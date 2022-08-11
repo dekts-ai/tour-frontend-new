@@ -1,0 +1,141 @@
+window.onload = function () {
+    
+    let loadTime = new Date();
+    loadTime.toLocaleString('en-US', { timeZone: 'US/Arizona' })
+    let unloadTime = JSON.parse(localStorage.getItem("formData"));
+    let refreshTime = unloadTime;
+    if (refreshTime != loadTime) {
+        window.localStorage.removeItem("formData");
+        window.localStorage.removeItem("selectTime");
+    }
+
+};
+$(document).ready(function () {
+    $(function () {
+        const d = new Date();
+        let totalmonths = d.getMonth() + 1;
+        let addTotalmonths = totalmonths - 12;
+        let finalMonths = 11
+        if(Math.abs(addTotalmonths) != ''){
+            finalMonths = Math.abs(addTotalmonths);
+        }
+
+        $('[data-toggle="tooltip"]').tooltip()
+        var ls = JSON.parse(localStorage.getItem("formData"));
+        var calendarPicker2 = $("#dsel2").calendarPicker({
+            years: 0,
+            months: finalMonths,
+            showDayArrows: true,
+            callback: function (cal) {
+                $("#wtf").html("Selected date: " + cal.currentDate);
+            }
+        });
+        if(ls != null){
+            if ( ls.dateselect !== null) {
+                calendarPicker2.changeDate(new Date(ls.calendaryear + '-' + ls.calendarmonth + '-' + ls.dateselect + '-' + ls.timedate));
+            } 
+        }else {
+            calendarPicker2.changeDate(new Date());
+        }
+        
+    });
+});
+
+$('.owl-carousel').owlCarousel({
+    loop: false,
+    margin: 0,
+    nav: true,
+    dots: false,
+    mouseDrag: false,
+    touchDrag: false,
+    responsive: {
+        0: {
+            items: 2
+        },
+        480: {
+            items: 4
+        },
+        575: {
+            items: 5
+        },
+        768: {
+            items: 7
+        }
+    }
+});
+
+//Get flag for phone number
+$('#phonenumber').each(function (index) {
+    var input = document.querySelector("#phonenumber");
+    if (input !== 'undefined') {
+        window.intlTelInput(input, {
+            separateDialCode: true,
+        });
+    }
+});
+
+$('#phonenumber, #cardnumber, #expirydate, #cvv').keypress(function (event) {
+    var keycode = event.which;
+    if (!(event.shiftKey == false && (keycode == 43 || keycode == 46 || keycode == 8 || keycode == 37 || keycode == 39 || (keycode >= 48 && keycode <= 57)))) {
+        event.preventDefault();
+    }
+});
+
+//Input validation text only
+$('#fullname, #nameoncard').bind('keyup blur', function () {
+    var node = $(this);
+    node.val(node.val().replace(/[^A-Za-z ']/g, ''));
+});
+
+$('#cardnumber').mask('0000 0000 0000 0000');
+$('#expiration').mask('00/00');
+$('#cvc').mask('000');
+
+$(".makeaayment-btn").click(function () {
+    var form = $("#payment-form");
+    form.validate({
+        errorElement: 'span',
+        errorClass: 'help-block',
+        success: function (label) {
+            label.text("ok!").addClass("success");
+        },
+        rules: {
+            fullname: {
+                required: true,
+            },
+            phonenumber: {
+                required: true,
+                minlength: 9,
+                maxlength: 14,
+            },
+            emailaddress: {
+                required: true,
+                email: true
+            },
+            getemailupdates: {
+                required: true,
+            },
+            cancellationsterms: {
+                required: true,
+            },
+            cardnumber: {
+                required: true,
+                minlength: 16,
+                maxlength: 16,
+            },
+            expiration: {
+                required: true,
+                minlength: 5,
+                maxlength: 5,
+            },
+            cvv: {
+                required: true,
+                minlength: 3,
+                maxlength: 3,
+            },
+            countryregion: {
+                required: true,
+            },
+        },
+    });
+});
