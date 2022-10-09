@@ -212,12 +212,12 @@ export default {
   },
   methods: {
     booking() {
-      const id = JSON.parse(localStorage.getItem("BookingId"));
+      const id = JSON.parse(this.$store.state.bookingId);
       axios
         .get("/tour-booking-confirmed/"+id)
         .then((response) => {
           this.tourBooking = response.data;
-        }).then(localStorage.removeItem('BookingId'));
+        });
     },
   },
 };
