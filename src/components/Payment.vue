@@ -1,7 +1,8 @@
 <template>
   <Header v-if="iframeStatus == false" />
 
-  <section v-for="TourPkgDetails in details.TourPkgDetails" :key="TourPkgDetails.pkg_rate_id" class="banner-section"
+  <section :class="[(iframeStatus == false) ? 'noiframe-inner-banner' : 'iframe-inner-banner', '']"
+    v-for="TourPkgDetails in details.TourPkgDetails" :key="TourPkgDetails.pkg_rate_id" class="banner-section"
     v-bind:style="{ 'background-image': 'url(' + TourPkgDetails.HeaderOne + ')' }">
     <div class="container">
       <div class="row">
@@ -254,7 +255,7 @@
                                       <li>
                                         Due to limited seating, we request that
                                         you cancel 24 hours prior to the tour
-                                        departure to receive a 100% refund.
+                                        departure to receive a Full Refund Minus Booking Fees.
                                       </li>
                                       <li>
                                         Cancellations made within 24 hours of
@@ -336,43 +337,6 @@
                           <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif"
                             alt="processing..." />
                         </div>
-                        <div class="col-12 mb-4">
-                          <div class="row">
-                            <div class="col-12 col-md-12">
-                              <div class="form-field-title payment-title mt-3">Payment Details</div>
-                              <div class="form-field-wrp contact-form-field" id="card-element">
-                                <div class="form-group col-12">
-                                  <label for="Card Number" class="col-form-label">Card Number<span
-                                      class="required-star">*</span></label>
-                                  <input type="text" id="card-number-element" name="cardnumber" v-model="form.cardnumber"
-                                    class="form-control" placeholder="Card Number" />
-                                </div>
-
-                                <div class="form-group col-12">
-                                  <label for="Expiry Date" class="col-form-label">Expiry Date<span
-                                      class="required-star">*</span></label>
-                                  <input type="text" id="card-expiry-element" name="expiration" v-model="form.expiration"
-                                    class="form-control" placeholder="MM/YY" />
-                                </div>
-
-                                <div class="form-group col-12">
-                                  <label for="CVC" class="col-form-label">CVC<span class="required-star">*</span></label>
-                                  <input type="text" id="card-cvc-element" name="cvv" v-model="form.cvv" class="form-control"
-                                    placeholder="CVC" />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <p v-if="errors.length">
-                          <b>Please correct the following error(s):</b>
-                        <ul>
-                          <li v-for="error in errors" :key="error" v-bind:class="{'text-danger': error }">{{ error }}
-                          </li>
-                        </ul>
-                        </p>
-                        <div class="error red center-align white-text">{{stripeValidationError}}</div>
 
                         <div class="col-12 total-cost-col">
                           <div class="row subtotal">
@@ -401,16 +365,126 @@
                             </div>
                           </div>
                         </div>
-                        <div class="form-group col-12 mt-2 mb-2">
-                          <input type="submit" value="Submit" class="btn btn-success btn-lg" />
+
+                        <div class="col-12 mb-3">
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="payment-text card-label-text-left"><img src="../assets/images/shield.png"
+                                  alt="shield"> Payment</div>
+                            </div>
+                            <div class="col-12">
+                              <div class="secured-encryption card-label-text-left"><img
+                                  src="../assets/images/lock-white.png" alt="lock"> Secured with 2048-bit encryption
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row mt-3">
+                            <div class="col-12">
+                              <div class="card-detail-main">
+                                <div class="row align-items-center">
+                                  <div class="col-12 col-md-5 border-right">
+                                    <div class="card-detail-wrp card-form-field">
+                                      <div class="form-group col-12 card-label-text-left">
+                                        <label for="cardnumber" class="col-form-label">Card Number<span
+                                            class="required-star">*</span></label>
+                                        <div class="field-icon-wrp">
+                                          <i class="fa fa-lock" aria-hidden="true"></i>
+                                        </div>
+                                        <input type="text" id="cardnumber" name="cardnumber" class="form-control"
+                                          v-model="form.cardnumber" placeholder="1234 1234 1234 1234">
+                                        <div class="validation-icon-wrp">
+                                          <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                        </div>
+                                      </div>
+                                      <div class="form-group col-12">
+                                        <div class="phone-wrap card-label-text-left">
+                                          <label for="nameoncard" class="col-form-label">Name on Card<span
+                                              class="required-star">*</span></label>
+                                          <div class="field-icon-wrp">
+                                            <i class="fa fa-user" aria-hidden="true"></i>
+                                          </div>
+                                          <input type="text" id="nameoncard" name="nameoncard" class="form-control"
+                                            v-model="form.nameoncard" placeholder="">
+                                          <div class="validation-icon-wrp">
+                                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="form-group col-12 mb-0">
+                                        <div class="row">
+                                          <div class="form-group col-7 card-label-text-left">
+                                            <label for="expiration" class="col-form-label">Expiration<span
+                                                class="required-star">*</span></label>
+                                            <div class="field-icon-wrp">
+                                              <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+                                            </div>
+                                            <input type="text" id="expiration" name="expiration" class="form-control"
+                                              v-model="form.expiration" placeholder="MM / YY">
+                                            <div class="validation-icon-wrp">
+                                              <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                            </div>
+                                          </div>
+                                          <div class="form-group col-5 card-label-text-left">
+                                            <label for="cvv" class="col-form-label">CVC<span
+                                                class="required-star">*</span><img src="../assets/images/radio-info.png"
+                                                data-toggle="tooltip" data-placement="top"
+                                                title="Please select Number of Adults (Ages 13 & Up) want to go the tour"></label>
+                                            <div class="field-icon-wrp">
+                                              <i class="fa fa-lock" aria-hidden="true"></i>
+                                            </div>
+                                            <input type="text" id="cvv" name="cvv" class="form-control"
+                                              v-model="form.cvv" placeholder="CVC">
+                                            <div class="validation-icon-wrp">
+                                              <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-12 col-md-7">
+                                    <div class="makeaayment-wrap">
+                                      <div class="form-group col-12">
+                                        <div class="makeaayment-detail-title card-label-text-left">
+                                          Our Native Tour accepts all major credit and debit cards:
+                                        </div>
+                                        <div class="makeaayment-detail-wrp">
+                                          <img src="../assets/images/card-name.png" alt="card-name">
+                                        </div>
+                                      </div>
+                                      <div class="form-group col-12">
+                                        <hr>
+                                      </div>
+                                      <div class="form-group col-12 mb-0">
+                                        <input type="submit" name="makeaayment" id="makeaayment" value="Make a Payment"
+                                          class="makeaayment-btn">
+                                      </div>
+                                      <div class="form-group col-12 mb-0">
+                                        <div class="booking-you-text card-label-text-left">By booking you also agree to
+                                          our <a href="#">policies</a>, and Our Native Tours <a href="#">terms of
+                                            service</a>.</div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
+
+                        <p class="mb-3" v-if="errors.length">
+                          <b>Please correct the following error(s):</b>
+                        <ul>
+                          <li v-for="error in errors" :key="error" v-bind:class="{'text-danger': error }">{{ error }}
+                          </li>
+                        </ul>
+                        </p>
                       </div>
                     </div>
                   </div>
                 </form>
               </div>
             </div>
-
             <Footer />
           </div>
         </div>
@@ -483,7 +557,7 @@ export default {
     };
   },
   async mounted() {
-    this.stripe = await loadStripe("pk_test_51KGGWAFWb9Y3fHFESHkUfEqAwitemWWsiUfpiMUgY5FE3H1x2UuXnSKyrhJmY2SINV1vA79LMvtqtoHfOL1bUJJM00uJzlRQPY");
+    this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);
     this.createAndMountFormElements();
   },
   created() {
@@ -567,6 +641,7 @@ export default {
       });
     },
     async submit(e) {
+      var loader = this.$loading.show();
       this.errors = [];
       if (!this.form.masks_mandatory) {
         this.errors.push("Masks mandatory is required.");
@@ -605,12 +680,15 @@ export default {
         };
         axios.post("/available-seats", checkSlotarr).then((response) => {
           if (response.data.success == "false") {
+            loader.hide();
             this.message = response.data.message;
             return true;
           } else {
             let self = this;
             let router = this.$router;
+            loader = self.$loading.show();
             axios.post("/booking-tour", this.form).then((response) => {
+              loader.hide();
               if (response.data.success == "false") {
                 this.message = response.data.message;
                 return true;
@@ -618,6 +696,7 @@ export default {
                 this.stripe
                   .confirmCardPayment(response.data.clientSecret)
                   .then(function () {
+                    loader = self.$loading.show();
                     self.bookingId = response.data.bookingId;
                     self.$store.dispatch('storeBookingId', self.bookingId)
                     var stripeObject = {
@@ -626,8 +705,10 @@ export default {
                       payment_intent_client_secret: response.data.clientSecret
                     };
                     axios.post("/booking-3ds-payment", stripeObject).then(() => {
+                      loader.hide();
                       router.push("/Thankyou");
                     }).catch(function (error) {
+                      loader.hide();
                       if (error.response) {
                         // Request made and server responded
                         self.errors.push(error.response.data.message)
@@ -641,11 +722,13 @@ export default {
                     });
                   });
               } else {
+                loader.hide();
                 this.bookingId = response.data.BookingId;
                 this.$store.dispatch('storeBookingId', this.bookingId)
                 this.$router.push("/Thankyou");
               }
             }).catch(function (error) {
+              loader.hide();
               if (error.response) {
                 // Request made and server responded
                 self.errors.push(error.response.data.message)
@@ -660,6 +743,7 @@ export default {
           }
         });
       }
+      loader.hide();
       e.preventDefault();
     },
   },
@@ -690,6 +774,10 @@ export default {
 
 .card-element {
   margin-top: 5px;
+}
+
+.card-label-text-left {
+  text-align: left;
 }
 
 .error {
