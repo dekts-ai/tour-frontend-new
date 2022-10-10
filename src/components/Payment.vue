@@ -336,26 +336,32 @@
                           <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif"
                             alt="processing..." />
                         </div>
-                        <div class="col-12 total-cost-col" id="card-element">
+                        <div class="col-12 mb-4">
+                          <div class="row">
+                            <div class="col-12 col-md-12">
+                              <div class="form-field-title payment-title mt-3">Payment Details</div>
+                              <div class="form-field-wrp contact-form-field" id="card-element">
+                                <div class="form-group col-12">
+                                  <label for="Card Number" class="col-form-label">Card Number<span
+                                      class="required-star">*</span></label>
+                                  <input type="text" id="card-number-element" name="cardnumber" v-model="form.cardnumber"
+                                    class="form-control" placeholder="Card Number" />
+                                </div>
 
-                          <div class="form-group col-12">
-                            <label for="Card Number" class="col-form-label">Card Number<span
-                                class="required-star">*</span></label>
-                            <input type="text" id="card-number-element" name="cardnumber" v-model="form.cardnumber"
-                              class="form-control" placeholder="Card Number" />
-                          </div>
+                                <div class="form-group col-12">
+                                  <label for="Expiry Date" class="col-form-label">Expiry Date<span
+                                      class="required-star">*</span></label>
+                                  <input type="text" id="card-expiry-element" name="expiration" v-model="form.expiration"
+                                    class="form-control" placeholder="MM/YY" />
+                                </div>
 
-                          <div class="form-group col-12">
-                            <label for="Expiry Date" class="col-form-label">Expiry Date<span
-                                class="required-star">*</span></label>
-                            <input type="text" id="card-expiry-element" name="expiration" v-model="form.expiration"
-                              class="form-control" placeholder="MM/YY" />
-                          </div>
-
-                          <div class="form-group col-12">
-                            <label for="CVC" class="col-form-label">CVC<span class="required-star">*</span></label>
-                            <input type="text" id="card-cvc-element" name="cvv" v-model="form.cvv" class="form-control"
-                              placeholder="CVV" />
+                                <div class="form-group col-12">
+                                  <label for="CVC" class="col-form-label">CVC<span class="required-star">*</span></label>
+                                  <input type="text" id="card-cvc-element" name="cvv" v-model="form.cvv" class="form-control"
+                                    placeholder="CVC" />
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
 
@@ -559,20 +565,6 @@ export default {
           }
         }
       });
-
-      this.cardElement.on("change", this.setValidationError);
-    },
-    setValidationError(event) {
-      if (event.elementType === "cardNumber") {
-        this.form.cardnumber = event.complete;
-      }
-      if (event.elementType === "cardExpiry") {
-        this.form.expiration = event.complete;
-      }
-      if (event.elementType === "cardCvc") {
-        this.form.cvv = event.complete;
-      }
-      this.stripeValidationError = event.error ? event.error.message : "";
     },
     async submit(e) {
       this.errors = [];
@@ -602,8 +594,7 @@ export default {
         this.form.cancellations_policy &&
         this.form.cardnumber &&
         this.form.expiration &&
-        this.form.cvv &&
-        this.stripeValidationError === ""
+        this.form.cvv
       ) {
         let checkSlotarr = {
           'tour_slot_id': this.form.tour_slot_id,
@@ -617,17 +608,18 @@ export default {
             this.message = response.data.message;
             return true;
           } else {
+            let self = this;
+            let router = this.$router;
             axios.post("/booking-tour", this.form).then((response) => {
               if (response.data.success == "false") {
                 this.message = response.data.message;
                 return true;
               } else if (response.data.clientSecret) {
-                let router = this.$router;
                 this.stripe
                   .confirmCardPayment(response.data.clientSecret)
                   .then(function () {
-                    this.bookingId = response.data.BookingId;
-                    this.$store.dispatch('storeBookingId', this.bookingId)
+                    self.bookingId = response.data.bookingId;
+                    self.$store.dispatch('storeBookingId', self.bookingId)
                     var stripeObject = {
                       booking_id: response.data.bookingId,
                       payment_intent: response.data.intentId,
@@ -638,8 +630,7 @@ export default {
                     }).catch(function (error) {
                       if (error.response) {
                         // Request made and server responded
-                        alert(error.response.data.message)
-                        this.errors.push(error.response.data.message)
+                        self.errors.push(error.response.data.message)
                       } else if (error.request) {
                         // The request was made but no response was received
                         console.log(error.request);
@@ -653,6 +644,17 @@ export default {
                 this.bookingId = response.data.BookingId;
                 this.$store.dispatch('storeBookingId', this.bookingId)
                 this.$router.push("/Thankyou");
+              }
+            }).catch(function (error) {
+              if (error.response) {
+                // Request made and server responded
+                self.errors.push(error.response.data.message)
+              } else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+              } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
               }
             });
           }
@@ -692,14 +694,5 @@ export default {
 
 .error {
   color: #dc3545;
-}
-
-#card-number-element,
-#card-expiry-element,
-#card-cvc-element {
-  background: white;
-  padding: 5px;
-  border: 1px solid #ececec;
-  height: 30px;
 }
 </style>
