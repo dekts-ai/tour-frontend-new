@@ -19,7 +19,7 @@
                                 <div class="bradcumb-main">
                                     <ul>
                                         <li class="home">
-                                            <router-link :to="`${CurrentURL}`">
+                                            <router-link :to="`${baseUrl}`">
                                                 Home
                                             </router-link>
                                         </li>
@@ -274,7 +274,7 @@ export default {
     },
     data() {
         return {
-            CurrentURL: '',
+            baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: '',
             timeSlotChecked: true,
             selected_fulldate: '',
@@ -620,10 +620,6 @@ export default {
             }
             e.preventDefault();
         },
-    },
-    beforeMount() {
-        this.CurrentURL = window.location;
-        localStorage.setItem("CurrentURL", this.CurrentURL);
-    },
+    }
 };
 </script>
