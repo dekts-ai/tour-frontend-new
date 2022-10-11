@@ -25,4 +25,5 @@ pnpm-debug.log*
 api collection/tour-vuejs.postman_collection.json
 api collection/tour-vuejs(updated api).postman_collection.json
 api collection/tour-vuejs.postman_collection.json
-*.json
+package-lock.json
+.env

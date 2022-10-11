@@ -5,21 +5,20 @@
     </div>
     <div class="col-md-6 text-end col-end">
       <p>Powered by Native American Tours </p>
-      <img v-if="TourPkgDetails[0].TourPackageLogo != ''" class="max-width" :src="`https://administrator.nativeamericantours.com/images/tour-operator/logo/${TourPkgDetails[0].TourPackageLogo}`" />
-      <img v-else class="max-width" src="../assets/images/footer-logo.png" style="max-width: 130px;" />
+      <img class="max-width" :src="TourPkgDetails[0].TourPackageLogo" style="max-width: 130px;">
     </div>
   </div>
 </template>
 
 <script>
-var TourPkgDetailsData = localStorage.getItem("TourPkgDetails");    
+var TourPkgDetailsData = localStorage.getItem("TourPkgDetails");
 const unwrapped = JSON.parse(TourPkgDetailsData);
 export default {
   name: "Footer",
-    data() {
-        return {
-            TourPkgDetails: unwrapped,
-        }
-    },
+  data() {
+    return {
+      TourPkgDetails: unwrapped,
+    }
+  },
 };
 </script>
