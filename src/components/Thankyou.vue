@@ -212,7 +212,10 @@ export default {
   },
   methods: {
     booking() {
-      const id = JSON.parse(this.$store.state.bookingId);
+      const id = this.$store.state.bookingId;
+      if (id === null) {
+        this.$router.push('/');
+      }
       axios
         .get("/tour-booking-confirmed/"+id)
         .then((response) => {
