@@ -3,7 +3,9 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-12 text-center text-sm-center text-md-start">
-          <img class="max-width" :src="TourPkgDetails[0].TourPackageLogo">
+          <a :href="`${basUrl}`">
+            <img class="max-width" :src="TourPkgDetails[0].TourPackageLogo">
+          </a>
         </div>
       </div>
     </div>
@@ -19,13 +21,9 @@ export default {
   data() {
     return {
       TourPkgDetails: unwrapped,
-      CurrentURL: '',
+      basUrl: process.env.VUE_APP_BASE_URL,
     }
-  },
-  beforeMount() {
-    var CurrentURL = localStorage.getItem("CurrentURL");
-    this.CurrentURL = CurrentURL;
-  },
+  }
 }
 </script>
 

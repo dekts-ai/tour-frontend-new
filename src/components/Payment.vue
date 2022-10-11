@@ -21,8 +21,7 @@
                 <div class="bradcumb-main">
                   <ul>
                     <li class="home">
-                      <a :href="`${CurrentURL}`">Home</a>
-                      <!--<router-link :to="`${CurrentURL}`">Home</router-link>-->
+                      <a :href="`${baseUrl}`">Home</a>
                     </li>
                     <li>{{ TourPkgName }}</li>
                   </ul>
@@ -94,10 +93,6 @@
                       <div class="booking-dt-img" v-for="TourPkgDetails in details.TourPkgDetails"
                         :key="TourPkgDetails.pkg_rate_id"
                         v-bind:style="{ 'background-image': 'url(' + TourPkgDetails.PaymentPageDateTimeSectionImage + ')' }">
-                        <!-- <img
-                          src="../assets/images/booking-dt.png"
-                          alt="booking-dt"
-                        /> -->
                       </div>
                       <div class="booking-dt-detail w-100">
                         <div class="booking-dt-detail-title">
@@ -109,16 +104,14 @@
                           data.timedate }}
                         </div>
                         <div class="booking-dt-detail-btn">
-                          <a :href="`${CurrentURL}`"><i class="fa fa-angle-left" aria-hidden="true"> Select a Different
+                          <a :href="`${baseUrl}`"><i class="fa fa-angle-left" aria-hidden="true"> Select a Different
                               Time & Date</i></a>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <!-- <form @submit.prevent="submit" action="https://book.nativeamericantours.com/payment/stripe" id="myForm" method="post"> -->
                 <form @submit.prevent="submit" id="myForm" method="post">
-                  <!--<form @submit.prevent="submit" action="http://192.168.1.24:8312/stripe" id="myForm" method="post">-->
                   <input type="hidden" id="bookingID" name="bookingID">
                   <div class="row starttime-row border-0">
                     <div class="col-12">
@@ -344,7 +337,6 @@
                             <div class="col-6 text-end">
                               $<label class="subgrandtotal">{{ subtotal }}</label>
                               <input type="hidden" id="subtotal" name="subtotal" :value="subtotal">
-
                             </div>
                           </div>
                           <div class="row fees">
@@ -356,12 +348,11 @@
                           </div>
                           <div class="row totalcost">
                             <div class="col-6 text-start">
-                              Total Cost: <span>(inclusive all taxes)</span>
+                              Total Cost:
                             </div>
                             <div class="col-6 text-end">
                               $<label class="grandtotalfinal">{{ form.total }}</label>
                               <input type="hidden" name="total" :value="form.total">
-                              <span>(inclusive all taxes)</span>
                             </div>
                           </div>
                         </div>
@@ -446,7 +437,7 @@
                                     <div class="makeaayment-wrap">
                                       <div class="form-group col-12">
                                         <div class="makeaayment-detail-title card-label-text-left">
-                                          Our Native Tour accepts all major credit and debit cards:
+                                          We accept all major credit and debit cards:
                                         </div>
                                         <div class="makeaayment-detail-wrp">
                                           <img src="../assets/images/card-name.png" alt="card-name">
@@ -461,7 +452,7 @@
                                       </div>
                                       <div class="form-group col-12 mb-0">
                                         <div class="booking-you-text card-label-text-left">By booking you also agree to
-                                          our <a href="#">policies</a>, and Our Native Tours <a href="#">terms of
+                                          our <a href="https://nativeamericantours.com/privacy-policy.html">policies</a>, and Stripe <a href="https://stripe.com/legal/end-users">terms of
                                             service</a>.</div>
                                       </div>
                                     </div>
@@ -508,7 +499,7 @@ export default {
   data() {
     return {
       bookingId: null,
-      CurrentURL: '',
+      baseUrl: process.env.VUE_APP_BASE_URL,
       iframeStatus: '',
       TourPkgName: '',
       data: [],
@@ -746,11 +737,7 @@ export default {
       loader.hide();
       e.preventDefault();
     },
-  },
-  beforeMount() {
-    var CurrentURL = localStorage.getItem("CurrentURL");
-    this.CurrentURL = CurrentURL;
-  },
+  }
 };
 </script>
 
