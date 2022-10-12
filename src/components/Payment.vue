@@ -91,8 +91,8 @@
                     </div>
                     <div class="booking-dt-wrp d-flex">
                       <div class="booking-dt-img" v-for="TourPkgDetails in details.TourPkgDetails"
-                        :key="TourPkgDetails.pkg_rate_id"
-                        v-bind:style="{ 'background-image': 'url(' + TourPkgDetails.PaymentPageDateTimeSectionImage + ')' }">
+                        :key="TourPkgDetails.pkg_rate_id">
+                        <img style="height: 210px; width: 220px;" :src="TourPkgDetails.PaymentPageDateTimeSectionImage" alt="">
                       </div>
                       <div class="booking-dt-detail w-100">
                         <div class="booking-dt-detail-title">
