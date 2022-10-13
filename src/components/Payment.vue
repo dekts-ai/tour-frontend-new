@@ -92,7 +92,8 @@
                     <div class="booking-dt-wrp d-flex">
                       <div class="booking-dt-img" v-for="TourPkgDetails in details.TourPkgDetails"
                         :key="TourPkgDetails.pkg_rate_id">
-                        <img style="height: 210px; width: 220px;" :src="TourPkgDetails.PaymentPageDateTimeSectionImage" alt="">
+                        <img style="height: 210px; width: 220px;" :src="TourPkgDetails.PaymentPageDateTimeSectionImage"
+                          alt="">
                       </div>
                       <div class="booking-dt-detail w-100">
                         <div class="booking-dt-detail-title">
@@ -382,7 +383,8 @@
                                           <i class="fa fa-lock" aria-hidden="true"></i>
                                         </div>
                                         <input type="text" id="cardnumber" name="cardnumber" class="form-control"
-                                          v-model="form.cardnumber" v-mask="'#### #### #### ####'" placeholder="1234 1234 1234 1234">
+                                          v-model="form.cardnumber" v-mask="'#### #### #### ####'"
+                                          placeholder="1234 1234 1234 1234">
                                         <div class="validation-icon-wrp">
                                           <i class="fa fa-check-circle" aria-hidden="true"></i>
                                         </div>
@@ -424,7 +426,7 @@
                                               <i class="fa fa-lock" aria-hidden="true"></i>
                                             </div>
                                             <input type="text" id="cvv" name="cvv" class="form-control"
-                                              v-model="form.cvv" v-mask="'###'" placeholder="CVC">
+                                              v-model="form.cvv" v-mask="'####'" placeholder="CVC">
                                             <div class="validation-icon-wrp">
                                               <i class="fa fa-check-circle" aria-hidden="true"></i>
                                             </div>
@@ -452,7 +454,9 @@
                                       </div>
                                       <div class="form-group col-12 mb-0">
                                         <div class="booking-you-text card-label-text-left">By booking you also agree to
-                                          our <a href="https://nativeamericantours.com/privacy-policy.html">policies</a>, and Stripe <a href="https://stripe.com/legal/end-users">terms of
+                                          our <a
+                                            href="https://nativeamericantours.com/privacy-policy.html">policies</a>, and
+                                          Stripe <a href="https://stripe.com/legal/end-users">terms of
                                             service</a>.</div>
                                       </div>
                                     </div>
@@ -489,6 +493,7 @@ import axios from "axios";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import { loadStripe } from '@stripe/stripe-js';
+import { localForageService } from "@/store/localforage";
 import { mask } from 'vue-the-mask'
 // import $ from "jquery";
 export default {
@@ -556,15 +561,16 @@ export default {
     this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);
     this.createAndMountFormElements();
   },
-  created() {
-    this.data = JSON.parse(localStorage.getItem("formData"));
+  async created() {
+    const lookup = await localForageService.getItem("formData");
+    this.data = JSON.parse(lookup);
     if (this.data.iframeStatusInfo != null && this.data.iframeStatusInfo == 'true') {
       this.iframeStatus = this.data.iframeStatusInfo;
     } else {
       this.iframeStatus = false;
     }
 
-    axios.get("/tour-package/" + this.data.package_id + "").then((response) => {
+    await axios.get("/tour-package/" + this.data.package_id + "").then((response) => {
       this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
       this.details = response.data;
       this.PermitFee = response.data.TourPkgRates[0].PermitFee;
@@ -577,7 +583,7 @@ export default {
       this.form.year = this.data.calendaryear;
       this.form.time = this.data.timedate;
       if (this.form.time) {
-        localStorage.setItem("selectTime", this.form.time);
+        localForageService.setItem("selectTime", this.form.time);
       }
     });
     this.form.tourists1 = this.data.peoplegroup;
@@ -586,26 +592,28 @@ export default {
     this.form.tourists = ts.join();
     this.form.tour_slot_id = this.data.tour_slot_id;
   },
-  updated() {
+  async updated() {
     const n = this.details.TourPkgRates;
     const field1 = 0;
     let costStoreArr = [];
-    n.forEach(number => {
-      let names_field = 'grpt' + number.pkg_rate_id;
-      const field1 = document.querySelector("input[name=" + names_field + "]").value;
-      costStoreArr.push(field1);
-    });
-    this.form.tour_package_id = this.details.TourPkgDetails[0].TourPackageId;
-    this.form.cost1 = [field1];
-    var ct = [field1];
-    this.form.cost = ct.join();
-    const sum = costStoreArr.reduce((a, b) => Number(a) + Number(b), 0);
-    this.subtotal = sum.toFixed(2);
-    var softwarefee = Number(this.subtotal * this.fees) / 100;
-    this.softwarefee = softwarefee.toFixed(2);
-    this.form.service_commission = this.softwarefee;
-    var totals = Number(softwarefee) + Number(sum);
-    this.form.total = totals.toFixed(2);
+    if (n) {
+      n.forEach(number => {
+        let names_field = 'grpt' + number.pkg_rate_id;
+        const field1 = document.querySelector("input[name=" + names_field + "]").value;
+        costStoreArr.push(field1);
+      });
+      this.form.tour_package_id = this.details.TourPkgDetails[0].TourPackageId;
+      this.form.cost1 = [field1];
+      var ct = [field1];
+      this.form.cost = ct.join();
+      const sum = costStoreArr.reduce((a, b) => Number(a) + Number(b), 0);
+      this.subtotal = sum.toFixed(2);
+      var softwarefee = Number(this.subtotal * this.fees) / 100;
+      this.softwarefee = softwarefee.toFixed(2);
+      this.form.service_commission = this.softwarefee;
+      var totals = Number(softwarefee) + Number(sum);
+      this.form.total = totals.toFixed(2);
+    }
   },
   methods: {
     createAndMountFormElements() {
@@ -637,6 +645,7 @@ export default {
       });
     },
     async submit(e) {
+      e.preventDefault();
       // if an async request is processing
       if (this.processing === true) {
         return;
@@ -697,7 +706,7 @@ export default {
                   .confirmCardPayment(response.data.clientSecret)
                   .then(function () {
                     self.bookingId = response.data.bookingId;
-                    self.$store.dispatch('storeBookingId', self.bookingId)
+                    localForageService.setItem("bookingId", self.bookingId);
                     var stripeObject = {
                       booking_id: response.data.bookingId,
                       payment_intent: response.data.intentId,
@@ -723,7 +732,7 @@ export default {
               } else {
                 self.processLoader(loader);
                 this.bookingId = response.data.BookingId;
-                this.$store.dispatch('storeBookingId', this.bookingId)
+                localForageService.setItem("bookingId", self.bookingId);
                 this.$router.push("/Thankyou");
               }
             }).catch(function (error) {
@@ -744,7 +753,6 @@ export default {
       } else {
         this.processLoader(loader);
       }
-      e.preventDefault();
     },
     processLoader(loader) {
       // reset the state
