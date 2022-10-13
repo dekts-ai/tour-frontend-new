@@ -502,6 +502,7 @@ export default {
   },
   data() {
     return {
+      processing: false,
       bookingId: null,
       baseUrl: process.env.VUE_APP_BASE_URL,
       iframeStatus: '',
@@ -636,6 +637,12 @@ export default {
       });
     },
     async submit(e) {
+      // if an async request is processing
+      if (this.processing === true) {
+        return;
+      }
+      // set the async state
+      this.processing = true;
       var loader = this.$loading.show();
       this.errors = [];
       if (!this.form.masks_mandatory) {
@@ -675,23 +682,20 @@ export default {
         };
         axios.post("/available-seats", checkSlotarr).then((response) => {
           if (response.data.success == "false") {
-            loader.hide();
             this.message = response.data.message;
             return true;
           } else {
             let self = this;
             let router = this.$router;
-            loader = self.$loading.show();
             axios.post("/booking-tour", this.form).then((response) => {
-              loader.hide();
               if (response.data.success == "false") {
+                self.processLoader(loader);
                 this.message = response.data.message;
                 return true;
               } else if (response.data.clientSecret) {
                 this.stripe
                   .confirmCardPayment(response.data.clientSecret)
                   .then(function () {
-                    loader = self.$loading.show();
                     self.bookingId = response.data.bookingId;
                     self.$store.dispatch('storeBookingId', self.bookingId)
                     var stripeObject = {
@@ -700,10 +704,10 @@ export default {
                       payment_intent_client_secret: response.data.clientSecret
                     };
                     axios.post("/booking-3ds-payment", stripeObject).then(() => {
-                      loader.hide();
+                      self.processLoader(loader);
                       router.push("/Thankyou");
                     }).catch(function (error) {
-                      loader.hide();
+                      self.processLoader(loader);
                       if (error.response) {
                         // Request made and server responded
                         self.errors.push(error.response.data.message)
@@ -717,13 +721,13 @@ export default {
                     });
                   });
               } else {
-                loader.hide();
+                self.processLoader(loader);
                 this.bookingId = response.data.BookingId;
                 this.$store.dispatch('storeBookingId', this.bookingId)
                 this.$router.push("/Thankyou");
               }
             }).catch(function (error) {
-              loader.hide();
+              self.processLoader(loader);
               if (error.response) {
                 // Request made and server responded
                 self.errors.push(error.response.data.message)
@@ -737,10 +741,16 @@ export default {
             });
           }
         });
+      } else {
+        this.processLoader(loader);
       }
-      loader.hide();
       e.preventDefault();
     },
+    processLoader(loader) {
+      // reset the state
+      this.processing = false;
+      loader.hide();
+    }
   }
 };
 </script>
