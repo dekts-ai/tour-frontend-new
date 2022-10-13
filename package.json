@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build",
+    "staging": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build",
+    "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -20,6 +21,7 @@
     "vue-loading-overlay": "^5.0.3",
     "vue-router": "^4.0.12",
     "vue-stripe-checkout": "^3.5.15",
+    "vue-the-mask": "^0.11.1",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

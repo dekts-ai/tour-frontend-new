@@ -91,8 +91,8 @@
                     </div>
                     <div class="booking-dt-wrp d-flex">
                       <div class="booking-dt-img" v-for="TourPkgDetails in details.TourPkgDetails"
-                        :key="TourPkgDetails.pkg_rate_id"
-                        v-bind:style="{ 'background-image': 'url(' + TourPkgDetails.PaymentPageDateTimeSectionImage + ')' }">
+                        :key="TourPkgDetails.pkg_rate_id">
+                        <img style="height: 210px; width: 220px;" :src="TourPkgDetails.PaymentPageDateTimeSectionImage" alt="">
                       </div>
                       <div class="booking-dt-detail w-100">
                         <div class="booking-dt-detail-title">
@@ -382,7 +382,7 @@
                                           <i class="fa fa-lock" aria-hidden="true"></i>
                                         </div>
                                         <input type="text" id="cardnumber" name="cardnumber" class="form-control"
-                                          v-model="form.cardnumber" placeholder="1234 1234 1234 1234">
+                                          v-model="form.cardnumber" v-mask="'#### #### #### ####'" placeholder="1234 1234 1234 1234">
                                         <div class="validation-icon-wrp">
                                           <i class="fa fa-check-circle" aria-hidden="true"></i>
                                         </div>
@@ -410,7 +410,7 @@
                                               <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
                                             </div>
                                             <input type="text" id="expiration" name="expiration" class="form-control"
-                                              v-model="form.expiration" placeholder="MM / YY">
+                                              v-model="form.expiration" v-mask="'##/##'" placeholder="MM/YY">
                                             <div class="validation-icon-wrp">
                                               <i class="fa fa-check-circle" aria-hidden="true"></i>
                                             </div>
@@ -424,7 +424,7 @@
                                               <i class="fa fa-lock" aria-hidden="true"></i>
                                             </div>
                                             <input type="text" id="cvv" name="cvv" class="form-control"
-                                              v-model="form.cvv" placeholder="CVC">
+                                              v-model="form.cvv" v-mask="'###'" placeholder="CVC">
                                             <div class="validation-icon-wrp">
                                               <i class="fa fa-check-circle" aria-hidden="true"></i>
                                             </div>
@@ -489,12 +489,16 @@ import axios from "axios";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import { loadStripe } from '@stripe/stripe-js';
+import { mask } from 'vue-the-mask'
 // import $ from "jquery";
 export default {
   name: "Payment",
   components: {
     Header,
     Footer,
+  },
+  directives: {
+    mask
   },
   data() {
     return {
