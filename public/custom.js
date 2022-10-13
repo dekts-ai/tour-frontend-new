@@ -1,15 +1,3 @@
-window.onload = function () {
-    
-    let loadTime = new Date();
-    loadTime.toLocaleString('en-US', { timeZone: 'US/Arizona' })
-    let unloadTime = JSON.parse(localStorage.getItem("formData"));
-    let refreshTime = unloadTime;
-    if (refreshTime != loadTime) {
-        window.localStorage.removeItem("formData");
-        window.localStorage.removeItem("selectTime");
-    }
-
-};
 $(document).ready(function () {
     $(function () {
         const d = new Date();
