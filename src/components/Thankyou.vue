@@ -1,6 +1,9 @@
 <template>
-  <Header />
-  <section class="banner-section">
+
+  <Header v-if="iframeStatus == false" />
+  <section :class="[(iframeStatus == false) ? 'noiframe-inner-banner' : 'iframe-inner-banner', '']"
+    v-for="TourPkgDetails in details.TourPkgDetails" :key="TourPkgDetails.pkg_rate_id" class="banner-section"
+    v-bind:style="{ 'background-image': 'url(' + TourPkgDetails.HeaderOne + ')' }">
     <div class="container">
       <div class="row">
         <div class="col-12"></div>
@@ -40,22 +43,22 @@
                         <p>
                           Thank you for your booking. Please check your below
                           booking confirmation details.
-                    
+
                         </p>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="row invoice-row"  v-if="tourBooking.data">
+                <div class="row invoice-row" v-if="tourBooking.data">
                   <div class="col-12">
                     <div class="invoice">
                       <div class="row top-row">
                         <div class="col-12 content1 text-end">
                           <h2>Booking Confirmation</h2>
-                        
-                            <h3>Booking ID # <a href="#">{{tourBooking.data[0].TourBookingID}}</a></h3>
-                            
-                          
+
+                          <h3>Booking ID # <a href="#">{{tourBooking.data[0].TourBookingID}}</a></h3>
+
+
                         </div>
                         <div class="col-12 content2">
                           <h2>Hello {{tourBooking.data[0].Name}},</h2>
@@ -112,13 +115,13 @@
                         </div>
                         <div class="col-12 booking-summery">
                           <h3>Your Booking Summery:</h3>
-                          
-                           <h2>Booking ID # <a href="#">{{tourBooking.data[0].TourBookingID}}</a></h2> 
-                            <!-- <button class="printbtn">
+
+                          <h2>Booking ID # <a href="#">{{tourBooking.data[0].TourBookingID}}</a></h2>
+                          <!-- <button class="printbtn">
                               <i class="fa fa-print" aria-hidden="true"></i> Get
                               a Print
                             </button> -->
-                          
+
                           <div class="booking-tbl">
                             <table class="table">
                               <thead>
@@ -132,15 +135,15 @@
                                 </tr>
                               </thead>
                               <tbody v-for="item in tourBooking.data[0].TourPkgRates" :key="item">
-                              
+
                                 <tr>
                                   <td>{{item.Age}}</td>
                                   <td>{{item.Price}}</td>
                                   <td>{{item.FeesAndTaxes}}</td>
                                   <td>{{item.Cost}}</td>
                                 </tr>
-                                
-                                
+
+
                               </tbody>
                             </table>
                           </div>
@@ -182,7 +185,7 @@
                   </div>
                 </div>
               </div>
-               
+
             </div>
             <Footer />
           </div>
@@ -190,34 +193,57 @@
       </div>
     </div>
   </section>
- 
+
 </template>
 <script>
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import axios from "axios";
+import { mapGetters } from 'vuex'
+import { localForageService } from "@/store/localforage";
+
 export default {
   name: "Thankyou",
   data() {
     return {
       tourBooking: [],
+      iframeStatus: '',
+      details: [],
     };
   },
   components: {
     Header,
     Footer,
   },
- mounted() {
+  computed: {
+    ...mapGetters({
+      bookingId: 'bookingId',
+    })
+  },
+  mounted() {
     this.booking();
   },
+  async created() {
+    const lookup = await localForageService.getItem("formData");
+    this.data = JSON.parse(lookup);
+    if (this.data.iframeStatusInfo != null && this.data.iframeStatusInfo == 'true') {
+      this.iframeStatus = this.data.iframeStatusInfo;
+    } else {
+      this.iframeStatus = false;
+    }
+
+    await axios.get("/tour-package/" + this.data.package_id + "").then((response) => {
+      this.details = response.data;
+    });
+  },
   methods: {
-    booking() {
-      const id = this.$store.state.bookingId;
+    async booking() {
+      const id = await localForageService.getItem("bookingId");
       if (id === null) {
         this.$router.push('/');
       }
       axios
-        .get("/tour-booking-confirmed/"+id)
+        .get("/tour-booking-confirmed/" + id)
         .then((response) => {
           this.tourBooking = response.data;
         });

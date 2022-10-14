@@ -4,7 +4,7 @@
       <div class="row align-items-center">
         <div class="col-md-12 text-center text-sm-center text-md-start">
           <a :href="`${basUrl}`">
-            <img class="max-width" :src="TourPkgDetails[0].TourPackageLogo">
+            <img v-if="TourPackageLogo" class="max-width" :src="TourPackageLogo">
           </a>
         </div>
       </div>
@@ -13,15 +13,22 @@
 </template>
 
 <script>
-var TourPkgDetailsData = localStorage.getItem("TourPkgDetails");
-const unwrapped = JSON.parse(TourPkgDetailsData);
+import { localForageService } from "@/store/localforage";
 
 export default {
   name: 'Header',
   data() {
     return {
-      TourPkgDetails: unwrapped,
+      TourPkgDetails: [],
+      TourPackageLogo: null,
       basUrl: process.env.VUE_APP_BASE_URL,
+    }
+  },
+  async created() {
+    const lookup = await localForageService.getItem("TourPkgDetails");
+    this.TourPkgDetails = JSON.parse(lookup);
+    if (this.TourPkgDetails.length) {
+      this.TourPackageLogo = this.TourPkgDetails[0].TourPackageLogo;
     }
   }
 }

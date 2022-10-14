@@ -260,10 +260,10 @@
 </template>
 
 <script>
-var selectTime = localStorage.getItem("selectTime");
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import axios from "axios";
+import { localForageService } from "@/store/localforage";
 import $ from "jquery";
 export default {
     name: "Index",
@@ -279,7 +279,7 @@ export default {
             timeSlotChecked: true,
             selected_fulldate: '',
             TourPkgName: '',
-            select_time: selectTime,
+            select_time: '',
             selectgrouppeoples: [],
             oldGroupPeopleValue: [],
             totalGroupPeopleValue: 0,
@@ -312,15 +312,16 @@ export default {
         };
     },
     created: function () {
-        var fData = JSON.parse(localStorage.getItem("formData"));
-        if (fData != '' && fData != null) {
-            if (fData.iframeStatusInfo == 'true') {
+        this.select_time = localForageService.getItem("selectTime");
+        this.getFormData();
+        if (this.data != '' && this.data != null) {
+            if (this.data.iframeStatusInfo == 'true') {
                 this.iframeStatus = true;
             }
         }
         axios.post("/set").then((response) => {
             let res = response;
-            localStorage.setItem("token", res.data.access_token);
+            localForageService.setItem("token", res.data.access_token);
             this.myFunctionOnLoad();
             this.myFunctiondateLoad();
         })
@@ -536,7 +537,7 @@ export default {
                 this.form.package_id = 1;
             }
 
-            var ls = JSON.parse(localStorage.getItem("formData"));
+            var ls = this.getFormData();
             if (ls != undefined || ls != null) {
                 this.form.tourists1 = ls.peoplegroup;
             }
@@ -544,7 +545,7 @@ export default {
                 this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
                 this.details = response.data;
                 const TourPkgDetailsInfo = JSON.stringify(this.details.TourPkgDetails);
-                localStorage.setItem("TourPkgDetails", TourPkgDetailsInfo);
+                localForageService.setItem("TourPkgDetails", TourPkgDetailsInfo);
             });
         },
         submit: function (e) {
@@ -608,8 +609,8 @@ export default {
                     if (response.data.success == "false") {
                         this.errors.push(response.data.message);
                     } else {
+                        localForageService.setItem("formData", JSON.stringify(formData));
                         router.push("/payment");
-                        localStorage.setItem("formData", JSON.stringify(formData));
                     }
                 });
                 return true;
@@ -620,6 +621,10 @@ export default {
             }
             e.preventDefault();
         },
+        async getFormData() {
+            const formData = await localForageService.getItem("formData");
+            this.data = JSON.parse(formData);
+        }
     }
 };
 </script>
