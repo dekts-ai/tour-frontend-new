@@ -3,9 +3,9 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-12 text-center text-sm-center text-md-start">
-          <router-link :to="{ name: 'Index' }">
+          <a :href="`${baseUrl}`">
             <img v-if="TourPackageLogo" class="max-width" :src="TourPackageLogo">
-          </router-link>
+          </a>
         </div>
       </div>
     </div>
@@ -18,7 +18,7 @@ export default {
   props: ["TourPackageLogo"],
   data() {
     return {
-      basUrl: process.env.VUE_APP_BASE_URL
+      baseUrl: process.env.VUE_APP_BASE_URL
     }
   }
 }

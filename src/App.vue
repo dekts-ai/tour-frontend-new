@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { localForageService } from "@/store/localforage";
+import axios from "axios";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 
@@ -18,19 +18,12 @@ export default {
   data() {
     return {
         baseUrl: process.env.VUE_APP_BASE_URL,
-        iframeStatus: '',
+        iframeStatus: false,
         TourPkgDetails: [],
         TourPackageLogo: null,
     }
   },
   async created() {
-    const lookup = await localForageService.getItem("TourPkgDetails");
-    this.TourPkgDetails = JSON.parse(lookup);
-
-    if (this.TourPkgDetails.length) {
-      this.TourPackageLogo = this.TourPkgDetails[0].TourPackageLogo;
-    }
-
     if (this.data != '' && this.data != null) {
       if (this.data.iframeStatusInfo == 'true') {
         this.iframeStatus = true;
@@ -45,8 +38,20 @@ export default {
         } else {
             this.iframeStatus = false;
         }
+        var id = typeof params.get("pkg") !== 'undefined' ? params.get("pkg") : 1;
+
+        axios.get("/tour-package/" + id + "").then((response) => {
+          this.$store.dispatch('storeTourPkgDetails', response.data.TourPkgDetails);
+          this.TourPkgDetails = response.data.TourPkgDetails;
+          this.TourPackageLogo = this.TourPkgDetails[0].TourPackageLogo;
+        });
     } else {
       this.iframeStatus = false;
+      axios.get("/tour-package/" + 1 + "").then((response) => {
+        this.$store.dispatch('storeTourPkgDetails', response.data.TourPkgDetails);
+        this.TourPkgDetails = response.data.TourPkgDetails;
+        this.TourPackageLogo = this.TourPkgDetails[0].TourPackageLogo;
+      });
     }
   }
 };

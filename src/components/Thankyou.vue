@@ -18,7 +18,11 @@
               <div class="col-12">
                 <div class="bradcumb-main">
                   <ul>
-                    <li class="home"><router-link :to="{ name: 'Index' }">Home</router-link></li>
+                    <li class="home">
+                      <a :href="`${baseUrl}`">
+                        Home
+                      </a>  
+                    </li>
                     <li>Lower Antelope Canyon Hiking Tour</li>
                   </ul>
                 </div>
@@ -166,7 +170,11 @@
                               </p>
                             </div>
                             <ul>
-                              <li><router-link :to="{ name: 'Index' }">Home Page</router-link></li>
+                              <li>
+                                <a :href="`${baseUrl}`">
+                                  Home Page
+                                </a>
+                              </li>
                             </ul>
                           </div>
                         </div>
@@ -186,8 +194,6 @@
 </template>
 <script>
 import axios from "axios";
-import { mapGetters } from 'vuex'
-import { localForageService } from "@/store/localforage";
 
 export default {
   name: "Thankyou",
@@ -196,19 +202,14 @@ export default {
       tourBooking: [],
       iframeStatus: '',
       details: [],
+      baseUrl: process.env.VUE_APP_BASE_URL,
     };
-  },
-  computed: {
-    ...mapGetters({
-      bookingId: 'bookingId',
-    })
   },
   mounted() {
     this.booking();
   },
   async created() {
-    const lookup = await localForageService.getItem("formData");
-    this.data = JSON.parse(lookup);
+    this.data = this.$store.state.formData;
     if (this.data.iframeStatusInfo != null && this.data.iframeStatusInfo == 'true') {
       this.iframeStatus = this.data.iframeStatusInfo;
     } else {
@@ -221,9 +222,9 @@ export default {
   },
   methods: {
     async booking() {
-      const id = await localForageService.getItem("bookingId");
+      const id = this.$store.state.bookingId;
       if (id === null) {
-        this.$router.push('/');
+        window.location.href = '/';
       }
       axios
         .get("/tour-booking-confirmed/" + id)

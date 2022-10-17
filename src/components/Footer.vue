@@ -22,7 +22,7 @@ export default {
   props: ["iframeStatus", "TourPackageLogo"],
   data() {
     return {
-      basUrl: process.env.VUE_APP_BASE_URL
+      baseUrl: process.env.VUE_APP_BASE_URL
     }
   }
 };

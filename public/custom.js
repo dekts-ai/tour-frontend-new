@@ -9,7 +9,6 @@ $(document).ready(function () {
         }
 
         $('[data-toggle="tooltip"]').tooltip()
-        var ls = JSON.parse(localStorage.getItem("formData"));
         var calendarPicker2 = $("#dsel2").calendarPicker({
             years: 0,
             months: finalMonths,
@@ -18,14 +17,7 @@ $(document).ready(function () {
                 $("#wtf").html("Selected date: " + cal.currentDate);
             }
         });
-        if(ls != null){
-            if ( ls.dateselect !== null) {
-                calendarPicker2.changeDate(new Date(ls.calendaryear + '-' + ls.calendarmonth + '-' + ls.dateselect + '-' + ls.timedate));
-            } 
-        }else {
-            calendarPicker2.changeDate(new Date());
-        }
-        
+        calendarPicker2.changeDate(new Date());
     });
 });
 

@@ -19,7 +19,9 @@
                 <div class="bradcumb-main">
                   <ul>
                     <li class="home">
-                      <router-link :to="{ name: 'Index' }">Home</router-link>
+                      <a :href="`${baseUrl}`">
+                        Home
+                      </a>
                     </li>
                     <li>{{ TourPkgName }}</li>
                   </ul>
@@ -103,11 +105,11 @@
                           data.timedate }}
                         </div>
                         <div class="booking-dt-detail-btn">
-                          <router-link :to="{ name: 'Index' }">
+                          <a :href="`${baseUrl}`">
                             <i class="fa fa-angle-left" aria-hidden="true"> Select a Different
                               Time & Date
                             </i>
-                          </router-link>
+                          </a>
                         </div>
                       </div>
                     </div>
@@ -491,7 +493,6 @@
 <script>
 import axios from "axios";
 import { loadStripe } from '@stripe/stripe-js';
-import { localForageService } from "@/store/localforage";
 import { mask } from 'vue-the-mask'
 export default {
   name: "Payment",
@@ -555,8 +556,10 @@ export default {
     this.createAndMountFormElements();
   },
   async created() {
-    const lookup = await localForageService.getItem("formData");
-    this.data = JSON.parse(lookup);
+    this.data = this.$store.state.formData;
+    if (this.data == null) {
+      window.location.href = '/';
+    }
     if (this.data.iframeStatusInfo != null && this.data.iframeStatusInfo == 'true') {
       this.iframeStatus = this.data.iframeStatusInfo;
     } else {
@@ -575,9 +578,6 @@ export default {
       this.form.month = this.data.calendarmonth;
       this.form.year = this.data.calendaryear;
       this.form.time = this.data.timedate;
-      if (this.form.time) {
-        localForageService.setItem("selectTime", this.form.time);
-      }
     });
     this.form.tourists1 = this.data.peoplegroup;
     this.form.calucation = this.data.calucation;
@@ -699,7 +699,7 @@ export default {
                   .confirmCardPayment(response.data.clientSecret)
                   .then(function () {
                     self.bookingId = response.data.bookingId;
-                    localForageService.setItem("bookingId", self.bookingId);
+                    this.$store.dispatch('storeBookingId', self.bookingId)
                     var stripeObject = {
                       booking_id: response.data.bookingId,
                       payment_intent: response.data.intentId,
@@ -725,7 +725,7 @@ export default {
               } else {
                 self.processLoader(loader);
                 this.bookingId = response.data.BookingId;
-                localForageService.setItem("bookingId", self.bookingId);
+                this.$store.dispatch('storeBookingId', this.bookingId)
                 this.$router.push("/Thankyou");
               }
             }).catch(function (error) {
