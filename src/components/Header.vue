@@ -13,22 +13,12 @@
 </template>
 
 <script>
-import { localForageService } from "@/store/localforage";
-
 export default {
   name: 'Header',
+  props: ["TourPackageLogo"],
   data() {
     return {
-      TourPkgDetails: [],
-      TourPackageLogo: null,
-      basUrl: process.env.VUE_APP_BASE_URL,
-    }
-  },
-  async created() {
-    const lookup = await localForageService.getItem("TourPkgDetails");
-    this.TourPkgDetails = JSON.parse(lookup);
-    if (this.TourPkgDetails.length) {
-      this.TourPackageLogo = this.TourPkgDetails[0].TourPackageLogo;
+      basUrl: process.env.VUE_APP_BASE_URL
     }
   }
 }

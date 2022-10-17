@@ -1,6 +1,4 @@
 <template>
-  <Header v-if="iframeStatus == false" />
-
   <section :class="[(iframeStatus == false) ? 'noiframe-inner-banner' : 'iframe-inner-banner', '']"
     v-for="TourPkgDetails in details.TourPkgDetails" :key="TourPkgDetails.pkg_rate_id" class="banner-section"
     v-bind:style="{ 'background-image': 'url(' + TourPkgDetails.HeaderOne + ')' }">
@@ -480,7 +478,6 @@
                 </form>
               </div>
             </div>
-            <Footer />
           </div>
         </div>
       </div>
@@ -490,18 +487,11 @@
 
 <script>
 import axios from "axios";
-import Header from "@/components/Header.vue";
-import Footer from "@/components/Footer.vue";
 import { loadStripe } from '@stripe/stripe-js';
 import { localForageService } from "@/store/localforage";
 import { mask } from 'vue-the-mask'
-// import $ from "jquery";
 export default {
   name: "Payment",
-  components: {
-    Header,
-    Footer,
-  },
   directives: {
     mask
   },

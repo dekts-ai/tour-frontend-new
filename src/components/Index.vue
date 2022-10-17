@@ -1,5 +1,4 @@
 <template>
-    <Header v-if="iframeStatus == false" />
     <section :class="[(iframeStatus == false) ? 'noiframe-inner-banner' : 'iframe-inner-banner', '']"
         v-for="TourPkgDetails in details.TourPkgDetails" :key="TourPkgDetails.pkg_rate_id" class="banner-section"
         v-bind:style="{ 'background-image': 'url(' + TourPkgDetails.HeaderOne + ')' }">
@@ -251,7 +250,6 @@
                                 </div>
                             </div>
                         </div>
-                        <Footer />
                     </div>
                 </div>
             </div>
@@ -260,18 +258,12 @@
 </template>
 
 <script>
-import Header from "@/components/Header.vue";
-import Footer from "@/components/Footer.vue";
 import axios from "axios";
 import { localForageService } from "@/store/localforage";
 import $ from "jquery";
 export default {
     name: "Index",
     title: "Foo Page",
-    components: {
-        Header,
-        Footer,
-    },
     data() {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
