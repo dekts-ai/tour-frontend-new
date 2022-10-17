@@ -3,9 +3,9 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-12 text-center text-sm-center text-md-start">
-          <a :href="`${basUrl}`">
+          <router-link :to="{ name: 'Index' }">
             <img v-if="TourPackageLogo" class="max-width" :src="TourPackageLogo">
-          </a>
+          </router-link>
         </div>
       </div>
     </div>

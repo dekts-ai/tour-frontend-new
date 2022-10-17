@@ -19,7 +19,7 @@
                 <div class="bradcumb-main">
                   <ul>
                     <li class="home">
-                      <a :href="`${baseUrl}`">Home</a>
+                      <router-link :to="{ name: 'Index' }">Home</router-link>
                     </li>
                     <li>{{ TourPkgName }}</li>
                   </ul>
@@ -103,8 +103,11 @@
                           data.timedate }}
                         </div>
                         <div class="booking-dt-detail-btn">
-                          <a :href="`${baseUrl}`"><i class="fa fa-angle-left" aria-hidden="true"> Select a Different
-                              Time & Date</i></a>
+                          <router-link :to="{ name: 'Index' }">
+                            <i class="fa fa-angle-left" aria-hidden="true"> Select a Different
+                              Time & Date
+                            </i>
+                          </router-link>
                         </div>
                       </div>
                     </div>

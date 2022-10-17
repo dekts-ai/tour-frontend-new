@@ -1,6 +1,4 @@
 <template>
-
-  <Header v-if="iframeStatus == false" />
   <section :class="[(iframeStatus == false) ? 'noiframe-inner-banner' : 'iframe-inner-banner', '']"
     v-for="TourPkgDetails in details.TourPkgDetails" :key="TourPkgDetails.pkg_rate_id" class="banner-section"
     v-bind:style="{ 'background-image': 'url(' + TourPkgDetails.HeaderOne + ')' }">
@@ -20,12 +18,9 @@
               <div class="col-12">
                 <div class="bradcumb-main">
                   <ul>
-                    <li class="home"><a href="https://antelopelowercanyon.com/blog">Home</a></li>
+                    <li class="home"><router-link :to="{ name: 'Index' }">Home</router-link></li>
                     <li>Lower Antelope Canyon Hiking Tour</li>
                   </ul>
-                  <div class="cloasedbtn">
-                    <img src="../assets/images/cross.png" />
-                  </div>
                 </div>
                 <hr class="sep1" />
               </div>
@@ -117,10 +112,6 @@
                           <h3>Your Booking Summery:</h3>
 
                           <h2>Booking ID # <a href="#">{{tourBooking.data[0].TourBookingID}}</a></h2>
-                          <!-- <button class="printbtn">
-                              <i class="fa fa-print" aria-hidden="true"></i> Get
-                              a Print
-                            </button> -->
 
                           <div class="booking-tbl">
                             <table class="table">
@@ -175,8 +166,7 @@
                               </p>
                             </div>
                             <ul>
-                              <!-- <li><a href="#">Get a Print</a></li> -->
-                              <li><a href="https://antelopelowercanyon.com/blog">Home Page</a></li>
+                              <li><router-link :to="{ name: 'Index' }">Home Page</router-link></li>
                             </ul>
                           </div>
                         </div>
@@ -187,7 +177,6 @@
               </div>
 
             </div>
-            <Footer />
           </div>
         </div>
       </div>
@@ -196,8 +185,6 @@
 
 </template>
 <script>
-import Header from "@/components/Header.vue";
-import Footer from "@/components/Footer.vue";
 import axios from "axios";
 import { mapGetters } from 'vuex'
 import { localForageService } from "@/store/localforage";
@@ -210,10 +197,6 @@ export default {
       iframeStatus: '',
       details: [],
     };
-  },
-  components: {
-    Header,
-    Footer,
   },
   computed: {
     ...mapGetters({
