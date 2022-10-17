@@ -3,7 +3,7 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-12 text-center text-sm-center text-md-start">
-          <a :href="`${basUrl}`">
+          <a :href="`${baseUrl}`">
             <img v-if="TourPackageLogo" class="max-width" :src="TourPackageLogo">
           </a>
         </div>
@@ -13,22 +13,12 @@
 </template>
 
 <script>
-import { localForageService } from "@/store/localforage";
-
 export default {
   name: 'Header',
+  props: ["TourPackageLogo"],
   data() {
     return {
-      TourPkgDetails: [],
-      TourPackageLogo: null,
-      basUrl: process.env.VUE_APP_BASE_URL,
-    }
-  },
-  async created() {
-    const lookup = await localForageService.getItem("TourPkgDetails");
-    this.TourPkgDetails = JSON.parse(lookup);
-    if (this.TourPkgDetails.length) {
-      this.TourPackageLogo = this.TourPkgDetails[0].TourPackageLogo;
+      baseUrl: process.env.VUE_APP_BASE_URL
     }
   }
 }

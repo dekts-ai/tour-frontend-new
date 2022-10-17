@@ -1,6 +1,4 @@
 <template>
-  <Header v-if="iframeStatus == false" />
-
   <section :class="[(iframeStatus == false) ? 'noiframe-inner-banner' : 'iframe-inner-banner', '']"
     v-for="TourPkgDetails in details.TourPkgDetails" :key="TourPkgDetails.pkg_rate_id" class="banner-section"
     v-bind:style="{ 'background-image': 'url(' + TourPkgDetails.HeaderOne + ')' }">
@@ -21,7 +19,9 @@
                 <div class="bradcumb-main">
                   <ul>
                     <li class="home">
-                      <a :href="`${baseUrl}`">Home</a>
+                      <a :href="`${baseUrl}`">
+                        Home
+                      </a>
                     </li>
                     <li>{{ TourPkgName }}</li>
                   </ul>
@@ -105,8 +105,11 @@
                           data.timedate }}
                         </div>
                         <div class="booking-dt-detail-btn">
-                          <a :href="`${baseUrl}`"><i class="fa fa-angle-left" aria-hidden="true"> Select a Different
-                              Time & Date</i></a>
+                          <a :href="`${baseUrl}`">
+                            <i class="fa fa-angle-left" aria-hidden="true"> Select a Different
+                              Time & Date
+                            </i>
+                          </a>
                         </div>
                       </div>
                     </div>
@@ -480,7 +483,6 @@
                 </form>
               </div>
             </div>
-            <Footer />
           </div>
         </div>
       </div>
@@ -490,18 +492,10 @@
 
 <script>
 import axios from "axios";
-import Header from "@/components/Header.vue";
-import Footer from "@/components/Footer.vue";
 import { loadStripe } from '@stripe/stripe-js';
-import { localForageService } from "@/store/localforage";
 import { mask } from 'vue-the-mask'
-// import $ from "jquery";
 export default {
   name: "Payment",
-  components: {
-    Header,
-    Footer,
-  },
   directives: {
     mask
   },
@@ -562,8 +556,10 @@ export default {
     this.createAndMountFormElements();
   },
   async created() {
-    const lookup = await localForageService.getItem("formData");
-    this.data = JSON.parse(lookup);
+    this.data = this.$store.state.formData;
+    if (this.data == null) {
+      window.location.href = '/';
+    }
     if (this.data.iframeStatusInfo != null && this.data.iframeStatusInfo == 'true') {
       this.iframeStatus = this.data.iframeStatusInfo;
     } else {
@@ -582,9 +578,6 @@ export default {
       this.form.month = this.data.calendarmonth;
       this.form.year = this.data.calendaryear;
       this.form.time = this.data.timedate;
-      if (this.form.time) {
-        localForageService.setItem("selectTime", this.form.time);
-      }
     });
     this.form.tourists1 = this.data.peoplegroup;
     this.form.calucation = this.data.calucation;
@@ -706,7 +699,7 @@ export default {
                   .confirmCardPayment(response.data.clientSecret)
                   .then(function () {
                     self.bookingId = response.data.bookingId;
-                    localForageService.setItem("bookingId", self.bookingId);
+                    this.$store.dispatch('storeBookingId', self.bookingId)
                     var stripeObject = {
                       booking_id: response.data.bookingId,
                       payment_intent: response.data.intentId,
@@ -732,7 +725,7 @@ export default {
               } else {
                 self.processLoader(loader);
                 this.bookingId = response.data.BookingId;
-                localForageService.setItem("bookingId", self.bookingId);
+                this.$store.dispatch('storeBookingId', this.bookingId)
                 this.$router.push("/Thankyou");
               }
             }).catch(function (error) {
