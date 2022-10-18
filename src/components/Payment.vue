@@ -19,7 +19,10 @@
                 <div class="bradcumb-main">
                   <ul>
                     <li class="home">
-                      <a :href="`${baseUrl}`">
+                      <a v-if="iframeStatus" :href="`${baseUrl}?pkg=${data.package_id}&iframe=${iframeStatus}`">
+                        Home
+                      </a>
+                      <a v-else :href="`${baseUrl}`">
                         Home
                       </a>
                     </li>
@@ -104,7 +107,14 @@
                           {{ data.day }}, {{ data.calendarmonth }} {{ data.dateselect }}th {{ data.calendaryear }} @ {{
                           data.timedate }}
                         </div>
-                        <div class="booking-dt-detail-btn">
+                        <div v-if="iframeStatus" class="booking-dt-detail-btn">
+                          <a :href="`${baseUrl}?pkg=${data.package_id}&iframe=${iframeStatus}`">
+                            <i class="fa fa-angle-left" aria-hidden="true"> Select a Different
+                              Time & Date
+                            </i>
+                          </a>
+                        </div>
+                        <div v-else class="booking-dt-detail-btn">
                           <a :href="`${baseUrl}`">
                             <i class="fa fa-angle-left" aria-hidden="true"> Select a Different
                               Time & Date
@@ -504,7 +514,7 @@ export default {
       processing: false,
       bookingId: null,
       baseUrl: process.env.VUE_APP_BASE_URL,
-      iframeStatus: '',
+      iframeStatus: false,
       TourPkgName: '',
       data: [],
       details: [],
