@@ -19,9 +19,12 @@
                 <div class="bradcumb-main">
                   <ul>
                     <li class="home">
-                      <a :href="`${baseUrl}`">
+                      <a v-if="iframeStatus" :href="`${baseUrl}?pkg=${data.package_id}&iframe=${iframeStatus}`">
                         Home
-                      </a>  
+                      </a>
+                      <a v-else :href="`${baseUrl}`">
+                        Home
+                      </a>
                     </li>
                     <li>Lower Antelope Canyon Hiking Tour</li>
                   </ul>
@@ -200,9 +203,10 @@ export default {
   data() {
     return {
       tourBooking: [],
-      iframeStatus: '',
+      iframeStatus: false,
       details: [],
       baseUrl: process.env.VUE_APP_BASE_URL,
+      data: []
     };
   },
   mounted() {
