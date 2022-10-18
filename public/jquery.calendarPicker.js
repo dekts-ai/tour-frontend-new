@@ -116,7 +116,8 @@ jQuery.fn.calendarPicker = function (options) {
             divDays.empty();
             var nc = options.days * 2 + 1;
             var w = parseInt((theDiv.width() - 4 - (options.showDayArrows ? 12 : 0) - (nc) * 4) / (nc - (options.showDayArrows ? 2 : 0))) + "px";
-            
+            w = (w === "0px") ? "171px" : w;
+
             for (var i = -options.days; i <= options.days; i++) {
                 var d = new Date(date);
                 d.setDate(day + i)
