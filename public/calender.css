@@ -9,7 +9,11 @@ color: white;
 margin: 1px;
 display: inline-block;
 overflow:hidden;
+/* min-width: 90px; */
 }
+/* .calElement:first-child, .calElement:last-child {
+	min-width: unset;
+} */
 /*.calYear {
 font-size: 20px;
 border-bottom: 1px dashed #666;
