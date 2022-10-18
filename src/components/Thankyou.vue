@@ -1,6 +1,4 @@
 <template>
-
-  <Header v-if="iframeStatus == false" />
   <section :class="[(iframeStatus == false) ? 'noiframe-inner-banner' : 'iframe-inner-banner', '']"
     v-for="TourPkgDetails in details.TourPkgDetails" :key="TourPkgDetails.pkg_rate_id" class="banner-section"
     v-bind:style="{ 'background-image': 'url(' + TourPkgDetails.HeaderOne + ')' }">
@@ -20,12 +18,13 @@
               <div class="col-12">
                 <div class="bradcumb-main">
                   <ul>
-                    <li class="home"><a href="https://antelopelowercanyon.com/blog">Home</a></li>
+                    <li class="home">
+                      <a :href="`${baseUrl}`">
+                        Home
+                      </a>  
+                    </li>
                     <li>Lower Antelope Canyon Hiking Tour</li>
                   </ul>
-                  <div class="cloasedbtn">
-                    <img src="../assets/images/cross.png" />
-                  </div>
                 </div>
                 <hr class="sep1" />
               </div>
@@ -117,10 +116,6 @@
                           <h3>Your Booking Summery:</h3>
 
                           <h2>Booking ID # <a href="#">{{tourBooking.data[0].TourBookingID}}</a></h2>
-                          <!-- <button class="printbtn">
-                              <i class="fa fa-print" aria-hidden="true"></i> Get
-                              a Print
-                            </button> -->
 
                           <div class="booking-tbl">
                             <table class="table">
@@ -175,8 +170,11 @@
                               </p>
                             </div>
                             <ul>
-                              <!-- <li><a href="#">Get a Print</a></li> -->
-                              <li><a href="https://antelopelowercanyon.com/blog">Home Page</a></li>
+                              <li>
+                                <a :href="`${baseUrl}`">
+                                  Home Page
+                                </a>
+                              </li>
                             </ul>
                           </div>
                         </div>
@@ -187,7 +185,6 @@
               </div>
 
             </div>
-            <Footer />
           </div>
         </div>
       </div>
@@ -196,11 +193,7 @@
 
 </template>
 <script>
-import Header from "@/components/Header.vue";
-import Footer from "@/components/Footer.vue";
 import axios from "axios";
-import { mapGetters } from 'vuex'
-import { localForageService } from "@/store/localforage";
 
 export default {
   name: "Thankyou",
@@ -209,23 +202,14 @@ export default {
       tourBooking: [],
       iframeStatus: '',
       details: [],
+      baseUrl: process.env.VUE_APP_BASE_URL,
     };
-  },
-  components: {
-    Header,
-    Footer,
-  },
-  computed: {
-    ...mapGetters({
-      bookingId: 'bookingId',
-    })
   },
   mounted() {
     this.booking();
   },
   async created() {
-    const lookup = await localForageService.getItem("formData");
-    this.data = JSON.parse(lookup);
+    this.data = this.$store.state.formData;
     if (this.data.iframeStatusInfo != null && this.data.iframeStatusInfo == 'true') {
       this.iframeStatus = this.data.iframeStatusInfo;
     } else {
@@ -238,9 +222,9 @@ export default {
   },
   methods: {
     async booking() {
-      const id = await localForageService.getItem("bookingId");
+      const id = this.$store.state.bookingId;
       if (id === null) {
-        this.$router.push('/');
+        window.location.href = '/';
       }
       axios
         .get("/tour-booking-confirmed/" + id)

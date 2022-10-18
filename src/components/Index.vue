@@ -1,5 +1,4 @@
 <template>
-    <Header v-if="iframeStatus == false" />
     <section :class="[(iframeStatus == false) ? 'noiframe-inner-banner' : 'iframe-inner-banner', '']"
         v-for="TourPkgDetails in details.TourPkgDetails" :key="TourPkgDetails.pkg_rate_id" class="banner-section"
         v-bind:style="{ 'background-image': 'url(' + TourPkgDetails.HeaderOne + ')' }">
@@ -19,9 +18,9 @@
                                 <div class="bradcumb-main">
                                     <ul>
                                         <li class="home">
-                                            <router-link :to="`${baseUrl}`">
+                                            <a :href="`${baseUrl}`">
                                                 Home
-                                            </router-link>
+                                            </a>
                                         </li>
                                         <li>{{ TourPkgName }}</li>
                                     </ul>
@@ -251,7 +250,6 @@
                                 </div>
                             </div>
                         </div>
-                        <Footer />
                     </div>
                 </div>
             </div>
@@ -260,22 +258,15 @@
 </template>
 
 <script>
-import Header from "@/components/Header.vue";
-import Footer from "@/components/Footer.vue";
 import axios from "axios";
-import { localForageService } from "@/store/localforage";
 import $ from "jquery";
 export default {
     name: "Index",
     title: "Foo Page",
-    components: {
-        Header,
-        Footer,
-    },
     data() {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
-            iframeStatus: '',
+            iframeStatus: false,
             timeSlotChecked: true,
             selected_fulldate: '',
             TourPkgName: '',
@@ -312,19 +303,13 @@ export default {
         };
     },
     created: function () {
-        this.select_time = localForageService.getItem("selectTime");
-        this.getFormData();
         if (this.data != '' && this.data != null) {
             if (this.data.iframeStatusInfo == 'true') {
                 this.iframeStatus = true;
             }
         }
-        axios.post("/set").then((response) => {
-            let res = response;
-            localForageService.setItem("token", res.data.access_token);
-            this.myFunctionOnLoad();
-            this.myFunctiondateLoad();
-        })
+        this.myFunctionOnLoad();
+        this.myFunctionDateLoad();
     },
     updated() {
         const dateset = document.getElementById("date").value;
@@ -423,7 +408,6 @@ export default {
                 );
             }
         },
-
         onchange() {
             const date = document.getElementById("realdatevalue").value;
             this.form.fulldate = date;
@@ -490,19 +474,13 @@ export default {
             this.form.tour_slot_id = "";
             this.form.timedate = "";
         },
-        myFunctiondateLoad: function () {
+        myFunctionDateLoad: function () {
             document.title = "Native American Tours";
-            const cdddate = document.getElementById("realdatevalue").value;
-            var date = '';
-            if (cdddate != '') {
-                date = cdddate;
-            } else {
-                const current = new Date();
-                date = `${current.getDate()}-${current.getMonth() + 1
-                    }-${current.getFullYear()}`;
-            }
+            const current = new Date();
+            var date = `${current.getDate()}-${current.getMonth() + 1
+                }-${current.getFullYear()}`;
             this.selected_fulldate = date;
-            axios.get("/tour-slot/" + cdddate + '/' + this.form.package_id).then((response) => {
+            axios.get("/tour-slot/" + date + '/' + this.form.package_id).then((response) => {
                 this.dateTimeArr = response.data.Time;
                 this.totalavailableseats = response.data.TotalAvailableSeats;
                 this.selectgrouppeoples = [];
@@ -537,19 +515,13 @@ export default {
                 this.form.package_id = 1;
             }
 
-            var ls = this.getFormData();
-            if (ls != undefined || ls != null) {
-                this.form.tourists1 = ls.peoplegroup;
-            }
             axios.get("/tour-package/" + this.form.package_id + "").then((response) => {
+                this.$store.dispatch('storeTourPkgDetails', response.data.TourPkgDetails)
                 this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
                 this.details = response.data;
-                const TourPkgDetailsInfo = JSON.stringify(this.details.TourPkgDetails);
-                localForageService.setItem("TourPkgDetails", TourPkgDetailsInfo);
             });
         },
         submit: function (e) {
-            const formData = this.form;
             const n = this.details.TourPkgRates;
             let index = 0;
             let GroupPeoArr = [];
@@ -609,7 +581,7 @@ export default {
                     if (response.data.success == "false") {
                         this.errors.push(response.data.message);
                     } else {
-                        localForageService.setItem("formData", JSON.stringify(formData));
+                        this.$store.dispatch('storeFormData', this.form)
                         router.push("/payment");
                     }
                 });
@@ -620,10 +592,6 @@ export default {
                 }
             }
             e.preventDefault();
-        },
-        async getFormData() {
-            const formData = await localForageService.getItem("formData");
-            this.data = JSON.parse(formData);
         }
     }
 };
