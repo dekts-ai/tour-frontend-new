@@ -1,5 +1,5 @@
 <template>
-  <header class="header-section">
+  <header v-if="iframeStatus == false" class="header-section">
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-12 text-center text-sm-center text-md-start">
@@ -15,7 +15,7 @@
 <script>
 export default {
   name: 'Header',
-  props: ["TourPackageLogo"],
+  props: ["iframeStatus", "TourPackageLogo"],
   data() {
     return {
       baseUrl: process.env.VUE_APP_BASE_URL
