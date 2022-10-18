@@ -41,7 +41,7 @@ ul {list-style: none; }
 ---------------------------*/
 .banner-section {background: url(../images/main-banner.jpg) no-repeat; background-size: cover; background-position: top; height: 257px; }
 .inner-content-section {margin-top: -55px; }
-.inner-content-section .background-color-sec {background: #fff; padding: 20px 50px; border-radius: 3px; margin-bottom: 60px; border: 1px solid #d5d5d5; }
+.inner-content-section .background-color-sec {background: #fff; padding: 20px 50px; border-radius: 3px; margin-bottom: 60px; /*border: 1px solid #d5d5d5;*/ }
 
 /* Bradcumb */
 .bradcumb-row {margin-bottom: 20px; }
@@ -234,7 +234,7 @@ ul {list-style: none; }
 .payment-form-sec .field-icon-wrp .fa {font-size: 13px; font-weight: 400; line-height: 13px; color: #cbcbcb;}
 .payment-form-sec .form-field-wrp input {font-size: 15px; font-weight: 400; line-height: 1; color: #565656; height: 55px; border: 1px solid #d5d5d5;  box-shadow: -3px -4px 5px 0px rgba(0, 0, 0, 0.12) inset; border-radius: 5px; padding: 5px 41px;}
 .payment-form-sec .form-field-wrp input:focus {border-color: #28a5ff;}
-.payment-form-sec .form-field-wrp .phone-wrap input {padding-left: 110px !important;}
+/* .payment-form-sec .form-field-wrp .phone-wrap input {padding-left: 110px !important;} */
 .payment-form-sec .form-field-wrp .phone-wrap .iti {width: 100%;}
 .payment-form-sec .iti--allow-dropdown .iti__flag-container, 
 .payment-form-sec .iti--separate-dial-code .iti__flag-container {right: auto; left: 30px; }
