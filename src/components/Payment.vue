@@ -19,11 +19,14 @@
                 <div class="bradcumb-main">
                   <ul>
                     <li class="home">
-                      <a v-if="iframeStatus" :href="`${baseUrl}?pkg=${data.package_id}&iframe=${iframeStatus}`">
-                        Home
+                      <a v-if="iframeStatus && data.package_id && form.affiliate_id" :href="`${baseUrl}?pkg=${data.package_id}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
+                          Home
+                      </a>
+                      <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?pkg=${data.package_id}&iframe=${iframeStatus}`">
+                          Home
                       </a>
                       <a v-else :href="`${baseUrl}`">
-                        Home
+                          Home {{ iframeStatus }} {{ data.package_id }} {{ form.affiliate_id  }}
                       </a>
                     </li>
                     <li>{{ TourPkgName }}</li>
@@ -107,7 +110,14 @@
                           {{ data.day }}, {{ data.calendarmonth }} {{ data.dateselect }}th {{ data.calendaryear }} @ {{
                           data.timedate }}
                         </div>
-                        <div v-if="iframeStatus" class="booking-dt-detail-btn">
+                        <div v-if="iframeStatus && data.package_id && form.affiliate_id" class="booking-dt-detail-btn">
+                          <a :href="`${baseUrl}?pkg=${data.package_id}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
+                            <i class="fa fa-angle-left" aria-hidden="true"> Select a Different
+                              Time & Date
+                            </i>
+                          </a>
+                        </div>
+                        <div v-else-if="iframeStatus && data.package_id" class="booking-dt-detail-btn">
                           <a :href="`${baseUrl}?pkg=${data.package_id}&iframe=${iframeStatus}`">
                             <i class="fa fa-angle-left" aria-hidden="true"> Select a Different
                               Time & Date
@@ -533,6 +543,7 @@ export default {
         cvv: "",
         countryregion: "",
         tour_package_id: "",
+        affiliate_id: "",
         total: "",
         tourists1: "",
         tourists: "",
@@ -566,6 +577,7 @@ export default {
     this.createAndMountFormElements();
   },
   async created() {
+    this.form.affiliate_id = this.$store.state.affiliateId;
     this.data = this.$store.state.formData;
     if (this.data == null) {
       window.location.href = '/';
@@ -576,18 +588,19 @@ export default {
       this.iframeStatus = false;
     }
 
-    await axios.get("/tour-package/" + this.data.package_id + "").then((response) => {
+    await axios.get("/tour-package/" + this.data.package_id + "/" + this.data.affiliate_id).then((response) => {
       this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
       this.details = response.data;
       this.PermitFee = response.data.TourPkgRates[0].PermitFee;
       this.ProcessingFee = response.data.TourPkgRates[0].ProcessingFee;
       this.Tax = response.data.TourPkgRates[0].Tax;
-      this.fees = response.data.TourPkgDetails[0].ServiceCommission;
+      this.fees = response.data.TourPkgDetails[0].ServiceCommission; // after discussion with anil I keep the service commission for affiliate too otherwise I planned to remove it for affiliate as per the backend process
       this.form.date = this.data.dateselect;
       this.form.day = this.data.day;
       this.form.month = this.data.calendarmonth;
       this.form.year = this.data.calendaryear;
       this.form.time = this.data.timedate;
+      this.form.affiliate_id = this.data.affiliate_id;
     });
     this.form.tourists1 = this.data.peoplegroup;
     this.form.calucation = this.data.calucation;
@@ -700,6 +713,7 @@ export default {
             let self = this;
             let router = this.$router;
             axios.post("/booking-tour", this.form).then((response) => {
+              this.$store.dispatch('storeCustomer', this.form);
               if (response.data.success == "false") {
                 self.processLoader(loader);
                 this.message = response.data.message;
@@ -735,7 +749,7 @@ export default {
               } else {
                 self.processLoader(loader);
                 this.bookingId = response.data.BookingId;
-                this.$store.dispatch('storeBookingId', this.bookingId)
+                this.$store.dispatch('storeBookingId', this.bookingId);
                 this.$router.push("/Thankyou");
               }
             }).catch(function (error) {
