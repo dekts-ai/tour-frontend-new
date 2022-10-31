@@ -18,7 +18,13 @@
                                 <div class="bradcumb-main">
                                     <ul>
                                         <li class="home">
-                                            <a :href="`${baseUrl}`">
+                                            <a v-if="iframeStatus && data.package_id && form.affiliate_id" :href="`${baseUrl}?pkg=${data.package_id}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
+                                                Home
+                                            </a>
+                                            <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?pkg=${data.package_id}&iframe=${iframeStatus}`">
+                                                Home
+                                            </a>
+                                            <a v-else :href="`${baseUrl}`">
                                                 Home
                                             </a>
                                         </li>
@@ -282,6 +288,7 @@ export default {
             form: {
                 iframeStatusInfo: '',
                 package_id: '',
+                affiliate_id: "",
                 dateselect: "",
                 calendarmonth: "",
                 calendaryear: "",
@@ -303,11 +310,10 @@ export default {
         };
     },
     created: function () {
-        if (this.data != '' && this.data != null) {
-            if (this.data.iframeStatusInfo == 'true') {
-                this.iframeStatus = true;
-            }
-        }
+        this.iframeStatus = this.$store.state.iframeStatus;
+        this.form.package_id = this.$store.state.packageId;
+        this.form.affiliate_id = this.$store.state.affiliateId;
+        this.data = this.$store.state.formData;
         this.myFunctionOnLoad();
         this.myFunctionDateLoad();
     },
@@ -495,28 +501,8 @@ export default {
             });
         },
         myFunctionOnLoad: function () {
-            let uri = window.location.search.substring(1);
-            if (uri != '') {
-                let params = new URLSearchParams(uri);
-
-                let package_id = params.get("pkg");
-                if (params.get("iframe") != null && params.get("iframe") == 'true') {
-                    this.iframeStatus = params.get("iframe");
-                } else {
-                    this.iframeStatus = false;
-                }
-
-                if (package_id != '' && package_id > 1) {
-                    this.form.package_id = package_id;
-                } else {
-                    this.form.package_id = 1;
-                }
-            } else {
-                this.form.package_id = 1;
-            }
-
-            axios.get("/tour-package/" + this.form.package_id + "").then((response) => {
-                this.$store.dispatch('storeTourPkgDetails', response.data.TourPkgDetails)
+            axios.get("/tour-package/" + this.form.package_id + "/" + this.form.affiliate_id).then((response) => {
+                this.$store.dispatch('storeTourPackage', response.data.TourPkgDetails)
                 this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
                 this.details = response.data;
             });
