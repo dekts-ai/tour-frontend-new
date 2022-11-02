@@ -162,21 +162,7 @@
                                                                             tour.ProcessingFee }}%
                                                                         </p>
                                                                     </td>
-                                                                    <td v-if="form.tourists1" class="group"
-                                                                        data-label="Select Group Of People">
-                                                                        <select @change="onChange($event)"
-                                                                            class="form-select people-group1"
-                                                                            :name="'peoplegroup' + tour.pkg_rate_id "
-                                                                            :id="'peoplegroup'+tour.pkg_rate_id"
-                                                                            v-model="form.tourists1[tour.pkg_rate_id]">
-                                                                            <option v-for="item in selectgrouppeoples"
-                                                                                :value="item.value" :key="item.value"
-                                                                                :selected="form.tourists1 === item.id">
-                                                                                {{ item.number }}</option>
-                                                                        </select>
-                                                                    </td>
-
-                                                                    <td v-else class="group"
+                                                                    <td class="group"
                                                                         data-label="Select Group Of People">
                                                                         <select @change="onChange($event)"
                                                                             class="form-select people-group1"
@@ -187,8 +173,6 @@
                                                                                 item.number }}</option>
                                                                         </select>
                                                                     </td>
-
-
                                                                     <td class="price" data-label="Price"
                                                                         v-if="peopleselects != '' && peopleselects != null">
                                                                         <span class="tag"><input type="hidden"
@@ -278,7 +262,6 @@ export default {
             TourPkgName: '',
             select_time: '',
             selectgrouppeoples: [],
-            oldGroupPeopleValue: [],
             totalGroupPeopleValue: 0,
             details: [],
             dateTimeArr: [],
@@ -300,7 +283,6 @@ export default {
                 tour_slot_id: "",
                 calucation: [],
                 peoplegroup_: [],
-                tourists1: "",
                 fulldate: "",
             },
             timedateId: "",
@@ -332,87 +314,25 @@ export default {
             this.form.tour_slot_id = id;
             this.form.timedate = timedate;
         },
-        onChange: function (event) {
+        onChange: function () {
             // Define Variables
             var v1 = this.totalavailableseats.seats;
-            var dropval = event.target.value;
-            var eventId = event.target.id;
-            var v2 = 0;
-            // Compare previous value when available
-            if (this.oldGroupPeopleValue.length > 0) {
-                this.oldGroupPeopleValue.forEach((object) => {
-                    if (
-                        object.key == eventId &&
-                        object.value &&
-                        object.value > 0 &&
-                        object.value != dropval
-                    ) {
-                        if (parseInt(object.value) > parseInt(dropval)) {
-                            var diff = parseInt(object.value) - parseInt(dropval);
-                            this.totalGroupPeopleValue =
-                                parseInt(this.totalGroupPeopleValue) - parseInt(diff);
-                            v2 = parseInt(v1) - parseInt(this.totalGroupPeopleValue);
-                        } else {
-                            diff = parseInt(dropval) - parseInt(object.value);
-                            this.totalGroupPeopleValue =
-                                parseInt(this.totalGroupPeopleValue) + parseInt(diff);
-                            v2 = parseInt(v1) - parseInt(this.totalGroupPeopleValue);
-                        }
-                    } else {
-                        if (object.key == eventId) {
-                            this.totalGroupPeopleValue =
-                                parseInt(this.totalGroupPeopleValue) + parseInt(dropval);
-                            v2 = parseInt(v1) - parseInt(this.totalGroupPeopleValue);
-                        }
-                    }
-                });
-            } else {
-                this.totalGroupPeopleValue =
-                    parseInt(this.totalGroupPeopleValue) + parseInt(dropval);
-                v2 = parseInt(v1) - parseInt(this.totalGroupPeopleValue);
-            }
+
             // Append Dropdown Value for TourPkgRates
-            this.oldGroupPeopleValue = [];
             this.details.TourPkgRates.forEach((element) => {
-                if (v2 > 0) {
-                    $("#peoplegroup" + element.pkg_rate_id).prop("disabled", false);
-                }
                 var packageValue = $("#peoplegroup" + element.pkg_rate_id).val();
-                this.oldGroupPeopleValue.push({
-                    key: "peoplegroup" + element.pkg_rate_id,
-                    value: packageValue,
-                });
-                if (packageValue != null && packageValue > 0) {
-                    if (v2 > packageValue) {
-                        this.appendValue(v2, packageValue, element.pkg_rate_id);
-                    }
-                } else {
-                    if (v2 <= 0) {
-                        $("#peoplegroup" + element.pkg_rate_id).prop("disabled", true);
-                        $("#peoplegroup" + element.pkg_rate_id)
-                            .find("option")
-                            .remove()
-                            .end();
-                        this.appendValue(v2, 0, element.pkg_rate_id);
-                    } else {
-                        if (v2 > 0) {
-                            this.appendValue(v2, 0, element.pkg_rate_id);
-                        }
-                    }
+                $("#peoplegroup" + element.pkg_rate_id)
+                    .find("option")
+                    .remove()
+                    .end();
+
+                for (let j = 0; j <= v1; j++) {
+                    var selectedValue = j == packageValue ? "selected" : "";
+                    $("#peoplegroup" + element.pkg_rate_id).append(
+                        '<option value="' + j + '" ' + selectedValue + ">" + j + "</option>"
+                    );
                 }
             });
-        },
-        appendValue(v2, packageValue, pkg_rate_id) {
-            $("#peoplegroup" + pkg_rate_id)
-                .find("option")
-                .remove()
-                .end();
-            for (let j = 0; j <= v2; j++) {
-                var selectedValue = j == packageValue ? "selected" : "";
-                $("#peoplegroup" + pkg_rate_id).append(
-                    '<option value="' + j + '" ' + selectedValue + ">" + j + "</option>"
-                );
-            }
         },
         onchange() {
             const date = document.getElementById("realdatevalue").value;
@@ -440,12 +360,12 @@ export default {
                         number: index,
                     });
                 }
-
             });
             this.timeSlotChecked = false;
             this.select_time = "";
             this.form.tour_slot_id = "";
             this.form.timedate = "";
+            this.updateRateGroups();
         },
         onchangeNew() {
             const date = document.getElementById("realdatevalue").value;
@@ -479,6 +399,7 @@ export default {
             this.select_time = "";
             this.form.tour_slot_id = "";
             this.form.timedate = "";
+            this.updateRateGroups();
         },
         myFunctionDateLoad: function () {
             document.title = "Native American Tours";
@@ -507,6 +428,17 @@ export default {
                 this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
                 this.details = response.data;
             });
+        },
+        updateRateGroups: function () {
+            console.log('updateRateGroups');
+            var year = this.$store.state.year;
+            axios.get("/tour-package/" + year + "/" + this.form.package_id + "/" + this.form.affiliate_id).then((response) => {
+                this.$store.dispatch('storeTourPackage', response.data.TourPkgDetails)
+                this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
+                response.data.TourPkgRates[0].Age = "test";
+                this.details = response.data;
+            });
+            this.onChange();
         },
         submit: function (e) {
             const n = this.details.TourPkgRates;
