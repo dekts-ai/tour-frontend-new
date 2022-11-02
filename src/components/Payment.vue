@@ -576,7 +576,7 @@ export default {
     this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);
     this.createAndMountFormElements();
   },
-  async created() {
+  created() {
     this.form.affiliate_id = this.$store.state.affiliateId;
     this.data = this.$store.state.formData;
     if (this.data == null) {
@@ -588,7 +588,8 @@ export default {
       this.iframeStatus = false;
     }
 
-    await axios.get("/tour-package/" + this.data.package_id + "/" + this.data.affiliate_id).then((response) => {
+    var year = this.$store.state.year;
+    axios.get("/tour-package/" + year + "/" + this.data.package_id + "/" + this.data.affiliate_id).then((response) => {
       this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
       this.details = response.data;
       this.PermitFee = response.data.TourPkgRates[0].PermitFee;
@@ -608,7 +609,7 @@ export default {
     this.form.tourists = ts.join();
     this.form.tour_slot_id = this.data.tour_slot_id;
   },
-  async updated() {
+  updated() {
     const n = this.details.TourPkgRates;
     const field1 = 0;
     let costStoreArr = [];
@@ -660,7 +661,7 @@ export default {
         }
       });
     },
-    async submit(e) {
+    submit(e) {
       e.preventDefault();
       // if an async request is processing
       if (this.processing === true) {

@@ -501,7 +501,8 @@ export default {
             });
         },
         myFunctionOnLoad: function () {
-            axios.get("/tour-package/" + this.form.package_id + "/" + this.form.affiliate_id).then((response) => {
+            var year = this.$store.state.year;
+            axios.get("/tour-package/" + year + "/" + this.form.package_id + "/" + this.form.affiliate_id).then((response) => {
                 this.$store.dispatch('storeTourPackage', response.data.TourPkgDetails)
                 this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
                 this.details = response.data;
