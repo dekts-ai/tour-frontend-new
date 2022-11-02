@@ -313,8 +313,10 @@ export default {
         timedate(id, timedate) {
             this.form.tour_slot_id = id;
             this.form.timedate = timedate;
+            console.log('timedate');
         },
         onChange: function () {
+            console.log('onChange');
             // Define Variables
             var v1 = this.totalavailableseats.seats;
 
@@ -335,6 +337,7 @@ export default {
             });
         },
         onchange() {
+            console.log('onchange');
             const date = document.getElementById("realdatevalue").value;
             this.form.fulldate = date;
             const dateset = document.getElementById("date").value;
@@ -368,6 +371,7 @@ export default {
             this.updateRateGroups();
         },
         onchangeNew() {
+            console.log('onchangeNew');
             const date = document.getElementById("realdatevalue").value;
             this.form.fulldate = date;
             const dateset = document.getElementById("date").value;
@@ -402,6 +406,7 @@ export default {
             this.updateRateGroups();
         },
         myFunctionDateLoad: function () {
+            console.log('myFunctionDateLoad');
             document.title = "Native American Tours";
             const current = new Date();
             var date = `${current.getDate()}-${current.getMonth() + 1
@@ -422,6 +427,7 @@ export default {
             });
         },
         myFunctionOnLoad: function () {
+            console.log('myFunctionLoad');
             var year = this.$store.state.year;
             axios.get("/tour-package/" + year + "/" + this.form.package_id + "/" + this.form.affiliate_id).then((response) => {
                 this.$store.dispatch('storeTourPackage', response.data.TourPkgDetails)
@@ -435,7 +441,6 @@ export default {
             axios.get("/tour-package/" + year + "/" + this.form.package_id + "/" + this.form.affiliate_id).then((response) => {
                 this.$store.dispatch('storeTourPackage', response.data.TourPkgDetails)
                 this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
-                response.data.TourPkgRates[0].Age = "test";
                 this.details = response.data;
             });
             this.onChange();
