@@ -22,7 +22,8 @@ export default {
         TourPkgDetails: [],
         TourPackageLogo: null,
         packageId: 1,
-        affiliateId: 0
+        affiliateId: 0,
+        year: null
     }
   },
   async created() {
@@ -40,7 +41,12 @@ export default {
     this.$store.dispatch('storeAffiliateId', this.affiliateId);
     this.$store.dispatch('storeIframeStatus', this.iframeStatus);
 
-    axios.get("/tour-package/" + this.packageId + "/" + this.affiliateId).then((response) => {
+    var date = new Date();
+    date = date.toLocaleString('en-US', {timeZone: 'US/Arizona'})
+    this.year = date.split(',')[0].split('/')[2];
+    this.$store.dispatch('storeYear', this.year);
+
+    axios.get("/tour-package/" + this.year + "/" + this.packageId + "/" + this.affiliateId).then((response) => {
       this.$store.dispatch('storeTourPackage', response.data.TourPkgDetails);
       this.TourPkgDetails = response.data.TourPkgDetails;
       this.TourPackageLogo = this.TourPkgDetails[0].TourPackageLogo;

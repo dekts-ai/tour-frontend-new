@@ -18,13 +18,7 @@
                                 <div class="bradcumb-main">
                                     <ul>
                                         <li class="home">
-                                            <a v-if="iframeStatus && data.package_id && form.affiliate_id" :href="`${baseUrl}?pkg=${data.package_id}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
-                                                Home
-                                            </a>
-                                            <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?pkg=${data.package_id}&iframe=${iframeStatus}`">
-                                                Home
-                                            </a>
-                                            <a v-else :href="`${baseUrl}`">
+                                            <a :href="`${baseUrl}`">
                                                 Home
                                             </a>
                                         </li>
@@ -97,6 +91,69 @@
                                             <div id="dsel3" ref="dsel3"></div>
                                         </div>
                                     </div>
+                                    <div class="row date-booking-row align-items-center">
+                                        <div class="col-xl-7">
+                                            <div class="calendardate">
+                                                <div class="owl-carousel owl-theme owl-loaded">
+                                                    <div class="owl-stage-outer">
+                                                        <div class="owl-stage">
+                                                            <div class="owl-item" v-for="(day, index) in week"
+                                                                v-bind:key="index" v-on:click="setActiveDay(day)"
+                                                                style="width: 74.286px;">
+                                                                <div class="time-item">
+                                                                    <label class="dayNumber">{{ day.ordinal }} <span>{{ day.dayName }}</span></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="owl-nav">
+                                                        <button type="button" role="presentation" class="owl-prev" v-on:click="getPreviousWeek()">
+                                                            <span aria-label="Previous">‹</span>
+                                                        </button>
+                                                        <button type="button" role="presentation" class="owl-next" v-on:click="getNextWeek()">
+                                                            <span aria-label="Next">›</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="owl-dots disabled"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-5 text-end">
+                                            <div class="selectboxes">
+                                                <div class="selectmonth">
+                                                    <select name="calendarmonth" id="calendarmonth">
+                                                        <option value="January">January</option>
+                                                        <option value="February">February</option>
+                                                        <option value="March">March</option>
+                                                        <option value="April">April</option>
+                                                        <option value="May">May</option>
+                                                        <option value="June">June</option>
+                                                        <option value="July">July</option>
+                                                        <option value="August">August</option>
+                                                        <option value="September" selected="">September</option>
+                                                        <option value="October">October</option>
+                                                        <option value="November">November</option>
+                                                        <option value="December">December</option>
+                                                    </select>
+                                                </div>
+                                                <div class="selectyear">
+                                                    <select name="calendaryear" id="calendaryear">
+                                                        <option value="2020">2021</option>
+                                                        <option value="2020">2022</option>
+                                                        <option value="2020">2023</option>
+                                                        <option value="2020">2024</option>
+                                                        <option value="2020">2025</option>
+                                                        <option value="2020">2026</option>
+                                                        <option value="2020">2027</option>
+                                                        <option value="2020">2028</option>
+                                                        <option value="2020">2029</option>
+                                                        <option value="2020">2030</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{ selectedDate }}
                                     <!-- <div class="row status-row">
                                        <div class="col-12 text-end">
                                           <ul class="status">
@@ -116,7 +173,7 @@
                                                             :key="name.Id" @click="timedate(name.Id, name.Time)">
                                                             <input type="radio" :id="name.Id" name="timedate"
                                                                 :value="name.Time" />
-                                                            <label :for="name.Id">{{ name.Time}}</label>
+                                                            <label :for="name.Id">{{ name.Time }}</label>
                                                         </div>
                                                     </div>
                                                     <div class="radio-toolbar" v-else>
@@ -129,8 +186,9 @@
                                                 <b>Please correct the following error(s):</b>
                                             <ul>
                                                 <li v-for="error in errors" :key="error"
-                                                    v-bind:class="{'text-danger': error }" style="font-size:25px">{{
-                                                    error }}</li>
+                                                    v-bind:class="{ 'text-danger': error }" style="font-size:25px">{{
+                                                            error
+                                                    }}</li>
                                             </ul>
                                             </p>
                                             <div class="row groupofpeople">
@@ -158,16 +216,17 @@
                                                                     <td class="taxes" data-label="Fees and Taxes">
                                                                         <p>
                                                                             Navajo Nation: Permit Fee ${{ tour.PermitFee
-                                                                            }} & Tax ${{ tour.Tax}}, Processing Fee: {{
-                                                                            tour.ProcessingFee }}%
+                                                                            }} & Tax ${{ tour.Tax }}, Processing Fee: {{
+        tour.ProcessingFee
+}}%
                                                                         </p>
                                                                     </td>
                                                                     <td v-if="form.tourists1" class="group"
                                                                         data-label="Select Group Of People">
                                                                         <select @change="onChange($event)"
                                                                             class="form-select people-group1"
-                                                                            :name="'peoplegroup' + tour.pkg_rate_id "
-                                                                            :id="'peoplegroup'+tour.pkg_rate_id"
+                                                                            :name="'peoplegroup' + tour.pkg_rate_id"
+                                                                            :id="'peoplegroup' + tour.pkg_rate_id"
                                                                             v-model="form.tourists1[tour.pkg_rate_id]">
                                                                             <option v-for="item in selectgrouppeoples"
                                                                                 :value="item.value" :key="item.value"
@@ -180,11 +239,12 @@
                                                                         data-label="Select Group Of People">
                                                                         <select @change="onChange($event)"
                                                                             class="form-select people-group1"
-                                                                            :name="'peoplegroup' + tour.pkg_rate_id "
-                                                                            :id="'peoplegroup'+tour.pkg_rate_id">
+                                                                            :name="'peoplegroup' + tour.pkg_rate_id"
+                                                                            :id="'peoplegroup' + tour.pkg_rate_id">
                                                                             <option v-for="item in selectgrouppeoples"
                                                                                 :value="item.value" :key="item.value">{{
-                                                                                item.number }}</option>
+                                                                                        item.number
+                                                                                }}</option>
                                                                         </select>
                                                                     </td>
 
@@ -193,7 +253,8 @@
                                                                         v-if="peopleselects != '' && peopleselects != null">
                                                                         <span class="tag"><input type="hidden"
                                                                                 name="amount" v-model="form.amount">{{
-                                                                                tour.price}}</span>
+                                                                                        tour.price
+                                                                                }}</span>
                                                                     </td>
                                                                     <td class="price" data-label="Price" v-else>
                                                                         <span class="tag">${{ tour.price }}</span>
@@ -219,7 +280,7 @@
                                     </div>
                                     <div class="col-lg-8 col-md-12">
                                         <div class="content-sec">
-                                            <h2>{{TourPkgDetails.TourPkgName }}</h2>
+                                            <h2>{{ TourPkgDetails.TourPkgName }}</h2>
                                             <p>{{ TourPkgDetails.TourPkgShortDesc }}</p>
                                         </div>
                                     </div>
@@ -243,7 +304,7 @@
                                         v-for="TourPkgDetails in details.TourPkgDetails"
                                         :key="TourPkgDetails.pkg_rate_id">
                                         <h2>Duration</h2>
-                                        <button class="btn-info">{{TourPkgDetails.TourPkgDuration }}</button>
+                                        <button class="btn-info">{{ TourPkgDetails.TourPkgDuration }}</button>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 whattobring">
                                         <h2>What to Bring</h2>
@@ -269,6 +330,12 @@ import $ from "jquery";
 export default {
     name: "Index",
     title: "Foo Page",
+    mounted() {
+        let today = new Date();
+        this.day = today.getDate();
+        this.month = today.getMonth();
+        this.year = today.getFullYear();
+    },
     data() {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
@@ -288,7 +355,6 @@ export default {
             form: {
                 iframeStatusInfo: '',
                 package_id: '',
-                affiliate_id: "",
                 dateselect: "",
                 calendarmonth: "",
                 calendaryear: "",
@@ -307,15 +373,22 @@ export default {
             data: {
                 timedate: "",
             },
+            i: 0,
+            year: [],
+            month: [],
+            week: [],
+            selectedDate: {}
         };
     },
     created: function () {
-        this.iframeStatus = this.$store.state.iframeStatus;
-        this.form.package_id = this.$store.state.packageId;
-        this.form.affiliate_id = this.$store.state.affiliateId;
-        this.data = this.$store.state.formData;
+        if (this.data != '' && this.data != null) {
+            if (this.data.iframeStatusInfo == 'true') {
+                this.iframeStatus = true;
+            }
+        }
         this.myFunctionOnLoad();
         this.myFunctionDateLoad();
+        this.getWeekBlock();
     },
     updated() {
         const dateset = document.getElementById("date").value;
@@ -501,9 +574,28 @@ export default {
             });
         },
         myFunctionOnLoad: function () {
-            var year = this.$store.state.year;
-            axios.get("/tour-package/" + year + "/" + this.form.package_id + "/" + this.form.affiliate_id).then((response) => {
-                this.$store.dispatch('storeTourPackage', response.data.TourPkgDetails)
+            let uri = window.location.search.substring(1);
+            if (uri != '') {
+                let params = new URLSearchParams(uri);
+
+                let package_id = params.get("pkg");
+                if (params.get("iframe") != null && params.get("iframe") == 'true') {
+                    this.iframeStatus = params.get("iframe");
+                } else {
+                    this.iframeStatus = false;
+                }
+
+                if (package_id != '' && package_id > 1) {
+                    this.form.package_id = package_id;
+                } else {
+                    this.form.package_id = 1;
+                }
+            } else {
+                this.form.package_id = 1;
+            }
+
+            axios.get("/tour-package/" + this.form.package_id + "").then((response) => {
+                this.$store.dispatch('storeTourPkgDetails', response.data.TourPkgDetails)
                 this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
                 this.details = response.data;
             });
@@ -579,7 +671,75 @@ export default {
                 }
             }
             e.preventDefault();
-        }
+        },
+        getOrdinalNum(n) {
+            return n + (n > 0 ? ['th', 'st', 'nd', 'rd'][(n > 3 && n < 21) || n % 10 > 3 ? 0 : n % 10] : '');
+        },
+        getDayName(n) {
+            var dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            return dayNames[n];
+        },
+        addDays(date, days) {
+            var result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result;
+        },
+        getWeekBlock() {
+            let today = new Date();
+            let prevMonday = new Date();
+
+            let n = today.getDay();
+
+            prevMonday.setDate(today.getDate() - (n - 1) + (this.i * 7));
+
+            this.prevMonday = prevMonday;
+
+            // Flush this.week to empty Array:
+            this.week = [];
+
+            this.month = [];
+
+            this.year = [];
+
+            for (var i = 0; i < 7; i++) {
+                let day = this.addDays(this.prevMonday, i);
+
+                let currentDayToday = false;
+                if (today.getTime() == day.getTime()) {
+                    currentDayToday = true;
+                }
+
+                this.week.push({
+                    ordinal: day.getDate(),
+                    dayName: this.getDayName(day.getDay()),
+                    active: false,
+                    currentDayToday: currentDayToday,
+                    actual: new Date(day.setHours(0, 0, 0, 0)),
+                });
+
+                this.month.indexOf(day.toLocaleString('default', { month: 'long' })) === -1 ? this.month.push(day.toLocaleString('default', { month: 'long' })) : this.month;
+                this.year.indexOf(day.toLocaleString('default', { year: 'numeric' })) === -1 ? this.year.push(day.toLocaleString('default', { year: 'numeric' })) : this.year;
+            }
+        },
+        getNextWeek() {
+            this.i++;
+            this.getWeekBlock();
+        },
+        getPreviousWeek() {
+            this.i--;
+            this.getWeekBlock();
+        },
+        setActiveDay(activeDay) {
+            console.log(activeDay);
+            // this.selectedDate = activeDay;
+            this.week.forEach((day) => {
+                if (activeDay == day) {
+                    day.active = true;
+                } else {
+                    day.active = false;
+                }
+            });
+        },
     }
 };
 </script>

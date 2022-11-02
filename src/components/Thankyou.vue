@@ -204,6 +204,7 @@ export default {
   name: "Thankyou",
   data() {
     return {
+      id: null,
       tourBooking: [],
       iframeStatus: false,
       details: [],
@@ -214,34 +215,40 @@ export default {
     };
   },
   mounted() {
-    this.booking();
+    this.checkId();
   },
-  async created() {
+  created() {
     this.affiliate_id = this.$store.state.affiliateId;
     this.data = this.$store.state.formData;
     this.customer = this.$store.state.customer;
-    if (this.data.iframeStatusInfo != null && this.data.iframeStatusInfo == 'true') {
-      this.iframeStatus = this.data.iframeStatusInfo;
-    } else {
-      this.iframeStatus = false;
-    }
+    this.id = this.$store.state.bookingId;
+    if (this.id) {
+      if (this.data.iframeStatusInfo != null && this.data.iframeStatusInfo == 'true') {
+        this.iframeStatus = this.data.iframeStatusInfo;
+      } else {
+        this.iframeStatus = false;
+      }
 
-    await axios.get("/tour-package/" + this.data.package_id + "").then((response) => {
-      this.details = response.data;
-    });
+      var year = this.$store.state.year;
+      axios.get("/tour-package/" + year + "/" + this.data.package_id + "/" + this.affiliate_id).then((response) => {
+        this.details = response.data;
+        this.booking();
+      });
+    }
   },
   methods: {
-    async booking() {
-      const id = this.$store.state.bookingId;
-      if (id === null) {
-        window.location.href = '/';
-      }
+    booking() {
       axios
-        .get("/tour-booking-confirmed/" + id)
+        .get("/tour-booking-confirmed/" + this.id)
         .then((response) => {
           this.tourBooking = response.data;
         });
     },
+    checkId() {
+      if (this.id == null) {
+        window.location.href = '/';
+      }
+    }
   },
 };
 </script>
