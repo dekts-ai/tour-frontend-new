@@ -443,7 +443,23 @@ export default {
                 this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
                 this.details = response.data;
             });
-            this.onChange();
+
+            // Define Variables
+            var v1 = this.totalavailableseats.seats;
+
+            // Append Dropdown Value for TourPkgRates
+            this.details.TourPkgRates.forEach((element) => {
+                $("#peoplegroup" + element.pkg_rate_id)
+                    .find("option")
+                    .remove()
+                    .end();
+
+                for (let j = 0; j <= v1; j++) {
+                    $("#peoplegroup" + element.pkg_rate_id).append(
+                        '<option value=' + j + '>' + j + '</option>'
+                    );
+                }
+            });
         },
         submit: function (e) {
             const n = this.details.TourPkgRates;
