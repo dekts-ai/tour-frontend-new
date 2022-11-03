@@ -58,9 +58,11 @@ jQuery.fn.calendarPicker = function (options) {
     theDiv1.append(divYears).append(divMonths);
 
     calendar.changeDate = function (date) {
+        console.log(date);
         calendar.currentDate = date;
 
         var fillYears = function (date) {
+            console.log('fillYears');
             var year = date.getFullYear();
             var t = new Date();
             divYears.empty();
@@ -80,6 +82,7 @@ jQuery.fn.calendarPicker = function (options) {
         }
 
         var fillMonths = function (date) {
+            console.log('fillMonths');
             var month = date.getMonth();
             var t = new Date();
             divMonths.empty();
@@ -88,29 +91,42 @@ jQuery.fn.calendarPicker = function (options) {
 
             var currentMonth = new Date().getMonth();
 
-            for (var i = currentMonth; i <= currentMonth + options.months; i++) {
-                var d = new Date(date);
-                var oldday = d.getDate();
-                d.setMonth(i);
+            if (new Date().getFullYear() == date.getFullYear()) {
+                for (var i = currentMonth; i <= currentMonth + options.months; i++) {
+                    var d = new Date(date);
+                    var oldday = d.getDate();
+                    d.setMonth(i);
+    
+                    if (d.getDate() != oldday) {
+                        d.setMonth(d.getMonth() - 1);
+                        d.setDate(28);
+                    }
 
-                if (d.getDate() != oldday) {
-                    d.setMonth(d.getMonth() - 1);
-                    d.setDate(28);
+                    var span = $("<option>").addClass("calElement").attr("millis", d.getTime()).html(options.monthNames[d.getMonth()]).val(i + 1);
+                    if (d.getYear() == t.getYear() && d.getMonth() == t.getMonth())
+                        span.addClass("today");
+
+                    if (d.getYear() == calendar.currentDate.getYear() && d.getMonth() == calendar.currentDate.getMonth()) {
+                        span.addClass("selected").attr("selected", "selected");
+                    }
+
+                    divMonths.append(span);
                 }
-                var span = $("<option>").addClass("calElement").attr("millis", d.getTime()).html(options.monthNames[d.getMonth()]).val(i + 1);
-                if (d.getYear() == t.getYear() && d.getMonth() == t.getMonth())
-                    span.addClass("today");
-                if (d.getYear() == calendar.currentDate.getYear() && d.getMonth() == calendar.currentDate.getMonth())
-                {
-                    span.addClass("selected").attr("selected", "selected");
-
+            } else {
+                for (var i = 0; i <= 11; i++) {
+                    var d = new Date(date);
+                    d.setMonth(i);
+                    var span = $("<option>").addClass("calElement").attr("millis", d.getTime()).html(options.monthNames[i]).val(i+1);
+                    if (d.getMonth() == calendar.currentDate.getMonth()) {
+                        span.addClass("selected").attr("selected", "selected");
+                    }
+                    divMonths.append(span);
                 }
-                divMonths.append(span);
-
             }
         }
 
         var fillDays = function (date) {
+            console.log('fillDays');
             var day = date.getDate();
             var t = new Date();
             divDays.empty();
@@ -130,8 +146,7 @@ jQuery.fn.calendarPicker = function (options) {
                     span.addClass("next")
                 } else {
                     span.html("<div class=time-item><label class=dayNumber>" + d.getDate() + "<span>" + options.dayNames[d.getDay()]).css("width", w) + "</span></label></div>";
-                    if (d.getYear() == t.getYear() && d.getMonth() == t.getMonth() && d.getDate() == t.getDate())
-                    {
+                    if (d.getYear() == t.getYear() && d.getMonth() == t.getMonth() && d.getDate() == t.getDate()) {
                         span.addClass("today");
                         let gm = d.getMonth();
                         if (gm == 0) {
@@ -179,7 +194,7 @@ jQuery.fn.calendarPicker = function (options) {
                     } else {
                         var today_vue = new Date();
                         var current_year = $(document).find('.date-booking-row #year').val();
-                        if(current_year != ''){
+                        if(current_year != '' && today_vue.getFullYear() === d.getFullYear()){
                             var lastDateOfYear = new Date(current_year, 11, 32);
                             if(d.getTime() > lastDateOfYear.getTime() ){
                                 span.addClass("slider-not-active");
@@ -189,7 +204,7 @@ jQuery.fn.calendarPicker = function (options) {
                             }
                         }
                         
-                        if(d.getTime() < today_vue.getTime()){
+                        if(d.getTime() < today_vue.getTime() && today_vue.getFullYear() === d.getFullYear()){
                             span.addClass("slider-not-active");
                             $(document).find('.calElement.prev').addClass("slider-not-active");
                         }
@@ -280,7 +295,11 @@ jQuery.fn.calendarPicker = function (options) {
     theDiv1.change(function (ev) {
         var ev = $(ev.target).closest('select').find(":selected");
         if (ev.hasClass("calElement")) {
-            calendar.changeDate(new Date(parseInt(ev.attr("millis"))));
+            if (ev.val() == 2023) {
+                calendar.changeDate(new Date("2023-01-01"));
+            } else {
+                calendar.changeDate(new Date(parseInt(ev.attr("millis"))));
+            }
         }
     });
 
