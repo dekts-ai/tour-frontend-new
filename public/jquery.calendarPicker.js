@@ -295,8 +295,8 @@ jQuery.fn.calendarPicker = function (options) {
     theDiv1.change(function (ev) {
         var ev = $(ev.target).closest('select').find(":selected");
         if (ev.hasClass("calElement")) {
-            if (ev.val() == new Date().getFullYear() + 1) {
-                calendar.changeDate(new Date((new Date().getFullYear() + 1) + "-01-01"));
+            if (ev.val() > new Date().getFullYear()) {
+                calendar.changeDate(new Date((ev.val() + "-01-01")));
             } else {
                 if (ev.val() == new Date().getFullYear()) {
                     calendar.changeDate(new Date());
