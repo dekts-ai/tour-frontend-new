@@ -19,11 +19,14 @@
                 <div class="bradcumb-main">
                   <ul>
                     <li class="home">
-                      <a v-if="iframeStatus" :href="`${baseUrl}?pkg=${data.package_id}&iframe=${iframeStatus}`">
-                        Home
+                      <a v-if="iframeStatus && data.package_id && affiliate_id" :href="`${baseUrl}?pkg=${data.package_id}&aid=${affiliate_id}&iframe=${iframeStatus}`">
+                          Home
+                      </a>
+                      <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?pkg=${data.package_id}&iframe=${iframeStatus}`">
+                          Home
                       </a>
                       <a v-else :href="`${baseUrl}`">
-                        Home
+                          Home
                       </a>
                     </li>
                     <li>Lower Antelope Canyon Hiking Tour</li>
@@ -60,10 +63,9 @@
 
                           <h3>Booking ID # <a href="#">{{tourBooking.data[0].TourBookingID}}</a></h3>
 
-
                         </div>
                         <div class="col-12 content2">
-                          <h2>Hello {{tourBooking.data[0].Name}},</h2>
+                          <h2>Hello {{customer.name}},</h2>
                           <p>
                             Thank you for your booking.
                           </p>
@@ -93,7 +95,7 @@
                               <div class="col-md-6">
                                 <div class="details-box">
                                   <h3 class="bookingname">Your Full Name:</h3>
-                                  <p>{{tourBooking.data[0] .Name}}</p>
+                                  <p>{{customer.name}}</p>
                                 </div>
                               </div>
                               <div class="col-md-6">
@@ -101,7 +103,7 @@
                                   <h3 class="bookingcontact">
                                     Your Contact Number:
                                   </h3>
-                                  <p>+{{tourBooking.data[0].ContactNumber}}</p>
+                                  <p>+{{customer.phone_number}}</p>
                                 </div>
                               </div>
                               <div class="col-md-6">
@@ -109,7 +111,7 @@
                                   <h3 class="bookingemail">
                                     Your Email Address:
                                   </h3>
-                                  <p>{{tourBooking.data[0].Email}}</p>
+                                  <p>{{customer.email}}</p>
                                 </div>
                               </div>
                             </div>
@@ -202,40 +204,51 @@ export default {
   name: "Thankyou",
   data() {
     return {
+      id: null,
       tourBooking: [],
       iframeStatus: false,
       details: [],
       baseUrl: process.env.VUE_APP_BASE_URL,
-      data: []
+      data: [],
+      customer: [],
+      affiliate_id: 0
     };
   },
   mounted() {
-    this.booking();
+    this.checkId();
   },
-  async created() {
+  created() {
+    this.affiliate_id = this.$store.state.affiliateId;
     this.data = this.$store.state.formData;
-    if (this.data.iframeStatusInfo != null && this.data.iframeStatusInfo == 'true') {
-      this.iframeStatus = this.data.iframeStatusInfo;
-    } else {
-      this.iframeStatus = false;
-    }
+    this.customer = this.$store.state.customer;
+    this.id = this.$store.state.bookingId;
+    if (this.id) {
+      if (this.data.iframeStatusInfo != null && this.data.iframeStatusInfo == 'true') {
+        this.iframeStatus = this.data.iframeStatusInfo;
+      } else {
+        this.iframeStatus = false;
+      }
 
-    await axios.get("/tour-package/" + this.data.package_id + "").then((response) => {
-      this.details = response.data;
-    });
+      var year = this.$store.state.year;
+      axios.get("/tour-package/" + year + "/" + this.data.package_id + "/" + this.affiliate_id).then((response) => {
+        this.details = response.data;
+        this.booking();
+      });
+    }
   },
   methods: {
-    async booking() {
-      const id = this.$store.state.bookingId;
-      if (id === null) {
-        window.location.href = '/';
-      }
+    booking() {
       axios
-        .get("/tour-booking-confirmed/" + id)
+        .get("/tour-booking-confirmed/" + this.id)
         .then((response) => {
           this.tourBooking = response.data;
         });
     },
+    checkId() {
+      if (this.id == null) {
+        window.location.href = '/';
+      }
+    }
   },
 };
 </script>

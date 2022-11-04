@@ -21,38 +21,36 @@ export default {
         iframeStatus: false,
         TourPkgDetails: [],
         TourPackageLogo: null,
+        packageId: 1,
+        affiliateId: 0,
+        year: null
     }
   },
   async created() {
-    if (this.data != '' && this.data != null) {
-      if (this.data.iframeStatusInfo == 'true') {
-        this.iframeStatus = true;
-      }
-    }
-
     let uri = window.location.search.substring(1);
     if (uri != '') {
         let params = new URLSearchParams(uri);
-        if (params.get("iframe") != null && params.get("iframe") == 'true') {
-            this.iframeStatus = params.get("iframe");
-        } else {
-            this.iframeStatus = false;
-        }
-        var id = typeof params.get("pkg") !== 'undefined' ? params.get("pkg") : 1;
-
-        axios.get("/tour-package/" + id + "").then((response) => {
-          this.$store.dispatch('storeTourPkgDetails', response.data.TourPkgDetails);
-          this.TourPkgDetails = response.data.TourPkgDetails;
-          this.TourPackageLogo = this.TourPkgDetails[0].TourPackageLogo;
-        });
+        this.iframeStatus = params.get("iframe") !== null ? params.get("iframe") : false;
+        this.packageId = params.get("pkg") !== null ? params.get("pkg") : 1;
+        this.affiliateId = params.get("aid") !== null ? params.get("aid") : 0;
     } else {
       this.iframeStatus = false;
-      axios.get("/tour-package/" + 1 + "").then((response) => {
-        this.$store.dispatch('storeTourPkgDetails', response.data.TourPkgDetails);
-        this.TourPkgDetails = response.data.TourPkgDetails;
-        this.TourPackageLogo = this.TourPkgDetails[0].TourPackageLogo;
-      });
     }
+
+    this.$store.dispatch('storePackageId', this.packageId);
+    this.$store.dispatch('storeAffiliateId', this.affiliateId);
+    this.$store.dispatch('storeIframeStatus', this.iframeStatus);
+
+    var date = new Date();
+    date = date.toLocaleString('en-US', {timeZone: 'US/Arizona'})
+    this.year = date.split(',')[0].split('/')[2];
+    this.$store.dispatch('storeYear', this.year);
+
+    axios.get("/tour-package/" + this.year + "/" + this.packageId + "/" + this.affiliateId).then((response) => {
+      this.$store.dispatch('storeTourPackage', response.data.TourPkgDetails);
+      this.TourPkgDetails = response.data.TourPkgDetails;
+      this.TourPackageLogo = this.TourPkgDetails[0].TourPackageLogo;
+    });
   }
 };
 </script>
