@@ -295,10 +295,14 @@ jQuery.fn.calendarPicker = function (options) {
     theDiv1.change(function (ev) {
         var ev = $(ev.target).closest('select').find(":selected");
         if (ev.hasClass("calElement")) {
-            if (ev.val() == 2023) {
-                calendar.changeDate(new Date("2023-01-01"));
+            if (ev.val() == new Date().getFullYear() + 1) {
+                calendar.changeDate(new Date((new Date().getFullYear() + 1) + "-01-01"));
             } else {
-                calendar.changeDate(new Date(parseInt(ev.attr("millis"))));
+                if (ev.val() == new Date().getFullYear()) {
+                    calendar.changeDate(new Date());
+                } else {
+                    calendar.changeDate(new Date(parseInt(ev.attr("millis"))));
+                }
             }
         }
     });
