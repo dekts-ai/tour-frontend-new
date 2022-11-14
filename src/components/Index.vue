@@ -437,6 +437,7 @@ export default {
         },
         updateRateGroups: function () {
             console.log('updateRateGroups');
+            this.$store.dispatch('storeYear', document.getElementById("year").value);
             var year = this.$store.state.year;
             axios.get("/tour-package/" + year + "/" + this.form.package_id + "/" + this.form.affiliate_id).then((response) => {
                 this.$store.dispatch('storeTourPackage', response.data.TourPkgDetails)
