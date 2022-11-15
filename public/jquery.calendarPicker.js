@@ -297,14 +297,10 @@ jQuery.fn.calendarPicker = function (options) {
         console.log(document.getElementById("year").value, ev.val());
         if (ev.hasClass("calElement")) {
             if (ev.val() > new Date().getFullYear()) {
-                var date = new Date(("2023-01-01"));
-                date.toLocaleString('en-US', {timeZone: 'US/Arizona'})
-                calendar.changeDate(date);
+                calendar.changeDate(new Date(("2023-01-01 12:30:00")));
             } else {
                 if (ev.val() == new Date().getFullYear()) {
-                    var date = new Date();
-                    date.toLocaleString('en-US', {timeZone: 'US/Arizona'})
-                    calendar.changeDate(date);
+                    calendar.changeDate(new Date());
                 } else {
                     calendar.changeDate(new Date(parseInt(ev.attr("millis"))));
                 }
