@@ -297,7 +297,7 @@ jQuery.fn.calendarPicker = function (options) {
         console.log(document.getElementById("year").value, ev.val());
         if (ev.hasClass("calElement")) {
             if (ev.val() > new Date().getFullYear()) {
-                calendar.changeDate(new Date(("2023-01-01 12:30:00")));
+                calendar.changeDate(new Date("2023-01-01"));
             } else {
                 if (ev.val() == new Date().getFullYear()) {
                     calendar.changeDate(new Date());
