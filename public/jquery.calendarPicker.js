@@ -295,15 +295,17 @@ jQuery.fn.calendarPicker = function (options) {
     theDiv1.change(function (ev) {
         var ev = $(ev.target).closest('select').find(":selected");
         console.log(document.getElementById("year").value, ev.val());
-        if (ev.hasClass("calElement")) {
-            if (ev.val() > new Date().getFullYear()) {
-                calendar.changeDate(new Date("2023-01-01"));
+        if (ev.val() > new Date().getFullYear()) {
+            var date = new Date(("2023-01-02"));
+            date.toLocaleString('en-US', {timeZone: 'US/Arizona'})
+            calendar.changeDate(date);
+        } else {
+            if (ev.val() == new Date().getFullYear()) {
+                var date = new Date();
+                date.toLocaleString('en-US', {timeZone: 'US/Arizona'})
+                calendar.changeDate(date);
             } else {
-                if (ev.val() == new Date().getFullYear()) {
-                    calendar.changeDate(new Date());
-                } else {
-                    calendar.changeDate(new Date(parseInt(ev.attr("millis"))));
-                }
+                calendar.changeDate(new Date(parseInt(ev.attr("millis"))));
             }
         }
     });
