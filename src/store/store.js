@@ -11,7 +11,8 @@ export default createStore({
     bookingId: null,
     formData: null,
     tourPackage: null,
-    customer: null
+    customer: null,
+    slotId: null,
  },
  getters: {
     iframeStatus: state => {
@@ -37,6 +38,9 @@ export default createStore({
     },
     customer: state => {
         return state.customer;
+    },
+    slotId: state => {
+        return state.slotId;
     }
  },
  mutations: {
@@ -63,7 +67,10 @@ export default createStore({
     },
     CUSTOMER(state, customer) {
         state.customer = customer;
-    }
+    },
+    SLOT_ID(state, slotId) {
+        state.slotId = slotId;
+    },
  },
  actions: {
     storeIframeStatus({ commit }, iframeStatus) {
@@ -89,6 +96,9 @@ export default createStore({
     },
     storeCustomer({ commit }, customer) {
         commit('CUSTOMER', customer);
-    }
+    },
+    storeSlotId({ commit }, slotId) {
+        commit('SLOT_ID', slotId);
+    },
  }
 });
