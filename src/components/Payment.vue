@@ -607,7 +607,7 @@ export default {
     this.form.calucation = this.data.calucation;
     var ts = this.data.peoplegroup_;
     this.form.tourists = ts.join();
-    this.form.tour_slot_id = this.data.tour_slot_id;
+    this.form.tour_slot_id = this.$store.state.slotId;
   },
   updated() {
     const n = this.details.TourPkgRates;
@@ -690,6 +690,7 @@ export default {
         this.errors.push("Please add card information.");
       }
       if (
+        this.$store.state.slotId &&
         this.form.masks_mandatory &&
         this.form.name &&
         this.form.phone_number &&
@@ -700,7 +701,7 @@ export default {
         this.form.cvv
       ) {
         let checkSlotarr = {
-          'tour_slot_id': this.form.tour_slot_id,
+          'tour_slot_id': this.$store.state.slotId,
           'package_id': this.form.tour_package_id,
           'tourists': this.form.tourists1,
           'tour_slot_time': this.form.time,
