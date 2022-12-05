@@ -311,6 +311,7 @@ export default {
     },
     methods: {
         timedate(id, timedate) {
+            this.$store.dispatch('storeSlotId', id)
             this.form.tour_slot_id = id;
             this.form.timedate = timedate;
             console.log('timedate');
