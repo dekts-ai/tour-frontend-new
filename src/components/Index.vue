@@ -311,12 +311,10 @@ export default {
     },
     methods: {
         timedate(id, timedate) {
-            var loader = this.$loading.show();
             this.$store.dispatch('storeSlotId', id)
             this.form.tour_slot_id = id;
             this.form.timedate = timedate;
             console.log('timedate');
-            this.processLoader(loader);
         },
         onChange: function () {
             console.log('onChange');
@@ -367,13 +365,15 @@ export default {
                         number: index,
                     });
                 }
+                this.processLoader(loader);
+            }).catch(() => {
+                this.processLoader(loader);
             });
             this.timeSlotChecked = false;
             this.select_time = "";
             this.form.tour_slot_id = "";
             this.form.timedate = "";
             this.updateRateGroups();
-            this.processLoader(loader);
         },
         onchangeNew() {
             var loader = this.$loading.show();
@@ -404,15 +404,18 @@ export default {
                         number: index,
                     });
                 }
+                this.processLoader(loader);
+            }).catch(() => {
+                this.processLoader(loader);
             });
             this.timeSlotChecked = false;
             this.select_time = "";
             this.form.tour_slot_id = "";
             this.form.timedate = "";
             this.updateRateGroups();
-            this.processLoader(loader);
         },
         myFunctionDateLoad: function () {
+            var loader = this.$loading.show();
             console.log('myFunctionDateLoad');
             document.title = "Native American Tours";
             const current = new Date();
@@ -431,6 +434,9 @@ export default {
                         number: index,
                     });
                 }
+                this.processLoader(loader);
+            }).catch(() => {
+                this.processLoader(loader);
             });
         },
         myFunctionOnLoad: function () {
