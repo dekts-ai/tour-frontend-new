@@ -311,10 +311,12 @@ export default {
     },
     methods: {
         timedate(id, timedate) {
+            var loader = this.$loading.show();
             this.$store.dispatch('storeSlotId', id)
             this.form.tour_slot_id = id;
             this.form.timedate = timedate;
             console.log('timedate');
+            this.processLoader(loader);
         },
         onChange: function () {
             console.log('onChange');
@@ -338,6 +340,7 @@ export default {
             });
         },
         onchange() {
+            var loader = this.$loading.show();
             console.log('onchange');
             const date = document.getElementById("realdatevalue").value;
             this.form.fulldate = date;
@@ -370,8 +373,10 @@ export default {
             this.form.tour_slot_id = "";
             this.form.timedate = "";
             this.updateRateGroups();
+            this.processLoader(loader);
         },
         onchangeNew() {
+            var loader = this.$loading.show();
             console.log('onchangeNew');
             const date = document.getElementById("realdatevalue").value;
             this.form.fulldate = date;
@@ -405,6 +410,7 @@ export default {
             this.form.tour_slot_id = "";
             this.form.timedate = "";
             this.updateRateGroups();
+            this.processLoader(loader);
         },
         myFunctionDateLoad: function () {
             console.log('myFunctionDateLoad');
@@ -437,6 +443,7 @@ export default {
             });
         },
         updateRateGroups: function () {
+            var loader = this.$loading.show();
             console.log('updateRateGroups');
             this.$store.dispatch('storeYear', document.getElementById("year").value);
             var year = this.$store.state.year;
@@ -462,6 +469,7 @@ export default {
                     );
                 }
             });
+            this.processLoader(loader);
         },
         submit: function (e) {
             const n = this.details.TourPkgRates;
@@ -534,7 +542,10 @@ export default {
                 }
             }
             e.preventDefault();
-        }
+        },
+        processLoader(loader) {
+            loader.hide();
+        },
     }
 };
 </script>
