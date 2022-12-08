@@ -319,7 +319,7 @@ export default {
         onChange: function () {
             console.log('onChange');
             // Define Variables
-            var v1 = this.totalavailableseats.seats;
+            var v1 = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
 
             // Append Dropdown Value for TourPkgRates
             this.details.TourPkgRates.forEach((element) => {
@@ -357,7 +357,8 @@ export default {
                 this.dateTimeArr = response.data.Time;
                 this.totalavailableseats = response.data.TotalAvailableSeats;
                 this.selectgrouppeoples = [];
-                var seatsava = this.totalavailableseats.seats + 1;
+                var seats = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
+                var seatsava = seats + 1;
                 for (let index = 0; index < seatsava; index++) {
                     this.selectgrouppeoples.push({
                         id: index + 1,
@@ -396,7 +397,8 @@ export default {
                 this.dateTimeArr = response.data.Time;
                 this.totalavailableseats = response.data.TotalAvailableSeats;
                 this.selectgrouppeoples = [];
-                var seatsava = this.totalavailableseats.seats + 1;
+                var seats = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
+                var seatsava = seats + 1;
                 for (let index = 0; index < seatsava; index++) {
                     this.selectgrouppeoples.push({
                         id: index + 1,
@@ -426,7 +428,8 @@ export default {
                 this.dateTimeArr = response.data.Time;
                 this.totalavailableseats = response.data.TotalAvailableSeats;
                 this.selectgrouppeoples = [];
-                var seatsava = this.totalavailableseats.seats + 1;
+                var seats = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
+                var seatsava = seats + 1;
                 for (let index = 0; index < seatsava; index++) {
                     this.selectgrouppeoples.push({
                         id: index + 1,
@@ -460,7 +463,7 @@ export default {
             });
 
             // Define Variables
-            var v1 = this.totalavailableseats.seats;
+            var v1 = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
 
             // Append Dropdown Value for TourPkgRates
             this.details.TourPkgRates.forEach((element) => {
