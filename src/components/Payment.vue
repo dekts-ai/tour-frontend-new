@@ -263,36 +263,35 @@
                             </div>
                             <div class="col-12 col-md-6">
                               <div class="form-field-title">
-                                Cancellations Policy
+                                Terms of Service
                               </div>
                               <div class="form-field-wrp contact-form-field">
                                 <div class="form-group col-12">
                                   <div class="policy-item-wrp">
+                                    <h5 class="card-label-text-left mb-2">
+                                      Cancellation policy
+                                    </h5>
                                     <ul>
                                       <li>
-                                        Due to limited seating, we request that
-                                        you cancel 24 hours prior to the tour
-                                        departure to receive a Full Refund Minus Booking Fees.
+                                        We offer cancellations on purchases made of the services offered on our Website. We offer cancellations only prior to performance of the service. You may cancel your order by contacting us via email or phone.
                                       </li>
                                       <li>
-                                        Cancellations made within 24 hours of
-                                        tour departure will incur a 50% fee.
+                                        We reserve the right to cancel your purchase for any reason, at our sole discretion, including but not limited to fraud, inaccuracies, and unavailability of the items or services purchased. We will let you know immediately if we plan on canceling your purchase.
                                       </li>
                                       <li>
-                                        All cancellations must be made by phone
-                                        or email.
+                                        We will issue a partial refund of the purchase price that you paid if we cancel your purchase.
+                                      </li>
+                                    </ul>
+
+                                    <h5 class="card-label-text-left mb-2">
+                                      Refund policy
+                                    </h5>
+                                    <ul>
+                                      <li>
+                                        We offer full refunds of ticket price (not booking fees) made of the services offered on our Website. Booking Fees are non-refundable. To qualify for a full refund of the ticket price, you must submit your request to us via phone or email 48 hours prior to the day you booked for. If your booking is canceled within the 48 hour timeframe of your tour, you may be eligible for a 50% refund. If you miss your tour for any reason, you will not be given a refund.
                                       </li>
                                       <li>
-                                        We will do our best to accommodate your
-                                        needs.
-                                      </li>
-                                      <li>
-                                        Cancellations made within 24 hours of
-                                        tour departure will incur a 50% fee.
-                                      </li>
-                                      <li>
-                                        All cancellations must be made by phone
-                                        or email.
+                                        In the event that tours are canceled due to weather or unforeseen circumstances, you will receive a full refund.
                                       </li>
                                     </ul>
                                   </div>
