@@ -299,21 +299,20 @@ export default {
         this.myFunctionOnLoad();
         this.myFunctionDateLoad();
     },
-    updated() {
-        const dateset = document.getElementById("date").value;
-        this.form.dateselect = dateset;
-        const day = document.getElementById("day").value;
-        this.form.day = day;
-        const month = document.getElementById("month").value;
-        this.form.calendarmonth = month;
-        const year = document.getElementById("year").value;
-        this.form.calendaryear = year;
-    },
     methods: {
         timedate(id, timedate) {
             this.$store.dispatch('storeSlotId', id)
             this.form.tour_slot_id = id;
             this.form.timedate = timedate;
+
+            const dateset = document.getElementById("date").value;
+            this.form.dateselect = dateset;
+            const day = document.getElementById("day").value;
+            this.form.day = day;
+            const month = document.getElementById("month").value;
+            this.form.calendarmonth = month;
+            const year = document.getElementById("year").value;
+            this.form.calendaryear = year;
             console.log('timedate');
         },
         onChange: function () {
@@ -540,6 +539,7 @@ export default {
                     if (response.data.success == "false") {
                         this.errors.push(response.data.message);
                     } else {
+                        console.log(this.form);
                         this.$store.dispatch('storeFormData', this.form)
                         router.push("/payment");
                     }
