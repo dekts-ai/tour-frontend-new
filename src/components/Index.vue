@@ -299,6 +299,16 @@ export default {
         this.myFunctionOnLoad();
         this.myFunctionDateLoad();
     },
+    mounted() {
+        window.calendarPickerFn();
+    },
+    beforeRouteEnter(to, from, next) {
+        next(() => {
+            if (to.name === 'Index') {
+                window.calendarPickerFn();
+            }
+        })
+    },
     methods: {
         timedate(id, timedate) {
             this.$store.dispatch('storeSlotId', id)
@@ -539,7 +549,6 @@ export default {
                     if (response.data.success == "false") {
                         this.errors.push(response.data.message);
                     } else {
-                        console.log(this.form);
                         this.$store.dispatch('storeFormData', this.form)
                         router.push("/payment");
                     }
