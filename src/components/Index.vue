@@ -324,6 +324,9 @@ export default {
             const year = document.getElementById("year").value;
             this.form.calendaryear = year;
             console.log('timedate');
+
+            const date = document.getElementById("realdatevalue").value;
+            localStorage.setItem("datemania", date);
         },
         onChange: function () {
             console.log('onChange');
@@ -429,7 +432,12 @@ export default {
             var loader = this.$loading.show();
             console.log('myFunctionDateLoad');
             document.title = "Native American Tours";
-            const current = new Date();
+
+            var current = new Date();
+            var datemania = localStorage.getItem("datemania")
+            if (datemania) {
+                current = new Date(Date.parse(this.dateFormat(datemania)));
+            }
             var date = `${current.getDate()}-${current.getMonth() + 1
                 }-${current.getFullYear()}`;
             this.selected_fulldate = date;
@@ -450,6 +458,10 @@ export default {
             }).catch(() => {
                 this.processLoader(loader);
             });
+        },
+        dateFormat: function (datemania) {
+            var date = datemania.split("-");
+            return date[2]+'-'+date[1]+'-'+date[0];
         },
         myFunctionOnLoad: function () {
             console.log('myFunctionLoad');
