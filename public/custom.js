@@ -5,7 +5,7 @@ $(document).ready(function () {
 });
 
 function calendarPickerFn() {
-    const d = new Date('2022-12-19');
+    const d = new Date();
     let totalmonths = d.getMonth() + 1;
     let addTotalmonths = totalmonths - 12;
     let finalMonths = 11
@@ -22,7 +22,17 @@ function calendarPickerFn() {
         }
     });
 
-    calendarPicker2.changeDate(new Date());
+    var datemania = localStorage.getItem("datemania")
+    if (datemania) {
+        calendarPicker2.changeDate(new Date(Date.parse(dateFormat(datemania))));
+    } else {
+        calendarPicker2.changeDate(new Date());
+    }
+}
+
+function dateFormat(date) {
+    var date = date.split("-");
+    return date[2]+'-'+date[1]+'-'+date[0];
 }
 
 window.calendarPickerFn = calendarPickerFn;

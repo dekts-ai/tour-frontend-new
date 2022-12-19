@@ -110,22 +110,8 @@
                           {{ data.day }}, {{ data.calendarmonth }} {{ data.dateselect }}th {{ data.calendaryear }} @ {{
                           data.timedate }}
                         </div>
-                        <div v-if="iframeStatus && data.package_id && form.affiliate_id" class="booking-dt-detail-btn">
-                          <a :href="`${baseUrl}?pkg=${data.package_id}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
-                            <i class="fa fa-angle-left" aria-hidden="true"> Select a Different
-                              Time & Date
-                            </i>
-                          </a>
-                        </div>
-                        <div v-else-if="iframeStatus && data.package_id" class="booking-dt-detail-btn">
-                          <a :href="`${baseUrl}?pkg=${data.package_id}&iframe=${iframeStatus}`">
-                            <i class="fa fa-angle-left" aria-hidden="true"> Select a Different
-                              Time & Date
-                            </i>
-                          </a>
-                        </div>
-                        <div v-else class="booking-dt-detail-btn">
-                          <a :href="`${baseUrl}`">
+                        <div class="booking-dt-detail-btn">
+                          <a @click="mindChange">
                             <i class="fa fa-angle-left" aria-hidden="true"> Select a Different
                               Time & Date
                             </i>
@@ -772,11 +758,30 @@ export default {
         this.processLoader(loader);
       }
     },
-    // mindChange() {
-    //   this.$router.push({
-    //     name: 'Index'
-    //   });
-    // },
+    mindChange() {
+      if (this.iframeStatus && this.data.package_id && this.form.affiliate_id) {
+        this.$router.push({
+          name: 'Index',
+          query: {
+            pkg: this.data.package_id,
+            aid: this.form.affiliate_id,
+            iframe: this.iframeStatus
+          }
+        });
+      } else if (this.iframeStatus && this.data.package_id) {
+        this.$router.push({
+          name: 'Index',
+          query: {
+            pkg: this.data.package_id,
+            iframe: this.iframeStatus
+          }
+        });
+      } else {
+        this.$router.push({
+          name: 'Index'
+        });
+      }
+    },
     processLoader(loader) {
       // reset the state
       this.processing = false;
