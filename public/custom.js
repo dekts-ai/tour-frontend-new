@@ -4,6 +4,10 @@ $(document).ready(function () {
     });
 });
 
+window.onpopstate = function () {
+    location.reload()
+};
+
 function calendarPickerFn() {
     const d = new Date('2022-12-19');
     let totalmonths = d.getMonth() + 1;
