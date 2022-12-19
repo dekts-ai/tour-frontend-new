@@ -772,6 +772,11 @@ export default {
         this.processLoader(loader);
       }
     },
+    // mindChange() {
+    //   this.$router.push({
+    //     name: 'Index'
+    //   });
+    // },
     processLoader(loader) {
       // reset the state
       this.processing = false;
