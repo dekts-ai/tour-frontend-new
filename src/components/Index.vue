@@ -87,7 +87,7 @@
                                     <div class="row starttime-row">
                                         <div class="col-12">
                                             <div class="row select-time">
-                                                <div class="col-4">
+                                                <div class="col-12 col-md-4">
                                                     <datepicker 
                                                         v-model="form.date" 
                                                         :value="form.date" 
@@ -97,7 +97,7 @@
                                                         @selected="selectedDate">
                                                     </datepicker>
                                                 </div>
-                                                <div class="col-8">
+                                                <div class="col-12 col-md-8 mt-4 mt-md-0">
                                                     <h2>Select a start time for your tour:</h2>
                                                     <div class="radio-toolbar" v-if="dateTimeArr.length > 0">
                                                         <div class="time-item" v-for="name in dateTimeArr"
