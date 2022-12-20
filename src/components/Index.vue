@@ -84,36 +84,24 @@
                                     </div>
                                 </div>
                                 <form @submit.prevent="submit">
-                                    <div class="row date-booking-row align-items-center">
-                                        <input id="realdatevalue" ref="realdatevalue" type="hidden">
-                                        <input type="hidden" ref="day" id="day">
-                                        <input type="hidden" id="month">
-                                        <input type="hidden" id="year">
-                                        <input type="hidden" id="date">
-                                        <div class="col-xl-6" @click="onchange()">
-                                            <div id="dsel2" ref="dsel2"></div>
-                                        </div>
-                                        <div class="col-xl-6 position-relative" v-on:change="onchangeNew()">
-                                            <div id="dsel3" ref="dsel3"></div>
-                                        </div>
-                                    </div>
-                                    <!-- <div class="row status-row">
-                                       <div class="col-12 text-end">
-                                          <ul class="status">
-                                             <li class="available">Available</li>
-                                             <li class="fastfilling">Fast Filling</li>
-                                             <li class="soldout">Sold Out</li>
-                                          </ul>
-                                       </div>
-                                    </div> -->
                                     <div class="row starttime-row">
                                         <div class="col-12">
                                             <div class="row select-time">
-                                                <div class="col-12">
+                                                <div class="col-4">
+                                                    <datepicker 
+                                                        v-model="form.date" 
+                                                        :value="form.date" 
+                                                        :inline="true"
+                                                        :disabled-dates="disabledDates" 
+                                                        :prevent-disable-date-selection="preventDisableDateSelection"
+                                                        @selected="selectedDate">
+                                                    </datepicker>
+                                                </div>
+                                                <div class="col-8">
                                                     <h2>Select a start time for your tour:</h2>
                                                     <div class="radio-toolbar" v-if="dateTimeArr.length > 0">
                                                         <div class="time-item" v-for="name in dateTimeArr"
-                                                            :key="name.Id" @click="timedate(name.Id, name.Time)">
+                                                            :key="name.Id" @click="selectedSlot(name.Id, name.Time)">
                                                             <input type="radio" :id="name.Id" name="timedate"
                                                                 :value="name.Time" />
                                                             <label :for="name.Id">{{ name.Time}}</label>
@@ -164,7 +152,7 @@
                                                                     </td>
                                                                     <td class="group"
                                                                         data-label="Select Group Of People">
-                                                                        <select @change="onChange($event)"
+                                                                        <select
                                                                             class="form-select people-group1"
                                                                             :name="'peoplegroup' + tour.pkg_rate_id "
                                                                             :id="'peoplegroup'+tour.pkg_rate_id">
@@ -250,255 +238,153 @@
 <script>
 import axios from "axios";
 import $ from "jquery";
+import Datepicker from 'vuejs3-datepicker';
+
 export default {
     name: "Index",
-    title: "Foo Page",
+    title: "Native American Tours",
+    components: {
+        Datepicker
+    },
     data() {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
-            timeSlotChecked: true,
-            selected_fulldate: '',
-            TourPkgName: '',
-            select_time: '',
+            TourPkgName: "",
+            year: "",
+            totalavailableseats: {},
             selectgrouppeoples: [],
-            totalGroupPeopleValue: 0,
             details: [],
+            disabledDates: {
+                to: new Date(new Date().setDate(new Date().getDate() - 1)),
+                from: new Date(2024, 0, 0)
+            },
+            preventDisableDateSelection: true,
             dateTimeArr: [],
-            date: null,
             peopleselects: [],
             errors: [],
             form: {
-                iframeStatusInfo: '',
-                package_id: '',
+                iframeStatusInfo: "",
+                package_id: "",
                 affiliate_id: "",
-                dateselect: "",
-                calendarmonth: "",
-                calendaryear: "",
-                day: "",
+                date: new Date(),
                 timedate: "",
                 peoplegroup: [],
-                tour: "",
                 amount: "",
                 tour_slot_id: "",
-                calucation: [],
-                peoplegroup_: [],
-                fulldate: "",
-            },
-            timedateId: "",
-            data: {
-                timedate: "",
-            },
+                calucation: []
+            }
         };
     },
     created: function () {
         this.iframeStatus = this.$store.state.iframeStatus;
         this.form.package_id = this.$store.state.packageId;
         this.form.affiliate_id = this.$store.state.affiliateId;
+        if (this.$store.state.date) {
+            this.form.date = this.$store.state.date;
+        }
         this.data = this.$store.state.formData;
-        this.myFunctionOnLoad();
-        this.myFunctionDateLoad();
-    },
-    mounted() {
-        window.calendarPickerFn();
-    },
-    beforeRouteEnter(to, from, next) {
-        next(() => {
-            if (to.name === 'Index') {
-                window.calendarPickerFn();
-            }
-        })
+        this.configure();
     },
     methods: {
-        timedate(id, timedate) {
-            this.$store.dispatch('storeSlotId', id)
-            this.form.tour_slot_id = id;
-            this.form.timedate = timedate;
+        configure() {
+            console.log('configure');
 
-            const dateset = document.getElementById("date").value;
-            this.form.dateselect = dateset;
-            const day = document.getElementById("day").value;
-            this.form.day = day;
-            const month = document.getElementById("month").value;
-            this.form.calendarmonth = month;
-            const year = document.getElementById("year").value;
-            this.form.calendaryear = year;
-            console.log('timedate');
-
-            const date = document.getElementById("realdatevalue").value;
-            localStorage.setItem("datemania", date);
-        },
-        onChange: function () {
-            console.log('onChange');
-            // Define Variables
-            var v1 = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
-
-            // Append Dropdown Value for TourPkgRates
-            this.details.TourPkgRates.forEach((element) => {
-                var packageValue = $("#peoplegroup" + element.pkg_rate_id).val();
-                $("#peoplegroup" + element.pkg_rate_id)
-                    .find("option")
-                    .remove()
-                    .end();
-
-                for (let j = 0; j <= v1; j++) {
-                    var selectedValue = j == packageValue ? "selected" : "";
-                    $("#peoplegroup" + element.pkg_rate_id).append(
-                        '<option value="' + j + '" ' + selectedValue + ">" + j + "</option>"
-                    );
-                }
-            });
-        },
-        onchange() {
             var loader = this.$loading.show();
-            console.log('onchange');
-            const date = document.getElementById("realdatevalue").value;
-            this.form.fulldate = date;
-            const dateset = document.getElementById("date").value;
-            this.form.dateselect = dateset;
-            const day = document.getElementById("day").value;
-            this.form.day = day;
-            const month = document.getElementById("month").value;
-            this.form.calendarmonth = month;
-            const year = document.getElementById("year").value;
-            this.form.calendaryear = year;
-            const cdddate = document.getElementById("realdatevalue").value;
-            this.selected_fulldate = cdddate;
-            this.dateTimeArr = [];
-            axios.get("/tour-slot/" + cdddate + '/' + this.form.package_id).then((response) => {
-                this.dateTimeArr = response.data.Time;
-                this.totalavailableseats = response.data.TotalAvailableSeats;
-                this.selectgrouppeoples = [];
-                var seats = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
-                var seatsava = seats + 1;
-                for (let index = 0; index < seatsava; index++) {
-                    this.selectgrouppeoples.push({
-                        id: index + 1,
-                        value: index,
-                        number: index,
-                    });
-                }
-                this.processLoader(loader);
-            }).catch(() => {
-                this.processLoader(loader);
-            });
-            this.timeSlotChecked = false;
-            this.select_time = "";
-            this.form.tour_slot_id = "";
-            this.form.timedate = "";
-            this.updateRateGroups();
-        },
-        onchangeNew() {
-            var loader = this.$loading.show();
-            console.log('onchangeNew');
-            const date = document.getElementById("realdatevalue").value;
-            this.form.fulldate = date;
-            const dateset = document.getElementById("date").value;
-            this.form.dateselect = dateset;
-            const day = document.getElementById("day").value;
-            this.form.day = day;
-            const month = document.getElementById("month").value;
-            this.form.calendarmonth = month;
-            const year = document.getElementById("year").value;
-            this.form.calendaryear = year;
-            const cdddate = document.getElementById("realdatevalue").value;
-            this.selected_fulldate = cdddate;
-            const package_id = this.form.package_id
-            this.dateTimeArr = [];
-            axios.get("/tour-slot/" + cdddate + '/' + package_id).then((response) => {
-                this.dateTimeArr = response.data.Time;
-                this.totalavailableseats = response.data.TotalAvailableSeats;
-                this.selectgrouppeoples = [];
-                var seats = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
-                var seatsava = seats + 1;
-                for (let index = 0; index < seatsava; index++) {
-                    this.selectgrouppeoples.push({
-                        id: index + 1,
-                        value: index,
-                        number: index,
-                    });
-                }
-                this.processLoader(loader);
-            }).catch(() => {
-                this.processLoader(loader);
-            });
-            this.timeSlotChecked = false;
-            this.select_time = "";
-            this.form.tour_slot_id = "";
-            this.form.timedate = "";
-            this.updateRateGroups();
-        },
-        myFunctionDateLoad: function () {
-            var loader = this.$loading.show();
-            console.log('myFunctionDateLoad');
             document.title = "Native American Tours";
 
-            var current = new Date();
-            var datemania = localStorage.getItem("datemania")
-            if (datemania) {
-                current = new Date(Date.parse(this.dateFormat(datemania)));
-            }
-            var date = `${current.getDate()}-${current.getMonth() + 1
-                }-${current.getFullYear()}`;
-            this.selected_fulldate = date;
+            var date = `${this.form.date.getDate()}-${this.form.date.getMonth() + 1}-${this.form.date.getFullYear()}`;
+
             axios.get("/tour-slot/" + date + '/' + this.form.package_id).then((response) => {
                 this.dateTimeArr = response.data.Time;
                 this.totalavailableseats = response.data.TotalAvailableSeats;
                 this.selectgrouppeoples = [];
                 var seats = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
-                var seatsava = seats + 1;
-                for (let index = 0; index < seatsava; index++) {
+                seats = seats + 1;
+                for (let index = 0; index < seats; index++) {
                     this.selectgrouppeoples.push({
                         id: index + 1,
                         value: index,
                         number: index,
                     });
                 }
+
                 this.processLoader(loader);
             }).catch(() => {
                 this.processLoader(loader);
             });
+
+            this.year = this.form.date.getFullYear();
+            this.updateRateGroups();
         },
-        dateFormat: function (datemania) {
-            var date = datemania.split("-");
-            return date[2]+'-'+date[1]+'-'+date[0];
-        },
-        myFunctionOnLoad: function () {
-            console.log('myFunctionLoad');
-            var year = this.$store.state.year;
-            axios.get("/tour-package/" + year + "/" + this.form.package_id + "/" + this.form.affiliate_id).then((response) => {
-                this.$store.dispatch('storeTourPackage', response.data.TourPkgDetails)
-                this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
-                this.details = response.data;
-            });
-        },
-        updateRateGroups: function () {
+        selectedDate(date) {
+            console.log('selectedDate');
+
             var loader = this.$loading.show();
+            this.form.date = date;
+            this.dateTimeArr = [];
+
+            var date = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+
+            axios.get("/tour-slot/" + date + '/' + this.form.package_id).then((response) => {
+                this.dateTimeArr = response.data.Time;
+                this.totalavailableseats = response.data.TotalAvailableSeats;
+                this.selectgrouppeoples = [];
+                var seats = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
+                seats = seats + 1;
+
+                for (let index = 0; index < seats; index++) {
+                    this.selectgrouppeoples.push({
+                        id: index + 1,
+                        value: index,
+                        number: index,
+                    });
+                }
+
+                this.processLoader(loader);
+            }).catch(() => {
+                this.processLoader(loader);
+            });
+
+            this.year = this.form.date.getFullYear();
+            this.updateRateGroups();
+        },
+        selectedSlot: function (id, timedate) {
+            console.log('selectedSlot');
+
+            this.$store.dispatch('storeSlotId', id)
+            this.form.tour_slot_id = id;
+            this.form.timedate = timedate;
+        },
+        updateRateGroups() {
             console.log('updateRateGroups');
-            this.$store.dispatch('storeYear', document.getElementById("year").value);
-            var year = this.$store.state.year;
-            axios.get("/tour-package/" + year + "/" + this.form.package_id + "/" + this.form.affiliate_id).then((response) => {
+
+            var loader = this.$loading.show();
+            axios.get("/tour-package/" + this.year + "/" + this.form.package_id + "/" + this.form.affiliate_id).then((response) => {
                 this.$store.dispatch('storeTourPackage', response.data.TourPkgDetails)
                 this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
                 this.details = response.data;
+
+                // Define Variables
+                var v1 = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
+
+                // Append Dropdown Value for TourPkgRates
+                this.details.TourPkgRates.forEach((element) => {
+                    $("#peoplegroup" + element.pkg_rate_id)
+                        .find("option")
+                        .remove()
+                        .end();
+
+                    for (let j = 0; j <= v1; j++) {
+                        $("#peoplegroup" + element.pkg_rate_id).append(
+                            '<option value=' + j + '>' + j + '</option>'
+                        );
+                    }
+                });
             });
 
-            // Define Variables
-            var v1 = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
-
-            // Append Dropdown Value for TourPkgRates
-            this.details.TourPkgRates.forEach((element) => {
-                $("#peoplegroup" + element.pkg_rate_id)
-                    .find("option")
-                    .remove()
-                    .end();
-
-                for (let j = 0; j <= v1; j++) {
-                    $("#peoplegroup" + element.pkg_rate_id).append(
-                        '<option value=' + j + '>' + j + '</option>'
-                    );
-                }
-            });
+            this.form.tour_slot_id = "";
+            this.form.timedate = "";
             this.processLoader(loader);
         },
         submit: function (e) {
@@ -530,9 +416,6 @@ export default {
                 CalPeoArr.push(field1_cal);
                 this.errors = [];
 
-                if (this.form.timedate == '' && this.select_time != '' && this.select_time != 'null') {
-                    this.form.timedate = this.select_time;
-                }
                 if (!this.form.timedate) {
                     this.errors.push("Please Select a start time for your tour");
                 }
@@ -547,7 +430,6 @@ export default {
                 let router = this.$router;
                 this.form.calucation = CalPeoArr;
                 this.form.peoplegroup = GroupPeoArr;
-                this.form.peoplegroup_ = GroupPeoArr;
                 this.form.iframeStatusInfo = this.iframeStatus;
 
                 let checkSlotarr = {
@@ -555,8 +437,8 @@ export default {
                     'package_id': this.form.package_id,
                     'tourists': this.form.peoplegroup,
                     'tour_slot_time': this.form.timedate,
-                    'tour_slot_fulldate': this.selected_fulldate,
                 };
+
                 axios.post("/available-seats", checkSlotarr).then((response) => {
                     if (response.data.success == "false") {
                         this.errors.push(response.data.message);
@@ -565,6 +447,7 @@ export default {
                         router.push("/payment");
                     }
                 });
+
                 return true;
             } else {
                 if (groupsum <= 0) {
@@ -573,7 +456,7 @@ export default {
             }
             e.preventDefault();
         },
-        processLoader(loader) {
+        processLoader: function (loader) {
             loader.hide();
         },
     }

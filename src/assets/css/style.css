@@ -83,7 +83,7 @@ ul {
 
 .header-right {
 	display: flex;
-	justify-content: end;
+	justify-content: flex-end;
 	align-items: center;
 }
 
@@ -461,7 +461,7 @@ ul {
 
 .date-booking-row .selectboxes {
 	display: flex;
-	justify-content: end;
+	justify-content: flex-end;
 	align-items: center;
 }
 
