@@ -42,6 +42,10 @@ export default {
     this.$store.dispatch('storeIframeStatus', this.iframeStatus);
 
     var date = new Date();
+    if (this.$store.state.date) {
+      date = this.$store.state.date;
+    }
+
     date = date.toLocaleString('en-US', {timeZone: 'US/Arizona'})
     this.year = date.split(',')[0].split('/')[2];
     this.$store.dispatch('storeYear', this.year);

@@ -26,7 +26,7 @@
                           Home
                       </a>
                       <a v-else :href="`${baseUrl}`">
-                          Home {{ iframeStatus }} {{ data.package_id }} {{ form.affiliate_id  }}
+                          Home
                       </a>
                     </li>
                     <li>{{ TourPkgName }}</li>
@@ -107,7 +107,7 @@
                         </div>
                         <div class="booking-dt-detail-time">
 
-                          {{ data.day }}, {{ data.calendarmonth }} {{ data.dateselect }}th {{ data.calendaryear }} @ {{
+                          {{ dateFormat(data.date) }} @ {{
                           data.timedate }}
                         </div>
                         <div class="booking-dt-detail-btn">
@@ -153,7 +153,7 @@
                                     </p>
                                   </td>
                                   <td class="group" data-label="Select Group Of People">
-                                    <input type="text" :value="form.tourists1[index]" class="form-select noarrow" />
+                                    <input type="text" :value="form.touristsArr[index]" class="form-select noarrow" />
                                   </td>
                                   <td class="final" data-label="Price">
                                     $<span class="finalprice1"><input type="hidden"
@@ -526,21 +526,16 @@ export default {
         nameoncard: "",
         expiration: "",
         cvv: "",
-        countryregion: "",
         tour_package_id: "",
         affiliate_id: "",
         total: "",
-        tourists1: "",
+        touristsArr: "",
         tourists: "",
-        cost1: [],
         cost: [],
         tour_slot_id: "",
         calucation: "",
         service_commission: "",
         date: "",
-        day: "",
-        month: "",
-        year: "",
         time: "",
       },
       errors: [],
@@ -581,16 +576,13 @@ export default {
       this.ProcessingFee = response.data.TourPkgRates[0].ProcessingFee;
       this.Tax = response.data.TourPkgRates[0].Tax;
       this.fees = response.data.TourPkgDetails[0].ServiceCommission; // after discussion with anil I keep the service commission for affiliate too otherwise I planned to remove it for affiliate as per the backend process
-      this.form.date = this.data.dateselect;
-      this.form.day = this.data.day;
-      this.form.month = this.data.calendarmonth;
-      this.form.year = this.data.calendaryear;
+      this.form.date = this.data.date;
       this.form.time = this.data.timedate;
       this.form.affiliate_id = this.data.affiliate_id;
     });
-    this.form.tourists1 = this.data.peoplegroup;
+    this.form.touristsArr = this.data.peoplegroup;
     this.form.calucation = this.data.calucation;
-    var ts = this.data.peoplegroup_;
+    var ts = this.data.peoplegroup;
     this.form.tourists = ts.join();
     this.form.tour_slot_id = this.$store.state.slotId;
   },
@@ -605,7 +597,6 @@ export default {
         costStoreArr.push(field1);
       });
       this.form.tour_package_id = this.details.TourPkgDetails[0].TourPackageId;
-      this.form.cost1 = [field1];
       var ct = [field1];
       this.form.cost = ct.join();
       const sum = costStoreArr.reduce((a, b) => Number(a) + Number(b), 0);
@@ -688,9 +679,8 @@ export default {
         let checkSlotarr = {
           'tour_slot_id': this.$store.state.slotId,
           'package_id': this.form.tour_package_id,
-          'tourists': this.form.tourists1,
-          'tour_slot_time': this.form.time,
-          'tour_slot_fulldate': this.selected_fulldate,
+          'tourists': this.form.touristsArr,
+          'tour_slot_time': this.form.time
         };
         axios.post("/available-seats", checkSlotarr).then((response) => {
           if (response.data.success == "false") {
@@ -781,6 +771,11 @@ export default {
           name: 'Index'
         });
       }
+    },
+    dateFormat(date) {
+      this.$store.dispatch('storeDate', date);
+      var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
+      return date.toLocaleDateString("en-US", options)
     },
     processLoader(loader) {
       // reset the state
