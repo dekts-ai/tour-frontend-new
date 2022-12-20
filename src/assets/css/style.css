@@ -2890,5 +2890,7 @@ section.iframe-inner-banner.banner-section {
     height: 110px !important;
     margin: 25px 0px 0px 0px;
 }
-
+.vuejs3-datepicker__calendar-actionarea {
+    text-align: left;
+}
 /*end 01-06-2022*/
