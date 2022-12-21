@@ -103,8 +103,13 @@
                                                         <div class="time-item" v-for="name in dateTimeArr"
                                                             :key="name.Id" @click="selectedSlot(name.Id, name.Time)">
                                                             <input type="radio" :id="name.Id" name="timedate"
-                                                                :value="name.Time" />
+                                                                :value="name.Time"
+                                                                :disabled=isDisabled(name) />
                                                             <label :for="name.Id">{{ name.Time}}</label>
+                                                            <br>
+                                                            <text v-if="name.dd < name.seats" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="watermark">{{ name.seats - name.dd }} <br> Seats free</text>
+                                                            <br>
+                                                            <text v-if="name.bookable_status == 'Closed' || name.dd >= name.seats" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="watermark">watermark</text>
                                                         </div>
                                                     </div>
                                                     <div class="radio-toolbar" v-else>
@@ -459,6 +464,11 @@ export default {
         processLoader: function (loader) {
             loader.hide();
         },
+        isDisabled: function (slot) {
+            if(slot.bookable_status == 'Closed' || slot.dd >= slot.seats) {
+                return 'disabled';
+            }
+        }
     }
 };
 </script>
