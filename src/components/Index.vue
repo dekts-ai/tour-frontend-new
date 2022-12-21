@@ -107,9 +107,8 @@
                                                                 :disabled=isDisabled(name) />
                                                             <label :for="name.Id">{{ name.Time}}</label>
                                                             <br>
-                                                            <text v-if="name.dd < name.seats" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="watermark">{{ name.seats - name.dd }} <br> Seats free</text>
-                                                            <br>
-                                                            <text v-if="name.bookable_status == 'Closed' || name.dd >= name.seats" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="watermark">watermark</text>
+                                                            <text v-if="name.bookable_status == 'Open' && name.dd < name.seats" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="watermark">{{ name.seats - name.dd }} <br> Seats free</text>
+                                                            <text v-else x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="watermark">watermark</text>
                                                         </div>
                                                     </div>
                                                     <div class="radio-toolbar" v-else>
