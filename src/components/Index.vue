@@ -102,13 +102,14 @@
                                                     <div class="radio-toolbar" v-if="dateTimeArr.length > 0">
                                                         <div class="time-item" v-for="name in dateTimeArr"
                                                             :key="name.Id" @click="selectedSlot(name.Id, name.Time)">
+                                                            <label class="time-item-lable" :for="name.Id"></label>
                                                             <input type="radio" :id="name.Id" name="timedate"
                                                                 :value="name.Time"
                                                                 :disabled=isDisabled(name) />
                                                             <label :for="name.Id">{{ name.Time}}</label>
                                                             <br>
-                                                            <text v-if="name.bookable_status == 'Open' && name.dd < name.seats" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="watermark">{{ name.seats - name.dd }} <br> Seats free</text>
-                                                            <text v-else x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="watermark">watermark</text>
+                                                            <text v-if="name.bookable_status == 'Open' && name.dd < name.seats" class="seats-free">{{ name.seats - name.dd }} <br> Seats free</text>
+                                                            <text v-else class="watermark">Closed</text>
                                                         </div>
                                                     </div>
                                                     <div class="radio-toolbar" v-else>
