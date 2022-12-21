@@ -6,6 +6,7 @@ export default createStore({
  state: {
     iframeStatus: false,
     year: null,
+    date: null,
     packageId: 0,
     affiliateId: 0,
     bookingId: null,
@@ -20,6 +21,9 @@ export default createStore({
     },
     year: state => {
         return state.year;
+    },
+    date: state => {
+        return state.date;
     },
     packageId: state => {
         return state.packageId;
@@ -50,6 +54,9 @@ export default createStore({
     YEAR(state, year) {
         state.year = year;
     },
+    DATE(state, date) {
+        state.date = date;
+    },
     PACKAGE_ID(state, packageId) {
         state.packageId = packageId;
     },
@@ -78,6 +85,9 @@ export default createStore({
     },
     storeYear({ commit }, year) {
         commit('YEAR', year);
+    },
+    storeDate({ commit }, date) {
+        commit('DATE', date);
     },
     storePackageId({ commit }, packageId) {
         commit('PACKAGE_ID', packageId);
