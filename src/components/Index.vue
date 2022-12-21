@@ -100,11 +100,24 @@
                                                 <div class="col-12 col-md-8 mt-4 mt-md-0">
                                                     <h2>Select a start time for your tour:</h2>
                                                     <div class="radio-toolbar" v-if="dateTimeArr.length > 0">
-                                                        <div class="time-item" v-for="name in dateTimeArr"
-                                                            :key="name.Id" @click="selectedSlot(name.Id, name.Time)">
+                                                        <div class="time-item" 
+                                                            :class="name.bookable_status == 'Open' && name.dd < name.seats ? 'seats-free-label' : 'watermark-label'" 
+                                                            v-for="name in dateTimeArr"
+                                                            :key="name.Id" 
+                                                            @click="selectedSlot(name.Id, name.Time)">
+
+                                                            <label class="time-item-lable" :for="name.Id"></label>
+
                                                             <input type="radio" :id="name.Id" name="timedate"
-                                                                :value="name.Time" />
+                                                                :value="name.Time"
+                                                                :disabled=isDisabled(name) />
+
+                                                            <label class="background-change"></label>
+
                                                             <label :for="name.Id">{{ name.Time}}</label>
+
+                                                            <text v-if="name.bookable_status == 'Open' && name.dd < name.seats" class="seats-free">{{ name.seats - name.dd }} SEATS</text>
+                                                            <text v-else class="watermark">SOLD OUT</text>
                                                         </div>
                                                     </div>
                                                     <div class="radio-toolbar" v-else>
@@ -459,6 +472,11 @@ export default {
         processLoader: function (loader) {
             loader.hide();
         },
+        isDisabled: function (slot) {
+            if(slot.bookable_status == 'Closed' || slot.dd >= slot.seats) {
+                return 'disabled';
+            }
+        }
     }
 };
 </script>

@@ -2886,11 +2886,71 @@ section.iframe-inner-banner.banner-section {
 .inner-content-section .no-container .background-color-sec {
 	margin-bottom: 0px;
 }
+
 .row.innerbanner-row.iframe-inner-banner {
-    height: 110px !important;
-    margin: 25px 0px 0px 0px;
+	height: 110px !important;
+	margin: 25px 0px 0px 0px;
 }
+
 .vuejs3-datepicker__calendar-actionarea {
-    text-align: left;
+	text-align: left;
 }
+
+.starttime-row .select-time .radio-toolbar .time-item {
+	border: 1px solid hsla(0, 0%, 7%, .5);
+	padding: 8px 12px;
+	border-radius: 3px;
+	background: #fff;
+	text-align: left;
+	overflow: hidden;
+}
+
+.starttime-row .select-time .radio-toolbar .time-item label {
+	border: none;
+	padding: 0;
+	border-radius: 0;
+	background: transparent;
+	font-size: 14px !important;
+	text-align: left;
+	z-index: 1;
+	position: relative;
+}
+
+.starttime-row .select-time .radio-toolbar .time-item text {
+	font-size: 14px;
+	position: relative;
+	z-index: 1;
+}
+
+.starttime-row .select-time .radio-toolbar .time-item label.time-item-lable {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 2;
+}
+
+.starttime-row .select-time .radio-toolbar .time-item label.background-change {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 0;
+}
+
+.watermark {
+	color: #f07777;
+}
+
+.seats-free {
+	color: #016F9C;
+}
+
+.watermark-label {
+	opacity: 0.5;
+	pointer-events: none;
+}
+
 /*end 01-06-2022*/
