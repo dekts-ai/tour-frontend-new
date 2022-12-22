@@ -120,9 +120,9 @@
                                                             <text v-else class="watermark">SOLD OUT</text>
                                                         </div>
                                                     </div>
-                                                    <div class="radio-toolbar" v-else>
+                                                    <!-- <div class="radio-toolbar" v-else>
                                                         <h2>Slot not found</h2>
-                                                    </div>
+                                                    </div> -->
                                                 </div>
                                             </div>
                                             <hr>
