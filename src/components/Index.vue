@@ -290,13 +290,13 @@ export default {
         };
     },
     created: function () {
-        this.iframeStatus = this.$store.state.iframeStatus;
-        this.form.package_id = this.$store.state.packageId;
-        this.form.affiliate_id = this.$store.state.affiliateId;
-        if (this.$store.state.date) {
-            this.form.date = this.$store.state.date;
+        this.iframeStatus = this.$store.getters.iframeStatus;
+        this.form.package_id = this.$store.getters.packageId;
+        this.form.affiliate_id = this.$store.getters.affiliateId;
+        if (this.$store.getters.date) {
+            this.form.date = new Date(this.$store.getters.date);
         }
-        this.data = this.$store.state.formData;
+        this.data = this.$store.getters.formData;
         this.configure();
     },
     methods: {

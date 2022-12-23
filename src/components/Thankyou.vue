@@ -218,10 +218,10 @@ export default {
     this.checkId();
   },
   created() {
-    this.affiliate_id = this.$store.state.affiliateId;
-    this.data = this.$store.state.formData;
-    this.customer = this.$store.state.customer;
-    this.id = this.$store.state.bookingId;
+    this.affiliate_id = this.$store.getters.affiliateId;
+    this.data = this.$store.getters.formData;
+    this.customer = this.$store.getters.customer;
+    this.id = this.$store.getters.bookingId;
     if (this.id) {
       if (this.data.iframeStatusInfo != null && this.data.iframeStatusInfo == 'true') {
         this.iframeStatus = this.data.iframeStatusInfo;
@@ -229,7 +229,7 @@ export default {
         this.iframeStatus = false;
       }
 
-      var year = this.$store.state.year;
+      var year = this.$store.getters.year;
       axios.get("/tour-package/" + year + "/" + this.data.package_id + "/" + this.affiliate_id).then((response) => {
         this.details = response.data;
         this.booking();
