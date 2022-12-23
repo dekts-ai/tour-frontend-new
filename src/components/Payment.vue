@@ -557,8 +557,8 @@ export default {
     this.createAndMountFormElements();
   },
   created() {
-    this.form.affiliate_id = this.$store.getters.affiliateId;
-    this.data = this.$store.getters.formData;
+    this.form.affiliate_id = this.$store.state.affiliateId;
+    this.data = this.$store.state.formData;
     if (this.data == null) {
       window.location.href = '/';
     }
@@ -568,7 +568,7 @@ export default {
       this.iframeStatus = false;
     }
 
-    var year = new Date(this.$store.getters.date).getFullYear();
+    var year = this.$store.state.year;
     axios.get("/tour-package/" + year + "/" + this.data.package_id + "/" + this.data.affiliate_id).then((response) => {
       this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
       this.details = response.data;
@@ -584,14 +584,13 @@ export default {
     this.form.calucation = this.data.calucation;
     var ts = this.data.peoplegroup;
     this.form.tourists = ts.join();
-    this.form.tour_slot_id = this.$store.getters.slotId;
+    this.form.tour_slot_id = this.$store.state.slotId;
   },
   updated() {
-    var year = new Date(this.$store.getters.date).getFullYear();
-    axios.get("/tour-package/" + year + "/" + this.data.package_id + "/" + this.data.affiliate_id).then((response) => {
-      const n = response.data.TourPkgRates;
-      const field1 = 0;
-      let costStoreArr = [];
+    const n = this.details.TourPkgRates;
+    const field1 = 0;
+    let costStoreArr = [];
+    if (n) {
       n.forEach(number => {
         let names_field = 'grpt' + number.pkg_rate_id;
         const field1 = document.querySelector("input[name=" + names_field + "]").value;
@@ -607,7 +606,7 @@ export default {
       this.form.service_commission = this.softwarefee;
       var totals = Number(softwarefee) + Number(sum);
       this.form.total = totals.toFixed(2);
-    });
+    }
   },
   methods: {
     createAndMountFormElements() {
@@ -667,7 +666,7 @@ export default {
         this.errors.push("Please add card information.");
       }
       if (
-        this.$store.getters.slotId &&
+        this.$store.state.slotId &&
         this.form.masks_mandatory &&
         this.form.name &&
         this.form.phone_number &&
@@ -678,7 +677,7 @@ export default {
         this.form.cvv
       ) {
         let checkSlotarr = {
-          'tour_slot_id': this.$store.getters.slotId,
+          'tour_slot_id': this.$store.state.slotId,
           'package_id': this.form.tour_package_id,
           'tourists': this.form.touristsArr,
           'tour_slot_time': this.form.time
@@ -694,7 +693,7 @@ export default {
             axios.post("/booking-tour", this.form).then((response) => {
               this.$store.dispatch('storeCustomer', this.form);
               if (response.data.success == "false") {
-                this.processLoader(loader);
+                self.processLoader(loader);
                 this.message = response.data.message;
                 return true;
               } else if (response.data.clientSecret) {
@@ -775,8 +774,8 @@ export default {
       }
     },
     dateFormat(date) {
-      date = new Date(date);
       this.$store.dispatch('storeDate', date);
+      localStorage.setItem('date', date);
       var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
       return date.toLocaleDateString("en-US", options)
     },
