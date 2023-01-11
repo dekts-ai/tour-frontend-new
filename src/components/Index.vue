@@ -117,7 +117,10 @@
                                                             <label :for="name.Id">{{ name.Time}}</label>
 
                                                             <text v-if="name.bookable_status == 'Open' && name.dd < name.seats" class="seats-free">{{ name.seats - name.dd }} SEATS</text>
-                                                            <text v-else class="watermark">SOLD OUT</text>
+                                                            <text v-else class="watermark">
+                                                                <span v-if="name.date >= '15-1-2023' && name.date <= '21-1-2023'">CLOSED</span>
+                                                                <span v-else>SOLD OUT</span>
+                                                            </text>
                                                         </div>
                                                     </div>
                                                     <!-- <div class="radio-toolbar" v-else>
