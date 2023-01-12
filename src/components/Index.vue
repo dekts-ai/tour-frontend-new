@@ -100,7 +100,7 @@
                                                 <div class="col-12 col-md-8 mt-4 mt-md-0">
                                                     <h2>Select a start time for your tour:</h2>
                                                     <div v-if="staticDateRange(form.date)">
-                                                        <h3 class="watermark">Canyon is closed in this week</h3>
+                                                        <h3 class="watermark">Canyon is closed this week</h3>
                                                         <br>
                                                     </div>
                                                     <div class="radio-toolbar" v-if="dateTimeArr.length > 0">
@@ -491,9 +491,8 @@ export default {
         staticDateRange: function (date) {
             date = new Date(date);
             let firstDate = new Date('01 15 2023');
-            let secondDate = new Date('01 21 2023');
-            console.log(date, firstDate, secondDate);
-            return date >= firstDate && date <= secondDate && this.form.package_id == 1;
+            let secondDate = new Date('01 22 2023');
+            return date >= firstDate && date < secondDate && this.form.package_id == 1;
         }
     }
 };
