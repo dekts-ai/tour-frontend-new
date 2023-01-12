@@ -775,7 +775,7 @@ export default {
     },
     dateFormat(date) {
       this.$store.dispatch('storeDate', date);
-      if (typeof localStorage !== 'undefined') {
+      if (localStorage.getItem("date") !== null) {
         localStorage.setItem('date', date);
       }
       var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
