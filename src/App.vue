@@ -44,7 +44,7 @@ export default {
     var date = new Date();
     if (this.$store.state.date) {
       date = new Date(this.$store.state.date);
-    } else if (localStorage.getItem('date')) {
+    } else if (typeof localStorage.getItem("date") !== 'undefined') {
       date = new Date(localStorage.getItem('date'));
     }
 
