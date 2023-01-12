@@ -298,7 +298,7 @@ export default {
         this.form.affiliate_id = this.$store.state.affiliateId;
         if (this.$store.state.date) {
             this.form.date = new Date(this.$store.state.date);
-        } else if (typeof localStorage.getItem("date") !== 'undefined') {
+        } else if (localStorage.getItem("date") !== null) {
             this.form.date = new Date(localStorage.getItem('date'));
         } else {
             this.form.date = new Date();
