@@ -336,7 +336,7 @@
                           </div>
                         </div>
                         <div id="pageloader">
-                          <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif"
+                          <img src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif"
                             alt="processing..." />
                         </div>
 
@@ -775,7 +775,9 @@ export default {
     },
     dateFormat(date) {
       this.$store.dispatch('storeDate', date);
-      localStorage.setItem('date', date);
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('date', date);
+      }
       var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
       return date.toLocaleDateString("en-US", options)
     },
