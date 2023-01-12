@@ -22,7 +22,7 @@ function calendarPickerFn() {
         }
     });
 
-    var datemania = localStorage.getItem("datemania")
+    var datemania = (typeof localStorage.getItem("datemania") !== 'undefined') ? localStorage.getItem("datemania") : null;
     if (datemania) {
         calendarPicker2.changeDate(new Date(Date.parse(dateFormat(datemania))));
     } else {
