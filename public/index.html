@@ -25,28 +25,6 @@
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    let storageSupported = false;
-    try {
-      storageSupported = (window.localStorage && true)
-    } catch (e) { }
-
-    if (!storageSupported) {
-      Object.defineProperty(window, 'localStorage', {value: {
-        _data       : {},
-        setItem     : function(id, val) { return this._data[id] = String(val); },
-        getItem     : function(id) { return this._data.hasOwnProperty(id) ? this._data[id] : undefined; },
-        removeItem  : function(id) { return delete this._data[id]; },
-        clear       : function() { return this._data = {}; }
-      } });
-      Object.defineProperty(window, 'sessionStorage', {value: {
-        _data       : {},
-        setItem     : function(id, val) { return this._data[id] = String(val); },
-        getItem     : function(id) { return this._data.hasOwnProperty(id) ? this._data[id] : undefined; },
-        removeItem  : function(id) { return delete this._data[id]; },
-        clear       : function() { return this._data = {}; }
-      } });
-    }
-    
     // Begin Inspectlet Asynchronous Code
     (function () {
         window.__insp = window.__insp || [];
