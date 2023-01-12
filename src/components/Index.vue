@@ -99,6 +99,7 @@
                                                 </div>
                                                 <div class="col-12 col-md-8 mt-4 mt-md-0">
                                                     <h2>Select a start time for your tour:</h2>
+                                                    <h3 v-if="`${form.date.getDate()}-${form.date.getMonth() + 1}-${form.date.getFullYear()}` >= '15-1-2023' && `${form.date.getDate()}-${form.date.getMonth() + 1}-${form.date.getFullYear()}` <= '21-1-2023' && form.package_id == 1" class="watermark">Canyon is closed in this week <br><br></h3>
                                                     <div class="radio-toolbar" v-if="dateTimeArr.length > 0">
                                                         <div class="time-item" 
                                                             :class="name.bookable_status == 'Open' && name.dd < name.seats ? 'seats-free-label' : 'watermark-label'" 
@@ -118,7 +119,7 @@
 
                                                             <text v-if="name.bookable_status == 'Open' && name.dd < name.seats" class="seats-free">{{ name.seats - name.dd }} SEATS</text>
                                                             <text v-else class="watermark">
-                                                                <span v-if="name.date >= '15-1-2023' && name.date <= '21-1-2023'">CLOSED</span>
+                                                                <span v-if="name.date >= '15-1-2023' && name.date <= '21-1-2023' && form.package_id == 1">CLOSED</span>
                                                                 <span v-else>SOLD OUT</span>
                                                             </text>
                                                         </div>
