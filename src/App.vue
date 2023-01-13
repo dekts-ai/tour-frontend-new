@@ -44,8 +44,6 @@ export default {
     var date = new Date();
     if (this.$store.state.date) {
       date = new Date(this.$store.state.date);
-    } else if (localStorage.getItem("date") !== null) {
-      date = new Date(localStorage.getItem('date'));
     }
 
     date = date.toLocaleString('en-US', {timeZone: 'US/Arizona'})
