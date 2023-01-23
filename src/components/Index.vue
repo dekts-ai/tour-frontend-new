@@ -120,7 +120,7 @@
 
                                                             <label :for="name.Id">{{ name.Time}}</label>
 
-                                                            <text v-if="name.bookable_status == 'Open' && name.dd < name.seats" class="seats-free">{{ name.seats - name.dd }} SEATS</text>
+                                                            <text v-if="name.bookable_status == 'Open' && name.dd < name.seats" class="seats-free">{{ name.seats - name.dd }} AVAILABLE</text>
                                                             <text v-else class="watermark">
                                                                 <span v-if="staticDateRange(form.date)">CLOSED</span>
                                                                 <span v-else>SOLD OUT</span>

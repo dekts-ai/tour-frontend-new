@@ -2898,7 +2898,7 @@ section.iframe-inner-banner.banner-section {
 
 .starttime-row .select-time .radio-toolbar .time-item {
 	border: 1px solid hsla(0, 0%, 7%, .5);
-	padding: 8px 12px;
+	padding: 8px 8px;
 	border-radius: 3px;
 	background: #fff;
 	text-align: left;
@@ -2917,9 +2917,10 @@ section.iframe-inner-banner.banner-section {
 }
 
 .starttime-row .select-time .radio-toolbar .time-item text {
-	font-size: 14px;
+	font-size: 13px;
 	position: relative;
 	z-index: 1;
+	white-space: nowrap;
 }
 
 .starttime-row .select-time .radio-toolbar .time-item label.time-item-lable {
