@@ -179,27 +179,6 @@
                             complete your booking
                           </span>
                         </div>
-                        <div class="col-12">
-                          <div class="masks-mandatory-wrp d-flex">
-                            <div class="masks-mandatory-img">
-                              <img src="../assets/images/masks-mandatory.png" alt="masks-mandatory-img" />
-                            </div>
-                            <div class="masks-mandatory-detail w-100">
-                              <label class="checkbox-wrap">Masks Mandatory<span class="required-star">*</span>
-                                <img src="../assets/images/radio-info.png" data-toggle="tooltip" data-placement="top"
-                                  title="Please select Number of Adults (Ages 13 & Up) want to go the tour" />
-                                <input type="checkbox" name="masks_mandatory" v-model="form.masks_mandatory"
-                                  id="masksmandatory" value="masks_mandatory" />
-                                <span class="checkmark"></span>
-                              </label>
-                              <div class="masks-mandatory-notice">
-                                By checking this box, I adhere to obey the mask
-                                mandate; any conflict will result in
-                                cancellation without refund.
-                              </div>
-                            </div>
-                          </div>
-                        </div>
                         <div class="col-12 mb-4">
                           <div class="row">
                             <div class="col-12 col-md-6">
@@ -515,7 +494,6 @@ export default {
       details: [],
       selectgrouppeoples: [],
       form: {
-        masks_mandatory: "",
         name: "",
         phone_number: "",
         email: "",
@@ -647,9 +625,6 @@ export default {
       this.processing = true;
       var loader = this.$loading.show();
       this.errors = [];
-      if (!this.form.masks_mandatory) {
-        this.errors.push("Masks mandatory is required.");
-      }
       if (!this.form.name) {
         this.errors.push("Name is required on contact section.");
       }
@@ -667,7 +642,6 @@ export default {
       }
       if (
         this.$store.state.slotId &&
-        this.form.masks_mandatory &&
         this.form.name &&
         this.form.phone_number &&
         this.form.email &&
