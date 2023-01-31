@@ -428,7 +428,7 @@ export default {
                     (Number(ProcessingFee1) *
                         Number(this.details.TourPkgRates[index].ProcessingFee)) /
                     100;
-                var master_cal1 = Number(ProcessingFee1) + Number(Fee1);
+                var master_cal1 = Math.trunc((Number(ProcessingFee1) + Number(Fee1)) * Math.pow(10, 2)) / Math.pow(10, 2);
 
                 if (Number(field1 > 0)) {
                     var field1_cal = (Number(master_cal1) * Number(field1)).toFixed(2);
