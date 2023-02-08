@@ -118,7 +118,7 @@
                           </div>
                         </div>
                         <div class="col-12 booking-summery">
-                          <h3>Your Booking Summery:</h3>
+                          <h3>Your Booking Summary:</h3>
 
                           <h2>Booking ID # <a href="#">{{tourBooking.data[0].TourBookingID}}</a></h2>
 
