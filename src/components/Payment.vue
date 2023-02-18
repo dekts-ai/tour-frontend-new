@@ -147,9 +147,13 @@
                                     {{ tour.Age }}
                                   </td>
                                   <td class="taxes" data-label="Fees and Taxes">
-                                    <p>
-                                      Navajo Nation: Permit Fee ${{ tour.PermitFee }} & Tax ${{ tour.Tax}}, Processing
-                                      Fee: {{ tour.ProcessingFee }}%
+                                    <p v-if="form.tour_package_id >= 12 && form.tour_package_id <= 15">
+                                        {{ tour.description }}
+                                    </p>
+                                    <p v-else>
+                                        Navajo Nation: Permit Fee ${{ tour.PermitFee
+                                        }} & Tax ${{ tour.Tax}}, Processing Fee: {{
+                                        tour.ProcessingFee }}%
                                     </p>
                                   </td>
                                   <td class="group" data-label="Select Group Of People">
