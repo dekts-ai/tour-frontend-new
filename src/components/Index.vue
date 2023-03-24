@@ -169,8 +169,7 @@
                                                                         </p>
                                                                         <p v-else>
                                                                             Navajo Nation: Permit Fee ${{ tour.PermitFee
-                                                                            }} & Tax ${{ tour.Tax}}, Processing Fee: {{
-                                                                            tour.ProcessingFee }}%
+                                                                            }} & Tax ${{ tour.Tax}}
                                                                         </p>
                                                                     </td>
                                                                     <td class="group"
