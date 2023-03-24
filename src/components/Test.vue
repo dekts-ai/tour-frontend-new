@@ -216,9 +216,7 @@
                                                                     <td class="taxes" data-label="Fees and Taxes">
                                                                         <p>
                                                                             Navajo Nation: Permit Fee ${{ tour.PermitFee
-                                                                            }} & Tax ${{ tour.Tax }}, Processing Fee: {{
-        tour.ProcessingFee
-}}%
+                                                                            }} & Tax ${{ tour.Tax }}
                                                                         </p>
                                                                     </td>
                                                                     <td v-if="form.tourists1" class="group"
