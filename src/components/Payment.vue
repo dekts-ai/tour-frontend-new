@@ -571,6 +571,7 @@ export default {
   updated() {
     const n = this.details.TourPkgRates;
     const field1 = 0;
+    let serviceCommissionTotal = 0;
     let costStoreArr = [];
     if (n) {
       n.forEach(number => {
@@ -578,12 +579,19 @@ export default {
         const field1 = document.querySelector("input[name=" + names_field + "]").value;
         costStoreArr.push(field1);
       });
+      costStoreArr.forEach((pax, key) => {
+        if (Number(pax) > 0) {
+          var paxRate = Number(n[key].price) + Number(n[key].additional_charge) + Number(n[key].permit_fee);
+          var serviceCommissionPerPax = this.roundout((paxRate * this.fees) / 100, 2);
+          serviceCommissionTotal += Number(this.form.touristsArr[key]) * serviceCommissionPerPax;
+        }
+      })
       this.form.tour_package_id = this.details.TourPkgDetails[0].TourPackageId;
       var ct = [field1];
       this.form.cost = ct.join();
       const sum = costStoreArr.reduce((a, b) => Number(a) + Number(b), 0);
       this.subtotal = sum.toFixed(2);
-      var softwarefee = Number(this.subtotal * this.fees) / 100;
+      var softwarefee = serviceCommissionTotal;
       this.softwarefee = softwarefee.toFixed(2);
       this.form.service_commission = this.softwarefee;
       var totals = Number(softwarefee) + Number(sum);
@@ -760,6 +768,14 @@ export default {
       // reset the state
       this.processing = false;
       loader.hide();
+    },
+    roundout(amount, places = 0) {
+      if (places < 0) {
+        places = 0;
+      }
+
+      let x = Math.pow(10, places);
+      return (amount >= 0 ? Math.ceil(amount * x) : Math.floor(amount * x)) / x;
     }
   }
 };
