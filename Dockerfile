@@ -1,5 +1,5 @@
 # build
-FROM node:18-alpine as build
+FROM 194836855709.dkr.ecr.us-east-1.amazonaws.com/node18:latest as build
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 
