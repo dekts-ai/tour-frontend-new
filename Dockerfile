@@ -1,4 +1,5 @@
 # build
+# FROM node:18-alpine as build
 FROM 194836855709.dkr.ecr.us-east-1.amazonaws.com/node18:latest as build
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
@@ -9,8 +10,8 @@ RUN npm install -g @vue/cli
 COPY . ./
 RUN npm run build
 
-# serve
-FROM nginx:1.20
+# server
+FROM 194836855709.dkr.ecr.us-east-1.amazonaws.com/nginx:latest
 COPY --from=build /app/dist /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 COPY conf/nginx.conf /etc/nginx/conf.d
