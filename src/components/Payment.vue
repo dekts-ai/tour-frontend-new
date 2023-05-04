@@ -331,7 +331,7 @@
                             </div>
                           </div>
                           <div class="row fees">
-                            <div class="col-6 text-start">Fees:</div>
+                            <div class="col-6 text-start">Booking Fees:</div>
                             <div class="col-6 text-end">
                               ${{ softwarefee }}
                               <input type="hidden" id="fees" name="softwarefee" :value="softwarefee" />
