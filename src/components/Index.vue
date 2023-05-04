@@ -53,7 +53,7 @@
                                             <li><i class="fa fa-star"></i></li>
                                             <li class="rate">4.5</li>
                                             <li class="info"><a href="javascript:void(0);" data-toggle="tooltip"
-                                                    data-placement="top" title="What is Lorem Ipsum?"><img
+                                                    data-placement="top" title=""><img
                                                         src="../assets/images/info.png"></a></li>
                                         </ul>
                                     </div>
@@ -76,9 +76,9 @@
                                         class="col-lg-6 col-md-12 text-center text-lg-end text-md-center text-sm-center">
                                         <div class="info">
                                             <button class="tooltipbtn btn-info" data-toggle="tooltip"
-                                                data-placement="top" title="What is Lorem Ipsum?">Secured</button>
+                                                data-placement="top" title="">Secured</button>
                                             <button class="tooltipbtn btn-danger" data-toggle="tooltip"
-                                                data-placement="top" title="What is Lorem Ipsum?">Health &
+                                                data-placement="top" title="">Health &
                                                 Safety</button>
                                         </div>
                                     </div>
