@@ -55,7 +55,7 @@
                       <li class="rate">4.5</li>
                       <li class="info">
                         <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top"
-                          title="What is Lorem Ipsum?"><img src="../assets/images/info.png" /></a>
+                          title=""><img src="../assets/images/info.png" /></a>
                       </li>
                     </ul>
                   </div>
@@ -80,11 +80,11 @@
                     ">
                     <div class="info">
                       <button class="tooltipbtn btn-info" data-toggle="tooltip" data-placement="top"
-                        title="What is Lorem Ipsum?">
+                        title="">
                         Secured
                       </button>
                       <button class="tooltipbtn btn-danger" data-toggle="tooltip" data-placement="top"
-                        title="What is Lorem Ipsum?">
+                        title="">
                         Health & Safety
                       </button>
                     </div>
