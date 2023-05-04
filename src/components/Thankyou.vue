@@ -153,7 +153,7 @@
                               <div>${{tourBooking.data[0].SubTotal}}</div>
                             </div>
                             <div class="tfee">
-                              <div>Fees:</div>
+                              <div>Booking Fees:</div>
                               <div>${{tourBooking.data[0].Fees}}</div>
                             </div>
                             <div class="tbooking">
