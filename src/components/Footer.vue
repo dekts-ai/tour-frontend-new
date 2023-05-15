@@ -8,7 +8,7 @@
           </div>
           <div class="col-md-6 text-end col-end">
             <p>Powered by Native American Tours </p>
-            <img class="max-width" v-if="TourPackageLogo" :src="TourPackageLogo" style="max-width: 130px;">
+            <!-- <img class="max-width" v-if="TourPackageLogo" :src="TourPackageLogo" style="max-width: 130px;"> -->
           </div>
         </div>
       </div>
