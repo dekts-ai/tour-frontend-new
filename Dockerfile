@@ -6,7 +6,7 @@ ENV PATH /app/node_modules/.bin:$PATH
 
 COPY package.json ./
 RUN npm install
-RUN npm install -g @vue/cli
+# RUN npm install -g @vue/cli
 COPY . ./
 RUN npm run build
 
