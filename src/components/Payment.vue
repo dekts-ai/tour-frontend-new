@@ -866,7 +866,7 @@ export default {
           this.processLoader(loader);
         }).catch(function (error) {
           self.state = 'initial';
-          this.ticket_cost = 0;
+          self.ticket_cost = 0;
           self.form.tour_promotion_id = "";
           self.form.discount2_value = 0;
           self.form.discount2_percentage = 0;
