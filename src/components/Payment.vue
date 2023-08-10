@@ -323,6 +323,41 @@
                         </div>
 
                         <div class="col-12 total-cost-col">
+                          <div class="row mb-2">
+                            <div class="col-6 text-start"></div>
+                            <div class="form-group col-6 text-end d-flex align-items-center justify-content-end">
+                              <input @keyup="addCouponCode" class="form-control form-control-sm me-1 pe-0" type="text" id="couponCode" placeholder="Coupon Code" style="max-width: 180px;">
+                              <button type="button" @click="applyCoupon" id="applyCouponButton" class="btn btn-sm btn-primary" style="padding: 2px 7px 5px 7px;">Apply</button>
+                            </div>
+                            <p class="text-end" v-if="couponSuccess.length">
+                              <ul>
+                                <li v-for="success in couponSuccess" :key="success" v-bind:class="{'text-success': success }">{{ success }}</li>
+                              </ul>
+                            </p>
+                            <p class="text-end" v-if="couponErrors.length">
+                              <ul>
+                                <li v-for="error in couponErrors" :key="error" v-bind:class="{'text-danger': error }">{{ error }}</li>
+                              </ul>
+                            </p>
+                          </div>
+
+                          <div class="row subtotal" v-if="ticket_cost">
+                            <div class="col-6 text-start">Ticket Cost:</div>
+                            <div class="col-6 text-end">
+                              $<label class="ticket_cost1">{{ ticket_cost }}</label>
+                              <input type="hidden" id="ticket_cost1" name="ticket_cost" :value="ticket_cost">
+                            </div>
+                          </div>
+
+                          <div class="row subtotal" v-if="form.discount2_value">
+                            <div class="col-6 text-start">Discount:</div>
+                            <div class="col-6 text-end">
+                              <span v-if="form.discount2_percentage">({{ form.discount2_percentage }}%)</span>
+                              $<label class="discount2_value">{{ form.discount2_value }}</label>
+                              <input type="hidden" id="discount2_value" name="discount2_value" :value="form.discount2_value">
+                            </div>
+                          </div>
+
                           <div class="row subtotal">
                             <div class="col-6 text-start">Subtotal:</div>
                             <div class="col-6 text-end">
@@ -518,10 +553,17 @@ export default {
         service_commission: "",
         date: "",
         time: "",
+        code: "",
+        tour_promotion_id: "",
+        discount2_value: 0,
+        discount2_percentage: 0,
       },
       errors: [],
+      couponErrors: [],
+      couponSuccess: [],
       price: "",
       grpt: [],
+      ticket_cost: "",
       subtotal: "",
       fees: "",
       total: "",
@@ -531,6 +573,7 @@ export default {
       elements: "",
       cardElement: null,
       stripeValidationError: "",
+      state: 'initial'
     };
   },
   async mounted() {
@@ -572,7 +615,7 @@ export default {
     const field1 = 0;
     let serviceCommissionTotal = 0;
     let costStoreArr = [];
-    if (n) {
+    if (n && this.state == 'initial') {
       n.forEach(number => {
         let names_field = 'grpt' + number.pkg_rate_id;
         const field1 = document.querySelector("input[name=" + names_field + "]").value;
@@ -775,6 +818,68 @@ export default {
 
       let x = Math.pow(10, places);
       return (amount >= 0 ? Math.ceil(amount * x) : Math.floor(amount * x)) / x;
+    },
+    addCouponCode() {
+      this.state = 'initial';
+      this.ticket_cost = 0;
+      this.form.tour_promotion_id = "";
+      this.form.discount2_value = 0;
+      this.form.discount2_percentage = 0;
+      this.couponSuccess = [];
+      this.couponErrors = [];
+      $('#applyCouponButton').text('Apply').removeClass('btn-success').addClass('btn-primary').attr('disabled', false);
+    },
+    applyCoupon() {
+      this.processing = true;
+      var loader = this.$loading.show();
+      this.form.code = document.querySelector("#couponCode").value;
+
+      this.couponSuccess = [];
+      this.couponErrors = [];
+      if (!this.form.code) {
+        this.couponErrors.push("To receive a discount, please enter the promo code.");
+      } else {
+        let self = this;
+        axios.get("/apply-coupon/" + this.form.tour_package_id + "/" + this.form.code).then((response) => {
+          this.state = 'changed';
+          this.ticket_cost = this.subtotal;
+
+          var promocode = response.data.data;
+          this.form.tour_promotion_id = promocode.id;
+          if (promocode.discount_value_type == "Percent") {
+            this.form.discount2_percentage = Number(promocode.discount_value);
+            var discountedAmount = this.subtotal * this.form.discount2_percentage / 100;
+            this.subtotal = Number(this.subtotal - discountedAmount).toFixed(2);
+          } else {
+            var discountedAmount = Number(promocode.discount_value).toFixed(2);
+            this.subtotal = Number(this.subtotal - discountedAmount).toFixed(2);
+          }
+          this.form.discount2_value = discountedAmount;
+          this.softwarefee = Number(this.subtotal * this.fees / 100).toFixed(2);
+          this.form.service_commission = this.softwarefee;
+          var total = Number(this.subtotal) + Number(this.softwarefee);
+          this.total = Number(total).toFixed(2);
+          this.form.total = this.total;
+
+          $('#applyCouponButton').text('Applied').removeClass('btn-primary').addClass('btn-success').attr('disabled', true);
+          this.couponSuccess.push(response.data.message);
+          this.processLoader(loader);
+        }).catch(function (error) {
+          self.state = 'initial';
+          this.ticket_cost = 0;
+          self.form.tour_promotion_id = "";
+          self.form.discount2_value = 0;
+          self.form.discount2_percentage = 0;
+          self.processLoader(loader);
+          if (error.response) {
+            self.couponErrors.push(error.response.data.message);
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log('Error', error.message);
+          }
+        });
+      }
     }
   }
 };
