@@ -204,7 +204,7 @@
                                       <i class="fa fa-phone" aria-hidden="true"></i>
                                     </div>
                                     <input type="text" id="phonenumber" name="phone_number" v-model="form.phone_number"
-                                      class="form-control" placeholder="Your Contact Number" />
+                                      v-mask="'###############'" class="form-control" placeholder="Your Contact Number" />
                                   </div>
                                 </div>
                                 <div class="form-group col-12">
