@@ -707,6 +707,7 @@ export default {
         let checkSlotarr = {
           'tour_slot_id': this.$store.state.slotId,
           'package_id': this.form.tour_package_id,
+          'affiliate_id': this.form.affiliate_id,
           'tourists': this.form.touristsArr,
           'tour_slot_time': this.form.time
         };
