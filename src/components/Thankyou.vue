@@ -135,31 +135,38 @@
                                 </tr>
                               </thead>
                               <tbody v-for="item in tourBooking.data[0].TourPkgRates" :key="item">
-
                                 <tr>
                                   <td>{{item.Age}}</td>
-                                  <td>{{item.Price}}</td>
+                                  <td>${{item.Price}}</td>
                                   <td>{{item.FeesAndTaxes}}</td>
-                                  <td>{{item.Cost}}</td>
+                                  <td>${{item.Cost}}</td>
                                 </tr>
-
-
                               </tbody>
                             </table>
                           </div>
                           <div class="grand-total">
                             <div class="tsub">
+                              <div v-if="tourBooking.data[0].discount2_value > 0">Ticket Cost:</div>
+                              <div v-else>Subtotal:</div>
+                              <div>${{ Number(tourBooking.data[0].SubTotal).toFixed(2) }}</div>
+                            </div>
+                            <div class="tsub" v-if="tourBooking.data[0].discount2_value > 0">
+                              <div>Discount:</div>
+                              <div>
+                                <span v-if="tourBooking.data[0].discount2_percentage > 0">({{ tourBooking.data[0].discount2_percentage }}%)</span> ${{tourBooking.data[0].discount2_value}}</div>
+                            </div>
+                            <div class="tsub" v-if="tourBooking.data[0].discount2_value > 0">
                               <div>Subtotal:</div>
-                              <div>${{tourBooking.data[0].SubTotal}}</div>
+                              <div>${{ Number(tourBooking.data[0].SubTotal - tourBooking.data[0].discount2_value).toFixed(2) }}</div>
                             </div>
                             <div class="tfee">
                               <div>Booking Fees:</div>
-                              <div>${{tourBooking.data[0].Fees}}</div>
+                              <div>${{ Number(tourBooking.data[0].Fees).toFixed(2) }}</div>
                             </div>
                             <div class="tbooking">
                               <div>Booking Total:</div>
                               <div>
-                                ${{tourBooking.data[0].BookingTotal}} <span>(inclusive all taxes)</span>
+                                ${{ Number(tourBooking.data[0].BookingTotal).toFixed(2) }} <span>(inclusive all taxes)</span>
                               </div>
                             </div>
                           </div>

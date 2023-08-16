@@ -1976,6 +1976,7 @@ input.help-block+.checkmark {
 	font-weight: 500;
 	color: #0071c2;
 	margin-bottom: 3px;
+	text-align: left;
 }
 
 .thankyou-main-row .invoice-row .top-row .cta .cta-box .content p {
