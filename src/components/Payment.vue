@@ -842,27 +842,36 @@ export default {
         let self = this;
         axios.get("/apply-coupon/" + this.form.tour_package_id + "/" + this.form.code).then((response) => {
           this.state = 'changed';
-          this.ticket_cost = this.subtotal;
 
           var promocode = response.data.data;
-          this.form.tour_promotion_id = promocode.id;
+          var subtotal = this.subtotal;
           if (promocode.discount_value_type == "Percent") {
-            this.form.discount2_percentage = Number(promocode.discount_value);
-            var discountedAmount = this.subtotal * this.form.discount2_percentage / 100;
-            this.subtotal = Number(this.subtotal - discountedAmount).toFixed(2);
+            var discount2Percentage = Number(promocode.discount_value);
+            var discountedAmount = subtotal * discount2Percentage / 100;
+            subtotal = Number(subtotal - discountedAmount).toFixed(2);
           } else {
             var discountedAmount = Number(promocode.discount_value).toFixed(2);
-            this.subtotal = Number(this.subtotal - discountedAmount).toFixed(2);
+            subtotal = Number(subtotal - discountedAmount).toFixed(2);
           }
-          this.form.discount2_value = Number(discountedAmount).toFixed(2);
-          this.softwarefee = this.roundout(this.subtotal * this.fees / 100, 2);
-          this.form.service_commission = this.softwarefee;
-          var total = Number(this.subtotal) + Number(this.softwarefee);
-          this.total = Number(total).toFixed(2);
-          this.form.total = this.total;
 
-          $('#applyCouponButton').text('Applied').removeClass('btn-primary').addClass('btn-success').attr('disabled', true);
-          this.couponSuccess.push(response.data.message);
+          if (subtotal <= 0) {
+            this.couponErrors.push("Your coupon code is not valid.");
+          } else {
+            this.form.discount2_percentage = discount2Percentage;
+            this.subtotal = subtotal;
+            this.ticket_cost = this.subtotal;
+            this.form.tour_promotion_id = promocode.id;
+            this.form.discount2_value = Number(discountedAmount).toFixed(2);
+            this.softwarefee = this.roundout(this.subtotal * this.fees / 100, 2);
+            this.form.service_commission = this.softwarefee;
+            var total = Number(this.subtotal) + Number(this.softwarefee);
+            this.total = Number(total).toFixed(2);
+            this.form.total = this.total;
+
+            $('#applyCouponButton').text('Applied').removeClass('btn-primary').addClass('btn-success').attr('disabled', true);
+            this.couponSuccess.push(response.data.message);
+          }
+
           this.processLoader(loader);
         }).catch(function (error) {
           self.state = 'initial';
