@@ -855,7 +855,7 @@ export default {
             var discountedAmount = Number(promocode.discount_value).toFixed(2);
             this.subtotal = Number(this.subtotal - discountedAmount).toFixed(2);
           }
-          this.form.discount2_value = discountedAmount;
+          this.form.discount2_value = Number(discountedAmount).toFixed(2);
           this.softwarefee = this.roundout(this.subtotal * this.fees / 100, 2);
           this.form.service_commission = this.softwarefee;
           var total = Number(this.subtotal) + Number(this.softwarefee);
