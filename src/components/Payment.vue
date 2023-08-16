@@ -846,6 +846,7 @@ export default {
           this.state = 'changed';
 
           var promocode = response.data.data;
+          var ticketCost = this.subtotal;
           var subtotal = this.subtotal;
           var discount2Percentage = 0;
           if (promocode.discount_value_type == "Percent") {
@@ -862,7 +863,7 @@ export default {
           } else {
             this.form.discount2_percentage = discount2Percentage;
             this.subtotal = subtotal;
-            this.ticket_cost = this.subtotal;
+            this.ticket_cost = ticketCost;
             this.form.tour_promotion_id = promocode.id;
             this.form.discount2_value = Number(discountedAmount).toFixed(2);
             this.softwarefee = this.roundout(this.subtotal * this.fees / 100, 2);
