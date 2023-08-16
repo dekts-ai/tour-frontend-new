@@ -839,6 +839,7 @@ export default {
       this.couponErrors = [];
       if (!this.form.code) {
         this.couponErrors.push("To receive a discount, please enter the promo code.");
+        this.processLoader(loader);
       } else {
         let self = this;
         axios.get("/apply-coupon/" + this.form.tour_package_id + "/" + this.form.code).then((response) => {
