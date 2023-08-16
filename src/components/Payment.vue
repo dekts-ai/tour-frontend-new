@@ -845,8 +845,9 @@ export default {
 
           var promocode = response.data.data;
           var subtotal = this.subtotal;
+          var discount2Percentage = 0;
           if (promocode.discount_value_type == "Percent") {
-            var discount2Percentage = Number(promocode.discount_value);
+            discount2Percentage = Number(promocode.discount_value);
             var discountedAmount = subtotal * discount2Percentage / 100;
             subtotal = Number(subtotal - discountedAmount).toFixed(2);
           } else {
