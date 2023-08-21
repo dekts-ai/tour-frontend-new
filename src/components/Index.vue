@@ -319,7 +319,7 @@ export default {
 
             var date = `${this.form.date.getDate()}-${this.form.date.getMonth() + 1}-${this.form.date.getFullYear()}`;
 
-            axios.get("/tour-slot/" + date + '/' + this.form.package_id).then((response) => {
+            axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id).then((response) => {
                 this.dateTimeArr = response.data.Time;
                 this.totalavailableseats = response.data.TotalAvailableSeats;
                 this.selectgrouppeoples = [];
@@ -350,7 +350,7 @@ export default {
 
             var date = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
 
-            axios.get("/tour-slot/" + date + '/' + this.form.package_id).then((response) => {
+            axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id).then((response) => {
                 this.dateTimeArr = response.data.Time;
                 this.totalavailableseats = response.data.TotalAvailableSeats;
                 this.selectgrouppeoples = [];
@@ -459,6 +459,7 @@ export default {
                 let checkSlotarr = {
                     'tour_slot_id': this.form.tour_slot_id,
                     'package_id': this.form.package_id,
+                    'affiliate_id': this.form.affiliate_id,
                     'tourists': this.form.peoplegroup,
                     'tour_slot_time': this.form.timedate,
                 };
