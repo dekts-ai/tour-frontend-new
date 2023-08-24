@@ -17,22 +17,22 @@ export default {
   },
   data() {
     return {
-        baseUrl: process.env.VUE_APP_BASE_URL,
-        iframeStatus: false,
-        TourPkgDetails: [],
-        TourPackageLogo: null,
-        packageId: 1,
-        affiliateId: 0,
-        year: null
+      baseUrl: process.env.VUE_APP_BASE_URL,
+      iframeStatus: false,
+      TourPkgDetails: [],
+      TourPackageLogo: null,
+      packageId: 1,
+      affiliateId: 0,
+      year: null
     }
   },
   async created() {
     let uri = window.location.search.substring(1);
     if (uri != '') {
-        let params = new URLSearchParams(uri);
-        this.iframeStatus = params.get("iframe") !== null ? params.get("iframe") : false;
-        this.packageId = params.get("pkg") !== null ? params.get("pkg") : 1;
-        this.affiliateId = params.get("aid") !== null ? params.get("aid") : 0;
+      let params = new URLSearchParams(uri);
+      this.iframeStatus = params.get("iframe") !== null ? params.get("iframe") : false;
+      this.packageId = params.get("pkg") !== null ? params.get("pkg") : 1;
+      this.affiliateId = params.get("aid") !== null ? params.get("aid") : 0;
     } else {
       this.iframeStatus = false;
     }
@@ -46,7 +46,7 @@ export default {
       date = new Date(this.$store.state.date);
     }
 
-    date = date.toLocaleString('en-US', {timeZone: 'US/Arizona'})
+    date = date.toLocaleString('en-US', { timeZone: 'US/Arizona' })
     this.year = date.split(',')[0].split('/')[2];
     this.$store.dispatch('storeYear', this.year);
 
@@ -54,6 +54,8 @@ export default {
       this.$store.dispatch('storeTourPackage', response.data.TourPkgDetails);
       this.TourPkgDetails = response.data.TourPkgDetails;
       this.TourPackageLogo = this.TourPkgDetails[0].TourPackageLogo;
+    }).catch((error) => {
+      console.log(error);
     });
   }
 };
@@ -61,7 +63,7 @@ export default {
 
 <style>
 #app {
- font-family: dovetail-mvb,serif;
+  font-family: dovetail-mvb, serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

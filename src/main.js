@@ -6,6 +6,11 @@ import store from "./store/store";
 import VueLoading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 
-axios.defaults.baseURL = process.env.VUE_APP_API_URL;
+// axios.defaults.baseURL = process.env.VUE_APP_API_URL;
+
+const url = process.env.VUE_APP_API_URL;
+const parts = window.location.host.split('.');
+const tenant = parts[0];
+axios.defaults.baseURL = `https://${tenant}.${url}`;
 
 createApp(App).use(router).use(store).use(VueLoading).mount('#app')
