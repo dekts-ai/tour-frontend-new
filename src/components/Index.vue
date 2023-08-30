@@ -279,7 +279,7 @@ export default {
             details: [],
             disabledDates: {
                 to: new Date(new Date().setDate(new Date().getDate() - 1)),
-                from: new Date(2024, 0, 0)
+                from: this.getEndDate()
             },
             preventDisableDateSelection: true,
             dateTimeArr: [],
@@ -311,6 +311,13 @@ export default {
         this.configure();
     },
     methods: {
+
+        getEndDate(){
+            let date = new Date(new Date().getFullYear(), 11, 31);
+                date.setHours(23, 59, 59, 999)
+            return date;
+        },
+
         configure() {
             console.log('configure');
 
