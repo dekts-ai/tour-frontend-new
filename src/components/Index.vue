@@ -279,7 +279,7 @@ export default {
             details: [],
             disabledDates: {
                 to: new Date(new Date().setDate(new Date().getDate() - 1)),
-                from: new Date(2024, 0, 0)
+                from: new Date(new Date().getFullYear(), 11, 31)
             },
             preventDisableDateSelection: true,
             dateTimeArr: [],
