@@ -531,6 +531,7 @@ export default {
       data: [],
       details: [],
       selectgrouppeoples: [],
+      with_rate_groups: 1,
       form: {
         name: "",
         phone_number: "",
@@ -542,6 +543,7 @@ export default {
         nameoncard: "",
         expiration: "",
         cvv: "",
+        tour_operator_id: "",
         tour_package_id: "",
         affiliate_id: "",
         total: "",
@@ -593,9 +595,10 @@ export default {
     }
 
     var year = this.$store.state.year;
-    axios.get("/tour-package/" + year + "/" + this.data.package_id + "/" + this.data.affiliate_id).then((response) => {
+    axios.get("/tour-package/" + year + "/" + this.data.tour_operator_id + "/" + this.data.package_id + "/" + this.data.affiliate_id + "/" + this.with_rate_groups).then((response) => {
       this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
       this.details = response.data;
+      this.details.TourPkgRates = this.details.TourPkgRates[this.data.package_id];
       this.PermitFee = response.data.TourPkgRates[0].PermitFee;
       this.ProcessingFee = response.data.TourPkgRates[0].ProcessingFee;
       this.Tax = response.data.TourPkgRates[0].Tax;
@@ -798,7 +801,7 @@ export default {
         });
       } else {
         this.$router.push({
-          name: 'Index'
+          name: 'Init'
         });
       }
     },

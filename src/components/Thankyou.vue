@@ -218,7 +218,8 @@ export default {
       baseUrl: process.env.VUE_APP_BASE_URL,
       data: [],
       customer: [],
-      affiliate_id: 0
+      affiliate_id: 0,
+      with_rate_groups: 1,
     };
   },
   mounted() {
@@ -237,7 +238,7 @@ export default {
       }
 
       var year = this.$store.state.year;
-      axios.get("/tour-package/" + year + "/" + this.data.package_id + "/" + this.affiliate_id).then((response) => {
+      axios.get("/tour-package/" + year + "/" + this.data.tour_operator_id + "/" + this.data.package_id + "/" + this.affiliate_id + "/" + this.with_rate_groups).then((response) => {
         this.details = response.data;
         this.booking();
       });

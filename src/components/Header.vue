@@ -4,7 +4,7 @@
       <div class="row align-items-center">
         <div class="col-md-12 text-center text-sm-center text-md-start">
           <a :href="`${baseUrl}`">
-            <img v-if="TourPackageLogo" class="max-width" :src="TourPackageLogo">
+            <img v-if="TourOperatorLogo" class="max-width" :src="TourOperatorLogo">
           </a>
         </div>
       </div>
@@ -15,7 +15,7 @@
 <script>
 export default {
   name: 'Header',
-  props: ["iframeStatus", "TourPackageLogo"],
+  props: ["iframeStatus", "TourOperatorLogo"],
   data() {
     return {
       baseUrl: process.env.VUE_APP_BASE_URL
