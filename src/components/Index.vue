@@ -29,7 +29,7 @@
                                 <div v-for="tourPackage in TourPkgDetails" :key="TourPkgDetails.id" class="col-lg-4 col-md-4 col-sm-6 col-xs-12 deal deal-block">
                                     <div class="item-slide">
                                         <div class="box-img">
-                                            <img :src="tourPackage.TourPackageLogo"
+                                            <img :src="tourPackage.FrontendPackageImage"
                                                 :alt="tourPackage.TourPkgName" />
                                             <div class="text-wrap">
                                                 <h4>{{ tourPackage.TourPkgName }}</h4>
