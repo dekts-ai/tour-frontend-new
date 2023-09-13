@@ -1,4 +1,13 @@
 <template>
+    <section :class="[(iframeStatus == false) ? 'noiframe-inner-banner' : 'iframe-inner-banner', '']"
+        class="banner-section"
+        v-bind:style="{ 'background-image': 'url(' + banner + ')' }">
+        <div class="container">
+            <div class="row">
+                <div class="col-12"></div>
+            </div>
+        </div>
+    </section>
     <section class="inner-content-section">
         <div :class="[(iframeStatus == false) ? 'container' : 'no-container', '']">
             <div class="background-color-sec">
@@ -67,6 +76,7 @@ export default {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
             TourPkgDetails: [],
+            banner: "",
             tourOperatorId: 1,
             packageId: 0,
             affiliateId: 0,
@@ -83,8 +93,9 @@ export default {
         this.affiliateId = this.$store.state.affiliateId;
 
         axios.get("/tour-package/" + this.year + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId).then((response) => {
-            console.log('Index.vue');
-            this.TourPkgDetails = response.data.TourPkgDetails;
+            var self = this;
+            self.TourPkgDetails = response.data.TourPkgDetails;
+            self.banner = self.TourPkgDetails[0].HeaderOne;
         });
     },
     methods: {

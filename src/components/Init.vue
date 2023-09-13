@@ -396,7 +396,6 @@ export default {
 
             var loader = this.$loading.show();
             axios.get("/tour-package/" + this.year + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + this.with_rate_groups).then((response) => {
-                console.log('Init.vue');
                 this.$store.dispatch('storeTourPackage', response.data.TourPkgDetails)
                 this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
                 this.details = response.data;
