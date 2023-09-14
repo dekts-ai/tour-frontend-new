@@ -80,7 +80,7 @@
                                             <button class="tooltipbtn btn-danger" data-toggle="tooltip"
                                                 data-placement="top" title="">Health &
                                                 Safety</button>
-                                            <!-- <button @click="mindChange" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button> -->
+                                            <button @click="mindChange" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
                                         </div>
                                     </div>
                                 </div>
@@ -509,30 +509,10 @@ export default {
             return date >= firstDate && date < secondDate && this.form.package_id == 1;
         },
         mindChange() {
-            if (this.iframeStatus && this.form.tour_operator_id && this.form.package_id && this.form.affiliate_id) {
-                this.$router.push({
-                    name: 'Init',
-                    query: {
-                        oid: this.form.tour_operator_id,
-                        pid: this.form.package_id,
-                        aid: this.form.affiliate_id,
-                        iframe: this.iframeStatus
-                    }
-                });
-            } else if (this.iframeStatus && this.form.tour_operator_id && this.form.package_id) {
-                this.$router.push({
-                    name: 'Init',
-                    query: {
-                        oid: this.form.tour_operator_id,
-                        pid: this.form.package_id,
-                        iframe: this.iframeStatus
-                    }
-                });
-            } else {
-                this.$router.push({
-                    name: 'Index'
-                });
-            }
+            this.$store.dispatch('storePackageId', 0)
+            this.$router.push({
+                name: 'Index'
+            });
         },
     }
 };
