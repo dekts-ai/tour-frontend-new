@@ -18,10 +18,10 @@
                                 <div class="bradcumb-main">
                                     <ul>
                                         <li class="home">
-                                            <a v-if="iframeStatus && form.package_id && form.affiliate_id" :href="`${baseUrl}?pkg=${form.package_id}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
+                                            <a v-if="iframeStatus && form.package_id && form.affiliate_id" :href="`${baseUrl}?oid=${form.tour_operator_id}&pid=${form.package_id}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
                                                 Home
                                             </a>
-                                            <a v-else-if="iframeStatus && form.package_id" :href="`${baseUrl}?pkg=${form.package_id}&iframe=${iframeStatus}`">
+                                            <a v-else-if="iframeStatus && form.package_id" :href="`${baseUrl}?oid=${form.tour_operator_id}&pid=${form.package_id}&iframe=${iframeStatus}`">
                                                 Home
                                             </a>
                                             <a v-else :href="`${baseUrl}`">
@@ -80,6 +80,7 @@
                                             <button class="tooltipbtn btn-danger" data-toggle="tooltip"
                                                 data-placement="top" title="">Health &
                                                 Safety</button>
+                                            <!-- <button @click="mindChange" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button> -->
                                         </div>
                                     </div>
                                 </div>
@@ -506,7 +507,38 @@ export default {
             let firstDate = new Date('01 15 2023');
             let secondDate = new Date('01 22 2023');
             return date >= firstDate && date < secondDate && this.form.package_id == 1;
-        }
+        },
+        mindChange() {
+            if (this.iframeStatus && this.form.tour_operator_id && this.form.package_id && this.form.affiliate_id) {
+                this.$router.push({
+                    name: 'Init',
+                    query: {
+                        oid: this.form.tour_operator_id,
+                        pid: this.form.package_id,
+                        aid: this.form.affiliate_id,
+                        iframe: this.iframeStatus
+                    }
+                });
+            } else if (this.iframeStatus && this.form.tour_operator_id && this.form.package_id) {
+                this.$router.push({
+                    name: 'Init',
+                    query: {
+                        oid: this.form.tour_operator_id,
+                        pid: this.form.package_id,
+                        iframe: this.iframeStatus
+                    }
+                });
+            } else {
+                this.$router.push({
+                    name: 'Index'
+                });
+            }
+        },
     }
 };
 </script>
+
+<style>
+.payment-row .booking-row .info .btn-primary {margin-left: 5px; color: #004085; background-color: #cce5ff; border: 1px solid #b8daff; font-size: 13px; vertical-align: baseline; padding: 6px 17px; font-weight: 500;}
+.payment-row .booking-row .info .btn-primary .fa {margin-right: 5px; margin-left: -5px;}
+</style>

@@ -19,10 +19,10 @@
                 <div class="bradcumb-main">
                   <ul>
                     <li class="home">
-                      <a v-if="iframeStatus && data.package_id && affiliate_id" :href="`${baseUrl}?pkg=${data.package_id}&aid=${affiliate_id}&iframe=${iframeStatus}`">
+                      <a v-if="iframeStatus && data.package_id && affiliate_id" :href="`${baseUrl}?oid=${data.tour_operator_id}&pid=${data.package_id}&aid=${affiliate_id}&iframe=${iframeStatus}`">
                           Home
                       </a>
-                      <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?pkg=${data.package_id}&iframe=${iframeStatus}`">
+                      <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?oid=${data.tour_operator_id}&pid=${data.package_id}&iframe=${iframeStatus}`">
                           Home
                       </a>
                       <a v-else :href="`${baseUrl}`">
@@ -183,7 +183,13 @@
                             </div>
                             <ul>
                               <li>
-                                <a :href="`${baseUrl}`">
+                                <a v-if="iframeStatus && data.package_id && data.affiliate_id" :href="`${baseUrl}?oid=${data.tour_operator_id}&pid=${data.package_id}&aid=${data.affiliate_id}&iframe=${iframeStatus}`">
+                                  Home Page
+                                </a>
+                                <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?oid=${data.tour_operator_id}&pid=${data.package_id}&iframe=${iframeStatus}`">
+                                  Home Page
+                                </a>
+                                <a v-else :href="`${baseUrl}`">
                                   Home Page
                                 </a>
                               </li>

@@ -19,10 +19,10 @@
                 <div class="bradcumb-main">
                   <ul>
                     <li class="home">
-                      <a v-if="iframeStatus && data.package_id && form.affiliate_id" :href="`${baseUrl}?pkg=${data.package_id}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
+                      <a v-if="iframeStatus && data.package_id && form.affiliate_id" :href="`${baseUrl}?oid=${data.tour_operator_id}&pid=${data.package_id}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
                           Home
                       </a>
-                      <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?pkg=${data.package_id}&iframe=${iframeStatus}`">
+                      <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?oid=${data.tour_operator_id}&pid=${data.package_id}&iframe=${iframeStatus}`">
                           Home
                       </a>
                       <a v-else :href="`${baseUrl}`">
@@ -782,26 +782,28 @@ export default {
       }
     },
     mindChange() {
-      if (this.iframeStatus && this.data.package_id && this.form.affiliate_id) {
+      if (this.iframeStatus && this.data.tour_operator_id && this.data.package_id && this.form.affiliate_id) {
         this.$router.push({
-          name: 'Index',
+          name: 'Init',
           query: {
-            pkg: this.data.package_id,
+            oid: this.data.tour_operator_id,
+            pid: this.data.package_id,
             aid: this.form.affiliate_id,
             iframe: this.iframeStatus
           }
         });
-      } else if (this.iframeStatus && this.data.package_id) {
+      } else if (this.iframeStatus && this.data.tour_operator_id && this.data.package_id) {
         this.$router.push({
-          name: 'Index',
+          name: 'Init',
           query: {
-            pkg: this.data.package_id,
+            oid: this.data.tour_operator_id,
+            pid: this.data.package_id,
             iframe: this.iframeStatus
           }
         });
       } else {
         this.$router.push({
-          name: 'Init'
+          name: 'Index'
         });
       }
     },
