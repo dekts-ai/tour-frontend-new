@@ -13,7 +13,7 @@ let tenant = "dixie";
 let uri = window.location.search.substring(1);
 if (uri != '') {
     let params = new URLSearchParams(uri);
-    tenant = params.get("tid") !== null ? params.get("tid") : null;
+    tenant = params.get("tid") !== null ? params.get("tid") : "dixie";
 }
 
 const url = process.env.VUE_APP_API_URL;
