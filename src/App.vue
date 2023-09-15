@@ -1,7 +1,7 @@
 <template>
-  <Header :iframeStatus="iframeStatus" :TourPackageLogo="TourPackageLogo"></Header>
+  <Header :iframeStatus="iframeStatus" :TourOperatorLogo="TourOperatorLogo"></Header>
   <router-view></router-view>
-  <Footer :iframeStatus="iframeStatus" :TourPackageLogo="TourPackageLogo"></Footer>
+  <Footer :iframeStatus="iframeStatus" :TourOperatorLogo="TourOperatorLogo"></Footer>
 </template>
 
 <script>
@@ -19,9 +19,9 @@ export default {
     return {
       baseUrl: process.env.VUE_APP_BASE_URL,
       iframeStatus: false,
-      TourPkgDetails: [],
-      TourPackageLogo: null,
-      packageId: 1,
+      TourOperatorLogo: null,
+      tourOperatorId: 1,
+      packageId: 0,
       affiliateId: 0,
       year: null
     }
@@ -31,12 +31,14 @@ export default {
     if (uri != '') {
       let params = new URLSearchParams(uri);
       this.iframeStatus = params.get("iframe") !== null ? params.get("iframe") : false;
-      this.packageId = params.get("pkg") !== null ? params.get("pkg") : 1;
+      this.tourOperatorId = params.get("oid") !== null ? params.get("oid") : 1;
+      this.packageId = params.get("pid") !== null ? params.get("pid") : 0;
       this.affiliateId = params.get("aid") !== null ? params.get("aid") : 0;
     } else {
       this.iframeStatus = false;
     }
 
+    this.$store.dispatch('storeTourOperatorId', this.tourOperatorId);
     this.$store.dispatch('storePackageId', this.packageId);
     this.$store.dispatch('storeAffiliateId', this.affiliateId);
     this.$store.dispatch('storeIframeStatus', this.iframeStatus);
@@ -50,12 +52,8 @@ export default {
     this.year = date.split(',')[0].split('/')[2];
     this.$store.dispatch('storeYear', this.year);
 
-    axios.get("/tour-package/" + this.year + "/" + this.packageId + "/" + this.affiliateId).then((response) => {
-      this.$store.dispatch('storeTourPackage', response.data.TourPkgDetails);
-      this.TourPkgDetails = response.data.TourPkgDetails;
-      this.TourPackageLogo = this.TourPkgDetails[0].TourPackageLogo;
-    }).catch((error) => {
-      console.log(error);
+    axios.get("/tour-operator-logo/" + this.tourOperatorId).then((response) => {
+      this.TourOperatorLogo = response.data.TourOperatorLogo;
     });
   }
 };

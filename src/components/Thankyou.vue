@@ -19,10 +19,10 @@
                 <div class="bradcumb-main">
                   <ul>
                     <li class="home">
-                      <a v-if="iframeStatus && data.package_id && affiliate_id" :href="`${baseUrl}?pkg=${data.package_id}&aid=${affiliate_id}&iframe=${iframeStatus}`">
+                      <a v-if="iframeStatus && data.package_id && affiliate_id" :href="`${baseUrl}?oid=${data.tour_operator_id}&pid=${data.package_id}&aid=${affiliate_id}&iframe=${iframeStatus}`">
                           Home
                       </a>
-                      <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?pkg=${data.package_id}&iframe=${iframeStatus}`">
+                      <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?oid=${data.tour_operator_id}&pid=${data.package_id}&iframe=${iframeStatus}`">
                           Home
                       </a>
                       <a v-else :href="`${baseUrl}`">
@@ -183,7 +183,13 @@
                             </div>
                             <ul>
                               <li>
-                                <a :href="`${baseUrl}`">
+                                <a v-if="iframeStatus && data.package_id && data.affiliate_id" :href="`${baseUrl}?oid=${data.tour_operator_id}&pid=${data.package_id}&aid=${data.affiliate_id}&iframe=${iframeStatus}`">
+                                  Home Page
+                                </a>
+                                <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?oid=${data.tour_operator_id}&pid=${data.package_id}&iframe=${iframeStatus}`">
+                                  Home Page
+                                </a>
+                                <a v-else :href="`${baseUrl}`">
                                   Home Page
                                 </a>
                               </li>
@@ -218,7 +224,8 @@ export default {
       baseUrl: process.env.VUE_APP_BASE_URL,
       data: [],
       customer: [],
-      affiliate_id: 0
+      affiliate_id: 0,
+      with_rate_groups: 1,
     };
   },
   mounted() {
@@ -237,7 +244,7 @@ export default {
       }
 
       var year = this.$store.state.year;
-      axios.get("/tour-package/" + year + "/" + this.data.package_id + "/" + this.affiliate_id).then((response) => {
+      axios.get("/tour-package/" + year + "/" + this.data.tour_operator_id + "/" + this.data.package_id + "/" + this.affiliate_id + "/" + this.with_rate_groups).then((response) => {
         this.details = response.data;
         this.booking();
       });
