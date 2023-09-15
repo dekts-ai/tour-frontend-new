@@ -20,6 +20,7 @@ export default {
       baseUrl: process.env.VUE_APP_BASE_URL,
       iframeStatus: false,
       TourOperatorLogo: null,
+      tenantId: 'dixie',
       tourOperatorId: 1,
       packageId: 0,
       affiliateId: 0,
@@ -31,6 +32,7 @@ export default {
     if (uri != '') {
       let params = new URLSearchParams(uri);
       this.iframeStatus = params.get("iframe") !== null ? params.get("iframe") : false;
+      this.tenantId = params.get("tid") !== null ? params.get("tid") : 'dixie';
       this.tourOperatorId = params.get("oid") !== null ? params.get("oid") : 1;
       this.packageId = params.get("pid") !== null ? params.get("pid") : 0;
       this.affiliateId = params.get("aid") !== null ? params.get("aid") : 0;
@@ -38,6 +40,7 @@ export default {
       this.iframeStatus = false;
     }
 
+    this.$store.dispatch('storeTenantId', this.tenantId);
     this.$store.dispatch('storeTourOperatorId', this.tourOperatorId);
     this.$store.dispatch('storePackageId', this.packageId);
     this.$store.dispatch('storeAffiliateId', this.affiliateId);

@@ -7,6 +7,7 @@ export default createStore({
         iframeStatus: false,
         year: null,
         date: null,
+        tenantId: 0,
         tourOperatorId: 0,
         packageId: 0,
         affiliateId: 0,
@@ -26,6 +27,9 @@ export default createStore({
         },
         date: state => {
             return state.date;
+        },
+        tenantId: state => {
+            return state.tenantId;
         },
         tourOperatorId: state => {
             return state.tourOperatorId;
@@ -65,6 +69,9 @@ export default createStore({
         DATE(state, date) {
             state.date = date;
         },
+        TENANT_ID(state, tenantId) {
+            state.tenantId = tenantId;
+        },
         TOUR_OPERATOR_ID(state, tourOperatorId) {
             state.tourOperatorId = tourOperatorId;
         },
@@ -102,6 +109,9 @@ export default createStore({
         },
         storeDate({ commit }, date) {
             commit('DATE', date);
+        },
+        storeTenantId({ commit }, tenantId) {
+            commit('TENANT_ID', tenantId);
         },
         storeTourOperatorId({ commit }, tourOperatorId) {
             commit('TOUR_OPERATOR_ID', tourOperatorId);
