@@ -19,10 +19,10 @@
                 <div class="bradcumb-main">
                   <ul>
                     <li class="home">
-                      <a v-if="iframeStatus && data.package_id && form.affiliate_id" :href="`${baseUrl}?oid=${data.tour_operator_id}&pid=${data.package_id}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
+                      <a v-if="iframeStatus && data.package_id && form.affiliate_id" :href="`${baseUrl}?tid=${data.tenant_id}&oid=${data.tour_operator_id}&pid=${data.package_id}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
                           Home
                       </a>
-                      <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?oid=${data.tour_operator_id}&pid=${data.package_id}&iframe=${iframeStatus}`">
+                      <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?tid=${data.tenant_id}&oid=${data.tour_operator_id}&pid=${data.package_id}&iframe=${iframeStatus}`">
                           Home
                       </a>
                       <a v-else :href="`${baseUrl}`">
@@ -782,20 +782,22 @@ export default {
       }
     },
     mindChange() {
-      if (this.iframeStatus && this.data.tour_operator_id && this.data.package_id && this.form.affiliate_id) {
+      if (this.iframeStatus && this.data.package_id && this.form.affiliate_id) {
         this.$router.push({
           name: 'Init',
           query: {
+            tid: this.data.tenant_id,
             oid: this.data.tour_operator_id,
             pid: this.data.package_id,
             aid: this.form.affiliate_id,
             iframe: this.iframeStatus
           }
         });
-      } else if (this.iframeStatus && this.data.tour_operator_id && this.data.package_id) {
+      } else if (this.iframeStatus && this.data.package_id) {
         this.$router.push({
           name: 'Init',
           query: {
+            tid: this.data.tenant_id,
             oid: this.data.tour_operator_id,
             pid: this.data.package_id,
             iframe: this.iframeStatus

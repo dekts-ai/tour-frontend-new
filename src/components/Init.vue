@@ -18,10 +18,10 @@
                                 <div class="bradcumb-main">
                                     <ul>
                                         <li class="home">
-                                            <a v-if="iframeStatus && form.package_id && form.affiliate_id" :href="`${baseUrl}?oid=${form.tour_operator_id}&pid=${form.package_id}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
+                                            <a v-if="iframeStatus && form.package_id && form.affiliate_id" :href="`${baseUrl}?tid=${form.tenant_id}&oid=${form.tour_operator_id}&pid=${form.package_id}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
                                                 Home
                                             </a>
-                                            <a v-else-if="iframeStatus && form.package_id" :href="`${baseUrl}?oid=${form.tour_operator_id}&pid=${form.package_id}&iframe=${iframeStatus}`">
+                                            <a v-else-if="iframeStatus && form.package_id" :href="`${baseUrl}?tid=${form.tenant_id}&oid=${form.tour_operator_id}&pid=${form.package_id}&iframe=${iframeStatus}`">
                                                 Home
                                             </a>
                                             <a v-else :href="`${baseUrl}`">
@@ -288,6 +288,7 @@ export default {
             errors: [],
             form: {
                 iframeStatusInfo: "",
+                tenant_id: "",
                 tour_operator_id: "",
                 package_id: "",
                 affiliate_id: "",
@@ -303,6 +304,7 @@ export default {
     },
     created: function () {
         this.iframeStatus = this.$store.state.iframeStatus;
+        this.form.tenant_id = this.$store.state.tenantId;
         this.form.tour_operator_id = this.$store.state.tourOperatorId;
         this.form.package_id = this.$store.state.packageId;
         this.form.affiliate_id = this.$store.state.affiliateId;

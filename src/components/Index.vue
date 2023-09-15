@@ -48,7 +48,7 @@
                                                             <span>{{ tourPackage.TourPkgDuration }}</span>
                                                         </div>
                                                         <div class="book-now-c">
-                                                            <button @click="bookNow(tourOperatorId, tourPackage.TourPackageId)">Book Now</button>
+                                                            <button @click="bookNow(tenantId, tourOperatorId, tourPackage.TourPackageId)">Book Now</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -81,6 +81,7 @@ export default {
             iframeStatus: false,
             TourPkgDetails: [],
             banner: "",
+            tenantId: "dixie",
             tourOperatorId: 1,
             packageId: 0,
             affiliateId: 0,
@@ -88,14 +89,15 @@ export default {
         };
     },
     async created() {
-        this.iframeStatus = this.$store.state.iframeStatus;
         this.year = this.$store.state.year;
+        this.tenantId = this.$store.state.tenantId;
         this.tourOperatorId = this.$store.state.tourOperatorId;
         this.packageId = this.$store.state.packageId;
+        this.affiliateId = this.$store.state.affiliateId;
+        this.iframeStatus = this.$store.state.iframeStatus;
         if (this.packageId > 0) {
             this.$router.push("/initialize");
         }
-        this.affiliateId = this.$store.state.affiliateId;
 
         axios.get("/tour-package/" + this.year + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId).then((response) => {
             var self = this;
@@ -104,7 +106,8 @@ export default {
         });
     },
     methods: {
-        bookNow(oid, pid) {
+        bookNow(tid, oid, pid) {
+            this.$store.dispatch('storeTenantId', tid);
             this.$store.dispatch('storeTourOperatorId', oid);
             this.$store.dispatch('storePackageId', pid);
             this.$router.push("/initialize");
