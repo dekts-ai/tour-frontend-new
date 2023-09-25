@@ -81,7 +81,7 @@ export default {
             iframeStatus: false,
             TourPkgDetails: [],
             banner: "",
-            tenantId: "dixie",
+            tenantId: "dixies",
             tourOperatorId: 1,
             packageId: 0,
             affiliateId: 0,

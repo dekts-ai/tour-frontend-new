@@ -9,11 +9,11 @@ import 'vue-loading-overlay/dist/vue-loading.css';
 
 // axios.defaults.baseURL = process.env.VUE_APP_API_URL;
 
-let tenant = "dixie";
+let tenant = "dixies";
 let uri = window.location.search.substring(1);
 if (uri != '') {
     let params = new URLSearchParams(uri);
-    tenant = params.get("tid") !== null ? params.get("tid") : "dixie";
+    tenant = params.get("tid") !== null ? params.get("tid") : "dixies";
 }
 
 const url = process.env.VUE_APP_API_URL;
