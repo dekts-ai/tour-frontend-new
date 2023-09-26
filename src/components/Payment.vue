@@ -19,10 +19,10 @@
                 <div class="bradcumb-main">
                   <ul>
                     <li class="home">
-                      <a v-if="iframeStatus && data.package_id && form.affiliate_id" :href="`${baseUrl}?pkg=${data.package_id}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
+                      <a v-if="iframeStatus && data.package_id && form.affiliate_id" :href="`${baseUrl}?tid=${data.tenant_id}&oid=${data.tour_operator_id}&pid=${data.package_id}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
                           Home
                       </a>
-                      <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?pkg=${data.package_id}&iframe=${iframeStatus}`">
+                      <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?tid=${data.tenant_id}&oid=${data.tour_operator_id}&pid=${data.package_id}&iframe=${iframeStatus}`">
                           Home
                       </a>
                       <a v-else :href="`${baseUrl}`">
@@ -531,6 +531,7 @@ export default {
       data: [],
       details: [],
       selectgrouppeoples: [],
+      with_rate_groups: 1,
       form: {
         name: "",
         phone_number: "",
@@ -542,6 +543,7 @@ export default {
         nameoncard: "",
         expiration: "",
         cvv: "",
+        tour_operator_id: "",
         tour_package_id: "",
         affiliate_id: "",
         total: "",
@@ -593,9 +595,10 @@ export default {
     }
 
     var year = this.$store.state.year;
-    axios.get("/tour-package/" + year + "/" + this.data.package_id + "/" + this.data.affiliate_id).then((response) => {
+    axios.get("/tour-package/" + year + "/" + this.data.tour_operator_id + "/" + this.data.package_id + "/" + this.data.affiliate_id + "/" + this.with_rate_groups).then((response) => {
       this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
       this.details = response.data;
+      this.details.TourPkgRates = this.details.TourPkgRates[this.data.package_id];
       this.PermitFee = response.data.TourPkgRates[0].PermitFee;
       this.ProcessingFee = response.data.TourPkgRates[0].ProcessingFee;
       this.Tax = response.data.TourPkgRates[0].Tax;
@@ -781,18 +784,22 @@ export default {
     mindChange() {
       if (this.iframeStatus && this.data.package_id && this.form.affiliate_id) {
         this.$router.push({
-          name: 'Index',
+          name: 'Init',
           query: {
-            pkg: this.data.package_id,
+            tid: this.data.tenant_id,
+            oid: this.data.tour_operator_id,
+            pid: this.data.package_id,
             aid: this.form.affiliate_id,
             iframe: this.iframeStatus
           }
         });
       } else if (this.iframeStatus && this.data.package_id) {
         this.$router.push({
-          name: 'Index',
+          name: 'Init',
           query: {
-            pkg: this.data.package_id,
+            tid: this.data.tenant_id,
+            oid: this.data.tour_operator_id,
+            pid: this.data.package_id,
             iframe: this.iframeStatus
           }
         });

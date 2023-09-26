@@ -18,7 +18,7 @@
 <script>
 export default {
   name: "Footer",
-  props: ["iframeStatus", "TourPackageLogo"],
+  props: ["iframeStatus", "TourOperatorLogo"],
   data() {
     return {
       baseUrl: process.env.VUE_APP_BASE_URL
