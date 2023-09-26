@@ -1,5 +1,7 @@
-import Payment from './components/Payment.vue';
+
 import Index from'./components/Index.vue';
+import Init from'./components/Init.vue';
+import Payment from './components/Payment.vue';
 import Thankyou from './components/Thankyou.vue';
 
 import { createRouter, createWebHistory } from 'vue-router'
@@ -9,6 +11,11 @@ const routes = [
         name: 'Index',
         component: Index,
         path: '/'
+    },
+    {
+        name: 'Init',
+        component: Init,
+        path: '/initialize'
     },
     {
         name: 'Payment',
@@ -23,7 +30,7 @@ const routes = [
 ];
 const router = createRouter({
     history:createWebHistory(),
-    routes, 
+    routes,
 });
 
 export default router;
