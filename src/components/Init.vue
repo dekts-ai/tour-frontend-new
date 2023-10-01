@@ -321,7 +321,7 @@ export default {
     },
     methods: {
         getEndDate() {
-            let date = new Date(new Date().getFullYear(), 11, 31);
+            let date = new Date(new Date().getFullYear() + 1, 11, 31);
                 date.setHours(23, 59, 59, 999)
             return date;
         },
