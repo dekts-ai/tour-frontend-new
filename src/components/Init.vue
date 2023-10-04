@@ -353,6 +353,8 @@ export default {
             });
 
             this.year = this.form.date.getFullYear();
+            this.$store.dispatch('storeYear', this.year);
+
             this.updateRateGroups();
         },
         selectedDate(date) {
@@ -385,6 +387,8 @@ export default {
             });
 
             this.year = this.form.date.getFullYear();
+            this.$store.dispatch('storeYear', this.year);
+
             this.updateRateGroups();
         },
         selectedSlot: function (id, timedate) {
