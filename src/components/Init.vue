@@ -101,7 +101,7 @@
                                                 <div class="col-12 col-md-8 mt-4 mt-md-0">
                                                     <h2>Select a start time for your tour:</h2>
                                                     <div v-if="staticDateRange(form.date)">
-                                                        <h3 class="watermark" style="width: 80%; margin: auto;">Canyon is closed for repairs. Please select another day.</h3>
+                                                        <h3 class="watermark static-date-range">Canyon is closed for repairs. Please select another day.</h3>
                                                         <br>
                                                     </div>
                                                     <div class="radio-toolbar" v-if="dateTimeArr.length > 0">
@@ -527,4 +527,5 @@ export default {
 <style>
 .payment-row .booking-row .info .btn-primary {margin-left: 5px; color: #004085; background-color: #cce5ff; border: 1px solid #b8daff; font-size: 13px; vertical-align: baseline; padding: 6px 17px; font-weight: 500;}
 .payment-row .booking-row .info .btn-primary .fa {margin-right: 5px; margin-left: -5px;}
+.static-date-range {width: 80%; margin: auto;}
 </style>
