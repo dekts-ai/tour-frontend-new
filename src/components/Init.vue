@@ -131,15 +131,33 @@
                                                     <!-- <div class="radio-toolbar" v-else>
                                                         <h2>Slot not found</h2>
                                                     </div> -->
+                                                    <div class="hotel-list-item"
+                                                        v-for="hotel in hotels"
+                                                        :key="hotel.id" 
+                                                        @click="selectedHotel(hotel.id)"
+                                                        @mouseover="flip(hotel.id)"
+                                                        @mouseout="unflip(hotel.id)"
+                                                        :class="{ 'flip': hotel.id === flippedHotelId, 'checked': hotel.id === form.hotel_id }">
+
+                                                        <div class="front">
+                                                            <label :for="'hotel-list-item' + hotel.id "></label>
+                                                            <div class="hotel-list-item-img"><img :src="'https://picsum.photos/1024/1024?nocache=' + hotel.id " :alt="hotel.name"></div>
+                                                            <input :id="'hotel-list-item' + hotel.id " type="radio" name="hotel_id">
+                                                            <div class="hotel-list-item-title">{{ hotel.name }}</div>
+                                                        </div>
+
+                                                        <div class="back">
+                                                            <label :for="'hotel-list-item' + hotel.id "></label>
+                                                            <div class="hotel-list-item-address">{{ hotel.address }}</div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <hr>
                                             <p v-if="errors.length">
                                                 <b>Please correct the following error(s):</b>
                                             <ul>
-                                                <li v-for="error in errors" :key="error"
-                                                    v-bind:class="{'text-danger': error }" style="font-size:25px">{{
-                                                    error }}</li>
+                                                <li v-for="error in errors" :key="error" v-bind:class="{'text-danger': error }" style="font-size:25px">{{ error }}</li>
                                             </ul>
                                             </p>
                                             <div class="row groupofpeople">
@@ -278,6 +296,8 @@ export default {
             totalavailableseats: {},
             selectgrouppeoples: [],
             details: [],
+            hotels: [],
+            flippedHotelId: null,
             disabledDates: {
                 to: new Date(new Date().setDate(new Date().getDate() - 1)),
                 from: this.getEndDate()
@@ -292,6 +312,7 @@ export default {
                 tour_operator_id: "",
                 package_id: "",
                 affiliate_id: "",
+                hotel_id: 0,
                 date: new Date(),
                 timedate: "",
                 peoplegroup: [],
@@ -398,6 +419,16 @@ export default {
             this.form.tour_slot_id = id;
             this.form.timedate = timedate;
         },
+        selectedHotel: function (hotelId) {
+            this.$store.dispatch('storeHotelId', hotelId)
+            this.form.hotel_id = hotelId;
+        },
+        flip(hotelId) {
+            this.flippedHotelId = hotelId;
+        },
+        unflip(hotelId) {
+            this.flippedHotelId = null;
+        },
         updateRateGroups() {
             console.log('updateRateGroups');
 
@@ -407,6 +438,7 @@ export default {
                 this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
                 this.details = response.data;
                 this.details.TourPkgRates = this.details.TourPkgRates[this.form.package_id];
+                this.hotels = response.data.hotels;
 
                 // Define Variables
                 var v1 = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;

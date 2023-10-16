@@ -546,6 +546,7 @@ export default {
         tour_operator_id: "",
         tour_package_id: "",
         affiliate_id: "",
+        hotel_id: "",
         total: "",
         touristsArr: "",
         tourists: "",
@@ -584,6 +585,7 @@ export default {
   },
   created() {
     this.form.affiliate_id = this.$store.state.affiliateId;
+    this.form.hotel_id = this.$store.state.hotelId;
     this.data = this.$store.state.formData;
     if (this.data == null) {
       window.location.href = '/';
