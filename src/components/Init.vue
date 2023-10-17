@@ -131,24 +131,29 @@
                                                     <!-- <div class="radio-toolbar" v-else>
                                                         <h2>Slot not found</h2>
                                                     </div> -->
-                                                    <div class="hotel-list-item"
-                                                        v-for="hotel in hotels"
-                                                        :key="hotel.id" 
-                                                        @click="selectedHotel(hotel.id)"
-                                                        @mouseover="flip(hotel.id)"
-                                                        @mouseout="unflip(hotel.id)"
-                                                        :class="{ 'flip': hotel.id === flippedHotelId, 'checked': hotel.id === form.hotel_id }">
+                                                    <div class="row hotel-list-item-wrap">
+                                                        <div class="col-12 col-md-6"
+                                                            v-for="hotel in hotels"
+                                                            :key="hotel.id">
 
-                                                        <div class="front">
-                                                            <label :for="'hotel-list-item' + hotel.id "></label>
-                                                            <div class="hotel-list-item-img"><img :src="'https://picsum.photos/1024/1024?nocache=' + hotel.id " :alt="hotel.name"></div>
-                                                            <input :id="'hotel-list-item' + hotel.id " type="radio" name="hotel_id">
-                                                            <div class="hotel-list-item-title">{{ hotel.name }}</div>
-                                                        </div>
+                                                            <div class="hotel-list-item"
+                                                                @click="selectedHotel(hotel.id)"
+                                                                @mouseover="flip(hotel.id)"
+                                                                @mouseout="unflip(hotel.id)"
+                                                                :class="{ 'flip': hotel.id === flippedHotelId, 'checked': hotel.id === form.hotel_id }">
 
-                                                        <div class="back">
-                                                            <label :for="'hotel-list-item' + hotel.id "></label>
-                                                            <div class="hotel-list-item-address">{{ hotel.address }}</div>
+                                                                <div class="front">
+                                                                    <label :for="'hotel-list-item' + hotel.id "></label>
+                                                                    <div class="hotel-list-item-img"><img :src="'https://picsum.photos/1024/1024?nocache=' + hotel.id " :alt="hotel.name"></div>
+                                                                    <input :id="'hotel-list-item' + hotel.id " type="radio" name="hotel_id">
+                                                                    <div class="hotel-list-item-title">{{ hotel.name }}</div>
+                                                                </div>
+
+                                                                <div class="back">
+                                                                    <label :for="'hotel-list-item' + hotel.id "></label>
+                                                                    <div class="hotel-list-item-address">{{ hotel.address }}</div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
