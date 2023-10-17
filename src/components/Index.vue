@@ -85,11 +85,11 @@ export default {
             tourOperatorId: 1,
             packageId: 0,
             affiliateId: 0,
-            year: null
+            date: null
         };
     },
     async created() {
-        this.year = this.$store.state.year;
+        this.date = this.$store.state.date;
         this.tenantId = this.$store.state.tenantId;
         this.tourOperatorId = this.$store.state.tourOperatorId;
         this.packageId = this.$store.state.packageId;
@@ -99,7 +99,7 @@ export default {
             this.$router.push("/initialize");
         }
 
-        axios.get("/tour-package/" + this.year + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId).then((response) => {
+        axios.get("/tour-package/" + this.date + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId).then((response) => {
             var self = this;
             self.TourPkgDetails = response.data.TourPkgDetails;
             self.banner = self.TourPkgDetails[0].HeaderOne;

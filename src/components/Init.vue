@@ -292,7 +292,6 @@ export default {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
             TourPkgName: "",
-            year: "",
             totalavailableseats: {},
             selectgrouppeoples: [],
             details: [],
@@ -352,7 +351,7 @@ export default {
             var loader = this.$loading.show();
             document.title = "Native American Tours";
 
-            var date = `${this.form.date.getDate()}-${this.form.date.getMonth() + 1}-${this.form.date.getFullYear()}`;
+            var date = `${this.form.date.getFullYear()}-${this.form.date.getMonth() + 1}-${this.form.date.getDate()}`;
 
             axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id).then((response) => {
                 this.dateTimeArr = response.data.Time;
@@ -373,10 +372,7 @@ export default {
                 this.processLoader(loader);
             });
 
-            this.year = this.form.date.getFullYear();
-            this.$store.dispatch('storeYear', this.year);
-
-            this.updateRateGroups();
+            this.updateRateGroups(date);
         },
         selectedDate(date) {
             console.log('selectedDate');
@@ -385,7 +381,7 @@ export default {
             this.form.date = date;
             this.dateTimeArr = [];
 
-            var date = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+            var date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 
             axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id).then((response) => {
                 this.dateTimeArr = response.data.Time;
@@ -407,10 +403,7 @@ export default {
                 this.processLoader(loader);
             });
 
-            this.year = this.form.date.getFullYear();
-            this.$store.dispatch('storeYear', this.year);
-
-            this.updateRateGroups();
+            this.updateRateGroups(date);
         },
         selectedSlot: function (id, timedate) {
             console.log('selectedSlot');
@@ -429,11 +422,11 @@ export default {
         unflip(hotelId) {
             this.flippedHotelId = null;
         },
-        updateRateGroups() {
+        updateRateGroups(date) {
             console.log('updateRateGroups');
 
             var loader = this.$loading.show();
-            axios.get("/tour-package/" + this.year + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + this.with_rate_groups).then((response) => {
+            axios.get("/tour-package/" + date + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + this.with_rate_groups).then((response) => {
                 this.$store.dispatch('storeTourPackage', response.data.TourPkgDetails)
                 this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
                 this.details = response.data;

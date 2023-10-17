@@ -5,7 +5,6 @@ import { createStore } from "vuex";
 export default createStore({
     state: {
         iframeStatus: false,
-        year: null,
         date: null,
         tenantId: 0,
         tourOperatorId: 0,
@@ -22,9 +21,6 @@ export default createStore({
     getters: {
         iframeStatus: state => {
             return state.iframeStatus;
-        },
-        year: state => {
-            return state.year;
         },
         date: state => {
             return state.date;
@@ -67,9 +63,6 @@ export default createStore({
         IFRAME_STATUS(state, iframeStatus) {
             state.iframeStatus = iframeStatus;
         },
-        YEAR(state, year) {
-            state.year = year;
-        },
         DATE(state, date) {
             state.date = date;
         },
@@ -110,9 +103,6 @@ export default createStore({
     actions: {
         storeIframeStatus({ commit }, iframeStatus) {
             commit('IFRAME_STATUS', iframeStatus);
-        },
-        storeYear({ commit }, year) {
-            commit('YEAR', year);
         },
         storeDate({ commit }, date) {
             commit('DATE', date);
