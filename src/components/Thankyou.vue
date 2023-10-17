@@ -241,8 +241,10 @@ export default {
         this.iframeStatus = false;
       }
 
-      var year = this.$store.state.year;
-      axios.get("/tour-package/" + year + "/" + this.data.tour_operator_id + "/" + this.data.package_id + "/" + this.affiliate_id + "/" + this.with_rate_groups).then((response) => {
+      var date = new Date(this.$store.state.date);
+      date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+
+      axios.get("/tour-package/" + date + "/" + this.data.tour_operator_id + "/" + this.data.package_id + "/" + this.affiliate_id + "/" + this.with_rate_groups).then((response) => {
         this.details = response.data;
         this.booking();
       });
