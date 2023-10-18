@@ -333,6 +333,7 @@ export default {
         this.form.tour_operator_id = this.$store.state.tourOperatorId;
         this.form.package_id = this.$store.state.packageId;
         this.form.affiliate_id = this.$store.state.affiliateId;
+        this.form.hotel_id = this.$store.state.hotelId;
         if (this.form.package_id === 0) {
             window.location.href = '/';
         }

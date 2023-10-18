@@ -3098,3 +3098,43 @@ section.iframe-inner-banner.banner-section {
 	object-fit: cover;
 	object-position: center center;
 }
+
+.hotel-section {
+    padding: 13px 13px 0;
+}
+
+.hotel-section .hotel-title {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: #333;
+    letter-spacing: -0.288px;
+}
+
+.hotel-section .hotel-name {
+    color: #333;
+    letter-spacing: -0.288px;
+}
+
+.hotel-section .hotel-wrapper {
+    border: 1px dotted #b2d4ed;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.hotel-section .hotel-wrapper .hotel-image {
+    max-width: 100px;
+    margin-right: 5px;
+    max-height: 100px
+}
+
+.hotel-section .hotel-wrapper .hotel-image img {
+	height: -webkit-fill-available;
+}
+
+.hotel-section .hotel-wrapper .hotel-detail {
+    background-color: #f2f9f3;
+    border-radius: 5px;
+    padding: 10px 20px;
+	text-align: left;
+}
