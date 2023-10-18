@@ -144,7 +144,7 @@
 
                                                                 <div class="front">
                                                                     <label :for="'hotel-list-item' + hotel.id "></label>
-                                                                    <div class="hotel-list-item-img"><img :src="'https://picsum.photos/1024/1024?nocache=' + hotel.id " :alt="hotel.name"></div>
+                                                                    <div class="hotel-list-item-img"><img :src="hotel.image" :alt="hotel.name"></div>
                                                                     <input :id="'hotel-list-item' + hotel.id " type="radio" name="hotel_id">
                                                                     <div class="hotel-list-item-title">{{ hotel.name }}</div>
                                                                 </div>
