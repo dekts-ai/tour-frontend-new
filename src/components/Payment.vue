@@ -182,7 +182,7 @@
                             complete your booking
                           </span>
                         </div>
-                        <div class="col-12 mb-4">
+                        <div class="col-12 mb-2">
                           <div class="row">
                             <div class="col-12 col-md-6">
                               <div class="form-field-title">Contact</div>
@@ -281,6 +281,20 @@
                                     <span class="checkmark"></span>
                                   </label>
                                 </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div v-if="selectedHotel" class="col-12 mb-4 hotel-section">
+                          <div class="col-12">
+                            <div class="hotel-wrapper d-flex">
+                              <div class="hotel-image">
+                                <img :src="selectedHotel.image" :alt="selectedHotel.name">
+                              </div>
+                              <div class="hotel-detail w-100">
+                                <div class="hotel-title">Hotel Pickup:</div>
+                                <div class="hotel-name">{{ selectedHotel.name }}</div>
+                                <div class="hotel-detail-address">{{ selectedHotel.address }}</div>
                               </div>
                             </div>
                           </div>
@@ -530,7 +544,9 @@ export default {
       TourPkgName: '',
       data: [],
       details: [],
+      hotels: [],
       selectgrouppeoples: [],
+      selectedHotel: null,
       with_rate_groups: 1,
       form: {
         name: "",
@@ -610,6 +626,14 @@ export default {
       this.form.date = this.data.date;
       this.form.time = this.data.timedate;
       this.form.affiliate_id = this.data.affiliate_id;
+      this.hotels = response.data.hotels;
+      if (this.hotels.length) {
+        this.hotels.forEach(hotel => {
+          if (hotel.id == this.form.hotel_id) {
+            this.selectedHotel = hotel;
+          }
+        });
+      }
     });
     this.form.touristsArr = this.data.peoplegroup;
     this.form.calucation = this.data.calucation;
