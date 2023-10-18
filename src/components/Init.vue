@@ -132,6 +132,9 @@
                                                         <h2>Slot not found</h2>
                                                     </div> -->
                                                     <div class="row hotel-list-item-wrap">
+                                                        <div v-if="hotels.length" class="p-1 pb-2 desired-pickup-location">
+                                                            Please select your desired pickup location:
+                                                        </div>
                                                         <div class="col-12 col-md-6"
                                                             v-for="hotel in hotels"
                                                             :key="hotel.id">
@@ -559,4 +562,5 @@ export default {
 .payment-row .booking-row .info .btn-primary {margin-left: 5px; color: #004085; background-color: #cce5ff; border: 1px solid #b8daff; font-size: 13px; vertical-align: baseline; padding: 6px 17px; font-weight: 500;}
 .payment-row .booking-row .info .btn-primary .fa {margin-right: 5px; margin-left: -5px;}
 .static-date-range {width: 80%; margin: auto;}
+.desired-pickup-location {text-align: left;}
 </style>
