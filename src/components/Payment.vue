@@ -292,7 +292,7 @@
                                 <img :src="selectedHotel.image" :alt="selectedHotel.name">
                               </div>
                               <div class="hotel-detail w-100">
-                                <div class="hotel-title">Hotel Pickup:</div>
+                                <div class="hotel-title">Hotel Pickup Location:</div>
                                 <div class="hotel-name">{{ selectedHotel.name }}</div>
                                 <div class="hotel-detail-address">{{ selectedHotel.address }}</div>
                               </div>
