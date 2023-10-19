@@ -113,6 +113,15 @@
                                   <p>{{customer.email}}</p>
                                 </div>
                               </div>
+                              <div class="col-md-12" v-if="hotel_id && selectedHotel">
+                                <div class="details-box">
+                                  <h3 class="bookinghotel">
+                                    Your Hotel Pickup Address:
+                                  </h3>
+                                  <p>{{selectedHotel.name}}</p>
+                                  <p>{{selectedHotel.address}}</p>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -224,6 +233,8 @@ export default {
       customer: [],
       affiliate_id: 0,
       with_rate_groups: 1,
+      hotel_id: 0,
+      selectedHotel: null
     };
   },
   mounted() {
@@ -233,6 +244,7 @@ export default {
     this.affiliate_id = this.$store.state.affiliateId;
     this.data = this.$store.state.formData;
     this.customer = this.$store.state.customer;
+    this.hotel_id = this.$store.state.hotelId;
     this.id = this.$store.state.bookingId;
     if (this.id) {
       if (this.data.iframeStatusInfo != null && this.data.iframeStatusInfo == 'true') {
@@ -246,6 +258,13 @@ export default {
 
       axios.get("/tour-package/" + date + "/" + this.data.tour_operator_id + "/" + this.data.package_id + "/" + this.affiliate_id + "/" + this.with_rate_groups).then((response) => {
         this.details = response.data;
+        if (this.details.hotels.length) {
+          this.details.hotels.forEach(hotel => {
+            if (hotel.id == this.hotel_id) {
+              this.selectedHotel = hotel;
+            }
+          });
+        }
         this.booking();
       });
     }
