@@ -131,15 +131,41 @@
                                                     <!-- <div class="radio-toolbar" v-else>
                                                         <h2>Slot not found</h2>
                                                     </div> -->
+                                                    <div class="row hotel-list-item-wrap">
+                                                        <div v-if="hotels.length" class="p-1 pb-2 desired-pickup-location">
+                                                            Please select your desired pickup location:
+                                                        </div>
+                                                        <div class="col-12 col-md-6"
+                                                            v-for="hotel in hotels"
+                                                            :key="hotel.id">
+
+                                                            <div class="hotel-list-item"
+                                                                @click="selectedHotel(hotel.id)"
+                                                                @mouseover="flip(hotel.id)"
+                                                                @mouseout="unflip(hotel.id)"
+                                                                :class="{ 'flip': hotel.id === flippedHotelId, 'checked': hotel.id === form.hotel_id }">
+
+                                                                <div class="front">
+                                                                    <label :for="'hotel-list-item' + hotel.id "></label>
+                                                                    <div class="hotel-list-item-img"><img :src="hotel.image" :alt="hotel.name"></div>
+                                                                    <input :id="'hotel-list-item' + hotel.id " type="radio" name="hotel_id">
+                                                                    <div class="hotel-list-item-title">{{ hotel.name }}</div>
+                                                                </div>
+
+                                                                <div class="back">
+                                                                    <label :for="'hotel-list-item' + hotel.id "></label>
+                                                                    <div class="hotel-list-item-address">{{ hotel.address }}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <hr>
                                             <p v-if="errors.length">
                                                 <b>Please correct the following error(s):</b>
                                             <ul>
-                                                <li v-for="error in errors" :key="error"
-                                                    v-bind:class="{'text-danger': error }" style="font-size:25px">{{
-                                                    error }}</li>
+                                                <li v-for="error in errors" :key="error" v-bind:class="{'text-danger': error }" style="font-size:25px">{{ error }}</li>
                                             </ul>
                                             </p>
                                             <div class="row groupofpeople">
@@ -274,10 +300,11 @@ export default {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
             TourPkgName: "",
-            year: "",
             totalavailableseats: {},
             selectgrouppeoples: [],
             details: [],
+            hotels: [],
+            flippedHotelId: null,
             disabledDates: {
                 to: new Date(new Date().setDate(new Date().getDate() - 1)),
                 from: this.getEndDate()
@@ -292,6 +319,7 @@ export default {
                 tour_operator_id: "",
                 package_id: "",
                 affiliate_id: "",
+                hotel_id: 0,
                 date: new Date(),
                 timedate: "",
                 peoplegroup: [],
@@ -308,6 +336,7 @@ export default {
         this.form.tour_operator_id = this.$store.state.tourOperatorId;
         this.form.package_id = this.$store.state.packageId;
         this.form.affiliate_id = this.$store.state.affiliateId;
+        this.form.hotel_id = this.$store.state.hotelId;
         if (this.form.package_id === 0) {
             window.location.href = '/';
         }
@@ -331,7 +360,7 @@ export default {
             var loader = this.$loading.show();
             document.title = "Native American Tours";
 
-            var date = `${this.form.date.getDate()}-${this.form.date.getMonth() + 1}-${this.form.date.getFullYear()}`;
+            var date = `${this.form.date.getFullYear()}-${this.form.date.getMonth() + 1}-${this.form.date.getDate()}`;
 
             axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id).then((response) => {
                 this.dateTimeArr = response.data.Time;
@@ -352,10 +381,7 @@ export default {
                 this.processLoader(loader);
             });
 
-            this.year = this.form.date.getFullYear();
-            this.$store.dispatch('storeYear', this.year);
-
-            this.updateRateGroups();
+            this.updateRateGroups(date);
         },
         selectedDate(date) {
             console.log('selectedDate');
@@ -364,7 +390,7 @@ export default {
             this.form.date = date;
             this.dateTimeArr = [];
 
-            var date = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+            var date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 
             axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id).then((response) => {
                 this.dateTimeArr = response.data.Time;
@@ -386,10 +412,7 @@ export default {
                 this.processLoader(loader);
             });
 
-            this.year = this.form.date.getFullYear();
-            this.$store.dispatch('storeYear', this.year);
-
-            this.updateRateGroups();
+            this.updateRateGroups(date);
         },
         selectedSlot: function (id, timedate) {
             console.log('selectedSlot');
@@ -398,15 +421,26 @@ export default {
             this.form.tour_slot_id = id;
             this.form.timedate = timedate;
         },
-        updateRateGroups() {
+        selectedHotel: function (hotelId) {
+            this.$store.dispatch('storeHotelId', hotelId)
+            this.form.hotel_id = hotelId;
+        },
+        flip(hotelId) {
+            this.flippedHotelId = hotelId;
+        },
+        unflip(hotelId) {
+            this.flippedHotelId = null;
+        },
+        updateRateGroups(date) {
             console.log('updateRateGroups');
 
             var loader = this.$loading.show();
-            axios.get("/tour-package/" + this.year + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + this.with_rate_groups).then((response) => {
+            axios.get("/tour-package/" + date + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + this.with_rate_groups).then((response) => {
                 this.$store.dispatch('storeTourPackage', response.data.TourPkgDetails)
                 this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
                 this.details = response.data;
                 this.details.TourPkgRates = this.details.TourPkgRates[this.form.package_id];
+                this.hotels = response.data.hotels;
 
                 // Define Variables
                 var v1 = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
@@ -528,4 +562,5 @@ export default {
 .payment-row .booking-row .info .btn-primary {margin-left: 5px; color: #004085; background-color: #cce5ff; border: 1px solid #b8daff; font-size: 13px; vertical-align: baseline; padding: 6px 17px; font-weight: 500;}
 .payment-row .booking-row .info .btn-primary .fa {margin-right: 5px; margin-left: -5px;}
 .static-date-range {width: 80%; margin: auto;}
+.desired-pickup-location {text-align: left;}
 </style>

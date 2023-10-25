@@ -182,7 +182,7 @@
                             complete your booking
                           </span>
                         </div>
-                        <div class="col-12 mb-4">
+                        <div class="col-12 mb-2">
                           <div class="row">
                             <div class="col-12 col-md-6">
                               <div class="form-field-title">Contact</div>
@@ -281,6 +281,20 @@
                                     <span class="checkmark"></span>
                                   </label>
                                 </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div v-if="selectedHotel" class="col-12 mb-4 hotel-section">
+                          <div class="col-12">
+                            <div class="hotel-wrapper d-flex">
+                              <div class="hotel-image">
+                                <img :src="selectedHotel.image" :alt="selectedHotel.name">
+                              </div>
+                              <div class="hotel-detail w-100">
+                                <div class="hotel-title">Hotel Pickup Location:</div>
+                                <div class="hotel-name">{{ selectedHotel.name }}</div>
+                                <div class="hotel-detail-address">{{ selectedHotel.address }}</div>
                               </div>
                             </div>
                           </div>
@@ -530,7 +544,9 @@ export default {
       TourPkgName: '',
       data: [],
       details: [],
+      hotels: [],
       selectgrouppeoples: [],
+      selectedHotel: null,
       with_rate_groups: 1,
       form: {
         name: "",
@@ -546,6 +562,7 @@ export default {
         tour_operator_id: "",
         tour_package_id: "",
         affiliate_id: "",
+        hotel_id: "",
         total: "",
         touristsArr: "",
         tourists: "",
@@ -584,6 +601,7 @@ export default {
   },
   created() {
     this.form.affiliate_id = this.$store.state.affiliateId;
+    this.form.hotel_id = this.$store.state.hotelId;
     this.data = this.$store.state.formData;
     if (this.data == null) {
       window.location.href = '/';
@@ -594,8 +612,10 @@ export default {
       this.iframeStatus = false;
     }
 
-    var year = this.$store.state.year;
-    axios.get("/tour-package/" + year + "/" + this.data.tour_operator_id + "/" + this.data.package_id + "/" + this.data.affiliate_id + "/" + this.with_rate_groups).then((response) => {
+	var date = new Date(this.data.date);
+  date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+
+	axios.get("/tour-package/" + date + "/" + this.data.tour_operator_id + "/" + this.data.package_id + "/" + this.data.affiliate_id + "/" + this.with_rate_groups).then((response) => {
       this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
       this.details = response.data;
       this.details.TourPkgRates = this.details.TourPkgRates[this.data.package_id];
@@ -606,6 +626,14 @@ export default {
       this.form.date = this.data.date;
       this.form.time = this.data.timedate;
       this.form.affiliate_id = this.data.affiliate_id;
+      this.hotels = response.data.hotels;
+      if (this.hotels.length) {
+        this.hotels.forEach(hotel => {
+          if (hotel.id == this.form.hotel_id) {
+            this.selectedHotel = hotel;
+          }
+        });
+      }
     });
     this.form.touristsArr = this.data.peoplegroup;
     this.form.calucation = this.data.calucation;

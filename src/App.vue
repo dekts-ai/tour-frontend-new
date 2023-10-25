@@ -24,7 +24,7 @@ export default {
       tourOperatorId: 1,
       packageId: 0,
       affiliateId: 0,
-      year: null
+      date: null
     }
   },
   async created() {
@@ -51,9 +51,9 @@ export default {
       date = new Date(this.$store.state.date);
     }
 
-    date = date.toLocaleString('en-US', { timeZone: 'US/Arizona' })
-    this.year = date.split(',')[0].split('/')[2];
-    this.$store.dispatch('storeYear', this.year);
+    // date = date.toLocaleString('en-US', { timeZone: 'US/Arizona' })
+    this.date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    this.$store.dispatch('storeDate', this.date);
 
     axios.get("/tour-operator-logo/" + this.tourOperatorId).then((response) => {
       this.TourOperatorLogo = response.data.TourOperatorLogo;

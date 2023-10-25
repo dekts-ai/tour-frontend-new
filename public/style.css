@@ -309,7 +309,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details {border-top: 5px solid #2b78b0; margin-top: 25px; background: #e9e9e9; padding: 27px 40px 45px; }
 .thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details h2 {font-size: 24px; font-weight: 300; color: #333333; line-height: 1.3; margin-bottom: 5px;}
 .thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details .details-box {height: 100%; border-bottom: 1px solid #c3c3c3; padding: 20px 0 25px; }
-.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details [class*="col-"]:last-child .details-box, .thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details [class*="col-"]:nth-child(5) .details-box {border-bottom: none; padding-bottom: 0; } 
+.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details [class*="col-"]:last-child .details-box, .thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details [class*="col-"]:nth-child(7) .details-box {border-bottom: none; padding-bottom: 0; } 
 .thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details .details-box h3 {font-size: 16px; font-weight: 400; color: #333333; line-height: 1.3; margin-bottom: 6px; padding-left: 27px; position: relative;}
 .thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details .details-box p {font-size: 16px; font-weight: 400; color: #0066b6; line-height: 1.3; }
 .thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details .details-box h3:after {content: ""; position: absolute; left: 0; background: url(../images/bookingdate.png) no-repeat; width: 15px; height: 15px; top: 3px; }
@@ -318,6 +318,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details .details-box h3.bookingname:after {background: url(../images/bookingname.png) no-repeat; width: 16px; height: 15px; top: 2px; }
 .thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details .details-box h3.bookingcontact:after {background: url(../images/bookingcontact.png) no-repeat; width: 15px; height: 16px; top: 2px; }
 .thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details .details-box h3.bookingemail:after {background: url(../images/bookingemail.png) no-repeat; width: 15px; height: 12px; top: 5px; }
+.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details .details-box h3.bookinghotel:after {background: url(../images/radio-info.png) no-repeat; width: 20px; height: 20px; top: 5px; }
 .thankyou-main-row .invoice-row .top-row .booking-summery {padding-top: 25px; }
 .thankyou-main-row .invoice-row .top-row .booking-summery h3 {font-size: 21px; font-weight: 400; color: #1d875a; letter-spacing: -0.5px; margin-bottom: 6px; }
 .thankyou-main-row .invoice-row .top-row .booking-summery p {font-size: 15px; font-weight: 400; color: #666666; letter-spacing: -0.5px; margin-bottom: 2px; } 

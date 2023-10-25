@@ -5,7 +5,6 @@ import { createStore } from "vuex";
 export default createStore({
     state: {
         iframeStatus: false,
-        year: null,
         date: null,
         tenantId: 0,
         tourOperatorId: 0,
@@ -17,13 +16,11 @@ export default createStore({
         tourPackageLogo: null,
         customer: null,
         slotId: null,
+        hotelId: 0,
     },
     getters: {
         iframeStatus: state => {
             return state.iframeStatus;
-        },
-        year: state => {
-            return state.year;
         },
         date: state => {
             return state.date;
@@ -57,14 +54,14 @@ export default createStore({
         },
         slotId: state => {
             return state.slotId;
+        },
+        hotelId: state => {
+            return state.hotelId;
         }
     },
     mutations: {
         IFRAME_STATUS(state, iframeStatus) {
             state.iframeStatus = iframeStatus;
-        },
-        YEAR(state, year) {
-            state.year = year;
         },
         DATE(state, date) {
             state.date = date;
@@ -99,13 +96,13 @@ export default createStore({
         SLOT_ID(state, slotId) {
             state.slotId = slotId;
         },
+        HOTEL_ID(state, hotelId) {
+            state.hotelId = hotelId;
+        },
     },
     actions: {
         storeIframeStatus({ commit }, iframeStatus) {
             commit('IFRAME_STATUS', iframeStatus);
-        },
-        storeYear({ commit }, year) {
-            commit('YEAR', year);
         },
         storeDate({ commit }, date) {
             commit('DATE', date);
@@ -139,6 +136,9 @@ export default createStore({
         },
         storeSlotId({ commit }, slotId) {
             commit('SLOT_ID', slotId);
+        },
+        storeHotelId({ commit }, hotelId) {
+            commit('HOTEL_ID', hotelId);
         },
     }
 });
