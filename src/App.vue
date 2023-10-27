@@ -46,12 +46,11 @@ export default {
     this.$store.dispatch('storeAffiliateId', this.affiliateId);
     this.$store.dispatch('storeIframeStatus', this.iframeStatus);
 
-    var date = new Date();
+    var date = new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' });
     if (this.$store.state.date) {
       date = new Date(this.$store.state.date);
     }
 
-    // date = date.toLocaleString('en-US', { timeZone: 'US/Arizona' })
     this.date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
     this.$store.dispatch('storeDate', this.date);
 
