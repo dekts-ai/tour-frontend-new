@@ -343,7 +343,7 @@ export default {
         if (this.$store.state.date) {
             this.form.date = new Date(this.$store.state.date);
         } else {
-            this.form.date = new Date();
+            this.form.date = new Date(this.form.date.toLocaleString('en-US', { timeZone: 'US/Arizona' }));
         }
         this.data = this.$store.state.formData;
         this.configure();
