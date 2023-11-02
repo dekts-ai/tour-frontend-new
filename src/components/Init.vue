@@ -340,14 +340,13 @@ export default {
         if (this.form.package_id === 0) {
             window.location.href = '/';
         }
-        console.log("INIT");
-        this.form.date = new Date();
+        this.form.date = new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' }));
         this.data = this.$store.state.formData;
         this.configure();
     },
     methods: {
         getEndDate() {
-            let date = new Date(new Date().getFullYear() + 1, 11, 31);
+            let date = new Date(new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' })).getFullYear() + 1, 11, 31);
                 date.setHours(23, 59, 59, 999)
             return date;
         },
@@ -358,8 +357,6 @@ export default {
             document.title = "Native American Tours";
 
             var date = `${this.form.date.getFullYear()}-${this.form.date.getMonth() + 1}-${this.form.date.getDate()}`;
-            console.log(this.form.date);
-            console.log(this.form.date.getFullYear() + " | " + this.form.date.getMonth()  + " | " +  this.form.date.getDate()  + " | " +  date);
 
             axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id).then((response) => {
                 this.dateTimeArr = response.data.Time;
