@@ -288,6 +288,7 @@
 import axios from "axios";
 import $ from "jquery";
 import Datepicker from 'vuejs3-datepicker';
+import { format } from 'date-fns';
 
 export default {
     name: "Index",
@@ -337,10 +338,17 @@ export default {
         this.form.package_id = this.$store.state.packageId;
         this.form.affiliate_id = this.$store.state.affiliateId;
         this.form.hotel_id = this.$store.state.hotelId;
+
         if (this.form.package_id === 0) {
             window.location.href = '/';
         }
-        this.form.date = new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' }));
+
+        if (this.$store.state.date) {
+            this.form.date = new Date(this.$store.state.date);
+        } else {
+            this.form.date = new Date(this.form.date.toLocaleString('en-US', { timeZone: 'US/Arizona' }));
+        }
+
         this.data = this.$store.state.formData;
         this.configure();
     },
@@ -356,7 +364,7 @@ export default {
             var loader = this.$loading.show();
             document.title = "Native American Tours";
 
-            var date = `${this.form.date.getFullYear()}-${this.form.date.getMonth() + 1}-${this.form.date.getDate()}`;
+            var date = format(this.form.date, 'yyyy-MM-dd');
 
             axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id).then((response) => {
                 this.dateTimeArr = response.data.Time;
@@ -386,7 +394,7 @@ export default {
             this.form.date = date;
             this.dateTimeArr = [];
 
-            var date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+            var date = format(date, 'yyyy-MM-dd');
 
             axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id).then((response) => {
                 this.dateTimeArr = response.data.Time;
