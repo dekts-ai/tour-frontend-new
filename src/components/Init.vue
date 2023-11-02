@@ -306,7 +306,7 @@ export default {
             hotels: [],
             flippedHotelId: null,
             disabledDates: {
-                to: new Date(new Date().setDate(new Date().getDate() - 1)),
+                to: new Date(new Date().setDate(new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' })).getDate() - 1)),
                 from: this.getEndDate()
             },
             preventDisableDateSelection: true,
@@ -331,6 +331,7 @@ export default {
         };
     },
     created: function () {
+        console.log(new Date().getDate());
         this.iframeStatus = this.$store.state.iframeStatus;
         this.form.tenant_id = this.$store.state.tenantId;
         this.form.tour_operator_id = this.$store.state.tourOperatorId;
@@ -343,7 +344,7 @@ export default {
         if (this.$store.state.date) {
             this.form.date = new Date(this.$store.state.date);
         } else {
-            this.form.date = new Date();
+            this.form.date = new Date(this.form.date.toLocaleString('en-US', { timeZone: 'US/Arizona' }));
         }
         this.data = this.$store.state.formData;
         this.configure();
