@@ -341,12 +341,7 @@ export default {
             window.location.href = '/';
         }
         console.log("INIT");
-        if (this.$store.state.date) {
-            this.form.date = new Date(this.$store.state.date);
-            console.log("Inside Store");
-        } else {
-            this.form.date = new Date();
-        }
+        this.form.date = new Date();
         this.data = this.$store.state.formData;
         this.configure();
     },
