@@ -67,14 +67,10 @@
 
 <script>
 import axios from "axios";
-import Datepicker from 'vuejs3-datepicker';
 
 export default {
     name: "Index",
     title: "Native American Tours",
-    components: {
-        Datepicker
-    },
     data() {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
@@ -95,6 +91,7 @@ export default {
         this.packageId = this.$store.state.packageId;
         this.affiliateId = this.$store.state.affiliateId;
         this.iframeStatus = this.$store.state.iframeStatus;
+
         if (this.packageId > 0) {
             this.$router.push("/initialize");
         }
