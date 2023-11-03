@@ -90,10 +90,10 @@
                                             <div class="row select-time">
                                                 <div class="col-12 col-md-4">
                                                     <datepicker 
-                                                        v-model="form.date" 
+                                                        v-model="form.date"
                                                         :value="form.date" 
                                                         :inline="true"
-                                                        :disabled-dates="disabledDates" 
+                                                        :disabled-dates="disabledDates"
                                                         :prevent-disable-date-selection="preventDisableDateSelection"
                                                         @selected="selectedDate">
                                                     </datepicker>
@@ -307,7 +307,7 @@ export default {
             hotels: [],
             flippedHotelId: null,
             disabledDates: {
-                to: new Date(new Date().setDate(new Date().getDate() - 1)),
+                to: this.getStartDate(),
                 from: this.getEndDate()
             },
             preventDisableDateSelection: true,
@@ -353,11 +353,6 @@ export default {
         this.configure();
     },
     methods: {
-        getEndDate() {
-            let date = new Date(new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' })).getFullYear() + 1, 11, 31);
-                date.setHours(23, 59, 59, 999)
-            return date;
-        },
         configure() {
             console.log('configure');
 
@@ -417,23 +412,6 @@ export default {
             });
 
             this.updateRateGroups(date);
-        },
-        selectedSlot: function (id, timedate) {
-            console.log('selectedSlot');
-
-            this.$store.dispatch('storeSlotId', id)
-            this.form.tour_slot_id = id;
-            this.form.timedate = timedate;
-        },
-        selectedHotel: function (hotelId) {
-            this.$store.dispatch('storeHotelId', hotelId)
-            this.form.hotel_id = hotelId;
-        },
-        flip(hotelId) {
-            this.flippedHotelId = hotelId;
-        },
-        unflip(hotelId) {
-            this.flippedHotelId = null;
         },
         updateRateGroups(date) {
             console.log('updateRateGroups');
@@ -541,10 +519,36 @@ export default {
         processLoader: function (loader) {
             loader.hide();
         },
+        getStartDate() {
+            let date = new Date(new Date().setDate(new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' })).getDate() - 1));
+            return date;
+        },
+        getEndDate() {
+            let date = new Date(new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' })).getFullYear() + 1, 11, 31);
+            date.setHours(23, 59, 59, 999);
+            return date;
+        },
         isDisabled: function (slot) {
             if(slot.bookable_status == 'Closed' || slot.dd >= slot.seats) {
                 return 'disabled';
             }
+        },
+        selectedSlot: function (id, timedate) {
+            console.log('selectedSlot');
+
+            this.$store.dispatch('storeSlotId', id)
+            this.form.tour_slot_id = id;
+            this.form.timedate = timedate;
+        },
+        selectedHotel: function (hotelId) {
+            this.$store.dispatch('storeHotelId', hotelId)
+            this.form.hotel_id = hotelId;
+        },
+        flip(hotelId) {
+            this.flippedHotelId = hotelId;
+        },
+        unflip(hotelId) {
+            this.flippedHotelId = null;
         },
         staticDateRange: function (date) {
             date = new Date(date);
