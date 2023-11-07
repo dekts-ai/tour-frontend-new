@@ -8,7 +8,6 @@
 import axios from "axios";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
-import { format } from 'date-fns';
 
 export default {
   name: "App",
@@ -47,9 +46,7 @@ export default {
     this.$store.dispatch('storeAffiliateId', this.affiliateId);
     this.$store.dispatch('storeIframeStatus', this.iframeStatus);
 
-    var date = new Date();
-    date = new Date(date.toLocaleString('en-US', { timeZone: 'US/Arizona' }));
-    this.date = format(date, 'yyyy-MM-dd');
+    this.date = new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' }));
     this.$store.dispatch('storeDate', this.date);
 
     axios.get("/tour-operator-logo/" + this.tourOperatorId).then((response) => {
