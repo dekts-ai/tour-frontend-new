@@ -290,7 +290,7 @@ import axios from "axios";
 import $ from "jquery";
 import Datepicker from 'vuejs3-datepicker';
 import { format } from 'date-fns';
-import moment from 'moment';
+import {getUTCDateFromTimeZone} from '../utils/dateUtils';
 
 export default {
     name: "Index",
@@ -348,8 +348,7 @@ export default {
         if (this.$store.state.date) {
             this.form.date = new Date(this.$store.state.date);
         } else {
-            const currentDate = new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' }));
-            this.form.date = moment( currentDate ).toDate();
+            this.form.date = this.getStartDate();
         }
 
         this.data = this.$store.state.formData;
@@ -524,10 +523,7 @@ export default {
         getStartDate() {
             // See this issues with datepicker 
             // https://github.com/charliekassel/vuejs-datepicker/issues/118
-            const origin_date = moment().format("YYYY-MM-DD");
-            const current_date = new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' })); // the time on the browser
-            const utc_date = Date.UTC((origin_date).substring(0, 4), (origin_date).substring(5, 7) - 1, (origin_date).substring(8, 10), current_date.getTimezoneOffset() / 60, 0, 0, 0);
-            return new Date(utc_date);
+            return getUTCDateFromTimeZone();
         },
         getEndDate() {
             let date = new Date(new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' })).getFullYear() + 1, 11, 31);
