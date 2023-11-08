@@ -50,7 +50,6 @@ export default {
     this.date = getUTCDateFromTimeZone();
     this.$store.dispatch('storeDate', this.date);
 
-
     axios.get("/tour-operator-logo/" + this.tourOperatorId).then((response) => {
       this.TourOperatorLogo = response.data.TourOperatorLogo;
     });
