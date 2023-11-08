@@ -8,7 +8,7 @@
             </div>
         </div>
     </section>
-    <section class="inner-content-section mt-0">
+    <section class="inner-content-section">
         <div :class="[(iframeStatus == false) ? 'container' : 'no-container', '']">
             <div class="background-color-sec">
                 <div class="row">
