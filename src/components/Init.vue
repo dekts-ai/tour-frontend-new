@@ -63,7 +63,7 @@
                         <div class="row payment-row">
                             <div class="col-12">
                                 <div class="row booking-row">
-                                    <div class="col-lg-6 col-md-12">
+                                    <div class="col-lg-5 col-md-12">
                                         <div class="booking">
                                             <h2>Book Online</h2>
                                             <div class="confirmation">
@@ -73,13 +73,14 @@
                                         </div>
                                     </div>
                                     <div
-                                        class="col-lg-6 col-md-12 text-center text-lg-end text-md-center text-sm-center">
+                                        class="col-lg-7 col-md-12 text-center text-lg-end text-md-center text-sm-center">
                                         <div class="info">
                                             <button class="tooltipbtn btn-info" data-toggle="tooltip"
                                                 data-placement="top" title="">Secured</button>
-                                            <button class="tooltipbtn btn-danger" data-toggle="tooltip"
+                                            <button class="tooltipbtn btn-danger me-1" data-toggle="tooltip"
                                                 data-placement="top" title="">Health &
                                                 Safety</button>
+                                            <button @click="viewCart" class="btn btn-warning"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart ({{ Object.keys(cartItem).length }})</button>
                                             <button @click="mindChange" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
                                         </div>
                                     </div>
@@ -114,7 +115,7 @@
 
                                                             <label class="time-item-lable" :for="name.Id"></label>
 
-                                                            <input type="radio" :id="name.Id" name="timedate"
+                                                            <input type="radio" :id="name.Id" name="time_date"
                                                                 :value="name.Time"
                                                                 :disabled=isDisabled(name) />
 
@@ -204,20 +205,14 @@
                                                                         data-label="Select Group Of People">
                                                                         <select
                                                                             class="form-select people-group1"
-                                                                            :name="'peoplegroup' + tour.pkg_rate_id "
-                                                                            :id="'peoplegroup'+tour.pkg_rate_id">
+                                                                            :name="'people_group' + tour.pkg_rate_id "
+                                                                            :id="'people_group'+tour.pkg_rate_id">
                                                                             <option v-for="item in selectgrouppeoples"
                                                                                 :value="item.value" :key="item.value">{{
                                                                                 item.number }}</option>
                                                                         </select>
                                                                     </td>
-                                                                    <td class="price" data-label="Price"
-                                                                        v-if="peopleselects != '' && peopleselects != null">
-                                                                        <span class="tag"><input type="hidden"
-                                                                                name="amount" v-model="form.amount">{{
-                                                                                tour.price}}</span>
-                                                                    </td>
-                                                                    <td class="price" data-label="Price" v-else>
+                                                                    <td class="price" data-label="Price">
                                                                         <span class="tag">${{ tour.price }}</span>
                                                                     </td>
                                                                 </tr>
@@ -225,7 +220,9 @@
                                                         </table>
                                                     </div>
                                                     <div class="booknowbtn text-end">
-                                                        <button type="submit">Book Now</button>
+                                                        <button v-if="updateCartBtn == 0" type="submit">Add to Cart</button>
+                                                        <button v-else type="submit">Update Cart</button>
+                                                        <!-- <button @click="addToCart" class="m-1">Add to Cart</button> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -308,6 +305,9 @@ export default {
             details: [],
             hotels: [],
             flippedHotelId: null,
+            cartItem: [],
+            updateCartBtn: 0,
+            slotId: 0,
             disabledDates: {
                 to: this.getStartDate(),
                 from: this.getEndDate()
@@ -317,18 +317,22 @@ export default {
             peopleselects: [],
             errors: [],
             form: {
-                iframeStatusInfo: "",
+                iframeStatusInfo: false,
                 tenant_id: "",
-                tour_operator_id: "",
-                package_id: "",
-                affiliate_id: "",
+                tour_operator_id: 0,
+                package_id: 0,
+                package_name: "",
+                affiliate_id: 0,
                 hotel_id: 0,
                 date: new Date(),
-                timedate: "",
-                peoplegroup: [],
-                amount: "",
-                tour_slot_id: "",
-                calucation: []
+                time_date: "",
+                people_group: [],
+                rate_group: [],
+                calucation: [],
+                subtotal: 0,
+                fees: 0,
+                total: 0,
+                tour_slot_id: 0
             },
             with_rate_groups: 1
         };
@@ -340,6 +344,7 @@ export default {
         this.form.package_id = this.$store.state.packageId;
         this.form.affiliate_id = this.$store.state.affiliateId;
         this.form.hotel_id = this.$store.state.hotelId;
+        this.cartItem = this.$store.state.cartItem;
 
         if (this.form.package_id === 0) {
             window.location.href = '/';
@@ -387,7 +392,7 @@ export default {
             console.log('selectedDate');
 
             var loader = this.$loading.show();
-            this.form.date = date;
+            // this.form.date = date;
             this.dateTimeArr = [];
 
             var date = format(date, 'yyyy-MM-dd');
@@ -424,19 +429,20 @@ export default {
                 this.details = response.data;
                 this.details.TourPkgRates = this.details.TourPkgRates[this.form.package_id];
                 this.hotels = response.data.hotels;
+                this.fees = response.data.TourPkgDetails[0].ServiceCommission
 
                 // Define Variables
                 var v1 = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
 
                 // Append Dropdown Value for TourPkgRates
                 this.details.TourPkgRates?.forEach((element) => {
-                    $("#peoplegroup" + element.pkg_rate_id)
+                    $("#people_group" + element.pkg_rate_id)
                         .find("option")
                         .remove()
                         .end();
 
                     for (let j = 0; j <= v1; j++) {
-                        $("#peoplegroup" + element.pkg_rate_id).append(
+                        $("#people_group" + element.pkg_rate_id).append(
                             '<option value=' + j + '>' + j + '</option>'
                         );
                     }
@@ -444,74 +450,56 @@ export default {
             });
 
             this.form.tour_slot_id = "";
-            this.form.timedate = "";
+            this.form.time_date = "";
             this.processLoader(loader);
         },
         submit: function (e) {
-            const n = this.details.TourPkgRates;
+            const tourPkgRates = this.details.TourPkgRates;
             let index = 0;
-            let GroupPeoArr = [];
-            let CalPeoArr = [];
+            let rateGroupArr = [];
+            let feesGroupArr = [];
+            let groupPaxArr = [];
+            let paxSubtotalArr = [];
 
-            n.forEach(number => {
-                let names_field = 'peoplegroup' + number.pkg_rate_id;
-                const field1 = document.querySelector("select[name=" + names_field + "]").value;
-                GroupPeoArr.push(field1);
+            tourPkgRates.forEach(number => {
+                let rateGroupField = 'people_group' + number.pkg_rate_id;
+                const rateGroup = document.querySelector("select[name=" + rateGroupField + "]").value;
+                groupPaxArr.push(rateGroup);
 
-                const ProcessingFee1 =
-                    Number(this.details.TourPkgRates[index].price) +
-                    Number(this.details.TourPkgRates[index].PermitFee) +
-                    Number(this.details.TourPkgRates[index].Tax);
-                const Fee1 =
-                    (Number(ProcessingFee1) *
-                        Number(this.details.TourPkgRates[index].ProcessingFee)) /
-                    100;
-                var master_cal1 = Number(ProcessingFee1) + Number(Fee1);
+                const rate = Number(tourPkgRates[index].price) + Number(tourPkgRates[index].PermitFee) + Number(tourPkgRates[index].Tax);
+                paxSubtotalArr.push(rateGroup > 0 ? rate.toFixed(2) : 0);
 
-                if (Number(field1 > 0)) {
-                    var field1_cal = (Number(master_cal1) * Number(field1)).toFixed(2);
-                } else {
-                    field1_cal = 0;
-                }
-                CalPeoArr.push(field1_cal);
+                const fees = (Number(rate) * Number(this.fees)) / 100;
+                feesGroupArr.push(rateGroup > 0 ? fees.toFixed(2) : 0);
+
+                rateGroupArr.push(tourPkgRates[index].Age);
+
                 this.errors = [];
 
-                if (!this.form.timedate) {
+                if (!this.form.time_date) {
                     this.errors.push("Please Select a start time for your tour");
                 }
 
                 index++;
             });
 
-            const groupsum = GroupPeoArr.reduce((a, b) => Number(a) + Number(b), 0);
-            const calsum = CalPeoArr.reduce((a, b) => Number(a) + Number(b), 0);
+            const rateGroupsum = groupPaxArr.reduce((a, b) => Number(a) + Number(b), 0);
+            const feesSum = feesGroupArr.reduce((a, b) => Number(a) + Number(b), 0);
+            const subtotalSum = paxSubtotalArr.reduce((a, b) => Number(a) + Number(b), 0);
 
-            if (groupsum != 0 && this.form.timedate != '' && calsum != 0) {
-                let router = this.$router;
-                this.form.calucation = CalPeoArr;
-                this.form.peoplegroup = GroupPeoArr;
+            if (rateGroupsum != 0 && this.form.time_date != '') {
+                this.form.calucation = paxSubtotalArr;
+                this.form.rate_group = rateGroupArr;
+                this.form.people_group = groupPaxArr;
                 this.form.iframeStatusInfo = this.iframeStatus;
+                this.form.package_name = this.TourPkgName;
+                this.form.subtotal = subtotalSum;
+                this.form.fees = feesSum;
+                this.form.total = subtotalSum + feesSum;
 
-                let checkSlotarr = {
-                    'tour_slot_id': this.form.tour_slot_id,
-                    'package_id': this.form.package_id,
-                    'affiliate_id': this.form.affiliate_id,
-                    'tourists': this.form.peoplegroup,
-                    'tour_slot_time': this.form.timedate,
-                };
-
-                axios.post("/available-seats", checkSlotarr).then((response) => {
-                    if (response.data.success == "false") {
-                        this.errors.push(response.data.message);
-                    } else {
-                        this.$store.dispatch('storeFormData', this.form)
-                        router.push("/payment");
-                    }
-                });
-
-                return true;
+                this.addToCart();
             } else {
-                if (groupsum <= 0) {
+                if (rateGroupsum <= 0) {
                     this.errors.push("Please Select your group of people for the tour");
                 }
             }
@@ -531,16 +519,16 @@ export default {
             return date;
         },
         isDisabled: function (slot) {
-            if(slot.bookable_status == 'Closed' || slot.dd >= slot.seats) {
+            if (slot.bookable_status == 'Closed' || slot.dd >= slot.seats) {
                 return 'disabled';
             }
         },
-        selectedSlot: function (id, timedate) {
+        selectedSlot: function (id, timeDate) {
             console.log('selectedSlot');
 
             this.$store.dispatch('storeSlotId', id)
             this.form.tour_slot_id = id;
-            this.form.timedate = timedate;
+            this.form.time_date = timeDate;
         },
         selectedHotel: function (hotelId) {
             this.$store.dispatch('storeHotelId', hotelId)
@@ -559,11 +547,50 @@ export default {
             return date >= firstDate && date < secondDate && this.form.package_id == 1;
         },
         mindChange() {
-            this.$store.dispatch('storePackageId', 0)
+            this.$store.dispatch('storePackageId', 0);
             this.$router.push({
                 name: 'Index'
             });
         },
+        addToCart() {
+            let checkSlotarr = {
+                'tour_slot_id': this.form.tour_slot_id,
+                'package_id': this.form.package_id,
+                'affiliate_id': this.form.affiliate_id,
+                'tourists': this.form.people_group,
+                'tour_slot_time': this.form.time_date,
+            };
+
+            axios.post("/available-seats", checkSlotarr).then((response) => {
+                if (response.data.success == "false") {
+                    this.errors.push(response.data.message);
+                } else {
+                    const updatedCart = {};
+
+                    for (const slotId in this.cartItem) {
+                        const formData = this.cartItem[slotId];
+                        if (formData.package_id != this.form.package_id) {
+                            updatedCart[slotId] = formData;
+                        }
+                    }
+
+                    this.cartItem = updatedCart;
+
+                    var data = {};
+                    data[this.form.tour_slot_id] = this.form;
+                    this.cartItem = { ...this.cartItem, ...data };
+                    this.$store.dispatch('storeCartItem', this.cartItem);
+                    this.updateCartBtn = 1;
+                }
+            });
+
+            return true;
+        },
+        viewCart() {
+            console.log('view cart');
+            this.$store.dispatch('storeFormData', this.form)
+            this.$router.push("/payment");
+        }
     }
 };
 </script>
@@ -571,6 +598,8 @@ export default {
 <style>
 .payment-row .booking-row .info .btn-primary {margin-left: 5px; color: #004085; background-color: #cce5ff; border: 1px solid #b8daff; font-size: 13px; vertical-align: baseline; padding: 6px 17px; font-weight: 500;}
 .payment-row .booking-row .info .btn-primary .fa {margin-right: 5px; margin-left: -5px;}
+.payment-row .booking-row .info .btn-warning {margin-left: 5px; color: #004085; background-color: #cce5ff; border: 1px solid #b8daff; font-size: 13px; vertical-align: baseline; padding: 6px 17px; font-weight: 500;}
+.payment-row .booking-row .info .btn-warning .fa {margin-right: 5px; margin-left: -5px;}
 .static-date-range {width: 80%; margin: auto;}
 .desired-pickup-location {text-align: left;}
 </style>

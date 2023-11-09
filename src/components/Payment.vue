@@ -106,9 +106,7 @@
                           {{ TourPkgName }}
                         </div>
                         <div class="booking-dt-detail-time">
-
-                          {{ dateFormat(data.date) }} @ {{
-                          data.timedate }}
+                          {{ dateFormat(data.date) }} @ {{ data.time_date }}
                         </div>
                         <div class="booking-dt-detail-btn">
                           <a @click="mindChange">
@@ -121,6 +119,48 @@
                     </div>
                   </div>
                 </div>
+                <div class="col-12 col-lg-12 mt-2">
+                  <!-- Package list -->
+                  <div class="tourist-package-list-wrap">
+                    <div class="tourist-package-list">
+                      <div v-for="item in cartItem" :key="item.tour_slot_id">
+                        <div :class="'tourist-package-' + item.tour_slot_id">
+                          <div class="tourist-package-title-wrap">
+                            <div class="tourist-package-title">{{ item.package_name }}</div>
+                            <div class="tourist-package-date">{{ dateFormat(item.date) }} @ {{ item.time_date }}</div>
+                            <div class="tourist-package-btn-wrap">
+                              <button class="btn-tourist-package btn-edit" type="button"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                              <button class="btn-tourist-package btn-delete" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                              <button class="btn-tourist-package btn-slide-down" @click="toggleAgeGroupList" type="button"><i class="fa fa-angle-down" aria-hidden="true"></i></button>
+                            </div>
+                          </div>
+                          <div class="tourist-package-age-group-list">
+                            <div v-for="(pax, key) in item.people_group" :key="key">
+                              <div v-if="pax > 0" class="tourist-package-age-group d-flex justify-content-between">
+                                <div class="tourist-group-age-title">{{ item.rate_group[key] }}</div>
+                                <div class="tourist-group-age-count">{{ pax }}</div>
+                              </div>
+                            </div>
+                            <div class="tourist-package-total-group d-flex justify-content-between mt-4">
+                              <div class="tourist-group-total-title">Subtotal</div>
+                              <div class="tourist-group-total-amount">{{ 0 }}</div>
+                            </div>
+                            <div class="tourist-package-total-group d-flex justify-content-between">
+                              <div class="tourist-group-total-title">Booking Fees</div>
+                              <div class="tourist-group-total-amount">{{ 0 }}</div>
+                            </div>
+                            <div class="tourist-package-total-group d-flex justify-content-between">
+                              <div class="tourist-group-total-title">Total Cost</div>
+                              <div class="tourist-group-total-amount">{{ 0 }}</div>
+                            </div>
+                          </div>
+                          <div class="tourist-package-total-cost"></div>													
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- / Package List -->
                 <form @submit.prevent="submit" id="myForm" method="post">
                   <input type="hidden" id="bookingID" name="bookingID">
                   <div class="row starttime-row border-0">
@@ -529,7 +569,8 @@
 <script>
 import axios from "axios";
 import { loadStripe } from '@stripe/stripe-js';
-import { mask } from 'vue-the-mask'
+import { mask } from 'vue-the-mask';
+import { format } from 'date-fns';
 export default {
   name: "Payment",
   directives: {
@@ -545,9 +586,10 @@ export default {
       data: [],
       details: [],
       hotels: [],
-      selectgrouppeoples: [],
       selectedHotel: null,
       with_rate_groups: 1,
+      showAgeGroupList: false,
+      cartItem: {},
       form: {
         name: "",
         phone_number: "",
@@ -581,7 +623,6 @@ export default {
       couponErrors: [],
       couponSuccess: [],
       price: "",
-      grpt: [],
       ticket_cost: "",
       subtotal: "",
       fees: "",
@@ -602,20 +643,20 @@ export default {
   created() {
     this.form.affiliate_id = this.$store.state.affiliateId;
     this.form.hotel_id = this.$store.state.hotelId;
+    this.cartItem = this.$store.state.cartItem;
     this.data = this.$store.state.formData;
+
     if (this.data == null) {
       window.location.href = '/';
     }
-    if (this.data.iframeStatusInfo != null && this.data.iframeStatusInfo == 'true') {
+    if (this.data.iframeStatusInfo == 'true') {
       this.iframeStatus = this.data.iframeStatusInfo;
-    } else {
-      this.iframeStatus = false;
     }
 
-	var date = new Date(this.data.date);
-  date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    var date = new Date(this.data.date);
+    date = format(date, 'yyyy-MM-dd');
 
-	axios.get("/tour-package/" + date + "/" + this.data.tour_operator_id + "/" + this.data.package_id + "/" + this.data.affiliate_id + "/" + this.with_rate_groups).then((response) => {
+    axios.get("/tour-package/" + date + "/" + this.data.tour_operator_id + "/" + this.data.package_id + "/" + this.data.affiliate_id + "/" + this.with_rate_groups).then((response) => {
       this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
       this.details = response.data;
       this.details.TourPkgRates = this.details.TourPkgRates[this.data.package_id];
@@ -624,9 +665,10 @@ export default {
       this.Tax = response.data.TourPkgRates[0].Tax;
       this.fees = response.data.TourPkgDetails[0].ServiceCommission; // after discussion with anil I keep the service commission for affiliate too otherwise I planned to remove it for affiliate as per the backend process
       this.form.date = this.data.date;
-      this.form.time = this.data.timedate;
+      this.form.time = this.data.time_date;
       this.form.affiliate_id = this.data.affiliate_id;
       this.hotels = response.data.hotels;
+
       if (this.hotels.length) {
         this.hotels.forEach(hotel => {
           if (hotel.id == this.form.hotel_id) {
@@ -635,9 +677,9 @@ export default {
         });
       }
     });
-    this.form.touristsArr = this.data.peoplegroup;
+    this.form.touristsArr = this.data.people_group;
     this.form.calucation = this.data.calucation;
-    var ts = this.data.peoplegroup;
+    var ts = this.data.people_group;
     this.form.tourists = ts.join();
     this.form.tour_slot_id = this.$store.state.slotId;
   },
@@ -928,6 +970,9 @@ export default {
           }
         });
       }
+    },
+    toggleAgeGroupList() {
+      this.showAgeGroupList = !this.showAgeGroupList;
     }
   }
 };
@@ -962,4 +1007,25 @@ export default {
 .error {
   color: #dc3545;
 }
+
+.tourist-package-list-wrap {background-color: #ffffff; border: 2px solid #eaeaea; border-radius: 5px; padding: 13px; max-height: 500px; margin-bottom: 30px;}
+.tourist-package-list-wrap .tourist-package {background-color: #f4feff; border-radius: 5px; border: 1px solid #eaeaea; margin-bottom: 10px;}
+.tourist-package-list-wrap .tourist-package-title-wrap {border-bottom: 2px solid #eaeaea; padding: 6px 60px 6px 10px; position: relative;}
+.tourist-package-list-wrap .tourist-package-title {color: #0d6efd; font-size: 14px; font-weight: 700;}
+.tourist-package-list-wrap .tourist-package-date {font-size: 12px; color: #444; font-weight: 400;}
+.tourist-package-list-wrap .tourist-package-btn-wrap {position: absolute; top: 50%; transform: translateY(-50%); right: 10px;}
+.tourist-package-list-wrap .btn-tourist-package {width: 30px; height: 30px; border: none; box-shadow: none; line-height: 30px; border-radius: 50px; margin-left: 5px; color: #fff; vertical-align: middle; -webkit-transition: all ease-in-out 0.3s; transition: all ease-in-out 0.3s;}
+.tourist-package-list-wrap .btn-tourist-package:hover, 
+.tourist-package-list-wrap .btn-tourist-package:focus {opacity: 0.8; outline: none;}
+.tourist-package-list-wrap .btn-tourist-package.btn-edit {background-color: #0088cc;}
+.tourist-package-list-wrap .btn-tourist-package.btn-delete {background-color: #ed3f3f;}
+.tourist-package-list-wrap .btn-tourist-package.btn-slide-down {background-color: #ababab;}
+.tourist-package-list-wrap .btn-tourist-package.btn-slide-down.active {transform: rotate(-180deg);}
+.tourist-package-list-wrap .tourist-package-age-group-list {padding: 10px;}
+.tourist-package-list-wrap .tourist-package-age-group {background-color: #efefef; margin-bottom: 5px; padding: 4px 15px;}
+.tourist-package-list-wrap .tourist-group-age-title {font-size: 13px; font-weight: 400;}
+.tourist-package-list-wrap .tourist-group-age-count {font-size: 13px; font-weight: 700; line-height: 1; color: #333; letter-spacing: 0.14px; background-color: #ececec; border: 1px solid #ccc; border-radius: 4px; box-shadow: -1px -6px 5px 0px rgba(0, 0, 0, 0.12) inset; display: inline-block; padding: 4px;}
+.tourist-package-list-wrap .tourist-package-total-group {background-color: #f2f9f3; margin-bottom: 5px; padding: 4px 15px;}
+.tourist-package-list-wrap .tourist-group-total-title {font-size: 13px; font-weight: 400;}
+.tourist-package-list-wrap .tourist-group-total-amount {font-size: 13px; font-weight: 700; line-height: 1; color: #333; letter-spacing: 0.14px; display: inline-block; padding: 4px;}
 </style>

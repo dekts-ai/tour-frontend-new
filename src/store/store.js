@@ -15,8 +15,9 @@ export default createStore({
         tourPackage: null,
         tourPackageLogo: null,
         customer: null,
-        slotId: null,
+        slotId: 0,
         hotelId: 0,
+        cartItem: {},
     },
     getters: {
         iframeStatus: state => {
@@ -57,6 +58,9 @@ export default createStore({
         },
         hotelId: state => {
             return state.hotelId;
+        },
+        cartItem: state => {
+            return state.cartItem;
         }
     },
     mutations: {
@@ -99,6 +103,9 @@ export default createStore({
         HOTEL_ID(state, hotelId) {
             state.hotelId = hotelId;
         },
+        CART_ITEM(state, cartItem) {
+            state.cartItem = cartItem;
+        }
     },
     actions: {
         storeIframeStatus({ commit }, iframeStatus) {
@@ -140,5 +147,8 @@ export default createStore({
         storeHotelId({ commit }, hotelId) {
             commit('HOTEL_ID', hotelId);
         },
+        storeCartItem({ commit }, cartItem) {
+            commit('CART_ITEM', cartItem);
+        }
     }
 });
