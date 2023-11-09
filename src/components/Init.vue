@@ -486,9 +486,13 @@ export default {
             const groupsum = GroupPeoArr.reduce((a, b) => Number(a) + Number(b), 0);
             if (groupsum == 0) {
                 this.errors.push("Please select your group of people for the tour");
-            } else if (GroupPeoArr[0] == 0 && groupsum != 0) {
+            } else {
                 delete (this.errors.length > 1 ? this.errors[1] : this.errors[0]);
-                this.errors.push("Please select a minimum of one adult to process your booking");
+                if (this.form.tenant_id == 'apm' && groupsum == 1) {
+                    this.errors.push("Please select a minimum of two people to process your booking");
+                } else if (GroupPeoArr[0] == 0) {
+                    this.errors.push("Please select a minimum of one adult to process your booking");
+                }
             }
 
             if (this.errors.length == 0) {
