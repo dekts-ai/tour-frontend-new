@@ -477,16 +477,21 @@ export default {
                 this.errors = [];
 
                 if (!this.form.timedate) {
-                    this.errors.push("Please Select a start time for your tour");
+                    this.errors.push("Please select a start time for your tour");
                 }
 
                 index++;
             });
 
             const groupsum = GroupPeoArr.reduce((a, b) => Number(a) + Number(b), 0);
-            const calsum = CalPeoArr.reduce((a, b) => Number(a) + Number(b), 0);
+            if (groupsum == 0) {
+                this.errors.push("Please select your group of people for the tour");
+            } else if (GroupPeoArr[0] == 0 && groupsum != 0) {
+                delete (this.errors.length > 1 ? this.errors[1] : this.errors[0]);
+                this.errors.push("Please select a minimum of one adult to process your booking");
+            }
 
-            if (groupsum != 0 && this.form.timedate != '' && calsum != 0) {
+            if (this.errors.length == 0) {
                 let router = this.$router;
                 this.form.calucation = CalPeoArr;
                 this.form.peoplegroup = GroupPeoArr;
@@ -510,10 +515,6 @@ export default {
                 });
 
                 return true;
-            } else {
-                if (groupsum <= 0) {
-                    this.errors.push("Please Select your group of people for the tour");
-                }
             }
             e.preventDefault();
         },
