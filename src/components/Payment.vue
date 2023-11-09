@@ -90,6 +90,79 @@
                     </div>
                   </div>
                 </div>
+                <div class="row m-2">
+	                <h4 class="mx-auto my-2">Your tour packages details</h4>
+                  <div class="col-12">
+                    <div class="tour-packages-wrap">
+                      <div class="tour-packages-item" v-for="item in cartItem" :key="item.tour_slot_id">
+                        <div class="tour-packages-inner-wrap">
+                          <div class="tour-packages-inner">
+                            <div class="tour-packages-detail">
+                              <div class="tour-packages-image"><img :src="item.package_image" alt="package-item-image"></div>
+                              <div class="tour-packages-title-wrap">
+                                <div class="tour-packages-title-top">{{ dateFormat(item.date) }} @ {{ item.time_date }}</div>
+                                <div class="tour-packages-title">{{ item.package_name }}</div>
+
+                                <div class="cancelling-policy-wrap">
+                                  <div class="cancelling-policy-title">Cancelling policy</div>
+                                  <div class="cancelling-policy-detail">Up to 2 days before tour date</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="tour-packages-group-wrap">
+                              <div class="tour-packages-group-title">Your selected group of people:</div>
+                              <div class="tour-packages-group-people">
+                                <div v-for="(pax, key) in item.people_group" :key="key">
+                                  <div class="tour-packages-selected-people" v-if="pax > 0">
+                                    <div class="tour-packages-selected-people-icon">
+                                      <svg width="8" height="11" viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.07976 5.3184C5.3978 5.3184 6.46628 4.24991 6.46628 2.93187C6.46628 1.61383 5.3978 0.545349 4.07976 0.545349C2.76172 0.545349 1.69324 1.61383 1.69324 2.93187C1.69324 4.24991 2.76172 5.3184 4.07976 5.3184Z" fill="#4C76B2"/><path d="M5.6879 6.11444H2.47167C1.94894 6.11507 1.44781 6.323 1.07819 6.69263C0.708563 7.06225 0.500632 7.56338 0.5 8.08611L0.5 10.092H7.65957V8.08611C7.65894 7.56338 7.45101 7.06225 7.08139 6.69263C6.71176 6.323 6.21063 6.11507 5.6879 6.11444V6.11444Z" fill="#4C76B2"/></svg>
+                                    </div>
+                                    <div class="tour-packages-selected-people-title">{{ item.rate_group[key] }}</div>
+                                    <div class="tour-packages-selected-people-count"><input type="text" name="count" :value="pax"></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="tour-packages-edit-wrap">
+                            <div class="tour-packages-action-wrap">
+                              <div class="tour-packages-action-btn">
+                                <a class="action-btn action-btn-edit" href="javascript.void(0)">Edit</a>
+                              </div>
+                              <div class="tour-packages-action-btn">
+                                <a class="action-btn action-btn-edit" href="javascript.void(0)">Delete</a>
+                              </div>
+                              <div class="tour-packages-action-btn">
+                                <a class="action-btn action-btn-edit" href="javascript.void(0)">Coupon code</a>
+                              </div>
+                            </div>
+                            <div class="tour-packages-couponcode-wrap">
+                              <div class="tour-packages-couponcode">
+                                <input type="text" name="couponcode" placeholder="Enter Code">
+                                <button class="couponcode-apply-btn ms-1">Apply</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="tour-packages-totalcost">
+                          <div class="tour-packages-costcount-title">Tour cost:</div>
+                          <div class="tour-packages-costcount-subitem">
+                            <div class="tour-packages-costcount-subitem-title">Subtotal:</div>
+                            <div class="tour-packages-costcount-subitem-cost">${{ item.subtotal.toFixed(2) }}</div>
+                          </div>
+                          <div class="tour-packages-costcount-subitem">
+                            <div class="tour-packages-costcount-subitem-title">Booking fees:</div>
+                            <div class="tour-packages-costcount-subitem-cost">${{ item.fees.toFixed(2) }}</div>
+                          </div>
+                          <div class="tour-packages-costcount-total">
+                            <div class="tour-packages-costcount-total-title">Tour Cost:</div>
+                            <div class="tour-packages-costcount-total-cost">${{ item.total.toFixed(2) }}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div class="row booking-dt-sec">
                   <div class="col-12">
                     <div class="booking-dt-title">
@@ -114,47 +187,6 @@
                               Time & Date
                             </i>
                           </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-12 col-lg-12 mt-2">
-                  <!-- Package list -->
-                  <div class="tourist-package-list-wrap">
-                    <div class="tourist-package-list">
-                      <div v-for="item in cartItem" :key="item.tour_slot_id">
-                        <div :class="'tourist-package-' + item.tour_slot_id">
-                          <div class="tourist-package-title-wrap">
-                            <div class="tourist-package-title">{{ item.package_name }}</div>
-                            <div class="tourist-package-date">{{ dateFormat(item.date) }} @ {{ item.time_date }}</div>
-                            <div class="tourist-package-btn-wrap">
-                              <button class="btn-tourist-package btn-edit" type="button"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-                              <button class="btn-tourist-package btn-delete" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                              <button class="btn-tourist-package btn-slide-down" @click="toggleAgeGroupList" type="button"><i class="fa fa-angle-down" aria-hidden="true"></i></button>
-                            </div>
-                          </div>
-                          <div class="tourist-package-age-group-list">
-                            <div v-for="(pax, key) in item.people_group" :key="key">
-                              <div v-if="pax > 0" class="tourist-package-age-group d-flex justify-content-between">
-                                <div class="tourist-group-age-title">{{ item.rate_group[key] }}</div>
-                                <div class="tourist-group-age-count">{{ pax }}</div>
-                              </div>
-                            </div>
-                            <div class="tourist-package-total-group d-flex justify-content-between mt-4">
-                              <div class="tourist-group-total-title">Subtotal</div>
-                              <div class="tourist-group-total-amount">{{ 0 }}</div>
-                            </div>
-                            <div class="tourist-package-total-group d-flex justify-content-between">
-                              <div class="tourist-group-total-title">Booking Fees</div>
-                              <div class="tourist-group-total-amount">{{ 0 }}</div>
-                            </div>
-                            <div class="tourist-package-total-group d-flex justify-content-between">
-                              <div class="tourist-group-total-title">Total Cost</div>
-                              <div class="tourist-group-total-amount">{{ 0 }}</div>
-                            </div>
-                          </div>
-                          <div class="tourist-package-total-cost"></div>													
                         </div>
                       </div>
                     </div>

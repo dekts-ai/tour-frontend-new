@@ -322,6 +322,7 @@ export default {
                 tour_operator_id: 0,
                 package_id: 0,
                 package_name: "",
+                package_image: "",
                 affiliate_id: 0,
                 hotel_id: 0,
                 date: new Date(),
@@ -454,12 +455,19 @@ export default {
             this.processLoader(loader);
         },
         submit: function (e) {
-            const tourPkgRates = this.details.TourPkgRates;
-            let index = 0;
+            this.errors = [];
+
+            if (!this.form.time_date) {
+                this.errors.push("Please select a start time for your tour");
+            }
+
             let rateGroupArr = [];
             let feesGroupArr = [];
             let groupPaxArr = [];
             let paxSubtotalArr = [];
+
+            const tourPkgRates = this.details.TourPkgRates;
+            let index = 0;
 
             tourPkgRates.forEach(number => {
                 let rateGroupField = 'people_group' + number.pkg_rate_id;
@@ -474,12 +482,6 @@ export default {
 
                 rateGroupArr.push(tourPkgRates[index].Age);
 
-                this.errors = [];
-
-                if (!this.form.time_date) {
-                    this.errors.push("Please Select a start time for your tour");
-                }
-
                 index++;
             });
 
@@ -487,7 +489,18 @@ export default {
             const feesSum = feesGroupArr.reduce((a, b) => Number(a) + Number(b), 0);
             const subtotalSum = paxSubtotalArr.reduce((a, b) => Number(a) + Number(b), 0);
 
-            if (rateGroupsum != 0 && this.form.time_date != '') {
+            if (rateGroupsum == 0) {
+                this.errors.push("Please select your group of people for the tour");
+            } else {
+                delete (this.errors.length > 1 ? this.errors[1] : this.errors[0]);
+                if (this.form.tenant_id == 'apm' && rateGroupsum == 1) {
+                    this.errors.push("Please select a minimum of two people to process your booking");
+                } else if (groupPaxArr[0] == 0) {
+                    this.errors.push("Please select a minimum of one adult to process your booking");
+                }
+            }
+
+            if (this.errors.length == 0) {
                 this.form.calucation = paxSubtotalArr;
                 this.form.rate_group = rateGroupArr;
                 this.form.people_group = groupPaxArr;
@@ -498,10 +511,6 @@ export default {
                 this.form.total = subtotalSum + feesSum;
 
                 this.addToCart();
-            } else {
-                if (rateGroupsum <= 0) {
-                    this.errors.push("Please Select your group of people for the tour");
-                }
             }
             e.preventDefault();
         },
@@ -583,6 +592,8 @@ export default {
                     this.updateCartBtn = 1;
                 }
             });
+
+            this.form.package_image = this.details?.TourPkgDetails?.length > 0 ? this.details.TourPkgDetails[0].FrontendPackageImage : "";
 
             return true;
         },
