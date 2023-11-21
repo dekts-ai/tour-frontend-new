@@ -182,11 +182,11 @@
 
                         <div class="col-12 cta">
                           <div class="cta-box">
-                            <div class="content">
+                            <div class="content" v-if="details.TourPkgDetails[0].phone_number">
                               <h3>Need Help?</h3>
                               <p>
                                 Please give us a call for any query or help at:
-                                <a href="tel:928-640-1761">928-640-1761</a>
+                                <a :href="'tel:' + details.TourPkgDetails[0].phone_number">{{details.TourPkgDetails[0].phone_number}}</a>
                               </p>
                             </div>
                             <ul>
