@@ -48,7 +48,7 @@
                                                             <span>{{ tourPackage.TourPkgDuration }}</span>
                                                         </div>
                                                         <div class="book-now-c">
-                                                            <button @click="bookNow(tenantId, tourOperatorId, tourPackage.TourPackageId)">Book Now</button>
+                                                            <button @click="bookNow(tourPackage.tenant_id, tourPackage.TourOperatorId, tourPackage.TourPackageId)">Book Now</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -67,6 +67,7 @@
 
 <script>
 import axios from "axios";
+import { format } from 'date-fns';
 
 export default {
     name: "Index",
@@ -85,7 +86,7 @@ export default {
         };
     },
     async created() {
-        this.date = this.$store.state.date;
+        this.date = format(this.$store.state.date, 'yyyy-MM-dd');
         this.tenantId = this.$store.state.tenantId;
         this.tourOperatorId = this.$store.state.tourOperatorId;
         this.packageId = this.$store.state.packageId;
@@ -97,6 +98,7 @@ export default {
         }
 
         axios.get("/tour-package/" + this.date + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId).then((response) => {
+            this.$store.dispatch('storeTourPackage', response.data)
             var self = this;
             self.TourPkgDetails = response.data.TourPkgDetails;
             self.banner = self.TourPkgDetails[0].HeaderOne;

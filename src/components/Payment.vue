@@ -14,7 +14,7 @@
       <div class="background-color-sec">
         <div class="row">
           <div class="col-12">
-            <div class="row bradcumb-row" v-if="iframeStatus == false">
+            <!-- <div class="row bradcumb-row" v-if="iframeStatus == false">
               <div class="col-12">
                 <div class="bradcumb-main">
                   <ul>
@@ -37,8 +37,8 @@
                 </div>
                 <hr class="sep1" />
               </div>
-            </div>
-            <div class="row innerbanner-row"
+            </div> -->
+            <!-- <div class="row innerbanner-row"
               :class="[(iframeStatus == false) ? 'noiframe-inner-banner' : 'iframe-inner-banner', '']"
               v-for="TourPkgDetails in details.TourPkgDetails" :key="TourPkgDetails.pkg_rate_id"
               v-bind:style="{ 'background-image': 'url(' + TourPkgDetails.HeaderTwo + ')' }">
@@ -61,7 +61,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="row payment-row">
               <div class="col-12">
                 <div class="row booking-row">
@@ -102,7 +102,6 @@
                               <div class="tour-packages-title-wrap">
                                 <div class="tour-packages-title-top">{{ dateFormat(item.date) }} @ {{ item.time_date }}</div>
                                 <div class="tour-packages-title">{{ item.package_name }}</div>
-
                                 <div class="cancelling-policy-wrap">
                                   <div class="cancelling-policy-title">Cancelling policy</div>
                                   <div class="cancelling-policy-detail">Up to 2 days before tour date</div>
@@ -127,10 +126,10 @@
                           <div class="tour-packages-edit-wrap">
                             <div class="tour-packages-action-wrap">
                               <div class="tour-packages-action-btn">
-                                <a class="action-btn action-btn-edit" href="javascript.void(0)">Edit</a>
+                                <a class="action-btn action-btn-edit pe-auto" @click="mindChange(item)">Edit</a>
                               </div>
                               <div class="tour-packages-action-btn">
-                                <a class="action-btn action-btn-edit" href="javascript.void(0)">Delete</a>
+                                <a class="action-btn action-btn-edit pe-auto" @click="removeFromCart(item)">Delete</a>
                               </div>
                               <div class="tour-packages-action-btn">
                                 <a class="action-btn action-btn-edit" href="javascript.void(0)">Coupon code</a>
@@ -163,7 +162,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="row booking-dt-sec">
+                <!-- <div class="row booking-dt-sec">
                   <div class="col-12">
                     <div class="booking-dt-title">
                       You're booking date and time:
@@ -191,385 +190,367 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> -->
                 <!-- / Package List -->
-                <form @submit.prevent="submit" id="myForm" method="post">
-                  <input type="hidden" id="bookingID" name="bookingID">
-                  <div class="row starttime-row border-0">
-                    <div class="col-12">
-                      <div class="row groupofpeople">
-                        <div class="col-12">
-                          <h2>Select your group of people for the tour:</h2>
-                          <div class="scroll-table">
-                            <table class="table">
-                              <thead>
-                                <tr>
-                                  <th scope="col">Age</th>
-                                  <th scope="col">Fees and Taxes</th>
-                                  <th scope="col">
-                                    Select Group <br />Of People
-                                  </th>
-                                  <th scope="col">Price</th>
-                                </tr>
-                              </thead>
-                              <tbody v-for="(tour, index) in details.TourPkgRates" :key="index">
-                                <tr>
-                                  <td class="age pay" data-label="Age">
-                                    <img src="../assets/images/aduct.png" />
-                                    {{ tour.Age }}
-                                  </td>
-                                  <td class="taxes" data-label="Fees and Taxes">
-                                    <p v-if="form.tour_package_id >= 12 && form.tour_package_id <= 15">
-                                        {{ tour.description }}
-                                    </p>
-                                    <p v-else>
-                                        Navajo Nation: Permit Fee ${{ tour.PermitFee
-                                        }} & Tax ${{ tour.Tax}}
-                                    </p>
-                                  </td>
-                                  <td class="group" data-label="Select Group Of People">
-                                    <input type="text" :value="form.touristsArr[index]" class="form-select noarrow" />
-                                  </td>
-                                  <td class="final" data-label="Price">
-                                    $<span class="finalprice1"><input type="hidden"
-                                        :name="'grpt'+ tour.pkg_rate_id + ''" :id="tour.pkg_rate_id"
-                                        :value="form.calucation[index]">{{ form.calucation[index]}}</span>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
+                <!-- <div class="row starttime-row border-0">
+                  <div class="col-12">
+                    <div class="row groupofpeople">
+                      <div class="col-12">
+                        <h2>Select your group of people for the tour:</h2>
+                        <div class="scroll-table">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">Age</th>
+                                <th scope="col">Fees and Taxes</th>
+                                <th scope="col">
+                                  Select Group <br />Of People
+                                </th>
+                                <th scope="col">Price</th>
+                              </tr>
+                            </thead>
+                            <tbody v-for="(tour, index) in details.TourPkgRates" :key="index">
+                              <tr>
+                                <td class="age pay" data-label="Age">
+                                  <img src="../assets/images/aduct.png" />
+                                  {{ tour.Age }}
+                                </td>
+                                <td class="taxes" data-label="Fees and Taxes">
+                                  <p v-if="form.tour_package_id >= 12 && form.tour_package_id <= 15">
+                                      {{ tour.description }}
+                                  </p>
+                                  <p v-else>
+                                      Navajo Nation: Permit Fee ${{ tour.PermitFee
+                                      }} & Tax ${{ tour.Tax}}
+                                  </p>
+                                </td>
+                                <td class="group" data-label="Select Group Of People">
+                                  <input type="text" :value="form.touristsArr[index]" class="form-select noarrow" />
+                                </td>
+                                <td class="final" data-label="Price">
+                                  $<span class="finalprice1"><input type="hidden"
+                                      :name="'grpt'+ tour.pkg_rate_id + ''" :id="tour.pkg_rate_id"
+                                      :value="form.calucation[index]">{{ form.calucation[index]}}</span>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
                         </div>
                       </div>
                     </div>
                   </div>
+                </div> -->
 
-                  <div class="row payment-form-sec">
-                    <div class="col-12">
+                <div class="row payment-form-sec">
+                  <div class="col-12">
 
-                      <div class="row">
-                        <div class="col-12">
-                          <span class="payment-form-notice">
-                            Please fill all fields marked with <span>*</span> to
-                            complete your booking
-                          </span>
-                        </div>
-                        <div class="col-12 mb-2">
-                          <div class="row">
-                            <div class="col-12 col-md-6">
-                              <div class="form-field-title">Contact</div>
-                              <div class="form-field-wrp contact-form-field">
-                                <div class="form-group col-12">
-                                  <label for="fullname" class="col-form-label">Full Name<span
-                                      class="required-star">*</span></label>
+                    <div class="row">
+                      <!-- <div class="col-12">
+                        <span class="payment-form-notice">
+                          Please fill all fields marked with <span>*</span> to
+                          complete your booking
+                        </span>
+                      </div>
+                      <div class="col-12 mb-2">
+                        <div class="row">
+                          <div class="col-12">
+                            <div class="form-field-title">Contact</div>
+                            <div class="form-field-wrp contact-form-field">
+                              <div class="col-md-12">
+                                <div class="form-group col-md-4">
+                                  <label for="fullname" class="col-form-label">Full Name<span class="required-star">*</span></label>
                                   <div class="field-icon-wrp">
                                     <i class="fa fa-user" aria-hidden="true"></i>
                                   </div>
-                                  <input type="text" id="name" name="name" v-model="form.name" class="form-control"
-                                    placeholder="Your Name" />
+                                  <input type="text" id="name" name="name" v-model="form.name" class="form-control" placeholder="Your Name" />
                                 </div>
-                                <div class="form-group col-12">
+                                <div class="form-group col-md-4">
                                   <div class="phone-wrap">
-                                    <label for="phonenumber" class="col-form-label">Phone Number<span
-                                        class="required-star">*</span></label>
+                                    <label for="phonenumber" class="col-form-label">Phone Number<span class="required-star">*</span></label>
                                     <div class="field-icon-wrp">
                                       <i class="fa fa-phone" aria-hidden="true"></i>
                                     </div>
-                                    <input type="text" id="phonenumber" name="phone_number" v-model="form.phone_number"
-                                      v-mask="'###############'" class="form-control" placeholder="Your Contact Number" />
+                                    <input type="text" id="phonenumber" name="phone_number" v-model="form.phone_number" v-mask="'###############'" class="form-control" placeholder="Your Contact Number" />
                                   </div>
                                 </div>
-                                <div class="form-group col-12">
-                                  <label for="Email" class="col-form-label">Email Address<span
-                                      class="required-star">*</span></label>
+                                <div class="form-group col-md-4">
+                                  <label for="Email" class="col-form-label">Email Address<span class="required-star">*</span></label>
                                   <div class="field-icon-wrp">
                                     <i class="fa fa-envelope" aria-hidden="true"></i>
                                   </div>
-                                  <input type="email" id="emailaddress" name="email" v-model="form.email"
-                                    class="form-control" placeholder="Your Email Address" />
+                                  <input type="email" id="emailaddress" name="email" v-model="form.email" class="form-control" placeholder="Your Email Address" />
                                 </div>
-                                <div class="form-group col-12">
-                                  <hr />
-                                </div>
-                                <div class="form-group col-12 mb-0">
-                                  <label class="checkbox-wrap get-email-updates mb-0">Get future email updates from {{
-                                  TourPkgName }}
-                                    <input type="checkbox" name="getemailupdates" v-model="form.getemailupdates"
-                                      id="getemailupdates" value="getemailupdates" />
-                                    <span class="checkmark"></span>
-                                  </label>
-                                </div>
+                              </div>
+                              <div class="form-group col-12">
+                                <hr />
+                              </div>
+                              <div class="form-group col-12 mb-0">
+                                <label class="checkbox-wrap get-email-updates mb-0">Get future email updates from {{
+                                TourPkgName }}
+                                  <input type="checkbox" name="getemailupdates" v-model="form.getemailupdates"
+                                    id="getemailupdates" value="getemailupdates" />
+                                  <span class="checkmark"></span>
+                                </label>
                               </div>
                             </div>
-                            <div class="col-12 col-md-6">
-                              <div class="form-field-title">
-                                Terms of Service
-                              </div>
-                              <div class="form-field-wrp contact-form-field">
-                                <div class="form-group col-12">
-                                  <div class="policy-item-wrp">
-                                    <h5 class="card-label-text-left mb-2">
-                                      Cancellation policy
-                                    </h5>
-                                    <ul>
-                                      <li>
-                                        We offer cancellations on purchases made of the services offered on our Website. We offer cancellations only prior to performance of the service. You may cancel your order by contacting us via email or phone.
-                                      </li>
-                                      <li>
-                                        We reserve the right to cancel your purchase for any reason, at our sole discretion, including but not limited to fraud, inaccuracies, and unavailability of the items or services purchased. We will let you know immediately if we plan on canceling your purchase.
-                                      </li>
-                                      <li>
-                                        We will issue a partial refund of the purchase price that you paid if we cancel your purchase.
-                                      </li>
-                                    </ul>
+                          </div>
+                          <div class="col-12 col-md-6">
+                            <div class="form-field-title">
+                              Terms of Service
+                            </div>
+                            <div class="form-field-wrp contact-form-field">
+                              <div class="form-group col-12">
+                                <div class="policy-item-wrp">
+                                  <h5 class="card-label-text-left mb-2">
+                                    Cancellation policy
+                                  </h5>
+                                  <ul>
+                                    <li>
+                                      We offer cancellations on purchases made of the services offered on our Website. We offer cancellations only prior to performance of the service. You may cancel your order by contacting us via email or phone.
+                                    </li>
+                                    <li>
+                                      We reserve the right to cancel your purchase for any reason, at our sole discretion, including but not limited to fraud, inaccuracies, and unavailability of the items or services purchased. We will let you know immediately if we plan on canceling your purchase.
+                                    </li>
+                                    <li>
+                                      We will issue a partial refund of the purchase price that you paid if we cancel your purchase.
+                                    </li>
+                                  </ul>
 
-                                    <h5 class="card-label-text-left mb-2">
-                                      Refund policy
-                                    </h5>
-                                    <ul>
-                                      <li>
-                                        We offer full refunds of ticket price (not booking fees) made of the services offered on our Website. Booking Fees are non-refundable. To qualify for a full refund of the ticket price, you must submit your request to us via phone or email 48 hours prior to the day you booked for. If your booking is canceled within the 48 hour timeframe of your tour, you may be eligible for a 50% refund. If you miss your tour for any reason, you will not be given a refund.
-                                      </li>
-                                      <li>
-                                        In the event that tours are canceled due to weather or unforeseen circumstances, you will receive a full refund.
-                                      </li>
-                                    </ul>
-                                  </div>
+                                  <h5 class="card-label-text-left mb-2">
+                                    Refund policy
+                                  </h5>
+                                  <ul>
+                                    <li>
+                                      We offer full refunds of ticket price (not booking fees) made of the services offered on our Website. Booking Fees are non-refundable. To qualify for a full refund of the ticket price, you must submit your request to us via phone or email 48 hours prior to the day you booked for. If your booking is canceled within the 48 hour timeframe of your tour, you may be eligible for a 50% refund. If you miss your tour for any reason, you will not be given a refund.
+                                    </li>
+                                    <li>
+                                      In the event that tours are canceled due to weather or unforeseen circumstances, you will receive a full refund.
+                                    </li>
+                                  </ul>
                                 </div>
-                                <div class="form-group col-12">
-                                  <hr />
-                                </div>
-                                <div class="form-group col-12 mb-0">
-                                  <label class="
-                                        checkbox-wrap
-                                        get-email-updates
-                                        mb-0
-                                        cancellationsterms
-                                      "><span class="required-star">*</span> I have
-                                    read and accept above all cancellations
-                                    terms.
-                                    <input type="checkbox" name="cancellations_policy"
-                                      v-model="form.cancellations_policy" id="cancellations_policy" />
-                                    <span class="checkmark"></span>
-                                  </label>
-                                </div>
+                              </div>
+                              <div class="form-group col-12">
+                                <hr />
+                              </div>
+                              <div class="form-group col-12 mb-0">
+                                <label class="
+                                      checkbox-wrap
+                                      get-email-updates
+                                      mb-0
+                                      cancellationsterms
+                                    "><span class="required-star">*</span> I have
+                                  read and accept above all cancellations
+                                  terms.
+                                  <input type="checkbox" name="cancellations_policy"
+                                    v-model="form.cancellations_policy" id="cancellations_policy" />
+                                  <span class="checkmark"></span>
+                                </label>
                               </div>
                             </div>
                           </div>
                         </div>
-                        <div v-if="selectedHotel" class="col-12 mb-4 hotel-section">
+                      </div>
+                      <div v-if="selectedHotel" class="col-12 mb-4 hotel-section">
+                        <div class="col-12">
+                          <div class="hotel-wrapper d-flex">
+                            <div class="hotel-image">
+                              <img :src="selectedHotel.image" :alt="selectedHotel.name">
+                            </div>
+                            <div class="hotel-detail w-100">
+                              <div class="hotel-title">Hotel Pickup Location:</div>
+                              <div class="hotel-name">{{ selectedHotel.name }}</div>
+                              <div class="hotel-detail-address">{{ selectedHotel.address }}</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <span class="payment-form-notice important-note w-100">
+                          <span class="notice-title">Important Note:</span>
+                          All guests must arrive 45 minutes prior to their
+                          reserved tour time. All guests must stay with their
+                          guides.
+                        </span>
+                      </div>
+                      <div class="form-group form-textarea-wrap col-12">
+                        <label for="comment" class="col-form-label">Comments</label>
+                        <textarea id="comment" name="comment" v-model="form.comment"
+                          placeholder="Please type here ..."></textarea>
+                      </div>
+                      <ul>
+                        <li class="text-danger" style="font-size:25px">
+                          {{message}}
+                        </li>
+                      </ul>
+                      <div class="col-12">
+                        <div class="row">
+                          <div class="col-12 col-md-6 text-center text-md-start">
+                            <div class="additional-notes-text">
+                              Any additional notes or special requests?
+                            </div>
+                          </div>
+                          <div class="col-12 col-md-6 text-center text-md-end">
+                            <div class="accommodate-your-request">
+                              We will do our best to accommodate your request.
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="pageloader">
+                        <img src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif"
+                          alt="processing..." />
+                      </div> -->
+
+                      <div class="col-12 total-cost-col">
+                        <!-- <div class="row mb-2">
+                          <div class="col-6 text-start"></div>
+                          <div class="form-group col-6 text-end d-flex align-items-center justify-content-end">
+                            <input @keyup="addCouponCode" class="form-control form-control-sm me-1 pe-0" type="text" id="couponCode" placeholder="Coupon Code" style="max-width: 180px;">
+                            <button type="button" @click="applyCoupon" id="applyCouponButton" class="btn btn-sm btn-primary" style="padding: 2px 7px 5px 7px;">Apply</button>
+                          </div>
+                          <p class="text-end" v-if="couponSuccess.length">
+                            <ul>
+                              <li v-for="success in couponSuccess" :key="success" v-bind:class="{'text-success': success }">{{ success }}</li>
+                            </ul>
+                          </p>
+                          <p class="text-end" v-if="couponErrors.length">
+                            <ul>
+                              <li v-for="error in couponErrors" :key="error" v-bind:class="{'text-danger': error }">{{ error }}</li>
+                            </ul>
+                          </p>
+                        </div> -->
+
+                        <div class="row subtotal" v-if="subtotal">
+                          <div class="col-6 text-start">Ticket Cost:</div>
+                          <div class="col-6 text-end">
+                            $<label class="ticket_cost">{{ subtotal.toFixed(2) }}</label>
+                          </div>
+                        </div>
+
+                        <div class="row subtotal" v-if="1">
+                          <div class="col-6 text-start">Discount:</div>
+                          <div class="col-6 text-end">
+                            <span v-if="0">({{ 0 }}%)</span>
+                            $<label class="discount2_value">{{ 0 }}</label>
+                          </div>
+                        </div>
+
+                        <div class="row fees">
+                          <div class="col-6 text-start">Booking Fees:</div>
+                          <div class="col-6 text-end">
+                            ${{ fees.toFixed(2) }}
+                          </div>
+                        </div>
+                        <div class="row totalcost">
+                          <div class="col-6 text-start">
+                            Total Cost:
+                          </div>
+                          <div class="col-6 text-end">
+                            $<label class="grandtotalfinal">{{ total.toFixed(2) }}</label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- <div class="col-12 mb-3">
+                        <div class="row">
                           <div class="col-12">
-                            <div class="hotel-wrapper d-flex">
-                              <div class="hotel-image">
-                                <img :src="selectedHotel.image" :alt="selectedHotel.name">
-                              </div>
-                              <div class="hotel-detail w-100">
-                                <div class="hotel-title">Hotel Pickup Location:</div>
-                                <div class="hotel-name">{{ selectedHotel.name }}</div>
-                                <div class="hotel-detail-address">{{ selectedHotel.address }}</div>
-                              </div>
+                            <div class="payment-text card-label-text-left"><img src="../assets/images/shield.png"
+                                alt="shield"> Payment</div>
+                          </div>
+                          <div class="col-12">
+                            <div class="secured-encryption card-label-text-left"><img
+                                src="../assets/images/lock-white.png" alt="lock"> Secured with 2048-bit encryption
                             </div>
                           </div>
                         </div>
-                        <div class="col-12">
-                          <span class="payment-form-notice important-note w-100">
-                            <span class="notice-title">Important Note:</span>
-                            All guests must arrive 45 minutes prior to their
-                            reserved tour time. All guests must stay with their
-                            guides.
-                          </span>
-                        </div>
-                        <div class="form-group form-textarea-wrap col-12">
-                          <label for="comment" class="col-form-label">Comments</label>
-                          <textarea id="comment" name="comment" v-model="form.comment"
-                            placeholder="Please type here ..."></textarea>
-                        </div>
-                        <ul>
-                          <li class="text-danger" style="font-size:25px">
-                            {{message}}
-                          </li>
-                        </ul>
-                        <div class="col-12">
-                          <div class="row">
-                            <div class="col-12 col-md-6 text-center text-md-start">
-                              <div class="additional-notes-text">
-                                Any additional notes or special requests?
-                              </div>
-                            </div>
-                            <div class="col-12 col-md-6 text-center text-md-end">
-                              <div class="accommodate-your-request">
-                                We will do our best to accommodate your request.
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div id="pageloader">
-                          <img src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif"
-                            alt="processing..." />
-                        </div>
-
-                        <div class="col-12 total-cost-col">
-                          <div class="row mb-2">
-                            <div class="col-6 text-start"></div>
-                            <div class="form-group col-6 text-end d-flex align-items-center justify-content-end">
-                              <input @keyup="addCouponCode" class="form-control form-control-sm me-1 pe-0" type="text" id="couponCode" placeholder="Coupon Code" style="max-width: 180px;">
-                              <button type="button" @click="applyCoupon" id="applyCouponButton" class="btn btn-sm btn-primary" style="padding: 2px 7px 5px 7px;">Apply</button>
-                            </div>
-                            <p class="text-end" v-if="couponSuccess.length">
-                              <ul>
-                                <li v-for="success in couponSuccess" :key="success" v-bind:class="{'text-success': success }">{{ success }}</li>
-                              </ul>
-                            </p>
-                            <p class="text-end" v-if="couponErrors.length">
-                              <ul>
-                                <li v-for="error in couponErrors" :key="error" v-bind:class="{'text-danger': error }">{{ error }}</li>
-                              </ul>
-                            </p>
-                          </div>
-
-                          <div class="row subtotal" v-if="ticket_cost">
-                            <div class="col-6 text-start">Ticket Cost:</div>
-                            <div class="col-6 text-end">
-                              $<label class="ticket_cost1">{{ ticket_cost }}</label>
-                              <input type="hidden" id="ticket_cost1" name="ticket_cost" :value="ticket_cost">
-                            </div>
-                          </div>
-
-                          <div class="row subtotal" v-if="form.discount2_value">
-                            <div class="col-6 text-start">Discount:</div>
-                            <div class="col-6 text-end">
-                              <span v-if="form.discount2_percentage">({{ form.discount2_percentage }}%)</span>
-                              $<label class="discount2_value">{{ form.discount2_value }}</label>
-                              <input type="hidden" id="discount2_value" name="discount2_value" :value="form.discount2_value">
-                            </div>
-                          </div>
-
-                          <div class="row subtotal">
-                            <div class="col-6 text-start">Subtotal:</div>
-                            <div class="col-6 text-end">
-                              $<label class="subgrandtotal">{{ subtotal }}</label>
-                              <input type="hidden" id="subtotal" name="subtotal" :value="subtotal">
-                            </div>
-                          </div>
-                          <div class="row fees">
-                            <div class="col-6 text-start">Booking Fees:</div>
-                            <div class="col-6 text-end">
-                              ${{ softwarefee }}
-                              <input type="hidden" id="fees" name="softwarefee" :value="softwarefee" />
-                            </div>
-                          </div>
-                          <div class="row totalcost">
-                            <div class="col-6 text-start">
-                              Total Cost:
-                            </div>
-                            <div class="col-6 text-end">
-                              $<label class="grandtotalfinal">{{ form.total }}</label>
-                              <input type="hidden" name="total" :value="form.total">
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="col-12 mb-3">
-                          <div class="row">
-                            <div class="col-12">
-                              <div class="payment-text card-label-text-left"><img src="../assets/images/shield.png"
-                                  alt="shield"> Payment</div>
-                            </div>
-                            <div class="col-12">
-                              <div class="secured-encryption card-label-text-left"><img
-                                  src="../assets/images/lock-white.png" alt="lock"> Secured with 2048-bit encryption
-                              </div>
-                            </div>
-                          </div>
-                          <div class="row mt-3">
-                            <div class="col-12">
-                              <div class="card-detail-main">
-                                <div class="row align-items-center">
-                                  <div class="col-12 col-md-5 border-right">
-                                    <div class="card-detail-wrp card-form-field">
-                                      <div class="form-group col-12 card-label-text-left">
-                                        <label for="cardnumber" class="col-form-label">Card Number<span
+                        <div class="row mt-3">
+                          <div class="col-12">
+                            <div class="card-detail-main">
+                              <div class="row align-items-center">
+                                <div class="col-12 col-md-5 border-right">
+                                  <div class="card-detail-wrp card-form-field">
+                                    <div class="form-group col-12 card-label-text-left">
+                                      <label for="cardnumber" class="col-form-label">Card Number<span
+                                          class="required-star">*</span></label>
+                                      <div class="field-icon-wrp">
+                                        <i class="fa fa-lock" aria-hidden="true"></i>
+                                      </div>
+                                      <input type="text" id="cardnumber" name="cardnumber" class="form-control"
+                                        v-model="form.cardnumber" v-mask="'#### #### #### ####'"
+                                        placeholder="1234 1234 1234 1234">
+                                      <div class="validation-icon-wrp">
+                                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                      </div>
+                                    </div>
+                                    <div class="form-group col-12">
+                                      <div class="phone-wrap card-label-text-left">
+                                        <label for="nameoncard" class="col-form-label">Name on Card<span
                                             class="required-star">*</span></label>
                                         <div class="field-icon-wrp">
-                                          <i class="fa fa-lock" aria-hidden="true"></i>
+                                          <i class="fa fa-user" aria-hidden="true"></i>
                                         </div>
-                                        <input type="text" id="cardnumber" name="cardnumber" class="form-control"
-                                          v-model="form.cardnumber" v-mask="'#### #### #### ####'"
-                                          placeholder="1234 1234 1234 1234">
+                                        <input type="text" id="nameoncard" name="nameoncard" class="form-control"
+                                          v-model="form.nameoncard" placeholder="">
                                         <div class="validation-icon-wrp">
                                           <i class="fa fa-check-circle" aria-hidden="true"></i>
                                         </div>
                                       </div>
-                                      <div class="form-group col-12">
-                                        <div class="phone-wrap card-label-text-left">
-                                          <label for="nameoncard" class="col-form-label">Name on Card<span
+                                    </div>
+                                    <div class="form-group col-12 mb-0">
+                                      <div class="row">
+                                        <div class="form-group col-7 card-label-text-left">
+                                          <label for="expiration" class="col-form-label">Expiration<span
                                               class="required-star">*</span></label>
                                           <div class="field-icon-wrp">
-                                            <i class="fa fa-user" aria-hidden="true"></i>
+                                            <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
                                           </div>
-                                          <input type="text" id="nameoncard" name="nameoncard" class="form-control"
-                                            v-model="form.nameoncard" placeholder="">
+                                          <input type="text" id="expiration" name="expiration" class="form-control"
+                                            v-model="form.expiration" v-mask="'##/##'" placeholder="MM/YY">
+                                          <div class="validation-icon-wrp">
+                                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                          </div>
+                                        </div>
+                                        <div class="form-group col-5 card-label-text-left">
+                                          <label for="cvv" class="col-form-label">CVC<span
+                                              class="required-star">*</span><img src="../assets/images/radio-info.png"
+                                              data-toggle="tooltip" data-placement="top"
+                                              title="Please select Number of Adults (Ages 13 & Up) want to go the tour"></label>
+                                          <div class="field-icon-wrp">
+                                            <i class="fa fa-lock" aria-hidden="true"></i>
+                                          </div>
+                                          <input type="text" id="cvv" name="cvv" class="form-control"
+                                            v-model="form.cvv" v-mask="'####'" placeholder="CVC">
                                           <div class="validation-icon-wrp">
                                             <i class="fa fa-check-circle" aria-hidden="true"></i>
                                           </div>
                                         </div>
                                       </div>
-                                      <div class="form-group col-12 mb-0">
-                                        <div class="row">
-                                          <div class="form-group col-7 card-label-text-left">
-                                            <label for="expiration" class="col-form-label">Expiration<span
-                                                class="required-star">*</span></label>
-                                            <div class="field-icon-wrp">
-                                              <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
-                                            </div>
-                                            <input type="text" id="expiration" name="expiration" class="form-control"
-                                              v-model="form.expiration" v-mask="'##/##'" placeholder="MM/YY">
-                                            <div class="validation-icon-wrp">
-                                              <i class="fa fa-check-circle" aria-hidden="true"></i>
-                                            </div>
-                                          </div>
-                                          <div class="form-group col-5 card-label-text-left">
-                                            <label for="cvv" class="col-form-label">CVC<span
-                                                class="required-star">*</span><img src="../assets/images/radio-info.png"
-                                                data-toggle="tooltip" data-placement="top"
-                                                title="Please select Number of Adults (Ages 13 & Up) want to go the tour"></label>
-                                            <div class="field-icon-wrp">
-                                              <i class="fa fa-lock" aria-hidden="true"></i>
-                                            </div>
-                                            <input type="text" id="cvv" name="cvv" class="form-control"
-                                              v-model="form.cvv" v-mask="'####'" placeholder="CVC">
-                                            <div class="validation-icon-wrp">
-                                              <i class="fa fa-check-circle" aria-hidden="true"></i>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
                                     </div>
                                   </div>
-                                  <div class="col-12 col-md-7">
-                                    <div class="makeaayment-wrap">
-                                      <div class="form-group col-12">
-                                        <div class="makeaayment-detail-title card-label-text-left">
-                                          We accept all major credit and debit cards:
-                                        </div>
-                                        <div class="makeaayment-detail-wrp">
-                                          <img src="../assets/images/card-name.png" alt="card-name">
-                                        </div>
+                                </div>
+                                <div class="col-12 col-md-7">
+                                  <div class="makeaayment-wrap">
+                                    <div class="form-group col-12">
+                                      <div class="makeaayment-detail-title card-label-text-left">
+                                        We accept all major credit and debit cards:
                                       </div>
-                                      <div class="form-group col-12">
-                                        <hr>
+                                      <div class="makeaayment-detail-wrp">
+                                        <img src="../assets/images/card-name.png" alt="card-name">
                                       </div>
-                                      <div class="form-group col-12 mb-0">
-                                        <input type="submit" name="makeaayment" id="makeaayment" value="Make a Payment"
-                                          class="makeaayment-btn">
-                                      </div>
-                                      <div class="form-group col-12 mb-0">
-                                        <div class="booking-you-text card-label-text-left">By booking you also agree to
-                                          our <a
-                                            href="https://nativeamericantours.com/privacy-policy.html">policies</a>, and
-                                          Stripe <a href="https://stripe.com/legal/end-users">terms of
-                                            service</a>.</div>
-                                      </div>
+                                    </div>
+                                    <div class="form-group col-12">
+                                      <hr>
+                                    </div>
+                                    <div class="form-group col-12 mb-0">
+                                      <input type="submit" name="makeaayment" id="makeaayment" value="Make a Payment"
+                                        class="makeaayment-btn">
+                                    </div>
+                                    <div class="form-group col-12 mb-0">
+                                      <div class="booking-you-text card-label-text-left">By booking you also agree to
+                                        our <a
+                                          href="https://nativeamericantours.com/privacy-policy.html">policies</a>, and
+                                        Stripe <a href="https://stripe.com/legal/end-users">terms of
+                                          service</a>.</div>
                                     </div>
                                   </div>
                                 </div>
@@ -577,18 +558,26 @@
                             </div>
                           </div>
                         </div>
+                      </div> -->
+                      <div class="addmore-package-wrap p-0">
+                        <div class="addmore-package-btn-wrap">
+                          <button class="btn addmore-package-btn" @click="mindChange()" type="button">+ Add more packages</button>
+                          <div class="checkout-btn-wrap">
+                            <button class="btn checkout-btn" type="button">Proceed to Checkout</button>						
+                          </div>
+                        </div>
+                      </div>
 
-                        <p class="mb-3" v-if="errors.length">
-                          <b>Please correct the following error(s):</b>
+                      <p class="mb-3" v-if="errors.length">
+                        <b>Please correct the following error(s):</b>
                         <ul>
                           <li v-for="error in errors" :key="error" v-bind:class="{'text-danger': error }">{{ error }}
                           </li>
                         </ul>
-                        </p>
-                      </div>
+                      </p>
                     </div>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
           </div>
@@ -600,9 +589,10 @@
 
 <script>
 import axios from "axios";
+import Swal from 'sweetalert2'
 import { loadStripe } from '@stripe/stripe-js';
 import { mask } from 'vue-the-mask';
-import { format } from 'date-fns';
+import { getUTCDateFromTimeZone } from '../utils/dateUtils';
 export default {
   name: "Payment",
   directives: {
@@ -614,52 +604,52 @@ export default {
       bookingId: null,
       baseUrl: process.env.VUE_APP_BASE_URL,
       iframeStatus: false,
-      TourPkgName: '',
-      data: [],
+      // TourPkgName: '',
+      // data: [],
       details: [],
-      hotels: [],
-      selectedHotel: null,
-      with_rate_groups: 1,
-      showAgeGroupList: false,
+      // hotels: [],
+      // selectedHotel: null,
+      // with_rate_groups: 1,
       cartItem: {},
-      form: {
-        name: "",
-        phone_number: "",
-        email: "",
-        getemailupdates: "",
-        cancellations_policy: "",
-        comment: "",
-        cardnumber: "",
-        nameoncard: "",
-        expiration: "",
-        cvv: "",
-        tour_operator_id: "",
-        tour_package_id: "",
-        affiliate_id: "",
-        hotel_id: "",
-        total: "",
-        touristsArr: "",
-        tourists: "",
-        cost: [],
-        tour_slot_id: "",
-        calucation: "",
-        service_commission: "",
-        date: "",
-        time: "",
-        code: "",
-        tour_promotion_id: "",
-        discount2_value: 0,
-        discount2_percentage: 0,
-      },
+      cartItemLength: 0,
+      // form: {
+      //   name: "",
+      //   phone_number: "",
+      //   email: "",
+      //   getemailupdates: "",
+      //   cancellations_policy: "",
+      //   comment: "",
+      //   cardnumber: "",
+      //   nameoncard: "",
+      //   expiration: "",
+      //   cvv: "",
+        // tour_operator_id: "",
+        // tour_package_id: "",
+        // affiliate_id: "",
+        // hotel_id: "",
+        // total: "",
+        // touristsArr: "",
+        // tourists: "",
+        // cost: [],
+        // tour_slot_id: "",
+        // calucation: "",
+        // service_commission: "",
+        // date: "",
+        // time: "",
+        // code: "",
+        // tour_promotion_id: "",
+        // discount2_value: 0,
+        // discount2_percentage: 0,
+      // },
       errors: [],
-      couponErrors: [],
-      couponSuccess: [],
-      price: "",
-      ticket_cost: "",
-      subtotal: "",
-      fees: "",
-      total: "",
-      softwarefee: "",
+      // couponErrors: [],
+      // couponSuccess: [],
+      // price: "",
+      // ticket_cost: 0,
+      subtotal: 0,
+      fees: 0,
+      total: 0,
+      // softwarefee: "",
       message: "",
       stripe: "",
       elements: "",
@@ -673,76 +663,16 @@ export default {
     this.createAndMountFormElements();
   },
   created() {
-    this.form.affiliate_id = this.$store.state.affiliateId;
-    this.form.hotel_id = this.$store.state.hotelId;
     this.cartItem = this.$store.state.cartItem;
-    this.data = this.$store.state.formData;
-
-    if (this.data == null) {
-      window.location.href = '/';
-    }
-    if (this.data.iframeStatusInfo == 'true') {
-      this.iframeStatus = this.data.iframeStatusInfo;
-    }
-
-    var date = new Date(this.data.date);
-    date = format(date, 'yyyy-MM-dd');
-
-    axios.get("/tour-package/" + date + "/" + this.data.tour_operator_id + "/" + this.data.package_id + "/" + this.data.affiliate_id + "/" + this.with_rate_groups).then((response) => {
-      this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
-      this.details = response.data;
-      this.details.TourPkgRates = this.details.TourPkgRates[this.data.package_id];
-      this.PermitFee = response.data.TourPkgRates[0].PermitFee;
-      this.ProcessingFee = response.data.TourPkgRates[0].ProcessingFee;
-      this.Tax = response.data.TourPkgRates[0].Tax;
-      this.fees = response.data.TourPkgDetails[0].ServiceCommission; // after discussion with anil I keep the service commission for affiliate too otherwise I planned to remove it for affiliate as per the backend process
-      this.form.date = this.data.date;
-      this.form.time = this.data.time_date;
-      this.form.affiliate_id = this.data.affiliate_id;
-      this.hotels = response.data.hotels;
-
-      if (this.hotels.length) {
-        this.hotels.forEach(hotel => {
-          if (hotel.id == this.form.hotel_id) {
-            this.selectedHotel = hotel;
-          }
-        });
+    this.cartItemLength = Object.values(this.cartItem).length;
+    if (this.cartItemLength) {
+      for (var key in this.cartItem) {
+        this.subtotal = this.subtotal + this.cartItem[key].subtotal;
+        this.fees = this.fees + this.cartItem[key].fees;
+        this.total = this.total + this.cartItem[key].total;
       }
-    });
-    this.form.touristsArr = this.data.people_group;
-    this.form.calucation = this.data.calucation;
-    var ts = this.data.people_group;
-    this.form.tourists = ts.join();
-    this.form.tour_slot_id = this.$store.state.slotId;
-  },
-  updated() {
-    const n = this.details.TourPkgRates;
-    const field1 = 0;
-    let serviceCommissionTotal = 0;
-    let costStoreArr = [];
-    if (n && this.state == 'initial') {
-      n.forEach(number => {
-        let names_field = 'grpt' + number.pkg_rate_id;
-        const field1 = document.querySelector("input[name=" + names_field + "]").value;
-        costStoreArr.push(field1);
-      });
-      costStoreArr.forEach((pax, key) => {
-        if (Number(pax) > 0) {
-          var paxRate = Number(n[key].price) + Number(n[key].additional_charge) + Number(n[key].permit_fee);
-          var serviceCommissionPerPax = this.roundout((paxRate * this.fees) / 100, 2);
-          serviceCommissionTotal += Number(this.form.touristsArr[key]) * serviceCommissionPerPax;
-        }
-      })
-      this.form.tour_package_id = this.details.TourPkgDetails[0].TourPackageId;
-      var ct = [field1];
-      this.form.cost = ct.join();
-      const sum = costStoreArr.reduce((a, b) => Number(a) + Number(b), 0);
-      this.subtotal = sum.toFixed(2);
-      var softwarefee = serviceCommissionTotal;
-      this.softwarefee = softwarefee.toFixed(2);
-      this.form.service_commission = this.softwarefee;
-      var totals = Number(softwarefee) + Number(sum);
-      this.form.total = totals.toFixed(2);
+    } else {
+      window.location.href = '/';
     }
   },
   methods: {
@@ -770,6 +700,41 @@ export default {
             fontFamily: 'Inter, sans-serif',
             color: "#fa755a",
             iconColor: "#fa755a"
+          }
+        }
+      });
+    },
+    removeFromCart(formData) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          delete this.cartItem[formData.tour_slot_id];
+          this.cartItemLength = Object.values(this.cartItem).length;
+
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your package has been deleted.",
+            icon: "success"
+          }).then((result) => {
+            if (result.isConfirmed && this.cartItemLength == 0) {
+              window.location.href = '/';
+            }
+          });
+
+          this.subtotal = 0;
+          this.fees = 0;
+          this.total = 0;
+          for (var key in this.cartItem) {
+            this.subtotal = this.subtotal + this.cartItem[key].subtotal;
+            this.fees = this.fees + this.cartItem[key].fees;
+            this.total = this.total + this.cartItem[key].total;
           }
         }
       });
@@ -883,29 +848,40 @@ export default {
         this.processLoader(loader);
       }
     },
-    mindChange() {
-      if (this.iframeStatus && this.data.package_id && this.form.affiliate_id) {
+    mindChange(formData = null) {
+      if (formData && formData.tenant_id && formData.tour_operator_id && formData.package_id && formData.affiliate_id) {
+        this.$store.dispatch('storeFormData', formData)
+        this.$store.dispatch('storePackageId', formData.package_id)
+        this.$store.dispatch('storeAffiliateId', formData.affiliate_id)
+        this.$store.dispatch('storeDate', formData.date)
+
         this.$router.push({
           name: 'Init',
           query: {
-            tid: this.data.tenant_id,
-            oid: this.data.tour_operator_id,
-            pid: this.data.package_id,
-            aid: this.form.affiliate_id,
-            iframe: this.iframeStatus
+            tid: formData.tenant_id,
+            oid: formData.tour_operator_id,
+            pid: formData.package_id,
+            aid: formData.affiliate_id,
+            iframe: formData.iframeStatusInfo
           }
         });
-      } else if (this.iframeStatus && this.data.package_id) {
+      } else if (formData && formData.tenant_id && formData.tour_operator_id && formData.package_id) {
+        this.$store.dispatch('storeFormData', formData)
+        this.$store.dispatch('storePackageId', formData.package_id)
+        this.$store.dispatch('storeDate', formData.date)
+
         this.$router.push({
           name: 'Init',
           query: {
-            tid: this.data.tenant_id,
-            oid: this.data.tour_operator_id,
-            pid: this.data.package_id,
-            iframe: this.iframeStatus
+            tid: formData.tenant_id,
+            oid: formData.tour_operator_id,
+            pid: formData.package_id,
+            iframe: formData.iframeStatusInfo
           }
         });
       } else {
+        this.$store.dispatch('storePackageId', 0)
+        this.$store.dispatch('storeDate', getUTCDateFromTimeZone())
         this.$router.push({
           name: 'Index'
         });
@@ -1002,9 +978,6 @@ export default {
           }
         });
       }
-    },
-    toggleAgeGroupList() {
-      this.showAgeGroupList = !this.showAgeGroupList;
     }
   }
 };
@@ -1039,25 +1012,4 @@ export default {
 .error {
   color: #dc3545;
 }
-
-.tourist-package-list-wrap {background-color: #ffffff; border: 2px solid #eaeaea; border-radius: 5px; padding: 13px; max-height: 500px; margin-bottom: 30px;}
-.tourist-package-list-wrap .tourist-package {background-color: #f4feff; border-radius: 5px; border: 1px solid #eaeaea; margin-bottom: 10px;}
-.tourist-package-list-wrap .tourist-package-title-wrap {border-bottom: 2px solid #eaeaea; padding: 6px 60px 6px 10px; position: relative;}
-.tourist-package-list-wrap .tourist-package-title {color: #0d6efd; font-size: 14px; font-weight: 700;}
-.tourist-package-list-wrap .tourist-package-date {font-size: 12px; color: #444; font-weight: 400;}
-.tourist-package-list-wrap .tourist-package-btn-wrap {position: absolute; top: 50%; transform: translateY(-50%); right: 10px;}
-.tourist-package-list-wrap .btn-tourist-package {width: 30px; height: 30px; border: none; box-shadow: none; line-height: 30px; border-radius: 50px; margin-left: 5px; color: #fff; vertical-align: middle; -webkit-transition: all ease-in-out 0.3s; transition: all ease-in-out 0.3s;}
-.tourist-package-list-wrap .btn-tourist-package:hover, 
-.tourist-package-list-wrap .btn-tourist-package:focus {opacity: 0.8; outline: none;}
-.tourist-package-list-wrap .btn-tourist-package.btn-edit {background-color: #0088cc;}
-.tourist-package-list-wrap .btn-tourist-package.btn-delete {background-color: #ed3f3f;}
-.tourist-package-list-wrap .btn-tourist-package.btn-slide-down {background-color: #ababab;}
-.tourist-package-list-wrap .btn-tourist-package.btn-slide-down.active {transform: rotate(-180deg);}
-.tourist-package-list-wrap .tourist-package-age-group-list {padding: 10px;}
-.tourist-package-list-wrap .tourist-package-age-group {background-color: #efefef; margin-bottom: 5px; padding: 4px 15px;}
-.tourist-package-list-wrap .tourist-group-age-title {font-size: 13px; font-weight: 400;}
-.tourist-package-list-wrap .tourist-group-age-count {font-size: 13px; font-weight: 700; line-height: 1; color: #333; letter-spacing: 0.14px; background-color: #ececec; border: 1px solid #ccc; border-radius: 4px; box-shadow: -1px -6px 5px 0px rgba(0, 0, 0, 0.12) inset; display: inline-block; padding: 4px;}
-.tourist-package-list-wrap .tourist-package-total-group {background-color: #f2f9f3; margin-bottom: 5px; padding: 4px 15px;}
-.tourist-package-list-wrap .tourist-group-total-title {font-size: 13px; font-weight: 400;}
-.tourist-package-list-wrap .tourist-group-total-amount {font-size: 13px; font-weight: 700; line-height: 1; color: #333; letter-spacing: 0.14px; display: inline-block; padding: 4px;}
 </style>

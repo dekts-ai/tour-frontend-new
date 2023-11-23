@@ -77,10 +77,10 @@
                                         <div class="info">
                                             <button class="tooltipbtn btn-info" data-toggle="tooltip"
                                                 data-placement="top" title="">Secured</button>
-                                            <button class="tooltipbtn btn-danger me-1" data-toggle="tooltip"
+                                            <button class="tooltipbtn btn-danger" data-toggle="tooltip"
                                                 data-placement="top" title="">Health &
                                                 Safety</button>
-                                            <button @click="viewCart" class="btn btn-warning"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart ({{ Object.keys(cartItem).length }})</button>
+                                            <!-- <button @click="viewCart" class="btn btn-warning"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart ({{ Object.keys(cartItem).length }})</button> -->
                                             <button @click="mindChange" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
                                         </div>
                                     </div>
@@ -91,7 +91,6 @@
                                             <div class="row select-time">
                                                 <div class="col-12 col-md-4">
                                                     <datepicker 
-                                                        
                                                         v-model="form.date"
                                                         :value="form.date" 
                                                         :inline="true"
@@ -111,7 +110,8 @@
                                                             :class="name.bookable_status == 'Open' && name.dd < name.seats ? 'seats-free-label' : 'watermark-label'" 
                                                             v-for="name in dateTimeArr"
                                                             :key="name.Id" 
-                                                            @click="selectedSlot(name.Id, name.Time)">
+                                                            @click="selectedSlot(name.Id, name.Time)"
+                                                            :style="name.Id == form.tour_slot_id ? 'background-color: #e9f7eb; border-color: #37d150;' : ''">
 
                                                             <label class="time-item-lable" :for="name.Id"></label>
 
@@ -131,7 +131,7 @@
                                                         </div>
                                                     </div>
                                                     <!-- <div class="radio-toolbar" v-else>
-                                                        <h2>Slot not found</h2>
+                                                        <h2 v-if="!staticDateRange(form.date)">Slot not found</h2>
                                                     </div> -->
                                                     <div class="row hotel-list-item-wrap">
                                                         <div v-if="hotels.length" class="p-1 pb-2 desired-pickup-location">
@@ -185,7 +185,7 @@
                                                                     <th scope="col">Price</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody v-for="tour in details.TourPkgRates"
+                                                            <tbody v-for="(tour, p) in details.TourPkgRates"
                                                                 :key="tour.pkg_rate_id">
                                                                 <tr>
                                                                     <td class="age" data-label="Age">
@@ -207,8 +207,8 @@
                                                                             class="form-select people-group1"
                                                                             :name="'people_group' + tour.pkg_rate_id "
                                                                             :id="'people_group'+tour.pkg_rate_id">
-                                                                            <option v-for="item in selectgrouppeoples"
-                                                                                :value="item.value" :key="item.value">{{
+                                                                            <option v-for="(item, q) in selectgrouppeoples"
+                                                                                :value="item.value" :key="item.value" :selected="q == this.form.people_group[p]">{{
                                                                                 item.number }}</option>
                                                                         </select>
                                                                     </td>
@@ -220,8 +220,7 @@
                                                         </table>
                                                     </div>
                                                     <div class="booknowbtn text-end">
-                                                        <button v-if="updateCartBtn == 0" type="submit">Add to Cart</button>
-                                                        <button v-else type="submit">Update Cart</button>
+                                                        <button type="submit">Continue</button>
                                                         <!-- <button @click="addToCart" class="m-1">Add to Cart</button> -->
                                                     </div>
                                                 </div>
@@ -287,7 +286,7 @@ import axios from "axios";
 import $ from "jquery";
 import Datepicker from 'vuejs3-datepicker';
 import { format } from 'date-fns';
-import {getUTCDateFromTimeZone} from '../utils/dateUtils';
+import { getUTCDateFromTimeZone } from '../utils/dateUtils';
 
 export default {
     name: "Index",
@@ -306,7 +305,6 @@ export default {
             hotels: [],
             flippedHotelId: null,
             cartItem: [],
-            updateCartBtn: 0,
             slotId: 0,
             disabledDates: {
                 to: this.getStartDate(),
@@ -325,7 +323,7 @@ export default {
                 package_image: "",
                 affiliate_id: 0,
                 hotel_id: 0,
-                date: new Date(),
+                date: getUTCDateFromTimeZone(),
                 time_date: "",
                 people_group: [],
                 rate_group: [],
@@ -339,15 +337,21 @@ export default {
         };
     },
     created: function () {
-        this.iframeStatus = this.$store.state.iframeStatus;
-        this.form.tenant_id = this.$store.state.tenantId;
-        this.form.tour_operator_id = this.$store.state.tourOperatorId;
-        this.form.package_id = this.$store.state.packageId;
-        this.form.affiliate_id = this.$store.state.affiliateId;
-        this.form.hotel_id = this.$store.state.hotelId;
         this.cartItem = this.$store.state.cartItem;
+        this.iframeStatus = this.$store.state.iframeStatus;
+        if (this.$store.state.formData && this.$store.state.formData?.package_id == this.$store.state.packageId) {
+            this.form = this.$store.state.formData;
+        } else {
+            this.form.tenant_id = this.$store.state.tenantId;
+            this.form.tour_operator_id = this.$store.state.tourOperatorId;
+            this.form.package_id = this.$store.state.packageId;
+            this.form.affiliate_id = this.$store.state.affiliateId;
+            this.form.hotel_id = this.$store.state.hotelId;
+            this.form.tour_slot_id = 0;
+            this.form.time_date = null;
+        }
 
-        if (this.form.package_id === 0) {
+        if (this.$store.state.packageId === 0) {
             window.location.href = '/';
         }
 
@@ -357,7 +361,6 @@ export default {
             this.form.date = this.getStartDate();
         }
 
-        this.data = this.$store.state.formData;
         this.configure();
     },
     methods: {
@@ -393,7 +396,7 @@ export default {
             console.log('selectedDate');
 
             var loader = this.$loading.show();
-            // this.form.date = date;
+            this.form.date = date;
             this.dateTimeArr = [];
 
             var date = format(date, 'yyyy-MM-dd');
@@ -418,25 +421,25 @@ export default {
                 this.processLoader(loader);
             });
 
-            this.updateRateGroups(date);
+            this.updateRateGroups(date, 1);
         },
-        updateRateGroups(date) {
+        updateRateGroups(date, calendar = 0) {
             console.log('updateRateGroups');
 
             var loader = this.$loading.show();
             axios.get("/tour-package/" + date + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + this.with_rate_groups).then((response) => {
-                this.$store.dispatch('storeTourPackage', response.data.TourPkgDetails)
+                this.$store.dispatch('storeTourPackage', response.data)
                 this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
-                this.details = response.data;
+                this.details = this.$store.state.tourPackage;
                 this.details.TourPkgRates = this.details.TourPkgRates[this.form.package_id];
-                this.hotels = response.data.hotels;
-                this.fees = response.data.TourPkgDetails[0].ServiceCommission
+                this.hotels = this.$store.state.tourPackage.hotels;
+                this.fees = this.$store.state.tourPackage.TourPkgDetails[0].ServiceCommission
 
                 // Define Variables
                 var v1 = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
 
                 // Append Dropdown Value for TourPkgRates
-                this.details.TourPkgRates?.forEach((element) => {
+                this.details.TourPkgRates?.forEach((element, i) => {
                     $("#people_group" + element.pkg_rate_id)
                         .find("option")
                         .remove()
@@ -450,8 +453,11 @@ export default {
                 });
             });
 
-            this.form.tour_slot_id = "";
-            this.form.time_date = "";
+            if (calendar) {
+                this.form.tour_slot_id = "";
+                this.form.time_date = "";
+            }
+
             this.processLoader(loader);
         },
         submit: function (e) {
@@ -469,16 +475,16 @@ export default {
             const tourPkgRates = this.details.TourPkgRates;
             let index = 0;
 
-            tourPkgRates.forEach(number => {
+            tourPkgRates?.forEach(number => {
                 let rateGroupField = 'people_group' + number.pkg_rate_id;
                 const rateGroup = document.querySelector("select[name=" + rateGroupField + "]").value;
                 groupPaxArr.push(rateGroup);
 
                 const rate = Number(tourPkgRates[index].price) + Number(tourPkgRates[index].PermitFee) + Number(tourPkgRates[index].Tax);
-                paxSubtotalArr.push(rateGroup > 0 ? rate.toFixed(2) : 0);
+                paxSubtotalArr.push(rateGroup > 0 ? rateGroup * rate.toFixed(2) : 0);
 
                 const fees = (Number(rate) * Number(this.fees)) / 100;
-                feesGroupArr.push(rateGroup > 0 ? fees.toFixed(2) : 0);
+                feesGroupArr.push(rateGroup > 0 ? rateGroup * fees.toFixed(2) : 0);
 
                 rateGroupArr.push(tourPkgRates[index].Age);
 
@@ -557,6 +563,7 @@ export default {
         },
         mindChange() {
             this.$store.dispatch('storePackageId', 0);
+            this.$store.dispatch('storeDate', getUTCDateFromTimeZone());
             this.$router.push({
                 name: 'Index'
             });
@@ -589,7 +596,7 @@ export default {
                     data[this.form.tour_slot_id] = this.form;
                     this.cartItem = { ...this.cartItem, ...data };
                     this.$store.dispatch('storeCartItem', this.cartItem);
-                    this.updateCartBtn = 1;
+                    this.$router.push("/payment");
                 }
             });
 
@@ -598,7 +605,7 @@ export default {
             return true;
         },
         viewCart() {
-            console.log('view cart');
+            console.log('viewCart');
             this.$store.dispatch('storeFormData', this.form)
             this.$router.push("/payment");
         }

@@ -1,11 +1,12 @@
 // store/index.js
 
 import { createStore } from "vuex";
+import { getUTCDateFromTimeZone } from '../utils/dateUtils';
 
 export default createStore({
     state: {
         iframeStatus: false,
-        date: null,
+        date: getUTCDateFromTimeZone(),
         tenantId: 0,
         tourOperatorId: 0,
         packageId: 0,
@@ -16,6 +17,7 @@ export default createStore({
         tourPackageLogo: null,
         customer: null,
         slotId: 0,
+        timeDate: null,
         hotelId: 0,
         cartItem: {},
     },
@@ -55,6 +57,9 @@ export default createStore({
         },
         slotId: state => {
             return state.slotId;
+        },
+        timeDate: state => {
+            return state.timeDate;
         },
         hotelId: state => {
             return state.hotelId;
@@ -100,6 +105,9 @@ export default createStore({
         SLOT_ID(state, slotId) {
             state.slotId = slotId;
         },
+        TIME_DATE(state, timeDate) {
+            state.timeDate = timeDate;
+        },
         HOTEL_ID(state, hotelId) {
             state.hotelId = hotelId;
         },
@@ -143,6 +151,9 @@ export default createStore({
         },
         storeSlotId({ commit }, slotId) {
             commit('SLOT_ID', slotId);
+        },
+        storeTimeDate({ commit }, timeDate) {
+            commit('TIME_DATE', timeDate);
         },
         storeHotelId({ commit }, hotelId) {
             commit('HOTEL_ID', hotelId);
