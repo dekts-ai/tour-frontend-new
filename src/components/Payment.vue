@@ -131,31 +131,38 @@
                               <div class="tour-packages-action-btn">
                                 <a class="action-btn action-btn-edit pe-auto" @click="removeFromCart(item)">Delete</a>
                               </div>
-                              <div class="tour-packages-action-btn">
-                                <a class="action-btn action-btn-edit" href="javascript.void(0)">Coupon code</a>
-                              </div>
                             </div>
                             <div class="tour-packages-couponcode-wrap">
                               <div class="tour-packages-couponcode">
-                                <input type="text" name="couponcode" placeholder="Enter Code">
-                                <button class="couponcode-apply-btn ms-1">Apply</button>
+                                <input type="text" name="couponcode" placeholder="Promo Code" :id="'couponCode-' + item.tour_slot_id" @keyup="addCouponCode(item)">
+                                <button class="couponcode-apply-btn ms-1" :id="'applyCouponButton-' + item.tour_slot_id" @click="applyCoupon(item)">Apply</button>
                               </div>
                             </div>
+                            <p class="text-end ms-1" v-if="item?.couponSuccess?.length">
+                              <ul>
+                                <li v-for="success in item?.couponSuccess" :key="success" v-bind:class="{'text-success': success }"><small>{{ success }}</small></li>
+                              </ul>
+                            </p>
+                            <p class="text-end ms-2" v-if="item?.couponErrors?.length">
+                              <ul>
+                                <li v-for="error in item?.couponErrors" :key="error" v-bind:class="{'text-danger': error }"><small>{{ error }}</small></li>
+                              </ul>
+                            </p>
                           </div>
                         </div>
                         <div class="tour-packages-totalcost">
-                          <div class="tour-packages-costcount-title">Tour cost:</div>
+                          <div class="tour-packages-costcount-title">Tour Cost:</div>
                           <div class="tour-packages-costcount-subitem">
                             <div class="tour-packages-costcount-subitem-title">Subtotal:</div>
-                            <div class="tour-packages-costcount-subitem-cost">${{ item.subtotal.toFixed(2) }}</div>
+                            <div class="tour-packages-costcount-subitem-cost">${{ Number(item.subtotal).toFixed(2) }}</div>
                           </div>
                           <div class="tour-packages-costcount-subitem">
-                            <div class="tour-packages-costcount-subitem-title">Booking fees:</div>
-                            <div class="tour-packages-costcount-subitem-cost">${{ item.fees.toFixed(2) }}</div>
+                            <div class="tour-packages-costcount-subitem-title">Booking Fees:</div>
+                            <div class="tour-packages-costcount-subitem-cost">${{ Number(item.fees).toFixed(2) }}</div>
                           </div>
                           <div class="tour-packages-costcount-total">
-                            <div class="tour-packages-costcount-total-title">Tour Cost:</div>
-                            <div class="tour-packages-costcount-total-cost">${{ item.total.toFixed(2) }}</div>
+                            <div class="tour-packages-costcount-total-title">Total Cost:</div>
+                            <div class="tour-packages-costcount-total-cost">${{ Number(item.total).toFixed(2) }}</div>
                           </div>
                         </div>
                       </div>
@@ -423,7 +430,7 @@
                         <div class="row subtotal" v-if="subtotal">
                           <div class="col-6 text-start">Ticket Cost:</div>
                           <div class="col-6 text-end">
-                            $<label class="ticket_cost">{{ subtotal.toFixed(2) }}</label>
+                            $<label class="ticket_cost">{{ Number(subtotal).toFixed(2) }}</label>
                           </div>
                         </div>
 
@@ -438,7 +445,7 @@
                         <div class="row fees">
                           <div class="col-6 text-start">Booking Fees:</div>
                           <div class="col-6 text-end">
-                            ${{ fees.toFixed(2) }}
+                            ${{ Number(fees).toFixed(2) }}
                           </div>
                         </div>
                         <div class="row totalcost">
@@ -446,7 +453,7 @@
                             Total Cost:
                           </div>
                           <div class="col-6 text-end">
-                            $<label class="grandtotalfinal">{{ total.toFixed(2) }}</label>
+                            $<label class="grandtotalfinal">{{ Number(total).toFixed(2) }}</label>
                           </div>
                         </div>
                       </div>
@@ -670,6 +677,9 @@ export default {
         this.subtotal = this.subtotal + this.cartItem[key].subtotal;
         this.fees = this.fees + this.cartItem[key].fees;
         this.total = this.total + this.cartItem[key].total;
+
+        this.cartItem[key].couponErrors = [];
+        this.cartItem[key].couponSuccess = [];
       }
     } else {
       window.location.href = '/';
@@ -905,33 +915,33 @@ export default {
       let x = Math.pow(10, places);
       return (amount >= 0 ? Math.ceil(amount * x) : Math.floor(amount * x)) / x;
     },
-    addCouponCode() {
+    addCouponCode(formData) {
+      console.log('addCouponCode');
       this.state = 'initial';
-      this.ticket_cost = 0;
-      this.form.tour_promotion_id = "";
-      this.form.discount2_value = 0;
-      this.form.discount2_percentage = 0;
-      this.couponSuccess = [];
-      this.couponErrors = [];
+      this.cartItem[formData.tour_slot_id].tour_promotion_id = "";
+      this.cartItem[formData.tour_slot_id].discount2_value = 0;
+      this.cartItem[formData.tour_slot_id].discount2_percentage = 0;
+      this.cartItem[formData.tour_slot_id].couponSuccess = [];
+      this.cartItem[formData.tour_slot_id].couponErrors = [];
       $('#applyCouponButton').text('Apply').removeClass('btn-success').addClass('btn-primary').attr('disabled', false);
     },
-    applyCoupon() {
+    applyCoupon(formData) {
+      console.log('applyCoupon');
       this.processing = true;
       var loader = this.$loading.show();
-      this.form.code = document.querySelector("#couponCode").value;
+      this.cartItem[formData.tour_slot_id].code = document.querySelector("#couponCode-" + formData.tour_slot_id).value;
 
-      this.couponSuccess = [];
-      this.couponErrors = [];
-      if (!this.form.code) {
-        this.couponErrors.push("To receive a discount, please enter the promo code.");
+      this.cartItem[formData.tour_slot_id].couponSuccess = [];
+      this.cartItem[formData.tour_slot_id].couponErrors = [];
+      if (!this.cartItem[formData.tour_slot_id].code) {
+        this.cartItem[formData.tour_slot_id].couponErrors.push("To receive a discount, please enter the promo code.");
         this.processLoader(loader);
       } else {
         let self = this;
-        axios.get("/apply-coupon/" + this.form.tour_package_id + "/" + this.form.code).then((response) => {
+        axios.get("/apply-coupon/" + this.cartItem[formData.tour_slot_id].package_id + "/" + this.cartItem[formData.tour_slot_id].code).then((response) => {
           this.state = 'changed';
 
           var promocode = response.data.data;
-          var ticketCost = this.subtotal;
           var subtotal = this.subtotal;
           var discount2Percentage = 0;
           if (promocode.discount_value_type == "Percent") {
@@ -946,31 +956,30 @@ export default {
           if (subtotal <= 0) {
             this.couponErrors.push("Your coupon code is not valid.");
           } else {
-            this.form.discount2_percentage = discount2Percentage;
+            this.cartItem[formData.tour_slot_id].discount2_percentage = discount2Percentage;
             this.subtotal = subtotal;
-            this.ticket_cost = ticketCost;
-            this.form.tour_promotion_id = promocode.id;
-            this.form.discount2_value = Number(discountedAmount).toFixed(2);
-            this.softwarefee = this.roundout(this.subtotal * this.fees / 100, 2);
-            this.form.service_commission = this.softwarefee;
-            var total = Number(this.subtotal) + Number(this.softwarefee);
+            this.cartItem[formData.tour_slot_id].tour_promotion_id = promocode.id;
+            this.cartItem[formData.tour_slot_id].discount2_value = Number(discountedAmount).toFixed(2);
+            this.fees = this.roundout(this.subtotal * this.fees / 100, 2);
+            this.cartItem[formData.tour_slot_id].service_commission = this.fees;
+            var total = Number(this.subtotal) + Number(this.fees);
             this.total = Number(total).toFixed(2);
-            this.form.total = this.total;
+            this.cartItem[formData.tour_slot_id].total = this.total;
 
-            $('#applyCouponButton').text('Applied').removeClass('btn-primary').addClass('btn-success').attr('disabled', true);
-            this.couponSuccess.push(response.data.message);
+            $('#applyCouponButton-' + formData.tour_slot_id).text('Applied').removeClass('btn-primary').addClass('btn-success').attr('disabled', true);
+            this.cartItem[formData.tour_slot_id].couponSuccess.push(response.data.message);
           }
 
           this.processLoader(loader);
         }).catch(function (error) {
           self.state = 'initial';
           self.ticket_cost = 0;
-          self.form.tour_promotion_id = "";
-          self.form.discount2_value = 0;
-          self.form.discount2_percentage = 0;
+          self.cartItem[formData.tour_slot_id].tour_promotion_id = "";
+          self.cartItem[formData.tour_slot_id].discount2_value = 0;
+          self.cartItem[formData.tour_slot_id].discount2_percentage = 0;
           self.processLoader(loader);
           if (error.response) {
-            self.couponErrors.push(error.response.data.message);
+            self.cartItem[formData.tour_slot_id].couponErrors.push(error.response.data.message);
           } else if (error.request) {
             console.log(error.request);
           } else {
