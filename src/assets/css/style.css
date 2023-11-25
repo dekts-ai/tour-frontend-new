@@ -3142,6 +3142,10 @@ section.iframe-inner-banner.banner-section {
 .hotel-section .hotel-wrapper .hotel-detail {
     background-color: #f2f9f3;
     border-radius: 5px;
-    padding: 10px 20px;
+    /* padding: 10px 20px; */
 	text-align: left;
+}
+
+.tnc-checkbox {
+	display: block !important;
 }

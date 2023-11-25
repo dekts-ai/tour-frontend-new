@@ -323,6 +323,9 @@ export default {
                 package_image: "",
                 affiliate_id: 0,
                 hotel_id: 0,
+                hotel_name: 0,
+                hotel_image: 0,
+                hotel_address: 0,
                 date: getUTCDateFromTimeZone(),
                 time_date: "",
                 people_group: [],
@@ -331,7 +334,10 @@ export default {
                 subtotal: 0,
                 fees: 0,
                 total: 0,
-                tour_slot_id: 0
+                tour_slot_id: 0,
+                service_commission: 0,
+                discount2_percentage: 0,
+                discount2_value: 0
             },
             with_rate_groups: 1
         };
@@ -346,7 +352,7 @@ export default {
             this.form.tour_operator_id = this.$store.state.tourOperatorId;
             this.form.package_id = this.$store.state.packageId;
             this.form.affiliate_id = this.$store.state.affiliateId;
-            this.form.hotel_id = this.$store.state.hotelId;
+            // this.form.hotel_id = this.$store.state.hotelId;
             this.form.tour_slot_id = 0;
             this.form.time_date = null;
         }
@@ -433,7 +439,7 @@ export default {
                 this.details = this.$store.state.tourPackage;
                 this.details.TourPkgRates = this.details.TourPkgRates[this.form.package_id];
                 this.hotels = this.$store.state.tourPackage.hotels;
-                this.fees = this.$store.state.tourPackage.TourPkgDetails[0].ServiceCommission
+                this.form.service_commission = this.$store.state.tourPackage.TourPkgDetails[0].ServiceCommission
 
                 // Define Variables
                 var v1 = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
@@ -483,7 +489,7 @@ export default {
                 const rate = Number(tourPkgRates[index].price) + Number(tourPkgRates[index].PermitFee) + Number(tourPkgRates[index].Tax);
                 paxSubtotalArr.push(rateGroup > 0 ? rateGroup * rate.toFixed(2) : 0);
 
-                const fees = (Number(rate) * Number(this.fees)) / 100;
+                const fees = (Number(rate) * Number(this.form.service_commission)) / 100;
                 feesGroupArr.push(rateGroup > 0 ? rateGroup * fees.toFixed(2) : 0);
 
                 rateGroupArr.push(tourPkgRates[index].Age);
@@ -548,6 +554,15 @@ export default {
         selectedHotel: function (hotelId) {
             this.$store.dispatch('storeHotelId', hotelId)
             this.form.hotel_id = hotelId;
+            if (this.hotels.length) {
+                this.hotels.forEach(hotel => {
+                    if (hotel.id == this.form.hotel_id) {
+                        this.form.hotel_name = hotel.name;
+                        this.form.hotel_image = hotel.image;
+                        this.form.hotel_address = hotel.address;
+                    }
+                });
+            }
         },
         flip(hotelId) {
             this.flippedHotelId = hotelId;

@@ -103,8 +103,7 @@
                                 <div class="tour-packages-title-top">{{ dateFormat(item.date) }} @ {{ item.time_date }}</div>
                                 <div class="tour-packages-title">{{ item.package_name }}</div>
                                 <div class="cancelling-policy-wrap">
-                                  <div class="cancelling-policy-title">Cancelling policy</div>
-                                  <div class="cancelling-policy-detail">Up to 2 days before tour date</div>
+                                  <button class="cancelling-policy-title" @click="openPolicy()">Terms and conditions</button>
                                 </div>
                               </div>
                             </div>
@@ -117,9 +116,21 @@
                                       <svg width="8" height="11" viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.07976 5.3184C5.3978 5.3184 6.46628 4.24991 6.46628 2.93187C6.46628 1.61383 5.3978 0.545349 4.07976 0.545349C2.76172 0.545349 1.69324 1.61383 1.69324 2.93187C1.69324 4.24991 2.76172 5.3184 4.07976 5.3184Z" fill="#4C76B2"/><path d="M5.6879 6.11444H2.47167C1.94894 6.11507 1.44781 6.323 1.07819 6.69263C0.708563 7.06225 0.500632 7.56338 0.5 8.08611L0.5 10.092H7.65957V8.08611C7.65894 7.56338 7.45101 7.06225 7.08139 6.69263C6.71176 6.323 6.21063 6.11507 5.6879 6.11444V6.11444Z" fill="#4C76B2"/></svg>
                                     </div>
                                     <div class="tour-packages-selected-people-title">{{ item.rate_group[key] }}</div>
-                                    <div class="tour-packages-selected-people-count"><input type="text" name="count" :value="pax"></div>
+                                    <div class="tour-packages-selected-people-count"><input type="text" name="count" :disabled="true" :value="pax"></div>
                                   </div>
                                 </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div v-if="item.hotel_id" class="col-12 mb-4 hotel-section" style="font-size: 12px;">
+                            <div class="hotel-wrapper d-flex">
+                              <div class="hotel-image">
+                                <img :src="item.hotel_image" :alt="item.hotel_name">
+                              </div>
+                              <div class="hotel-detail w-100">
+                                <div class="hotel-title">Hotel Pickup Location:</div>
+                                <div class="hotel-name">{{ item.hotel_name }}</div>
+                                <div class="hotel-detail-address">{{ item.hotel_address }}</div>
                               </div>
                             </div>
                           </div>
@@ -134,8 +145,8 @@
                             </div>
                             <div class="tour-packages-couponcode-wrap">
                               <div class="tour-packages-couponcode">
-                                <input type="text" name="couponcode" placeholder="Promo Code" :id="'couponCode-' + item.tour_slot_id" @keyup="addCouponCode(item)">
-                                <button class="couponcode-apply-btn ms-1" :id="'applyCouponButton-' + item.tour_slot_id" @click="applyCoupon(item)">Apply</button>
+                                <input type="text" name="couponcode" placeholder="Promo Code" v-model="item.code" :id="'couponCode-' + item.tour_slot_id" @keyup="addCouponCode(item)">
+                                <button class="couponcode-apply-btn ms-1" :class="item?.code ? 'btn-success' : 'btn-primary'" :disabled="item?.code ? true : false" :id="'applyCouponButton-' + item.tour_slot_id" @click="applyCoupon(item)">{{ item?.code ? 'Applied' : 'Apply' }}</button>
                               </div>
                             </div>
                             <p class="text-end ms-1" v-if="item?.couponSuccess?.length">
@@ -157,11 +168,18 @@
                             <div class="tour-packages-costcount-subitem-cost">${{ Number(item.subtotal).toFixed(2) }}</div>
                           </div>
                           <div class="tour-packages-costcount-subitem">
+                            <div class="tour-packages-costcount-subitem-title">Discount:</div>
+                            <div class="tour-packages-costcount-subitem-cost">
+                              <span v-if="item?.discount2_percentage">({{ item?.discount2_percentage }}%)</span>
+                              ${{ item?.discount2_value ? Number(item?.discount2_value).toFixed(2) : Number(0).toFixed(2) }}
+                            </div>
+                          </div>
+                          <div class="tour-packages-costcount-subitem">
                             <div class="tour-packages-costcount-subitem-title">Booking Fees:</div>
                             <div class="tour-packages-costcount-subitem-cost">${{ Number(item.fees).toFixed(2) }}</div>
                           </div>
                           <div class="tour-packages-costcount-total">
-                            <div class="tour-packages-costcount-total-title">Total Cost:</div>
+                            <div class="tour-packages-costcount-total-title">Tour Cost:</div>
                             <div class="tour-packages-costcount-total-cost">${{ Number(item.total).toFixed(2) }}</div>
                           </div>
                         </div>
@@ -427,34 +445,23 @@
                           </p>
                         </div> -->
 
-                        <div class="row subtotal" v-if="subtotal">
+                        <div class="row subtotal">
                           <div class="col-6 text-start">Ticket Cost:</div>
-                          <div class="col-6 text-end">
-                            $<label class="ticket_cost">{{ Number(subtotal).toFixed(2) }}</label>
-                          </div>
+                          <div class="col-6 text-end">${{ Number(subtotal).toFixed(2) }}</div>
                         </div>
 
                         <div class="row subtotal" v-if="1">
                           <div class="col-6 text-start">Discount:</div>
-                          <div class="col-6 text-end">
-                            <span v-if="0">({{ 0 }}%)</span>
-                            $<label class="discount2_value">{{ 0 }}</label>
-                          </div>
+                          <div class="col-6 text-end">${{ Number(discount).toFixed(2) }}</div>
                         </div>
 
                         <div class="row fees">
                           <div class="col-6 text-start">Booking Fees:</div>
-                          <div class="col-6 text-end">
-                            ${{ Number(fees).toFixed(2) }}
-                          </div>
+                          <div class="col-6 text-end">${{ Number(fees).toFixed(2) }}</div>
                         </div>
                         <div class="row totalcost">
-                          <div class="col-6 text-start">
-                            Total Cost:
-                          </div>
-                          <div class="col-6 text-end">
-                            $<label class="grandtotalfinal">{{ Number(total).toFixed(2) }}</label>
-                          </div>
+                          <div class="col-6 text-start">Total Cost:</div>
+                          <div class="col-6 text-end">${{ Number(total).toFixed(2) }}</div>
                         </div>
                       </div>
 
@@ -614,7 +621,7 @@ export default {
       // TourPkgName: '',
       // data: [],
       details: [],
-      // hotels: [],
+      hotels: [],
       // selectedHotel: null,
       // with_rate_groups: 1,
       cartItem: {},
@@ -654,6 +661,7 @@ export default {
       // price: "",
       // ticket_cost: 0,
       subtotal: 0,
+      discount: 0,
       fees: 0,
       total: 0,
       // softwarefee: "",
@@ -662,21 +670,36 @@ export default {
       elements: "",
       cardElement: null,
       stripeValidationError: "",
-      state: 'initial'
+      state: 'initial',
+      toast: null
     };
   },
   async mounted() {
     this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);
     this.createAndMountFormElements();
+
+    this.toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
   },
   created() {
+    this.hotels = this.$store.state.tourPackage?.hotels;
     this.cartItem = this.$store.state.cartItem;
     this.cartItemLength = Object.values(this.cartItem).length;
     if (this.cartItemLength) {
       for (var key in this.cartItem) {
-        this.subtotal = this.subtotal + this.cartItem[key].subtotal;
-        this.fees = this.fees + this.cartItem[key].fees;
-        this.total = this.total + this.cartItem[key].total;
+        this.subtotal = Number(this.subtotal) + Number(this.cartItem[key].subtotal);
+        this.discount = Number(this.discount) + Number(this.cartItem[key].discount2_value);
+        this.fees = Number(this.fees) + Number(this.cartItem[key].fees);
+        this.total = Number(this.total) + Number(this.cartItem[key].total);
 
         this.cartItem[key].couponErrors = [];
         this.cartItem[key].couponSuccess = [];
@@ -739,12 +762,14 @@ export default {
           });
 
           this.subtotal = 0;
+          this.discount = 0;
           this.fees = 0;
           this.total = 0;
           for (var key in this.cartItem) {
-            this.subtotal = this.subtotal + this.cartItem[key].subtotal;
-            this.fees = this.fees + this.cartItem[key].fees;
-            this.total = this.total + this.cartItem[key].total;
+            this.subtotal = Number(this.subtotal) + Number(this.cartItem[key].subtotal);
+            this.discount = Number(this.discount) + Number(this.cartItem[key].discount2_value);
+            this.fees = Number(this.fees) + Number(this.cartItem[key].fees);
+            this.total = Number(this.total) + Number(this.cartItem[key].total);
           }
         }
       });
@@ -917,13 +942,36 @@ export default {
     },
     addCouponCode(formData) {
       console.log('addCouponCode');
+      if (this.cartItem[formData.tour_slot_id]?.discount2_value) {
+        this.cartItem[formData.tour_slot_id].subtotal = Number(this.cartItem[formData.tour_slot_id].subtotal) + Number(this.cartItem[formData.tour_slot_id].discount2_value);
+        this.cartItem[formData.tour_slot_id].fees = this.roundout(Number(this.cartItem[formData.tour_slot_id].subtotal) * Number(this.cartItem[formData.tour_slot_id].service_commission) / 100, 2);
+        var total = Number(this.cartItem[formData.tour_slot_id].subtotal) + Number(this.cartItem[formData.tour_slot_id].fees);
+        this.cartItem[formData.tour_slot_id].total = Number(total).toFixed(2);
+
+        this.subtotal = 0;
+        this.discount = 0;
+        this.fees = 0;
+        this.total = 0;
+        for (var key in this.cartItem) {
+          this.subtotal = Number(this.subtotal) + Number(this.cartItem[key].subtotal);
+          this.discount = Number(this.discount) + Number(this.cartItem[key].discount2_value);
+          this.fees = Number(this.fees) + Number(this.cartItem[key].fees);
+          this.total = Number(this.total) + Number(this.cartItem[key].total);
+        }
+      }
+
       this.state = 'initial';
       this.cartItem[formData.tour_slot_id].tour_promotion_id = "";
       this.cartItem[formData.tour_slot_id].discount2_value = 0;
       this.cartItem[formData.tour_slot_id].discount2_percentage = 0;
       this.cartItem[formData.tour_slot_id].couponSuccess = [];
       this.cartItem[formData.tour_slot_id].couponErrors = [];
-      $('#applyCouponButton').text('Apply').removeClass('btn-success').addClass('btn-primary').attr('disabled', false);
+
+      $('#applyCouponButton-' + formData.tour_slot_id)
+        .text('Apply')
+        .removeClass('btn-success')
+        .addClass('btn-primary')
+        .attr('disabled', false);
     },
     applyCoupon(formData) {
       console.log('applyCoupon');
@@ -942,7 +990,7 @@ export default {
           this.state = 'changed';
 
           var promocode = response.data.data;
-          var subtotal = this.subtotal;
+          var subtotal = this.cartItem[formData.tour_slot_id].subtotal;
           var discount2Percentage = 0;
           if (promocode.discount_value_type == "Percent") {
             discount2Percentage = Number(promocode.discount_value);
@@ -957,23 +1005,39 @@ export default {
             this.couponErrors.push("Your coupon code is not valid.");
           } else {
             this.cartItem[formData.tour_slot_id].discount2_percentage = discount2Percentage;
-            this.subtotal = subtotal;
             this.cartItem[formData.tour_slot_id].tour_promotion_id = promocode.id;
             this.cartItem[formData.tour_slot_id].discount2_value = Number(discountedAmount).toFixed(2);
-            this.fees = this.roundout(this.subtotal * this.fees / 100, 2);
-            this.cartItem[formData.tour_slot_id].service_commission = this.fees;
-            var total = Number(this.subtotal) + Number(this.fees);
-            this.total = Number(total).toFixed(2);
-            this.cartItem[formData.tour_slot_id].total = this.total;
 
-            $('#applyCouponButton-' + formData.tour_slot_id).text('Applied').removeClass('btn-primary').addClass('btn-success').attr('disabled', true);
+            this.cartItem[formData.tour_slot_id].subtotal = Number(subtotal).toFixed(2);
+            this.cartItem[formData.tour_slot_id].fees = this.roundout(subtotal * this.cartItem[formData.tour_slot_id].service_commission / 100, 2);
+
+            var total = Number(subtotal) + Number(this.cartItem[formData.tour_slot_id].fees);
+            this.cartItem[formData.tour_slot_id].total = Number(total).toFixed(2);
+
+            $('#applyCouponButton-' + formData.tour_slot_id)
+              .text('Applied')
+              .removeClass('btn-primary')
+              .addClass('btn-success')
+              .attr('disabled', true);
+
             this.cartItem[formData.tour_slot_id].couponSuccess.push(response.data.message);
+
+            this.subtotal = 0;
+            this.discount = 0;
+            this.fees = 0;
+            this.total = 0;
+            for (var key in this.cartItem) {
+              this.subtotal = Number(this.subtotal) + Number(this.cartItem[key].subtotal);
+              this.discount = Number(this.discount) + Number(this.cartItem[key].discount2_value);
+              this.fees = Number(this.fees) + Number(this.cartItem[key].fees);
+              this.total = Number(this.total) + Number(this.cartItem[key].total);
+            }
           }
 
           this.processLoader(loader);
         }).catch(function (error) {
           self.state = 'initial';
-          self.ticket_cost = 0;
+          self.cartItem[formData.tour_slot_id].code = "";
           self.cartItem[formData.tour_slot_id].tour_promotion_id = "";
           self.cartItem[formData.tour_slot_id].discount2_value = 0;
           self.cartItem[formData.tour_slot_id].discount2_percentage = 0;
@@ -985,6 +1049,63 @@ export default {
           } else {
             console.log('Error', error.message);
           }
+        });
+      }
+    },
+    async openPolicy(formData) {
+      Swal.bindClickHandler();
+      const { value: accept } = await Swal.fire({
+        toast: true,
+        title: "Terms and conditions",
+        html: `<div class="form-group col-12">
+          <div class="policy-item-wrp">
+            <h6 class="card-label-text-left mb-2">
+              <i>Cancellation policy</i>
+            </h6>
+            <ul>
+              <li class="ms-2">
+                We offer cancellations on purchases made of the services offered on our Website. We offer cancellations only prior to performance of the service. You may cancel your order by contacting us via email or phone.
+              </li>
+              <li class="ms-2">
+                We reserve the right to cancel your purchase for any reason, at our sole discretion, including but not limited to fraud, inaccuracies, and unavailability of the items or services purchased. We will let you know immediately if we plan on canceling your purchase.
+              </li>
+              <li class="ms-2">
+                We will issue a partial refund of the purchase price that you paid if we cancel your purchase.
+              </li>
+            </ul>
+            <br>
+            <h6 class="card-label-text-left mb-2">
+              <i>Refund policy</i>
+            </h6>
+            <ul>
+              <li class="ms-2">
+                We offer full refunds of ticket price (not booking fees) made of the services offered on our Website. Booking Fees are non-refundable. To qualify for a full refund of the ticket price, you must submit your request to us via phone or email 48 hours prior to the day you booked for. If your booking is canceled within the 48 hour timeframe of your tour, you may be eligible for a 50% refund. If you miss your tour for any reason, you will not be given a refund.
+              </li>
+              <li class="ms-2">
+                In the event that tours are canceled due to weather or unforeseen circumstances, you will receive a full refund.
+              </li>
+            </ul>
+          </div>
+        </div>`,
+        input: "checkbox",
+        inputValue: 1,
+        inputPlaceholder: `
+          I agree with the terms and conditions
+        `,
+        customClass: {
+          input: "tnc-checkbox"
+        },
+        confirmButtonText: `
+          Continue&nbsp;<i class="fa fa-arrow-right"></i>
+        `,
+        inputValidator: (result) => {
+          return !result && "You need to agree with T&C";
+        }
+      });
+      if (accept) {
+        this.toast.fire({
+          icon: "success",
+          title: "You agreed with T&C :)"
         });
       }
     }
