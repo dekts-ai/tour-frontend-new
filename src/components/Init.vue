@@ -129,9 +129,9 @@
                                                             </text>
                                                         </div>
                                                     </div>
-                                                    <!-- <div class="radio-toolbar" v-else>
-                                                        <h2>Slot not found</h2>
-                                                    </div> -->
+                                                    <div class="watermark static-date-range" v-else>
+                                                        <h2>Sorry, there is no availability for this day</h2>
+                                                    </div>
                                                     <div class="row hotel-list-item-wrap">
                                                         <div v-if="hotels.length" class="p-1 pb-2 desired-pickup-location">
                                                             Please select your desired pickup location:
