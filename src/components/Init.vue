@@ -336,6 +336,7 @@ export default {
                 total: 0,
                 tour_slot_id: 0,
                 service_commission: 0,
+                tour_promotion_id: 0,
                 discount2_percentage: 0,
                 discount2_value: 0
             },
