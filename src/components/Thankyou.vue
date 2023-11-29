@@ -188,7 +188,7 @@
                               <div class="tbooking">
                                 <div>Booking Total:</div>
                                 <div>
-                                  ${{ (Number(tourBooking.subtotal) + Number(tourBooking.service_commission)).toFixed(2) }} <span>(inclusive all taxes)</span>
+                                  ${{ ((Number(tourBooking.subtotal) - Number(tourBooking.discount2_value)) + Number(tourBooking.service_commission)).toFixed(2) }} <span>(inclusive all taxes)</span>
                                 </div>
                               </div>
                             </div>
@@ -266,7 +266,7 @@ export default {
   methods: {
     booking() {
       let self = this;
-      var loader = this.$loading.show();
+      var loader = this.$loading.show()
       const payload = { ...this.id };
 
       axios.post("/package-booking-confirmed", { ids: payload }).then((response) => {
