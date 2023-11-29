@@ -57,12 +57,12 @@
                   <div class="col-12">
                     <div class="invoice">
                       <div class="row top-row">
-                        <div class="col-12 content1 text-end">
+                        <!-- <div class="col-12 content1 text-end">
                           <h2>Booking Confirmation</h2>
 
                           <h3>Booking ID # <a href="#">{{tourBooking.data[0].TourBookingID}}</a></h3>
 
-                        </div>
+                        </div> -->
                         <div class="col-12 content2">
                           <h2>Hello {{customer.name}},</h2>
                           <p>
@@ -71,26 +71,8 @@
                         </div>
                         <div class="col-12 booking-details-inner">
                           <div class="invoice-details">
-                            <h2>Your Booking Details:</h2>
+                            <h2>Your Contact Details:</h2>
                             <div class="row">
-                              <div class="col-md-6">
-                                <div class="details-box">
-                                  <h3 class="bookingdate">Booking Date:</h3>
-                                  <p>{{tourBooking.data[0].BookingDate}}</p>
-                                </div>
-                              </div>
-                              <div class="col-md-6">
-                                <div class="details-box">
-                                  <h3 class="bookedtour">Booked Tour:</h3>
-                                  <p>{{tourBooking.data[0].TourPkgName}}</p>
-                                </div>
-                              </div>
-                              <div class="col-md-6">
-                                <div class="details-box">
-                                  <h3 class="bookingtime">Booking Time:</h3>
-                                  <p>{{tourBooking.data[0].BookingTime}}</p>
-                                </div>
-                              </div>
                               <div class="col-md-6">
                                 <div class="details-box">
                                   <h3 class="bookingname">Your Full Name:</h3>
@@ -113,68 +95,101 @@
                                   <p>{{customer.email}}</p>
                                 </div>
                               </div>
-                              <div class="col-md-12" v-if="hotel_id && selectedHotel">
-                                <div class="details-box">
-                                  <h3 class="bookinghotel">
-                                    Your Hotel Pickup Address:
-                                  </h3>
-                                  <p>{{selectedHotel.name}}</p>
-                                  <p>{{selectedHotel.address}}</p>
-                                </div>
-                              </div>
                             </div>
                           </div>
                         </div>
-                        <div class="col-12 booking-summery">
-                          <h3>Your Booking Summary:</h3>
+                        <div v-for="tourBooking in tourBooking.data">
+                          <div class="col-12 booking-summery">
+                            <h3>Your Booking Summary:</h3>
 
-                          <h2>Booking ID # <a href="#">{{tourBooking.data[0].TourBookingID}}</a></h2>
+                            <h2>Booking ID # <a href="#">{{tourBooking.TourBookingID}}</a></h2>
+                            <div class="col-12 booking-details-inner">
+                              <div class="invoice-details">
+                                <h2>Your Booking Details:</h2>
+                                <div class="row">
+                                  <div class="col-md-6">
+                                    <div class="details-box">
+                                      <h3 class="bookinghotel">Booking ID:</h3>
+                                      <p>{{tourBooking.TourBookingID}}</p>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <div class="details-box">
+                                      <h3 class="bookingdate">Booking Date:</h3>
+                                      <p>{{tourBooking.BookingDate}}</p>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <div class="details-box">
+                                      <h3 class="bookedtour">Booked Tour:</h3>
+                                      <p>{{tourBooking.TourPkgName}}</p>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <div class="details-box">
+                                      <h3 class="bookingtime">Booking Time:</h3>
+                                      <p>{{tourBooking.BookingTime}}</p>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-12" v-if="hotel_id && selectedHotel">
+                                    <div class="details-box">
+                                      <h3 class="bookinghotel">
+                                        Your Hotel Pickup Address:
+                                      </h3>
+                                      <p>{{selectedHotel.name}}</p>
+                                      <p>{{selectedHotel.address}}</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
 
-                          <div class="booking-tbl">
-                            <table class="table">
-                              <thead>
-                                <tr>
-                                  <th scope="col">
-                                    Total Booked <br />People ({{tourBooking.data[0].TotalBookedPeople}})
-                                  </th>
-                                  <th scope="col">Price (Per Person)</th>
-                                  <th scope="col">Fees and Taxes</th>
-                                  <th scope="col">Cost</th>
-                                </tr>
-                              </thead>
-                              <tbody v-for="item in tourBooking.data[0].TourPkgRates" :key="item">
-                                <tr>
-                                  <td>{{item.Age}}</td>
-                                  <td>${{item.Price}}</td>
-                                  <td>{{item.FeesAndTaxes}}</td>
-                                  <td>${{item.Cost}}</td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                          <div class="grand-total">
-                            <div class="tsub">
-                              <div v-if="tourBooking.data[0].discount2_value > 0">Ticket Cost:</div>
-                              <div v-else>Subtotal:</div>
-                              <div>${{ Number(tourBooking.data[0].SubTotal).toFixed(2) }}</div>
+                            <div class="booking-tbl">
+                              <table class="table">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">
+                                      Total Booked <br />People ({{tourBooking.TotalBookedPeople}})
+                                    </th>
+                                    <th scope="col">Price (Per Person)</th>
+                                    <th scope="col">Fees and Taxes</th>
+                                    <th scope="col">Cost</th>
+                                  </tr>
+                                </thead>
+                                <tbody v-for="item in tourBooking.TourPkgRates" :key="item">
+                                  <tr>
+                                    <td>{{item.Age}}</td>
+                                    <td>${{item.Price}}</td>
+                                    <td>{{item.FeesAndTaxes}}</td>
+                                    <td>${{item.Cost}}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
                             </div>
-                            <div class="tsub" v-if="tourBooking.data[0].discount2_value > 0">
-                              <div>Discount:</div>
-                              <div>
-                                <span v-if="tourBooking.data[0].discount2_percentage > 0">({{ tourBooking.data[0].discount2_percentage }}%)</span> ${{tourBooking.data[0].discount2_value}}</div>
-                            </div>
-                            <div class="tsub" v-if="tourBooking.data[0].discount2_value > 0">
-                              <div>Subtotal:</div>
-                              <div>${{ Number(tourBooking.data[0].SubTotal - tourBooking.data[0].discount2_value).toFixed(2) }}</div>
-                            </div>
-                            <div class="tfee">
-                              <div>Booking Fees:</div>
-                              <div>${{ Number(tourBooking.data[0].Fees).toFixed(2) }}</div>
-                            </div>
-                            <div class="tbooking">
-                              <div>Booking Total:</div>
-                              <div>
-                                ${{ Number(tourBooking.data[0].BookingTotal).toFixed(2) }} <span>(inclusive all taxes)</span>
+                            <div class="grand-total">
+                              <div class="tsub">
+                                <div v-if="tourBooking.discount2_value > 0">Ticket Cost:</div>
+                                <div v-else>Subtotal:</div>
+                                <div>${{ Number(tourBooking.SubTotal).toFixed(2) }}</div>
+                              </div>
+                              <div class="tsub" v-if="tourBooking.discount2_value > 0">
+                                <div>Discount:</div>
+                                <div>
+                                  <span v-if="tourBooking.discount2_percentage > 0">({{ tourBooking.discount2_percentage }}%)</span> ${{tourBooking.discount2_value}}</div>
+                              </div>
+                              <div class="tsub" v-if="tourBooking.discount2_value > 0">
+                                <div>Subtotal:</div>
+                                <div>${{ Number(tourBooking.SubTotal - tourBooking.discount2_value).toFixed(2) }}</div>
+                              </div>
+                              <div class="tfee">
+                                <div>Booking Fees:</div>
+                                <div>${{ Number(tourBooking.Fees).toFixed(2) }}</div>
+                              </div>
+                              <div class="tbooking">
+                                <div>Booking Total:</div>
+                                <div>
+                                  ${{ Number(tourBooking.BookingTotal).toFixed(2) }} <span>(inclusive all taxes)</span>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -215,7 +230,6 @@
       </div>
     </div>
   </section>
-
 </template>
 <script>
 import axios from "axios";
@@ -224,7 +238,8 @@ export default {
   name: "Thankyou",
   data() {
     return {
-      id: null,
+      id: {},
+      idLength: 0,
       tourBooking: [],
       iframeStatus: false,
       details: [],
@@ -237,51 +252,34 @@ export default {
       selectedHotel: null
     };
   },
-  mounted() {
-    this.checkId();
-  },
   created() {
-    this.affiliate_id = this.$store.state.affiliateId;
-    this.data = this.$store.state.formData;
+    this.iframeStatus = this.$store.state.iframeStatus;
     this.customer = this.$store.state.customer;
-    this.hotel_id = this.$store.state.hotelId;
-    this.id = this.$store.state.bookingId;
-    if (this.id) {
-      if (this.data.iframeStatusInfo != null && this.data.iframeStatusInfo == 'true') {
-        this.iframeStatus = this.data.iframeStatusInfo;
-      } else {
-        this.iframeStatus = false;
-      }
-
-      var date = new Date(this.$store.state.date);
-      date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-
-      axios.get("/tour-package/" + date + "/" + this.data.tour_operator_id + "/" + this.data.package_id + "/" + this.affiliate_id + "/" + this.with_rate_groups).then((response) => {
-        this.details = response.data;
-        if (this.details.hotels.length) {
-          this.details.hotels.forEach(hotel => {
-            if (hotel.id == this.hotel_id) {
-              this.selectedHotel = hotel;
-            }
-          });
-        }
-        this.booking();
-      });
+    this.id = this.$store.state.bookingIds;
+    this.idLength = Object.values(this.id).length;
+    if (this.idLength) {
+      this.booking()
+    } else {
+      window.location.href = '/';
     }
   },
   methods: {
     booking() {
-      axios
-        .get("/tour-booking-confirmed/" + this.id)
-        .then((response) => {
-          this.tourBooking = response.data;
-        });
+      let self = this;
+      var loader = this.$loading.show();
+      const payload = { ...this.id };
+
+      axios.post("/package-booking-confirmed", { ids: payload }).then((response) => {
+        this.tourBooking = response.data;
+        this.processLoader(loader);
+      }).catch(function (error) {
+        console.log(error);
+        self.processLoader(loader);
+      });
     },
-    checkId() {
-      if (this.id == null) {
-        window.location.href = '/';
-      }
-    }
+    processLoader(loader) {
+        loader.hide();
+    },
   },
 };
 </script>

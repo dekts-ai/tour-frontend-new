@@ -616,7 +616,7 @@ export default {
                     let self = this;
                     let router = this.$router;
                     axios.post("/package-booking-tour", payload).then((response) => {
-                        // this.$store.dispatch('storeCustomer', this.form);
+                        this.$store.dispatch('storeCustomer', payload);
                         if (response.data.success == "false") {
                             self.processLoader(loader);
                             this.message = response.data.message;
@@ -651,7 +651,7 @@ export default {
                                 });
                         } else {
                             self.processLoader(loader);
-                            this.bookingIds = response.data.BookingId;
+                            this.bookingIds = response.data.BookingIds;
                             this.$store.dispatch('storeBookingIds', this.bookingIds);
                             this.$router.push("/thankyou");
                         }

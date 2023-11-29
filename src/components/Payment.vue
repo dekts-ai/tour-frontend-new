@@ -518,7 +518,6 @@ export default {
     checkout() {
       this.cartItemLength = Object.values(this.cartItem).length;
       if (this.cartItemLength) {
-        console.log(this.cartItem);
         this.$store.dispatch('storeCartItem', this.cartItem);
         this.$router.push({
           name: 'Checkout'
