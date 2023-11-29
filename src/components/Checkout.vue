@@ -625,10 +625,10 @@ export default {
                             this.stripe
                                 .confirmCardPayment(response.data.clientSecret)
                                 .then(function () {
-                                    self.bookingId = response.data.bookingId;
-                                    // self.$store.dispatch('storeBookingId', self.bookingId)
+                                    self.bookingIds = response.data.bookingIds;
+                                    self.$store.dispatch('storeBookingIds', self.bookingIds)
                                     var stripeObject = {
-                                        booking_id: response.data.bookingId,
+                                        booking_ids: response.data.bookingIds,
                                         payment_intent: response.data.intentId,
                                         payment_intent_client_secret: response.data.clientSecret
                                     };
