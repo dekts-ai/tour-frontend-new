@@ -64,7 +64,7 @@
 
                         </div> -->
                         <div class="col-12 content2">
-                          <h2>Hello {{customer.name}},</h2>
+                          <h2>Hello {{ customer.name }},</h2>
                           <p>
                             Thank you for your booking.
                           </p>
@@ -76,7 +76,7 @@
                               <div class="col-md-6">
                                 <div class="details-box">
                                   <h3 class="bookingname">Your Full Name:</h3>
-                                  <p>{{customer.name}}</p>
+                                  <p>{{ customer.name }}</p>
                                 </div>
                               </div>
                               <div class="col-md-6">
@@ -84,7 +84,7 @@
                                   <h3 class="bookingcontact">
                                     Your Contact Number:
                                   </h3>
-                                  <p>+{{customer.phone_number}}</p>
+                                  <p>+{{ customer.phone_number }}</p>
                                 </div>
                               </div>
                               <div class="col-md-6">
@@ -92,7 +92,7 @@
                                   <h3 class="bookingemail">
                                     Your Email Address:
                                   </h3>
-                                  <p>{{customer.email}}</p>
+                                  <p>{{ customer.email }}</p>
                                 </div>
                               </div>
                             </div>
@@ -102,7 +102,7 @@
                           <div class="col-12 booking-summery">
                             <h3>Your Booking Summary:</h3>
 
-                            <h2>Booking ID # <a href="#">{{tourBooking.TourBookingID}}</a></h2>
+                            <h2>Booking ID # <a href="#">{{ tourBooking.id }}</a></h2>
                             <div class="col-12 booking-details-inner">
                               <div class="invoice-details">
                                 <h2>Your Booking Details:</h2>
@@ -110,34 +110,34 @@
                                   <div class="col-md-6">
                                     <div class="details-box">
                                       <h3 class="bookinghotel">Booking ID:</h3>
-                                      <p>{{tourBooking.TourBookingID}}</p>
+                                      <p>{{ tourBooking.id }}</p>
                                     </div>
                                   </div>
                                   <div class="col-md-6">
                                     <div class="details-box">
                                       <h3 class="bookingdate">Booking Date:</h3>
-                                      <p>{{tourBooking.BookingDate}}</p>
+                                      <p>{{ tourBooking.date }}</p>
                                     </div>
                                   </div>
                                   <div class="col-md-6">
                                     <div class="details-box">
                                       <h3 class="bookedtour">Booked Tour:</h3>
-                                      <p>{{tourBooking.TourPkgName}}</p>
+                                      <p>{{ tourBooking.package_name }}</p>
                                     </div>
                                   </div>
                                   <div class="col-md-6">
                                     <div class="details-box">
                                       <h3 class="bookingtime">Booking Time:</h3>
-                                      <p>{{tourBooking.BookingTime}}</p>
+                                      <p>{{ tourBooking.time }}</p>
                                     </div>
                                   </div>
-                                  <div class="col-md-12" v-if="hotel_id && selectedHotel">
+                                  <div class="col-md-12" v-if="tourBooking.hotel_id">
                                     <div class="details-box">
                                       <h3 class="bookinghotel">
                                         Your Hotel Pickup Address:
                                       </h3>
-                                      <p>{{selectedHotel.name}}</p>
-                                      <p>{{selectedHotel.address}}</p>
+                                      <p>{{ tourBooking.hotel_name }}</p>
+                                      <p>{{ tourBooking.hotel_address }}</p>
                                     </div>
                                   </div>
                                 </div>
@@ -149,19 +149,19 @@
                                 <thead>
                                   <tr>
                                     <th scope="col">
-                                      Total Booked <br />People ({{tourBooking.TotalBookedPeople}})
+                                      Total Booked <br />People ({{ tourBooking.tourists }})
                                     </th>
                                     <th scope="col">Price (Per Person)</th>
                                     <th scope="col">Fees and Taxes</th>
                                     <th scope="col">Cost</th>
                                   </tr>
                                 </thead>
-                                <tbody v-for="item in tourBooking.TourPkgRates" :key="item">
+                                <tbody v-for="item in tourBooking.tourPackageRates" :key="item">
                                   <tr>
-                                    <td>{{item.Age}}</td>
-                                    <td>${{item.Price}}</td>
-                                    <td>{{item.FeesAndTaxes}}</td>
-                                    <td>${{item.Cost}}</td>
+                                    <td>{{ item.tourists }}</td>
+                                    <td>${{ item.rate }}</td>
+                                    <td>{{ item.fees }}</td>
+                                    <td>${{ item.total }}</td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -170,7 +170,7 @@
                               <div class="tsub">
                                 <div v-if="tourBooking.discount2_value > 0">Ticket Cost:</div>
                                 <div v-else>Subtotal:</div>
-                                <div>${{ Number(tourBooking.SubTotal).toFixed(2) }}</div>
+                                <div>${{ Number(tourBooking.subtotal).toFixed(2) }}</div>
                               </div>
                               <div class="tsub" v-if="tourBooking.discount2_value > 0">
                                 <div>Discount:</div>
@@ -179,16 +179,16 @@
                               </div>
                               <div class="tsub" v-if="tourBooking.discount2_value > 0">
                                 <div>Subtotal:</div>
-                                <div>${{ Number(tourBooking.SubTotal - tourBooking.discount2_value).toFixed(2) }}</div>
+                                <div>${{ Number(tourBooking.subtotal - tourBooking.discount2_value).toFixed(2) }}</div>
                               </div>
                               <div class="tfee">
                                 <div>Booking Fees:</div>
-                                <div>${{ Number(tourBooking.Fees).toFixed(2) }}</div>
+                                <div>${{ Number(tourBooking.service_commission).toFixed(2) }}</div>
                               </div>
                               <div class="tbooking">
                                 <div>Booking Total:</div>
                                 <div>
-                                  ${{ Number(tourBooking.BookingTotal).toFixed(2) }} <span>(inclusive all taxes)</span>
+                                  ${{ (Number(tourBooking.subtotal) + Number(tourBooking.service_commission)).toFixed(2) }} <span>(inclusive all taxes)</span>
                                 </div>
                               </div>
                             </div>
@@ -258,7 +258,7 @@ export default {
     this.id = this.$store.state.bookingIds;
     this.idLength = Object.values(this.id).length;
     if (this.idLength) {
-      this.booking()
+      this.booking();
     } else {
       window.location.href = '/';
     }
