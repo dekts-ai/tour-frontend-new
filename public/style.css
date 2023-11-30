@@ -698,4 +698,6 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.addmore-package-wrap .addmore-package-btn-wrap {display: block;}
 	.addmore-package-wrap .addmore-package-btn {width: 100%;}
 	.addmore-package-wrap .checkout-btn {width: 100%;}
+
+	.vuejs3-datepicker__calendar {max-width: 100%; width: auto !important;}
 }

@@ -81,7 +81,7 @@
                                                 data-placement="top" title="">Health &
                                                 Safety</button>
                                             <!-- <button @click="viewCart" class="btn btn-warning"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart ({{ Object.keys(cartItem).length }})</button> -->
-                                            <button @click="mindChange" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+                                            <button @click="mindChange" class="btn btn-primary mt-2"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
                                         </div>
                                     </div>
                                 </div>
@@ -89,7 +89,7 @@
                                     <div class="row starttime-row">
                                         <div class="col-12">
                                             <div class="row select-time">
-                                                <div class="col-12 col-md-4">
+                                                <div class="col-12 col-lg-4">
                                                     <datepicker 
                                                         v-model="form.date"
                                                         :value="form.date" 
@@ -99,7 +99,7 @@
                                                         @selected="selectedDate">
                                                     </datepicker>
                                                 </div>
-                                                <div class="col-12 col-md-8 mt-4 mt-md-0">
+                                                <div class="col-12 col-lg-8 mt-4 mt-lg-0">
                                                     <h2>Select a start time for your tour:</h2>
                                                     <div v-if="staticDateRange(form.date)">
                                                         <h3 class="watermark static-date-range">Canyon is closed for repairs. Please select another day.</h3>
