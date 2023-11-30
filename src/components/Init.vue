@@ -525,10 +525,8 @@ export default {
                 this.form.fees = feesSum;
                 this.form.total = subtotalSum + feesSum;
 
-                this.addToCart();
+                this.addToCart(loader);
             }
-
-            this.processLoader(loader);
         },
         processLoader: function (loader) {
             loader.hide();
@@ -587,8 +585,7 @@ export default {
                 name: 'Index'
             });
         },
-        addToCart() {
-            var loader = this.$loading.show();
+        addToCart(loader) {
             let checkSlotarr = {
                 'tour_slot_id': this.form.tour_slot_id,
                 'package_id': this.form.package_id,
