@@ -467,7 +467,9 @@ export default {
 
             this.processLoader(loader);
         },
-        submit: function (e) {
+        submit: function () {
+            var loader = this.$loading.show();
+
             this.errors = [];
 
             if (!this.form.time_date) {
@@ -525,7 +527,8 @@ export default {
 
                 this.addToCart();
             }
-            e.preventDefault();
+
+            this.processLoader(loader);
         },
         processLoader: function (loader) {
             loader.hide();

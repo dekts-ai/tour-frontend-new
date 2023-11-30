@@ -516,13 +516,16 @@ export default {
       }
     },
     checkout() {
+      var loader = this.$loading.show();
       this.cartItemLength = Object.values(this.cartItem).length;
       if (this.cartItemLength) {
         this.$store.dispatch('storeCartItem', this.cartItem);
+        this.processLoader(loader);
         this.$router.push({
           name: 'Checkout'
         });
       } else {
+        this.processLoader(loader);
         Swal.fire({
           title: "Empty!",
           text: "Please select package to process booking.",

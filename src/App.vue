@@ -8,7 +8,7 @@
 import axios from "axios";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
-import {getUTCDateFromTimeZone} from './utils/dateUtils';
+import { getUTCDateFromTimeZone } from './utils/dateUtils';
 
 export default {
   name: "App",
@@ -50,9 +50,11 @@ export default {
     this.date = getUTCDateFromTimeZone();
     this.$store.dispatch('storeDate', this.date);
 
-    axios.get("/tour-operator-logo/" + this.tourOperatorId).then((response) => {
-      this.TourOperatorLogo = response.data.TourOperatorLogo;
-    });
+    if (this.iframeStatus == false) {
+      axios.get("/tour-operator-logo/" + this.tourOperatorId).then((response) => {
+        this.TourOperatorLogo = response.data.TourOperatorLogo;
+      });
+    }
   }
 };
 </script>
