@@ -458,14 +458,14 @@ export default {
                         );
                     }
                 });
+
+                this.processLoader(loader);
             });
 
             if (calendar) {
                 this.form.tour_slot_id = "";
                 this.form.time_date = "";
             }
-
-            this.processLoader(loader);
         },
         submit: function () {
             var loader = this.$loading.show();
@@ -588,6 +588,7 @@ export default {
             });
         },
         addToCart() {
+            var loader = this.$loading.show();
             let checkSlotarr = {
                 'tour_slot_id': this.form.tour_slot_id,
                 'package_id': this.form.package_id,
@@ -617,6 +618,8 @@ export default {
                     this.$store.dispatch('storeCartItem', this.cartItem);
                     this.$router.push("/payment");
                 }
+
+                this.processLoader(loader);
             });
 
             this.form.package_image = this.details?.TourPkgDetails?.length > 0 ? this.details.TourPkgDetails[0].FrontendPackageImage : "";

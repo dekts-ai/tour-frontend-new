@@ -86,6 +86,7 @@ export default {
         };
     },
     async created() {
+        var loader = this.$loading.show();
         this.date = format(this.$store.state.date, 'yyyy-MM-dd');
         this.tenantId = this.$store.state.tenantId;
         this.tourOperatorId = this.$store.state.tourOperatorId;
@@ -102,6 +103,7 @@ export default {
             var self = this;
             self.TourPkgDetails = response.data.TourPkgDetails;
             self.banner = self.TourPkgDetails[0].HeaderOne;
+            self.processLoader(loader);
         });
     },
     methods: {
@@ -110,6 +112,9 @@ export default {
             this.$store.dispatch('storeTourOperatorId', oid);
             this.$store.dispatch('storePackageId', pid);
             this.$router.push("/initialize");
+        },
+        processLoader: function (loader) {
+            loader.hide();
         },
     }
 };
