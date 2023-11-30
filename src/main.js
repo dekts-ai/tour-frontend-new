@@ -3,7 +3,6 @@ import App from './App.vue'
 import router from './routers'
 import axios from 'axios';
 import store from "./store/store";
-import eventBus from './eventBus';
 import VueLoading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 
@@ -23,4 +22,4 @@ if (tenant) {
     axios.defaults.baseURL = `https://${tenant}.${url}`;
 }
 
-createApp(App).use(router).use(store).use(eventBus).use(VueLoading).mount('#app')
+createApp(App).use(router).use(store).use(VueLoading).mount('#app')
