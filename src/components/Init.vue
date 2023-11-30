@@ -526,6 +526,8 @@ export default {
                 this.form.total = subtotalSum + feesSum;
 
                 this.addToCart(loader);
+            } else {
+                this.processLoader(loader);
             }
         },
         processLoader: function (loader) {
