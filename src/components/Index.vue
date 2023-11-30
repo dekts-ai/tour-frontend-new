@@ -32,6 +32,7 @@
                                             <button class="tooltipbtn btn-danger" data-toggle="tooltip" data-placement="top"
                                                 title="">Health &
                                                 Safety</button>
+                                            <button v-if="Object.keys(cartItem).length" @click="viewCart" class="btn btn-warning"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart ({{ Object.keys(cartItem).length }})</button>
                                         </div>
                                     </div>
                                 </div>
@@ -82,7 +83,8 @@ export default {
             tourOperatorId: 1,
             packageId: 0,
             affiliateId: 0,
-            date: null
+            date: null,
+            cartItem: []
         };
     },
     async created() {
@@ -93,6 +95,7 @@ export default {
         this.packageId = this.$store.state.packageId;
         this.affiliateId = this.$store.state.affiliateId;
         this.iframeStatus = this.$store.state.iframeStatus;
+        this.cartItem = this.$store.state.cartItem;
 
         if (this.packageId > 0) {
             this.$router.push("/initialize");
@@ -112,6 +115,9 @@ export default {
             this.$store.dispatch('storeTourOperatorId', oid);
             this.$store.dispatch('storePackageId', pid);
             this.$router.push("/initialize");
+        },
+        viewCart() {
+            this.$router.push("/payment");
         },
         processLoader: function (loader) {
             loader.hide();

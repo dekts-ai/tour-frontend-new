@@ -39,6 +39,7 @@
                         title="">
                         Health & Safety
                       </button>
+                      <button @click="mindChange" class="btn btn-primary mt-2"><i class="fa fa-arrow-left" aria-hidden="true"></i> Home</button>
                     </div>
                   </div>
                 </div>
