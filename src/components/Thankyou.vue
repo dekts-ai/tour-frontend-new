@@ -67,13 +67,13 @@
                           <div class="invoice-details">
                             <h2>Your Contact Details:</h2>
                             <div class="row">
-                              <div class="col-md-6">
+                              <div class="col-lg-4 col-md-6">
                                 <div class="details-box">
                                   <h3 class="bookingname">Your Full Name:</h3>
                                   <p>{{ customer.name }}</p>
                                 </div>
                               </div>
-                              <div class="col-md-6">
+                              <div class="col-lg-4 col-md-6">
                                 <div class="details-box">
                                   <h3 class="bookingcontact">
                                     Your Contact Number:
@@ -81,7 +81,7 @@
                                   <p>+{{ customer.phone_number }}</p>
                                 </div>
                               </div>
-                              <div class="col-md-6">
+                              <div class="col-lg-4 col-md-6">
                                 <div class="details-box">
                                   <h3 class="bookingemail">
                                     Your Email Address:
@@ -186,7 +186,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-12 cta">
+                        <div class="col-12 cta p-0">
                           <div class="cta-box">
                             <div class="content">
                               <h3>Need Help?</h3>

@@ -100,17 +100,13 @@
                               <input type="text" name="couponcode" placeholder="Promo Code" v-model="item.code" :id="'couponCode-' + item.tour_slot_id" @keyup="addCouponCode(item)">
                               <button class="couponcode-apply-btn ms-1" :class="item?.code ? 'btn-success' : 'btn-primary'" :disabled="item?.code ? true : false" :id="'applyCouponButton-' + item.tour_slot_id" @click="applyCoupon(item)">{{ item?.code ? 'Applied' : 'Apply' }}</button>
                             </div>
+                            <p v-if="item?.couponSuccess?.length" v-for="success in item?.couponSuccess" :key="success" v-bind:class="{'text-success': success }">
+                              {{ success }}
+                            </p>
+                            <p v-if="item?.couponErrors?.length" v-for="error in item?.couponErrors" :key="error" v-bind:class="{'text-danger': error }">
+                              {{ error }}
+                            </p>
                           </div>
-                          <p class="text-end ms-1" v-if="item?.couponSuccess?.length">
-                            <ul>
-                              <li v-for="success in item?.couponSuccess" :key="success" v-bind:class="{'text-success': success }"><small>{{ success }}</small></li>
-                            </ul>
-                          </p>
-                          <p class="text-end ms-2" v-if="item?.couponErrors?.length">
-                            <ul>
-                              <li v-for="error in item?.couponErrors" :key="error" v-bind:class="{'text-danger': error }"><small>{{ error }}</small></li>
-                            </ul>
-                          </p>
                         </div>
                       </div>
                       <div class="tour-packages-totalcost">

@@ -152,56 +152,81 @@
                                             <div class="col-12">
                                                 <div class="form-field-title">Contact</div>
                                                 <div class="col-md-12 form-field-wrp contact-form-field mb-2">
-                                                    <div class="col-md-12">
-                                                        <div class="form-group">
-                                                            <label for="fullname"
-                                                                class="col-form-label">Full Name<span
-                                                                    class="required-star">*</span></label>
-                                                            <div class="field-icon-wrp">
-                                                                <i class="fa fa-user"
-                                                                    aria-hidden="true"></i>
-                                                            </div>
-                                                            <input type="text" id="name" name="name"
-                                                                v-model="name" class="form-control"
-                                                                placeholder="Your Name" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <div class="form-group">
-                                                            <div class="phone-wrap">
-                                                                <label for="phonenumber"
-                                                                    class="col-form-label">Phone Number<span
-                                                                        class="required-star">*</span></label>
-                                                                <div class="field-icon-wrp">
-                                                                    <i class="fa fa-phone"
-                                                                        aria-hidden="true"></i>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label for="fullname"
+                                                                        class="col-form-label">Full Name<span
+                                                                            class="required-star">*</span></label>
+                                                                    <div class="field-icon-wrp">
+                                                                        <i class="fa fa-user"
+                                                                            aria-hidden="true"></i>
+                                                                    </div>
+                                                                    <input type="text" id="name" name="name"
+                                                                        v-model="name" class="form-control"
+                                                                        placeholder="Your Name" />
                                                                 </div>
-                                                                <input type="text" id="phonenumber"
-                                                                    name="phone_number"
-                                                                    v-model="phone_number"
-                                                                    v-mask="'###############'"
-                                                                    class="form-control"
-                                                                    placeholder="Your Contact Number" />
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <div class="phone-wrap">
+                                                                        <label for="phonenumber"
+                                                                            class="col-form-label">Phone Number<span
+                                                                                class="required-star">*</span></label>
+                                                                        <div class="field-icon-wrp">
+                                                                            <i class="fa fa-phone"
+                                                                                aria-hidden="true"></i>
+                                                                        </div>
+                                                                        <input type="text" id="phonenumber"
+                                                                            name="phone_number"
+                                                                            v-model="phone_number"
+                                                                            v-mask="'###############'"
+                                                                            class="form-control"
+                                                                            placeholder="Your Contact Number" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label for="Email" class="col-form-label">Email
+                                                                        Address<span
+                                                                            class="required-star">*</span></label>
+                                                                    <div class="field-icon-wrp">
+                                                                        <i class="fa fa-envelope"
+                                                                            aria-hidden="true"></i>
+                                                                    </div>
+                                                                    <input type="email" id="emailaddress"
+                                                                        name="email" v-model="email"
+                                                                        class="form-control"
+                                                                        placeholder="Your Email Address" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group form-textarea-wrap">
+                                                                <label for="comment" class="col-form-label">Comments</label>
+                                                                <textarea id="comment" name="comment" v-model="comment"
+                                                                    placeholder="Please type here ..."></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-12">
-                                                        <div class="form-group">
-                                                            <label for="Email" class="col-form-label">Email
-                                                                Address<span
-                                                                    class="required-star">*</span></label>
-                                                            <div class="field-icon-wrp">
-                                                                <i class="fa fa-envelope"
-                                                                    aria-hidden="true"></i>
+
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-6 text-center text-md-start">
+                                                            <div class="additional-notes-text">
+                                                                Any additional notes or special requests?
                                                             </div>
-                                                            <input type="email" id="emailaddress"
-                                                                name="email" v-model="email"
-                                                                class="form-control"
-                                                                placeholder="Your Email Address" />
+                                                        </div>
+                                                        <div class="col-12 col-md-6 text-center text-md-end">
+                                                            <div class="accommodate-your-request">
+                                                                We will do our best to accommodate your request.
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+
                                             <div class="col-12">
                                                 <span class="payment-form-notice important-note w-100">
                                                     <span class="notice-title">Important Note:</span>
@@ -209,27 +234,6 @@
                                                     reserved tour time. All guests must stay with their
                                                     guides.
                                                 </span>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="form-group form-textarea-wrap">
-                                                    <label for="comment" class="col-form-label">Comments</label>
-                                                    <textarea id="comment" name="comment" v-model="comment"
-                                                        placeholder="Please type here ..."></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="row">
-                                                    <div class="col-12 col-md-6 text-center text-md-start">
-                                                        <div class="additional-notes-text">
-                                                            Any additional notes or special requests?
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-6 text-center text-md-end">
-                                                        <div class="accommodate-your-request">
-                                                            We will do our best to accommodate your request.
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </div>
 
                                             <div class="col-12 mb-3">
