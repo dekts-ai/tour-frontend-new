@@ -75,7 +75,7 @@
                           </div>
                         </div>
                         <div v-if="item.hotel_id" class="col-12 mb-4 hotel-section" style="font-size: 12px;">
-                          <div class="hotel-wrapper d-flex">
+                          <div class="hotel-wrapper d-sm-flex">
                             <div class="hotel-image">
                               <img :src="item.hotel_image" :alt="item.hotel_name">
                             </div>
