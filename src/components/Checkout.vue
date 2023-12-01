@@ -397,10 +397,11 @@
   
 <script>
 import axios from "axios";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import { loadStripe } from '@stripe/stripe-js';
 import { mask } from 'vue-the-mask';
 import { getUTCDateFromTimeZone } from '../utils/dateUtils';
+
 export default {
     name: "Payment",
     directives: {

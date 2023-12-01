@@ -163,15 +163,6 @@
                         </div>
                       </div>
 
-                      <div class="addmore-package-wrap p-0">
-                        <div class="addmore-package-btn-wrap">
-                          <button class="btn addmore-package-btn" @click="mindChange()" type="button">+ Add more packages</button>
-                          <div class="checkout-btn-wrap">
-                            <button class="btn checkout-btn" @click="checkout()" type="button">Proceed to Checkout</button>						
-                          </div>
-                        </div>
-                      </div>
-
                       <p class="mb-3" v-if="errors.length">
                         <b>Please correct the following error(s):</b>
                         <ul>
@@ -184,6 +175,15 @@
                 </div>
               </div>
             </div>
+
+            <div class="addmore-package-wrap p-0">
+              <div class="addmore-package-btn-wrap">
+                <button class="btn addmore-package-btn" @click="mindChange()" type="button">+ Add more packages</button>
+                <div class="checkout-btn-wrap">
+                  <button class="btn checkout-btn" @click="checkout()" type="button">Proceed to Checkout</button>						
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -193,8 +193,9 @@
 
 <script>
 import axios from "axios";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import { getUTCDateFromTimeZone } from '../utils/dateUtils';
+
 export default {
   name: "Payment",
   data() {
