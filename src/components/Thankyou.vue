@@ -96,16 +96,16 @@
                         <div class="booking-summery-title mt-3 mb-3">Your Booking Summary:</div>
 
                         <div class="booking-summery">
-                          <div class="booking-summery-package-wrap" v-for="tourBooking in tourBooking.data">
-                            <div class="accordion" id="accordionExample">
-                              <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingOne">
-                                  <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse-'+tourBooking.id" aria-expanded="true" aria-controls="collapseOne">
+                          <div class="booking-summery-package-wrap">
+                            <div class="accordion" id="accordion-parent">
+                              <div class="accordion-item" v-for="(tourBooking, index) in tourBooking.data">
+                                <h2 class="accordion-header" :id="'heading-' + tourBooking.id">
+                                  <button :class="'accordion-button ' + (index > 0 ? 'collapsed' : '')" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse-' + tourBooking.id" :aria-expanded="(index == 0 ? true : false)" :aria-controls="'collapse-' + tourBooking.id">
                                     Booking ID # {{ tourBooking.id }}
                                     <span class="tour-name">{{ tourBooking.package_name }}</span>
                                   </button>
                                 </h2>
-                                <div :id="'collapse-'+tourBooking.id" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                <div :id="'collapse-' + tourBooking.id" :class="'accordion-collapse collapse ' + (index == 0 ? 'show' : '')" :aria-labelledby="'heading-' + tourBooking.id" data-bs-parent="#accordion-parent">
                                   <div class="accordion-body">
                                     <div class="row">
                                       <div class="col-md-6">
