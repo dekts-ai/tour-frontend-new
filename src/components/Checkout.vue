@@ -463,6 +463,7 @@ export default {
         });
     },
     created() {
+        this.iframeStatus = this.$store.state.iframeStatus;
         this.hotels = this.$store.state.tourPackage?.hotels;
         this.cartItem = this.$store.state.cartItem;
         this.cartItemLength = Object.values(this.cartItem).length;
