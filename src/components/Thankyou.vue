@@ -10,11 +10,11 @@
   </section>
 
   <section class="inner-content-section">
-    <div class="container">
+    <div :class="[iframeStatus ? 'no-container' : 'container', '']">
       <div class="background-color-sec">
         <div class="row">
           <div class="col-12">
-            <div class="row bradcumb-row">
+            <div class="row bradcumb-row" v-if="iframeStatus == false">
               <div class="col-12">
                 <div class="bradcumb-main">
                   <ul>
@@ -35,7 +35,7 @@
                 <hr class="sep1" />
               </div>
             </div>
-            <div class="row thankyou-main-row">
+            <div :class="[iframeStatus ? 'row thankyou-main-row iframe-row' : 'row thankyou-main-row', '']">
               <div class="col-12">
                 <div class="row status-bar-row">
                   <div class="col-12">

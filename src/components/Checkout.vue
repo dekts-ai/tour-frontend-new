@@ -14,7 +14,7 @@
             <div class="background-color-sec">
                 <div class="row">
                     <div class="col-12">
-                        <div class="row payment-row">
+                        <div :class="[iframeStatus ? 'row payment-row iframe-row' : 'row payment-row', '']">
                             <div class="col-12">
                                 <div class="row booking-row">
                                     <div class="col-lg-5 col-md-12">

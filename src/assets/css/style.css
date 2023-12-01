@@ -274,6 +274,10 @@ ul {
 	margin: 20px 0 0;
 }
 
+.iframe-row {
+	margin: 75px 0 20px 0 !important;
+}
+
 .payment-row .booking-row {
 	padding: 18px 13px;
 	border-bottom: 1px solid #dfdfdf;
