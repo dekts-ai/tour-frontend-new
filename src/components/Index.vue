@@ -32,7 +32,7 @@
                                             <button class="tooltipbtn btn-danger" data-toggle="tooltip" data-placement="top"
                                                 title="">Health &
                                                 Safety</button>
-                                            <button v-if="Object.keys(cartItem).length" @click="viewCart" class="btn btn-warning"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart ({{ Object.keys(cartItem).length }})</button>
+                                            <button v-if="Object.keys(cartItem).length" @click="viewCart" class="btn btn-warning mt-2"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart ({{ Object.keys(cartItem).length }})</button>
                                         </div>
                                     </div>
                                 </div>
