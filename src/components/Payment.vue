@@ -247,7 +247,7 @@ export default {
         this.cartItem[key].couponSuccess = [];
       }
     } else {
-      window.location.href = '/';
+      this.$router.push("/");
     }
   },
   methods: {
@@ -271,7 +271,7 @@ export default {
             icon: "success"
           }).then((result) => {
             if (result.isConfirmed && this.cartItemLength == 0) {
-              window.location.href = '/';
+              this.$router.push("/");
             }
           });
 

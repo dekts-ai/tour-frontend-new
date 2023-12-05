@@ -478,7 +478,7 @@ export default {
                 this.cartItem[key].couponSuccess = [];
             }
         } else {
-            window.location.href = '/';
+            this.$router.push("/");
         }
     },
     methods: {

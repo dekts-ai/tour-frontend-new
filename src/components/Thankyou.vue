@@ -251,13 +251,13 @@ export default {
     if (this.idLength) {
       this.booking();
     } else {
-      window.location.href = '/';
+      this.$router.push("/");
     }
   },
   methods: {
     booking() {
       let self = this;
-      var loader = this.$loading.show()
+      var loader = this.$loading.show();
       const payload = { ...this.id };
 
       axios.post("/package-booking-confirmed", { ids: payload }).then((response) => {

@@ -359,7 +359,7 @@ export default {
         }
 
         if (this.$store.state.packageId === 0) {
-            window.location.href = '/';
+            this.$router.push("/");
         }
 
         if (this.$store.state.date) {
