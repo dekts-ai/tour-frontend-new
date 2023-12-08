@@ -39,357 +39,162 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mt-3">
-                                    <div class="tour-packages-wrap">
-                                        <div class="tour-packages-item" v-for="item in cartItem" :key="item.tour_slot_id">
-                                            <div class="tour-packages-inner-wrap">
-                                                <div class="tour-packages-inner">
-                                                    <div class="tour-packages-detail">
-                                                        <div class="tour-packages-image">
-                                                            <img :src="item.package_image" alt="package-item-image">
-                                                        </div>
-                                                        <div class="tour-packages-title-wrap">
-                                                            <div class="tour-packages-title-top">{{ dateFormat(item.date) }} @ {{ item.time_date }}</div>
-                                                            <div class="tour-packages-title">{{ item.package_name }}
-                                                            </div>
-                                                            <div class="cancelling-policy-wrap">
-                                                                <button class="cancelling-policy-title" @click="openPolicy()">Terms and conditions</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="tour-packages-group-wrap">
-                                                        <div class="tour-packages-group-title">Your selected group of people:</div>
-                                                        <div class="tour-packages-group-people">
-                                                            <div v-for="(pax, key) in item.people_group" :key="key">
-                                                                <div class="tour-packages-selected-people" v-if="pax > 0">
-                                                                    <div class="tour-packages-selected-people-icon">
-                                                                        <svg width="8" height="11" viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                            <path d="M4.07976 5.3184C5.3978 5.3184 6.46628 4.24991 6.46628 2.93187C6.46628 1.61383 5.3978 0.545349 4.07976 0.545349C2.76172 0.545349 1.69324 1.61383 1.69324 2.93187C1.69324 4.24991 2.76172 5.3184 4.07976 5.3184Z" fill="#4C76B2" />
-                                                                            <path d="M5.6879 6.11444H2.47167C1.94894 6.11507 1.44781 6.323 1.07819 6.69263C0.708563 7.06225 0.500632 7.56338 0.5 8.08611L0.5 10.092H7.65957V8.08611C7.65894 7.56338 7.45101 7.06225 7.08139 6.69263C6.71176 6.323 6.21063 6.11507 5.6879 6.11444V6.11444Z" fill="#4C76B2" />
-                                                                        </svg>
-                                                                    </div>
-                                                                    <div class="tour-packages-selected-people-title">{{ item.rate_group[key] }}</div>
-                                                                    <div class="tour-packages-selected-people-count">
-                                                                        <input type="text" name="count" :disabled="true" :value="pax">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div v-if="item.hotel_id" class="col-12 mb-4 hotel-section" style="font-size: 12px;">
-                                                    <div class="hotel-wrapper d-sm-flex">
-                                                        <div class="hotel-image">
-                                                            <img :src="item.hotel_image" :alt="item.hotel_name">
-                                                        </div>
-                                                        <div class="hotel-detail w-100">
-                                                            <div class="hotel-title">Hotel Pickup Location:</div>
-                                                            <div class="hotel-name">{{ item.hotel_name }}</div>
-                                                            <div class="hotel-detail-address">{{ item.hotel_address }}</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <p class="text-start tour-packages-detail" v-if="seatErrors?.length">
-                                                    <ul><li v-for="(error, index) in seatErrors" :key="index" v-bind:class="{'text-danger': error[item.tour_slot_id]?.success }"><small>{{ error[item.tour_slot_id]?.message }}</small></li></ul>
-                                                </p>
-                                            </div>
-                                            <div class="tour-packages-totalcost">
-                                                <div class="tour-packages-costcount-title">Tour Cost:</div>
-                                                <div class="tour-packages-costcount-subitem">
-                                                    <div class="tour-packages-costcount-subitem-title">Subtotal:</div>
-                                                    <div class="tour-packages-costcount-subitem-cost">${{ Number(item.subtotal).toFixed(2) }}</div>
-                                                </div>
-                                                <div class="tour-packages-costcount-subitem">
-                                                    <div class="tour-packages-costcount-subitem-title">Discount:</div>
-                                                    <div class="tour-packages-costcount-subitem-cost">
-                                                        <span v-if="item?.discount2_percentage">({{ item?.discount2_percentage }}%)</span> ${{ item?.discount2_value ? Number(item?.discount2_value).toFixed(2) : Number(0).toFixed(2) }}
-                                                    </div>
-                                                </div>
-                                                <div class="tour-packages-costcount-subitem">
-                                                    <div class="tour-packages-costcount-subitem-title">Booking Fees:</div>
-                                                    <div class="tour-packages-costcount-subitem-cost">${{ Number(item.fees).toFixed(2) }}</div>
-                                                </div>
-                                                <div class="tour-packages-costcount-total">
-                                                    <div class="tour-packages-costcount-total-title">Tour Cost:</div>
-                                                    <div class="tour-packages-costcount-total-cost">${{ Number(item.total).toFixed(2) }}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-12 total-cost-col mt-0 mb-2">
-                                    <div class="row subtotal">
-                                        <div class="col-6 text-start">Ticket Cost:</div>
-                                        <div class="col-6 text-end">${{ Number(subtotal).toFixed(2) }}</div>
-                                    </div>
-
-                                    <div class="row subtotal" v-if="1">
-                                        <div class="col-6 text-start">Discount:</div>
-                                        <div class="col-6 text-end">${{ Number(discount).toFixed(2) }}</div>
-                                    </div>
-
-                                    <div class="row fees">
-                                        <div class="col-6 text-start">Booking Fees:</div>
-                                        <div class="col-6 text-end">${{ Number(fees).toFixed(2) }}</div>
-                                    </div>
-
-                                    <div class="row totalcost">
-                                        <div class="col-6 text-start">Total Cost:</div>
-                                        <div class="col-6 text-end">${{ Number(total).toFixed(2) }}</div>
-                                    </div>
-                                </div>
-
                                 <div class="row payment-form-sec">
-                                    <div class="col-12">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <span class="payment-form-notice">
-                                                    Please fill all fields marked with <span>*</span> to
-                                                    complete your booking
-                                                </span>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="form-field-title">Contact</div>
-                                                <div class="col-md-12 form-field-wrp contact-form-field mb-2">
-                                                    <div class="row">
-                                                        <div class="col-lg-6">
-                                                            <div class="col-md-12">
-                                                                <div class="form-group">
-                                                                    <label for="fullname"
-                                                                        class="col-form-label">Full Name<span
-                                                                            class="required-star">*</span></label>
-                                                                    <div class="field-icon-wrp">
-                                                                        <i class="fa fa-user"
-                                                                            aria-hidden="true"></i>
-                                                                    </div>
-                                                                    <input type="text" id="name" name="name"
-                                                                        v-model="name" class="form-control"
-                                                                        placeholder="Your Name" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-12">
-                                                                <div class="form-group">
-                                                                    <div class="phone-wrap">
-                                                                        <label for="phonenumber"
-                                                                            class="col-form-label">Phone Number<span
-                                                                                class="required-star">*</span></label>
-                                                                        <div class="field-icon-wrp">
-                                                                            <i class="fa fa-phone"
-                                                                                aria-hidden="true"></i>
-                                                                        </div>
-                                                                        <input type="text" id="phonenumber"
-                                                                            name="phone_number"
-                                                                            v-model="phone_number"
-                                                                            v-mask="'###############'"
-                                                                            class="form-control"
-                                                                            placeholder="Your Contact Number" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-12">
-                                                                <div class="form-group">
-                                                                    <label for="Email" class="col-form-label">Email
-                                                                        Address<span
-                                                                            class="required-star">*</span></label>
-                                                                    <div class="field-icon-wrp">
-                                                                        <i class="fa fa-envelope"
-                                                                            aria-hidden="true"></i>
-                                                                    </div>
-                                                                    <input type="email" id="emailaddress"
-                                                                        name="email" v-model="email"
-                                                                        class="form-control"
-                                                                        placeholder="Your Email Address" />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-6">
-                                                            <div class="form-group form-textarea-wrap">
-                                                                <label for="comment" class="col-form-label">Comments</label>
-                                                                <textarea id="comment" name="comment" v-model="comment"
-                                                                    placeholder="Please type here ..."></textarea>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="row">
-                                                        <div class="col-12 col-md-6 text-center text-md-start">
-                                                            <div class="additional-notes-text">
-                                                                Any additional notes or special requests?
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-12 col-md-6 text-center text-md-end">
-                                                            <div class="accommodate-your-request">
-                                                                We will do our best to accommodate your request.
-                                                            </div>
-                                                        </div>
+                                	<div class="col-lg-7 mb-lg-0 mb-md-5 mb-4">
+                                		<div class="contact-wrap">
+	                                		<div class="form-field-title">Contact:</div>
+	                                        <div class="form-field-wrp contact-form-field mb-2">
+			                                    <div class="form-group">
+                                                    <label for="fullname" class="col-form-label">Full Name <span class="required-star">*</span></label>
+                                                    <div class="field-icon-wrp"> <i class="fa fa-user" aria-hidden="true"></i> </div>
+                                                    <input type="text" v-model="name" id="name" name="name" class="form-control" placeholder="Your Name">
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="phone-wrap">
+                                                        <label for="phonenumber" class="col-form-label">Phone Number <span class="required-star">*</span> </label>
+                                                        <div class="field-icon-wrp"> <i class="fa fa-phone" aria-hidden="true"></i> </div>
+                                                        <input type="text" v-model="phone_number" id="phonenumber" name="phone_number" class="form-control" placeholder="Your Contact Number">
                                                     </div>
                                                 </div>
-                                            </div>
-
-                                            <div class="col-12">
-                                                <span class="payment-form-notice important-note w-100">
-                                                    <span class="notice-title">Important Note:</span>
-                                                    All guests must arrive 45 minutes prior to their
-                                                    reserved tour time. All guests must stay with their
-                                                    guides.
-                                                </span>
-                                            </div>
-
-                                            <div class="col-12 mb-3">
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <div class="payment-text card-label-text-left"><img
-                                                                src="../assets/images/shield.png" alt="shield"> Payment
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <div class="secured-encryption card-label-text-left"><img
-                                                                src="../assets/images/lock-white.png" alt="lock"> Secured
-                                                            with 2048-bit encryption
-                                                        </div>
-                                                    </div>
+                                                <div class="form-group">
+                                                    <label for="Email" class="col-form-label">Email Address <span class="required-star">*</span> </label>
+                                                    <div class="field-icon-wrp"> <i class="fa fa-envelope" aria-hidden="true"></i> </div>
+                                                    <input type="email" v-model="email" id="emailaddress" name="email" class="form-control" placeholder="Your Email Address">
                                                 </div>
-                                                <div class="row mt-3">
-                                                    <div class="col-12">
-                                                        <div class="card-detail-main">
-                                                            <div class="row align-items-center">
-                                                                <div class="col-12 col-md-5 border-right">
-                                                                    <div class="card-detail-wrp card-form-field">
-                                                                        <div class="form-group col-12 card-label-text-left">
-                                                                            <label for="cardnumber"
-                                                                                class="col-form-label">Card Number<span
-                                                                                    class="required-star">*</span></label>
-                                                                            <div class="field-icon-wrp">
-                                                                                <i class="fa fa-lock"
-                                                                                    aria-hidden="true"></i>
-                                                                            </div>
-                                                                            <input type="text" id="cardnumber"
-                                                                                name="cardnumber" class="form-control"
-                                                                                v-model="cardnumber"
-                                                                                v-mask="'#### #### #### ####'"
-                                                                                placeholder="1234 1234 1234 1234">
-                                                                            <div class="validation-icon-wrp">
-                                                                                <i class="fa fa-check-circle"
-                                                                                    aria-hidden="true"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group col-12">
-                                                                            <div class="phone-wrap card-label-text-left">
-                                                                                <label for="nameoncard"
-                                                                                    class="col-form-label">Name on Card<span
-                                                                                        class="required-star">*</span></label>
-                                                                                <div class="field-icon-wrp">
-                                                                                    <i class="fa fa-user"
-                                                                                        aria-hidden="true"></i>
-                                                                                </div>
-                                                                                <input type="text" id="nameoncard"
-                                                                                    name="nameoncard" class="form-control"
-                                                                                    v-model="nameoncard" placeholder="">
-                                                                                <div class="validation-icon-wrp">
-                                                                                    <i class="fa fa-check-circle"
-                                                                                        aria-hidden="true"></i>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group col-12 mb-0">
-                                                                            <div class="row">
-                                                                                <div
-                                                                                    class="form-group col-7 card-label-text-left">
-                                                                                    <label for="expiration"
-                                                                                        class="col-form-label">Expiration<span
-                                                                                            class="required-star">*</span></label>
-                                                                                    <div class="field-icon-wrp">
-                                                                                        <i class="fa fa-calendar-check-o"
-                                                                                            aria-hidden="true"></i>
-                                                                                    </div>
-                                                                                    <input type="text" id="expiration"
-                                                                                        name="expiration"
-                                                                                        class="form-control"
-                                                                                        v-model="expiration"
-                                                                                        v-mask="'##/##'"
-                                                                                        placeholder="MM/YY">
-                                                                                    <div class="validation-icon-wrp">
-                                                                                        <i class="fa fa-check-circle"
-                                                                                            aria-hidden="true"></i>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div
-                                                                                    class="form-group col-5 card-label-text-left">
-                                                                                    <label for="cvv"
-                                                                                        class="col-form-label">CVC<span
-                                                                                            class="required-star">*</span><img
-                                                                                            src="../assets/images/radio-info.png"
-                                                                                            data-toggle="tooltip"
-                                                                                            data-placement="top"
-                                                                                            title="Card Verification Code"></label>
-                                                                                    <div class="field-icon-wrp">
-                                                                                        <i class="fa fa-lock"
-                                                                                            aria-hidden="true"></i>
-                                                                                    </div>
-                                                                                    <input type="text" id="cvv" name="cvv"
-                                                                                        class="form-control" v-model="cvv"
-                                                                                        v-mask="'####'" placeholder="CVC">
-                                                                                    <div class="validation-icon-wrp">
-                                                                                        <i class="fa fa-check-circle"
-                                                                                            aria-hidden="true"></i>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-12 col-md-7">
-                                                                    <div class="makeaayment-wrap">
-                                                                        <div class="form-group col-12">
-                                                                            <div
-                                                                                class="makeaayment-detail-title card-label-text-left">
-                                                                                We accept all major credit and debit cards:
-                                                                            </div>
-                                                                            <div class="makeaayment-detail-wrp">
-                                                                                <img src="../assets/images/card-name.png"
-                                                                                    alt="card-name">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group col-12">
-                                                                            <hr>
-                                                                        </div>
-                                                                        <div class="form-group col-12 mb-0">
-                                                                            <input type="submit" name="makeaayment"
-                                                                                id="makeaayment" @click="submit()" value="Make a Payment"
-                                                                                class="makeaayment-btn">
-                                                                        </div>
-                                                                        <div class="form-group col-12 mb-0">
-                                                                            <div
-                                                                                class="booking-you-text card-label-text-left">
-                                                                                By booking you also agree to
-                                                                                our <a
-                                                                                    href="https://nativeamericantours.com/privacy-policy.html">policies</a>,
-                                                                                and
-                                                                                Stripe <a
-                                                                                    href="https://stripe.com/legal/end-users">terms
-                                                                                    of
-                                                                                    service</a>.</div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                <div class="form-group form-textarea-wrap">
+                                                    <label for="comment" class="col-form-label">Comments</label>
+                                                    <textarea v-model="comment" id="comment" name="comment" placeholder="Please type here ..."></textarea>
+                                                </div>
+			                                    <div class="form-group mb-0">
+			                                    	<div class="form-check">
+  														<input class="form-check-input" type="checkbox" v-model="getemailupdates" id="flexCheckDefault">
+  														<label class="form-check-label" for="flexCheckDefault">
+                                                            Get future email updates from Lower Antelope Canyon Hiking Tour
+                                                        </label>
+													</div>
+												</div>
+			                                </div>
+			                                <div class="payment-box mb-2">
+			                                	<div class="payment-text card-label-text-left">
+                                                    <img src="../assets/images/payment.png"> Payment
+                                                </div>
+			                                	<div class="secured-encryption card-label-text-left">
+                                                    <img src="../assets/images/lock-white.png" alt="lock"> Secured with 2048-bit encryption
+                                                </div>
+			                                	<div class="card-detail-main">
+	    											<div class="card-detail-wrp card-form-field">
+										                <div class="form-group col-12 card-label-text-left">
+										                    <label for="cardnumber" class="col-form-label">Card Number <span class="required-star">*</span></label>
+										                    <div class="field-icon-wrp"><i class="fa fa-lock" aria-hidden="true"></i></div>
+										                    <input type="text" id="cardnumber" name="cardnumber" class="form-control" v-model="cardnumber" v-mask="'#### #### #### ####'" placeholder="1234 1234 1234 1234">
+										                    <div class="validation-icon-wrp"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+										                </div>
+										                <div class="form-group col-12">
+										                    <div class="phone-wrap card-label-text-left">
+										                        <label for="nameoncard" class="col-form-label">Name on Card <span class="required-star">*</span></label>
+										                        <div class="field-icon-wrp"><i class="fa fa-user" aria-hidden="true"></i></div>
+										                        <input type="text" id="nameoncard" name="nameoncard" class="form-control" v-model="nameoncard" placeholder="">
+										                        <div class="validation-icon-wrp"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+										                    </div>
+										                </div>
+										                <div class="form-group col-12 mb-0">
+										                    <div class="row">
+										                        <div class="form-group col-7 card-label-text-left small">
+										                            <label for="expiration" class="col-form-label">Expiration <span class="required-star">*</span></label>
+										                            <div class="field-icon-wrp"><i class="fa fa-calendar-check-o" aria-hidden="true"></i></div>
+										                            <input type="text" id="expiration" name="expiration" class="form-control" v-model="expiration" v-mask="'##/##'" placeholder="MM/YY">
+										                            <div class="validation-icon-wrp"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+										                        </div>
+										                        <div class="form-group col-5 card-label-text-left small">
+										                            <label for="cvv" class="col-form-label">CVC <span class="required-star">*</span>
+										                                <img src="data:image/png;base64,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" data-toggle="tooltip" data-placement="top" title="Card Verification Code">
+										                            </label>
+										                            <div class="field-icon-wrp"><i class="fa fa-lock" aria-hidden="true"></i></div>
+										                            <input type="text" id="cvv" name="cvv" class="form-control" v-model="cvv" v-mask="'####'" placeholder="CVC">
+										                            <div class="validation-icon-wrp"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+										                        </div>
+										                    </div>
+										                </div>
+                                                        <p class="mb-3" v-if="errors.length">
+                                                            <b>Please correct the following error(s):</b>
+                                                            <ul>
+                                                                <li v-for="error in errors" :key="error"
+                                                                    v-bind:class="{ 'text-danger': error }">{{ error }}
+                                                                </li>
+                                                            </ul>
+                                                        </p>
+										                <div class="form-group col-12 mb-0">
+										                    <input type="submit" @click="submit()" name="makeaayment" id="makeaayment" class="makeaayment-btn" value="Make a Payment">
+										                </div>
+										               	<div class="form-group col-12 mb-0">
+										                    <div class="booking-you-text card-label-text-left"> By booking you also agree to our <a href="https://nativeamericantours.com/privacy-policy.html">policies</a>, and Stripe <a href="https://stripe.com/legal/end-users">terms of service</a>. </div>
+										                </div>
+					            					</div>
+	        									</div>
+	        								</div>
+	        							</div>	
+        							</div>
+		                            <div class="col-lg-5">
+		                            	<div class="form-field-title">Total cost:</div>	
+		                            	<div class="total-cost-wrap" v-for="item in cartItem" :key="item.tour_slot_id">
+		                            		<div class="title-wrap">
+		                            			<div class="title">{{ item.package_name }}</div>
+		                            			<div class="time">{{ dateFormat(item.date) }} @ {{ item.time_date }}</div>
+		                            		</div>
+                                            <div v-for="(pax, key) in item.people_group" :key="key">
+                                                <div v-if="pax > 0" class="ages-wrap d-flex justify-content-between align-items-center">
+                                                    <div class="title">{{ item.rate_group[key] }}</div>
+                                                    <div class="number">{{ pax }}</div>	
                                                 </div>
                                             </div>
-
-                                            <p class="mb-3" v-if="errors.length">
-                                                <b>Please correct the following error(s):</b>
-                                                <ul>
-                                                    <li v-for="error in errors" :key="error"
-                                                        v-bind:class="{ 'text-danger': error }">{{ error }}
-                                                    </li>
-                                                </ul>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
+		                            		<div class="other-details-wrap d-flex justify-content-between align-items-center">
+		                            			<div class="title">Ticket Cost</div>
+						                       	<div class="amount">${{ Number(item.subtotal).toFixed(2) }}</div>	
+		                            		</div>
+		                            		<div class="other-details-wrap d-flex justify-content-between align-items-center" v-if="item?.discount2_value > 0">
+		                            			<div class="title">Discount</div>
+						                       	<div class="amount"><span v-if="item?.discount2_percentage">({{ item?.discount2_percentage }}%)</span> ${{ item?.discount2_value ? Number(item?.discount2_value).toFixed(2) : Number(0).toFixed(2) }}</div>	
+		                            		</div>
+		                            		<!-- <div class="other-details-wrap d-flex justify-content-between align-items-center" v-if="item?.discount2_value > 0">
+		                            			<div class="title">Subtotal</div>
+						                       	<div class="amount">${{ Number(item.fees).toFixed(2) }}</div>	
+		                            		</div> -->
+		                            		<div class="other-details-wrap d-flex justify-content-between align-items-center">
+		                            			<div class="title">Booking Fees</div>
+						                       	<div class="amount">${{ Number(item.fees).toFixed(2) }}</div>	
+		                            		</div>
+		                            		<div class="other-details-wrap d-flex justify-content-between align-items-center">
+		                            			<div class="title"><strong>Total Cost</strong></div>
+                                                <div class="amount">${{ Number(item.total).toFixed(2) }}</div>
+		                            		</div>
+		                            	</div>
+		                            	<div class="total-cost-wrap third">
+		                            		<div class="title-wrap">
+		                            			<div class="title">Total Cost</div>
+		                            		</div>
+		                            		<div class="other-details-wrap d-flex justify-content-between align-items-center mt-0">
+		                            			<div class="title">Ticket Cost</div>
+						                       	<div class="amount">${{ Number(subtotal).toFixed(2) }}</div>	
+		                            		</div>
+		                            		<div class="other-details-wrap d-flex justify-content-between align-items-center" v-if="discount > 0">
+		                            			<div class="title">Discount</div>
+						                       	<div class="amount">${{ Number(discount).toFixed(2) }}</div>	
+		                            		</div>
+		                            		<!-- <div class="other-details-wrap d-flex justify-content-between align-items-center">
+		                            			<div class="title">Subtotal</div>
+						                       	<div class="amount">$132.60</div>	
+		                            		</div> -->
+		                            		<div class="other-details-wrap d-flex justify-content-between align-items-center">
+		                            			<div class="title">Booking Fees</div>
+						                       	<div class="amount">${{ Number(fees).toFixed(2) }}</div>	
+		                            		</div>
+		                            		<div class="other-details-wrap d-flex justify-content-between align-items-center last">
+		                            			<div class="title"><strong>Total Cost</strong></div>
+						                       	<div class="amount"><strong>${{ Number(total).toFixed(2) }}</strong></div>	
+		                            		</div>
+		                            	</div>
+		                            </div>
+		                        </div>
                             </div>
                         </div>
                     </div>

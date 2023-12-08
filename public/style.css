@@ -1,18 +1,9 @@
 /* slider right arrow start */
-.slider-not-active {
-	pointer-events: none ;
-	cursor: default;
-	text-decoration: none;
-	background-color:lightgrey;
-  }  
-.slider-active {
-	pointer-events: auto;
-	cursor: default;
-	text-decoration: none;
-	background-color:white ;
-	}
-  /* slider right arrow end */
-/*---------------------------  
+.slider-not-active { pointer-events: none; cursor: default; text-decoration: none; background-color:lightgrey; }  
+.slider-active { pointer-events: auto; cursor: default; text-decoration: none; background-color:white; }
+/* slider right arrow end */
+
+/*---------------------------
 	Common
 ---------------------------*/
 html { scroll-behavior: smooth; }
@@ -24,8 +15,8 @@ p { margin: 0px; }
 h1, h2, h3, h4, h5, h6, figure, ul { margin: 0; padding: 0px; }
 ul {list-style: none; }
 .iti__flag {background-image: url("../images/flags.png");}
-
 .starttime-row .groupofpeople .table tbody tr td.group .form-select.noarrow {background: transparent; text-align: center; }
+
 /*---------------------------  
 	Header
 ---------------------------*/
@@ -68,7 +59,6 @@ ul {list-style: none; }
 .innerbanner-row .title-box .rating ul li.info img {position: relative; top: -3px; }
 
 /* Payment */
-
 .iframe-row { margin: 75px 0 20px 0 !important; }
 .payment-row { border: 1px solid #dfdfdf; border-radius: 3px; margin: 20px 0 0; }
 .payment-row .booking-row {padding: 18px 13px; border-bottom: 1px solid #dfdfdf; }
@@ -234,9 +224,8 @@ ul {list-style: none; }
 .payment-form-sec .form-field-wrp label.checkbox-wrap .checkmark {border-color: #d5d5d5;  box-shadow: -3px -4px 5px 0px rgba(0, 0, 0, 0.12) inset;}
 .payment-form-sec .form-field-wrp .field-icon-wrp {position: absolute; z-index: 1; top: 50%; left: 15px; transform: translateY(-50%);}
 .payment-form-sec .field-icon-wrp .fa {font-size: 13px; font-weight: 400; line-height: 13px; color: #cbcbcb;}
-.payment-form-sec .form-field-wrp input {font-size: 15px; font-weight: 400; line-height: 1; color: #565656; height: 55px; border: 1px solid #d5d5d5;  box-shadow: -3px -4px 5px 0px rgba(0, 0, 0, 0.12) inset; border-radius: 5px; padding: 5px 41px;}
+.payment-form-sec .form-field-wrp input {font-size: 15px; font-weight: 400; line-height: 1; color: #565656; height: 20px; border: 1px solid #d5d5d5;  box-shadow: -3px -4px 5px 0px rgba(0, 0, 0, 0.12) inset; border-radius: 5px; padding: 5px 41px;}
 .payment-form-sec .form-field-wrp input:focus {border-color: #28a5ff;}
-/* .payment-form-sec .form-field-wrp .phone-wrap input {padding-left: 110px !important;} */
 .payment-form-sec .form-field-wrp .phone-wrap .iti {width: 100%;}
 .payment-form-sec .iti--allow-dropdown .iti__flag-container, 
 .payment-form-sec .iti--separate-dial-code .iti__flag-container {right: auto; left: 30px; }
@@ -253,7 +242,6 @@ ul {list-style: none; }
 .payment-form-sec .form-textarea-wrap textarea:focus {border-color: #28a5ff;}
 .payment-form-sec .additional-notes-text {font-size: 16px; font-weight: 300; line-height: 1.2; color: #565656; margin-top: 8px;}
 .payment-form-sec .accommodate-your-request {font-size: 16px; font-weight: 600; line-height: 1.2; color: #aeaeae; margin-top: 8px;}
-.payment-form-sec .payment-text {font-size: 24px; font-weight: 400; line-height: 1; color: #008009; margin-bottom: 15px; margin-top: 30px;}
 .payment-form-sec .secured-encryption {font-size: 13px; font-weight: 600; line-height: 1; color: #fff; background-color: #419547; padding: 9px 30px;}
 .payment-form-sec .card-detail-main {background-color: #e3e3e3; border-radius: 0 0 5px 5px;}
 .payment-form-sec .card-detail-wrp {padding: 15px 5px 25px 30px;}
@@ -352,225 +340,11 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .thankyou-main-row .invoice-row .top-row .booking-summery p .printbtn i {margin-right: 3px; }
 /***** Thank You Page End *****/
 
-
-@media (min-width: 1200px) {
-	.container { max-width: 1200px; }
-	.inner-content-section .container { max-width: 1225px; }
-}
-
-@media (max-width: 1230px) {
-	.scroll-table { overflow: hidden; overflow-x: scroll; }
-}
-@media (max-width: 1199px) {
-    .inner-content-section .background-color-sec { padding: 20px 30px; }
-    .payment-row .booking-row .booking h2 { font-size: 25px; }
-    .date-booking-row .selectboxes { justify-content: center; margin-bottom: 10px; }
-    .starttime-row .groupofpeople .table tfoot tr td.cost { padding: 10px 20px; }
-    .starttime-row .groupofpeople .table tfoot tr td.total { padding: 10px 20px; }
-    .tour-start-row .duration .btn-info { height: auto; }
-    .tour-start-row .whattobring .bring-group { display: block; }
-    .tour-start-row .whattobring .bring-group .btn-info { height: auto; margin: 0; margin-bottom: 10px; width: 100%;}
-	/***** Payment Page Start *****/
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-time {font-size: 22px;}
-	.payment-form-sec {padding-left: 13px; padding-right: 13px;}
-	/***** Payment Page End *****/
-}
-@media (max-width: 991px) {
-    .innerbanner-row .title-box { display: block; }
-    .innerbanner-row .title-box h1 { margin-bottom: 15px; }
-    .inner-content-section .background-color-sec { padding: 20px 15px; }
-    .payment-row .booking-row .booking { justify-content: center; margin-bottom: 15px; }
-    .images-sec {text-align: center; margin-bottom: 30px; }
-    .content-sec { text-align: center; }
-    .hiking-tour-row .content-sec h2 { padding-left: 0px; }
-    .hiking-tour-row .content-sec h2:after { content: none; }
-    .permit-tax .content-sec h2 { padding-left: 0px; }
-    .permit-tax .content-sec h2:after { content: none; }
-	/***** Payment Page Start *****/
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail {padding: 12px 17px;}
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-title {font-size: 20px;}
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-time {font-size: 18px;}
-	.starttime-row .groupofpeople h2 {font-size: 20px; margin-bottom: 17px; margin-top: 0;}
-	.payment-form-sec .payment-form-notice {font-size: 14px;}
-	.payment-form-sec label.checkbox-wrap {font-size: 20px;}
-	.payment-form-sec .checkmark {top: 0;}
-	.payment-form-sec .masks-mandatory-notice {font-size: 14px;}
-	.payment-form-sec .form-field-wrp {padding: 24px 17px 17px 20px;}
-	.payment-form-sec .form-field-wrp input {height: 50px;}
-	.payment-form-sec .form-field-wrp label.checkbox-wrap {font-size: 12px;}
-	.payment-form-sec .policy-item-wrp {max-height: 194px;}
-	.payment-form-sec .additional-notes-text {font-size: 14px;}
-	.payment-form-sec .accommodate-your-request {font-size: 14px;}
-	.payment-form-sec .secured-encryption {padding: 9px 15px;}
-	.payment-form-sec .card-detail-wrp {padding: 15px 5px 15px 15px;}
-	.payment-form-sec .makeaayment-wrap {padding: 12px 30px 12px 25px;}
-	.payment-form-sec .makeaayment-wrap input[type="submit"] {height: 50px;}
-	/***** Payment Page End *****/
-	/***** Thank You Page Start *****/
-	.thankyou-main-row .status-bar-row .sucessmsg .content h2 { font-size: 24px; margin-bottom: 6px;}
-	.thankyou-main-row .status-bar-row .sucessmsg .content p { font-size: 14px; }
-	.thankyou-main-row .status-bar-row { padding: 20px 10px; }
-	.thankyou-main-row .invoice-row { padding: 27px 10px 35px; }
-	.booking-tbl {overflow: hidden; overflow-x: scroll; }
-	/***** Thank You Page End *****/
-}
-@media (max-width: 767px) {
-    .header-right { justify-content: center; margin-top: 10px; margin-bottom: 5px; }
-    .date-booking-row .calendardate { max-width: 390px; }
-    .starttime-row .select-time .radio-toolbar .time-item {width: 32.38%; }
-    .starttime-row .select-time .radio-toolbar .time-item:nth-child(4n+0) { margin-right: 1.426%; }
-    .starttime-row .select-time .radio-toolbar .time-item:nth-child(3n+0) { margin-right: 0; }
-    .starttime-row .groupofpeople .booknowbtn button {font-size: 20px; padding: 8px 90px 8px 20px; }
-    .starttime-row .groupofpeople .booknowbtn button:after {font-size: 30px; top: 0px; }
-    .fee-tax-row h2 { font-size: 20px; line-height: 1.3; }
-    .fee-tax-row p { padding-bottom: 15px; }
-    .tour-start-row .duration { border-bottom: 1px solid #dfdfdf; border-right: 0; }
-    .footer-row>* {text-align: center !important; }
-    .footer-row .col-start p { margin-bottom: 15px; }
-    .footer-row .col-center img { margin-bottom: 15px; }
-	/***** Payment Page Start *****/
-	.booking-dt-sec .booking-dt-title {font-size: 20px; text-align: center;}
-	.booking-dt-sec .booking-dt-wrp {display: block !important;}
-	.booking-dt-sec .booking-dt-wrp .booking-dt-img {min-width: unset; background-color: #f2f9f3; text-align: center; padding-top: 12px; margin-right: 0;}
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail {border-radius: 0; text-align: center;}
-	.starttime-row .groupofpeople h2 {text-align: center;}
-	.payment-form-sec label.checkbox-wrap {font-size: 18px;}
-	.payment-form-sec .masks-mandatory-notice {font-size: 14px; line-height: 18px;}
-	.payment-form-sec .form-field-title {font-size: 20px; text-align: center; margin-bottom: 20px;}
-	.payment-form-sec .form-field-wrp {margin-bottom: 20px;}
-	.payment-form-sec .payment-text {font-size: 20px; text-align: center;}
-	.payment-form-sec .makeaayment-wrap input[type="submit"] {font-size: 20px;}
-	.payment-form-sec .policy-item-wrp {max-height: unset;}
-	.payment-form-sec .payment-form-notice.important-note {margin-top: -24px;}
-	.payment-form-sec .makeaayment-wrap {padding: 12px 30px 12px 13px; border-left: none;}
-	/***** Payment Page End *****/
-	/***** Thank You Page Start *****/
-	.thankyou-main-row .status-bar-row { padding: 20px 0px; }
-	.thankyou-main-row .invoice-row {padding: 27px 0px 35px; }
-	.thankyou-main-row .status-bar-row .sucessmsg .content p { line-height: 18px; }
-	.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details [class*="col-"]:nth-child(5) .details-box {border-bottom: 1px solid #c3c3c3; padding: 20px 0 25px; }
-	.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details { padding: 27px 30px 45px; }
-	.thankyou-main-row .invoice-row .top-row .cta .cta-box { display: block; text-align: center; }
-	/***** Thank You Page End *****/
-	/***** Table Responsive Start *****/
-	.starttime-row .groupofpeople .table thead, 
-	.starttime-row .groupofpeople .table thead tr, 
-	.starttime-row .groupofpeople .table thead tr th {display: none !important;}
-	.starttime-row .groupofpeople .table, 
-	.starttime-row .groupofpeople .table tbody, 
-	.starttime-row .groupofpeople .table tbody tr, 
-	.starttime-row .groupofpeople .table tbody tr td {display: block !important; position:relative !important;}
-	.starttime-row .groupofpeople .table tbody tr td {padding: 10px 10px 10px 45%;}
-	.starttime-row .groupofpeople table td:before {content: attr(data-label); font-size: 16px; font-weight: 400; color: #333; position:absolute; left: 10px; top: 50%; transform:translateY(-50%); width:42%; text-align: left;}
-	.starttime-row .groupofpeople .table tbody tr td.age {min-width:unset !important;}
-
-	.starttime-row .groupofpeople .table tbody tr {border: 1px solid #dfdfdf; margin-bottom: 20px;}
-	.starttime-row .groupofpeople .table tbody tr td.age {border:none; border-bottom: 1px solid #dfdfdf; min-width:unset !important; text-align: right !important; height:auto !important;}
-	.starttime-row .groupofpeople .table tbody tr td.taxes {border:none; border-bottom: 1px solid #dfdfdf; min-width:unset !important; text-align: right; height:auto !important; background-color: #edf4ff;}
-	.starttime-row .groupofpeople .table tbody tr td.taxes p {line-height:19px; margin-bottom: 0;}
-	
-	.starttime-row .groupofpeople .table tbody tr td.group {border:none; border-bottom: 1px solid #dfdfdf; min-width:unset !important; text-align: right; height:auto !important; background-color: #edf4ff;}
-	.starttime-row .groupofpeople .table tbody tr td.group .form-select {margin: 0 0 0 auto; text-align: right; padding-right: 10px; background: #edf4ff url(data:image/png;base64,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) no-repeat center right 0px;}
-	.starttime-row .groupofpeople .table tbody tr td.price, 
-	.starttime-row .groupofpeople .table tbody tr td.final {border:none; min-width:unset !important; text-align: right; height:auto !important; background-color:transparent;}
-	
-	/***** Table Responsive End *****/
-}
-@media (max-width: 575px) {
-	.payment-row .booking-row { padding: 18px 0px;}
-	.status-row { padding: 3px 0px 6px; }
-	.starttime-row { padding: 25px 0px; }
-	.fee-tax-row { padding: 20px 0px 25px; }
-	.date-booking-row .calendardate {max-width: 330px; }
-	.starttime-row .select-time .radio-toolbar .time-item {width: 49.2%; }
-	.starttime-row .select-time .radio-toolbar .time-item:nth-child(3n+0) { margin-right: 1.426%; }
-    .starttime-row .select-time .radio-toolbar .time-item:nth-child(2n+0) { margin-right: 0; }
-    .starttime-row .select-time h2, .starttime-row .groupofpeople h2 { font-size: 21px; }
-    .hiking-tour-row .content-sec h2 { font-size: 20px; }
-    .permit-tax .content-sec h2 { font-size: 20px; }
-	/***** Payment Page Start *****/
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-title {font-size: 18px;}
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-time {font-size: 18px;}
-	.starttime-row .select-time h2, .starttime-row .groupofpeople h2 {font-size: 20px;}
-	.payment-form-sec .masks-mandatory-wrp {padding: 15px 20px 15px;}
-	.payment-form-sec .masks-mandatory-img {min-width: 75px; margin-right: 20px;}
-	/***** Payment Page End *****/
-	/***** Thank You Page Start *****/
-	.thankyou-main-row .invoice-row .top-row .content1 h2 { font-size: 24px; }
-	.thankyou-main-row .invoice-row .top-row .content2 h2 { font-size: 22px; margin-bottom: 5px;}
-	.thankyou-main-row .invoice-row .top-row .content2 p { font-size: 14px; line-height: 1.3; }
-	.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details { padding: 20px 20px 35px; }
-	/***** Thank You Page End *****/
-}
-@media (max-width: 480px) {
-	.inner-content-section .background-color-sec { margin-bottom: 30px; }
-	.innerbanner-row { padding: 16px 0px; }
-	.innerbanner-row .title-box h1 { font-size: 25px; }
-	.innerbanner-row .title-box .rating { margin-left: 0px; }
-	.payment-row .booking-row .booking { display: block; text-align: center; }
-	.payment-row .booking-row .booking h2 { margin-bottom: 10px; margin-right: 0px; }
-	.payment-row .booking-row .booking .confirmation { width: 100%; }
-	.payment-row .booking-row .info .tooltipbtn.btn-info { margin: 0 0 10px; }
-	.payment-row .booking-row .info .tooltipbtn { width: 100%; }
-	.date-booking-row .calendardate {max-width: 170px; }
-	.date-booking-row .selectboxes select#calendaryear { margin-right: 0px; }
-	.status-row .status li { padding-left: 14px; }
-	.status-row .status li:after { left: 3px; }
-	.starttime-row .select-time .radio-toolbar .time-item { width: 100%; margin: 0 0 10px; }
-	.starttime-row .groupofpeople .booknowbtn button { width: 100%; }
-	.hiking-tour-row { padding: 30px 0px 30px; }
-	.tour-start-row .duration { padding: 21px 15px 25px; }
-	.tour-start-row .whattobring { padding: 21px 15px 25px; }	
-	/***** Payment Page Start *****/
-	.booking-dt-sec {padding: 20px 0px 0;}
-	.booking-dt-sec .booking-dt-wrp .booking-dt-img {padding: 10px 10px 0;}
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail {padding: 10px;}
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-title {font-size: 16px; margin-bottom: 5px;}
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-time {font-size: 16px; margin-bottom: 10px;}
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-btn a {font-size: 14px; padding: 8px 10px;}
-	.payment-form-sec .masks-mandatory-wrp {display: block !important; padding: 15px;}
-	.payment-form-sec .masks-mandatory-img {margin-right: 0; text-align: center; margin-bottom: 15px;}
-	.payment-form-sec label.checkbox-wrap {font-size: 16px;}
-	.payment-form-sec .masks-mandatory-notice {font-size: 12px; line-height: 16px;}
-	.payment-form-sec {padding-left: 0; padding-right: 0;}
-	.payment-form-sec .form-field-wrp {padding: 15px 10px 10px 10px;}
-	.payment-form-sec .form-field-wrp input {height: 45px;}
-	.payment-form-sec .form-field-wrp label.checkbox-wrap {font-size: 12px; line-height: 18px;}
-	.payment-form-sec .policy-item-wrp ul li {font-size: 14px; line-height: 19px;}
-	.payment-form-sec .policy-item-wrp ul li:last-child {margin-bottom: 0;}
-	.payment-form-sec .form-field-wrp input {padding: 5px 32px;}
-	.payment-form-sec .form-field-wrp .phone-wrap input {padding-left: 93px !important;}
-	/***** Payment Page End *****/
-	/***** Thank You Page Start *****/
-	.thankyou-main-row .status-bar-row .sucessmsg { display: block; text-align: center; }
-	.thankyou-main-row .status-bar-row .sucessmsg .images { margin-right: 0; margin-bottom: 15px; }
-	.thankyou-main-row .status-bar-row .sucessmsg .content h2 { margin-bottom: 10px; }
-	.thankyou-main-row .invoice-row .top-row .content1 p { font-size: 14px; margin-bottom: 20px; }
-	.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details h2 { font-size: 20px; }
-	.thankyou-main-row .invoice-row {padding: 27px 0px 20px; }
-	/***** Thank You Page End *****/
-	.total-cost-col {padding-right: calc(var(--bs-gutter-x) * .5); padding-left: calc(var(--bs-gutter-x) * .5); }
-	.total-cost-col .totalcost [class*="col-"] { font-size: 22px; }
-	.thankyou-main-row .invoice-row .top-row .booking-summery p .printbtn {position: relative; display: block; margin-top: 15px; margin-left: auto; }
-}
-
-@media (max-width: 360px) {
-	.total-cost-col .totalcost [class*="col-"] {font-size: 20px; }
-	.total-cost-col .totalcost [class*="col-"] span { font-size: 11px; }
-}
-
 /* slider right arrow start */
-.slider-not-active {
-	pointer-events: none ;
-	cursor: default;
-	text-decoration: none;
-	background-color:lightgrey;
-}
+.slider-not-active { pointer-events: none; cursor: default; text-decoration: none; background-color:lightgrey; }
 /* slider right arrow end */
 
-.pe-auto {
-	cursor: pointer;
-}
+.pe-auto { cursor: pointer;}
 
 .tour-packages-wrap input, 
 .tour-packages-wrap input:focus {outline: none;}
@@ -642,86 +416,6 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 
 .tour-packages-item button.cancelling-policy-title {background: none; border: none; font-size: 14px; font-weight: 700; line-height: 1; color: #4C76B2; display: inline-block; vertical-align: top; text-decoration: underline; padding: 0;}
 
-@media (min-width: 1200px) {
-	.container, .container-lg, .container-md, .container-sm, .container-xl {max-width: 1050px;}
-
-	.tour-packages-item .tour-packages-detail {width: 60%;}
-	.tour-packages-item .tour-packages-group-wrap {width: 40%;}
-}
-
-@media (min-width: 1500px) {
-	.container, .container-lg, .container-md, .container-sm, .container-xl {max-width: 1500px;}
-	
-	.tour-packages-item {margin-bottom: 15px;}
-
-	.tour-packages-wrap .tour-packages-image img {max-width: 140px;}
-	.tour-packages-edit-wrap {padding: 0 40px 25px}
-	.tour-packages-item .tour-packages-detail {padding: 30px 40px 20px 40px;}
-	.tour-packages-item .tour-packages-group-wrap {padding: 30px 70px 20px 40px;}
-	.tour-packages-item .tour-packages-totalcost {padding: 30px 40px 25px 40px;}
-
-	.tour-packages-item .tour-packages-title-top {font-size: 20px;}
-	.tour-packages-item .tour-packages-title {font-size: 20px;}
-	.tour-packages-item .cancelling-policy-title, 
-	.tour-packages-item .cancelling-policy-detail, 
-	.tour-packages-item .tour-packages-group-title, 
-	.tour-packages-item .tour-packages-selected-people-title, 
-	.tour-packages-item .tour-packages-costcount-title, 
-	.tour-packages-item .tour-packages-costcount-subitem-title, .tour-packages-item .tour-packages-costcount-subitem-cost, 
-	.tour-packages-item .tour-packages-costcount-total-title, .tour-packages-item .tour-packages-costcount-total-cost {font-size: 18px;}
-
-	.tour-packages-item .tour-packages-selected-people-count input {font-size: 18px; width: 42px; height: 25px;}
-	.tour-packages-item .tour-packages-totalcost {max-width: 475px;}
-	.tour-packages-item .tour-packages-costcount-total {min-width: 375px;}
-
-	.tour-packages-couponcode input, 
-	.tour-packages-couponcode .couponcode-apply-btn, 
-	.tour-packages-item .tour-packages-action-btn .action-btn {font-size: 16px;}
-
-	.addmore-package-wrap .addmore-package-btn, 
-	.addmore-package-wrap .checkout-btn {font-size: 20px;}
-}
-
-@media (min-width: 992px) and (max-width: 1199px) {
-	.tour-packages-item .tour-packages-detail {width: 55%;}
-	.tour-packages-item .tour-packages-group-wrap {width: 45%;}
-}
-
-@media (max-width: 991px) {
-	.tour-packages-item {display: block;}
-	.tour-packages-item .tour-packages-totalcost {width: 100%; max-width: 100%;}
-	.tour-packages-item .tour-packages-totalcost:after {height: 1px; width: 100%;}
-	.tour-packages-item .tour-packages-totalcost:before {top: -10px; left: calc(50% - 5px); transform: rotate(120deg);}
-	.tour-packages-item .tour-packages-inner-wrap {width: 100%;}
-	.tour-packages-item .tour-packages-detail {width: 60%}
-	.tour-packages-item .tour-packages-group-wrap {width: 40%}
-}
-
-@media (max-width: 767px) {
-	.tour-packages-item .tour-packages-inner {display: block;}
-	.tour-packages-item .tour-packages-detail, 
-	.tour-packages-item .tour-packages-group-wrap {width: 100%; padding: 20px 15px;}
-}
-
-@media (max-width: 575px) {
-	.tour-packages-item .tour-packages-detail, 
-	.tour-packages-edit-wrap {display: block;}
-	.tour-packages-item .tour-packages-couponcode {margin-top: 10px;}
-	.tour-packages-item .tour-packages-image {text-align: center; margin-bottom: 15px;}
-	.tour-packages-item .tour-packages-title-wrap {margin-left: 0;}
-	.tour-packages-item .tour-packages-group-wrap {padding-top: 0;}
-	.tour-packages-item .tour-packages-title {margin-bottom: 7px;}
-	.tour-packages-item .tour-packages-group-title {margin-bottom: 5px;}
-	.tour-packages-item .tour-packages-totalcost {padding-top: 15px;}
-	.tour-packages-item .tour-packages-action-btn:first-child {padding-left: 0;}
-
-	.addmore-package-wrap .addmore-package-btn-wrap {display: block;}
-	.addmore-package-wrap .addmore-package-btn {width: 100%;}
-	.addmore-package-wrap .checkout-btn {width: 100%;}
-
-	.vuejs3-datepicker__calendar {max-width: 100%; width: auto !important;}
-}
-
 .thankyou-wrap {max-width: 700px; text-align: left;}
 .content-detail-wrap {border-top: 5px solid #2b78b0; margin-top: 25px; background: #e9e9e9; padding: 27px 40px 10px;}
 .content-detail-wrap .content-detail-title {font-size: 24px; font-weight: 700; color: #333; line-height: 1.3; margin-bottom: 5px; text-align: center;}
@@ -768,3 +462,395 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .cta .cta-box p {font-size: 12px; font-weight: 300; color: #666;}
 .cta .cta-box ul {list-style: none;}
 .cta .cta-box a {color: #666; text-decoration: none;}
+
+.inner-content-section .background-color-sec {background: #ffffff; padding: 14px 25px 20px 40px; border-radius: 3px; border: 1px solid #DFDFDF; margin: 50px 0px; }
+.payment-row .booking-row .booking {display: flex; align-items: center; }
+.payment-row .booking-row .booking h2 {font-size:30px; font-weight:600; color:#111; line-height:1; margin-right:13px }
+.payment-row .booking-row .booking .confirmation {display:flex; align-items:center; border:1px solid #cbcbcb; border-radius:3px; padding:4px 15px; height:35px; width:228px }
+.payment-row .booking-row .booking .confirmation img {margin-right:8px }
+.payment-row .booking-row .booking .confirmation p {font-size:16px; font-weight:500; color:#000; letter-spacing:-1px; margin-bottom:0 }
+.payment-row .booking-row .info .tooltipbtn {border:1px solid rgba(29,135,90,.5); background:#f2f9f3; border-radius:3px; font-size:13px; color:#1d875a; font-weight:700; padding:6px 30px; width:182px; text-align:left; position:relative }
+.payment-row .booking-row .info .tooltipbtn.btn-info {margin-right:3px }
+.payment-row .booking-row .info .tooltipbtn.btn-danger {border:1px solid rgba(178,5,17,.3); background:#ffecee; color:#f07777 }
+.payment-row .booking-row .info .tooltipbtn.btn-info:after {content:""; position:absolute; top:9px; left:10px; background:url(secured-2.png) no-repeat; width:9px; height:12px }
+.payment-row .booking-row .info .tooltipbtn.btn-info:before {content:""; position:absolute; top:8px; right:8px; background:url(secured-1.png) no-repeat; height:15px; width:15px }
+.payment-row .booking-row .info .tooltipbtn.btn-danger::after {content: ""; position: absolute; top: 10px; left: 10px; background: url(health-1.png) no-repeat; width: 11px; height: 11px; }
+.payment-row .booking-row .info .tooltipbtn.btn-danger::before {content: ""; position: absolute; top: 8px; right: 8px; background: url(health-2.png) no-repeat; height: 15px; width: 15px; }
+.payment-row .booking-row .info .btn-primary {margin-left: 5px; color: #004085; background-color: #cce5ff; border: 1px solid #b8daff; font-size: 13px; vertical-align: baseline; padding: 6px 17px; font-weight: 500; }
+.payment-row .booking-row .info .btn-primary .fa {margin-right: 5px; margin-left: -5px; }
+.payment-form-sec {border-top: 1px solid #DFDFDF; margin-top: 15px; padding-top: 40px; }
+.payment-form-sec .contact-wrap {max-width: 615px;}
+.payment-form-sec .form-field-title {font-size: 24px; font-weight: 500; line-height: 1; color: #333; margin-bottom: 13px; text-align: left; }
+.payment-form-sec .form-field-wrp {border: 2px solid #EDEDED; border-radius:5px; padding: 27px 24px 20px;}
+.payment-form-sec .form-field-wrp .form-group {margin-bottom:21px; position:relative }
+.payment-form-sec .form-field-wrp label {font-size:14px; font-weight:400; line-height:1; color:#333; position:absolute; top:-10px; left:10px; padding:2px 5px; background-color:#fff; z-index:2 }
+.payment-form-sec .form-field-wrp label .required-star {color: #EF5B53;}
+.payment-form-sec .form-field-wrp label.checkbox-wrap {padding:0 5px 0 27px; margin-bottom:12px; position:relative; top:unset; left:unset; font-size:14px; font-weight:400; line-height:21px; color:#333; letter-spacing:.14px }
+.payment-form-sec .form-field-wrp label.checkbox-wrap .checkmark {border-color:#d5d5d5; box-shadow:inset -3px -4px 5px 0 rgba(0,0,0,.12) }
+.payment-form-sec .form-field-wrp .field-icon-wrp {position:absolute; z-index:1; top:50%; left:15px; transform:translateY(-50%) }
+.payment-form-sec .field-icon-wrp .fa {color:#cbcbcb }
+.payment-form-sec .form-field-wrp .form-control {font-size:14px; font-weight:400; line-height:1; color:#7E7E7E; height:50px; border: 1px solid rgba(213, 213, 213, 0.50); background: #F6F6F6; box-shadow: 0px -5px 4px 0px rgba(0, 0, 0, 0.12) inset; border-radius:5px; padding:5px 45px }
+.payment-form-sec .form-field-wrp .form-control:focus {border-color:#28a5ff; background: #fff; }
+.payment-form-sec .form-textarea-wrap {position:relative }
+.payment-form-sec .form-textarea-wrap label {font-size:14px; font-weight:400; line-height:1; color:#333; position:absolute; top:-10px; left:10px; padding:2px 5px; background-color:#fff; z-index:2 }
+.payment-form-sec .form-textarea-wrap textarea {font-size:14px; font-weight:400; line-height:1.2; color:#7E7E7E; height:78px; border-radius: 5px; border: 1px solid rgba(213, 213, 213, 0.50); background: #F6F6F6; box-shadow: 0px -5px 4px 0px rgba(0, 0, 0, 0.12) inset; padding:18px 20px; outline:none; width:100%; resize:none; }
+.payment-form-sec .form-textarea-wrap textarea:focus {border-color:#28a5ff }
+.payment-form-sec .form-check input {min-height: 20px; min-width: 20px; padding: 0 !important; border-radius: 5px; border: 1px solid rgba(213, 213, 213, 0.50); box-shadow: 0px -5px 4px 0px rgba(0, 0, 0, 0.12) inset; margin-right: 12px; }
+.payment-form-sec .form-check-label {position: unset !important; padding: 0 !important; line-height: 1.2 !important; }
+.payment-form-sec .secured-encryption {font-size:14px; font-weight:600; line-height:1; color:#fff; background-color:#419547; padding:10px 30px; display: flex; align-items: center; margin-bottom: 10px; }
+.payment-form-sec .secured-encryption img {margin-right: 7px; }
+.payment-form-sec .card-detail-main {background-color:#e3e3e3; border-radius:0 0 5px 5px }
+.payment-form-sec .card-detail-wrp {padding:15px 5px 25px 30px }
+.payment-form-sec .card-detail-wrp .form-group {position:relative; margin-bottom:12px }
+.payment-form-sec .card-detail-wrp label {font-size:14.53px; font-weight:500; line-height:1; color:#121212; margin-bottom:2px; padding:0 }
+.payment-form-sec .card-detail-wrp .field-icon-wrp {position:absolute; z-index:1; top:calc(50% + 10px); left:15px; transform:translateY(-50%) }
+.payment-form-sec .field-icon-wrp .fa {font-size:14px; font-weight:400; line-height:14px; color:#a3a3a3 }
+.payment-form-sec .card-detail-wrp input,
+.payment-form-sec .card-detail-wrp select {font-size:14px; font-weight:400; line-height:1; color:#464646; height:40px; border:1px solid #d5d5d5; box-shadow:inset -3px -4px 5px 0 rgba(0,0,0,.12); border-radius:5px; padding:5px 37px; width:calc(100% - 24px) }
+.payment-form-sec .card-detail-wrp input:focus, .payment-form-sec .card-detail-wrp select:focus {border-color:#28a5ff; box-shadow:0 0 12px 0 rgba(91,186,255,.3),inset -3px -4px 5px 0 rgba(0,0,0,.12) }
+.payment-form-sec .card-detail-wrp select {padding:5px 7px }
+.payment-form-sec .card-detail-wrp .form-group .form-group .field-icon-wrp {left:25px }
+.payment-form-sec .card-detail-wrp .form-group .form-group input {padding:5px 15px 5px 37px }
+.payment-form-sec .card-detail-wrp .form-group .form-group .validation-icon-wrp {right:13px }
+.payment-form-sec .validation-icon-wrp {font-size:19px; line-height:1; font-weight:400; color:#d5d5d5; width:18px; position:absolute; right:0; top:calc(50% + 13px); transform:translateY(-50%) }
+.payment-form-sec .makeaayment-wrap {padding:12px 40px 12px 30px; border-left:3px solid #d1d1d1 }
+.payment-form-sec .makeaayment-detail-title {font-size:16px; font-weight:400; line-height:1.2; color:#121212; margin-bottom:8px }
+.payment-form-sec .makeaayment-detail-wrp {background-color:hsla(0,0%,100%,.5); border-radius:5px }
+.payment-form-sec .card-detail-main hr, .payment-form-sec .card-detail-main hr:not([size]) {height:3px; border-color:#d1d1d1; margin:30px 0 }
+.payment-form-sec .makeaayment-wrap input[type=submit] {font-size:24px; font-weight:700; line-height:1; color:#333; background:#ffde84; background:linear-gradient(90deg,#ffde84,#eed07e); box-shadow:4px 4px 5px 0 rgba(0,0,0,.05),inset -3px -4px 12px 0 rgba(0,0,0,.12); height:60px; text-align:center; width:100%; border:none; border-radius:5px }
+.payment-form-sec .makeaayment-wrap input[type=submit]:hover {background:#0373c3; color:#fff }
+.payment-form-sec .booking-you-text {font-size:12px; font-weight:300; line-height:1.2; color:#333; margin-top:10px; text-align:center }
+.payment-form-sec .booking-you-text a {color:#618bda }
+.payment-form-sec .booking-you-text a:hover {color:#333 }
+.payment-form-sec input[type="submit"] {font-size: 16px; font-weight: 700; line-height: 1; color: #333; background: #ffde84; background: linear-gradient(90deg,#ffde84,#eed07e); box-shadow: 4px 4px 5px 0 rgba(0,0,0,.05),inset -3px -4px 12px 0 rgba(0,0,0,.12); height: 40px; text-align: center; width: 100%; max-width: 555px; margin: 0 auto; border: none; border-radius: 5px; }
+.payment-form-sec input[type="submit"]:hover {background: #0373c3; color: #fff; }
+.total-cost-wrap  {border-radius: 5px; border: 1px solid rgba(213, 213, 213, 0.50); background: #FFF; margin-bottom: 10px;}
+.total-cost-wrap .title-wrap {border-bottom: 1px solid rgba(213, 213, 213, 0.50); padding: 15px 25px;}
+.total-cost-wrap .title-wrap .title {color: #0070FF; font-size: 16px; font-weight: 700; line-height: 1; margin-bottom: 5px; text-align: left; }
+.total-cost-wrap .title-wrap .time, .total-cost-wrap .ages-wrap .title, .total-cost-wrap .other-details-wrap .title, .total-cost-wrap .other-details-wrap .amount {color: #333;font-size: 14px; font-weight: 400; line-height: 1; text-align: left; }
+.total-cost-wrap .ages-wrap {background: #D8E2F2; padding: 5px 15px; margin: 7px; }
+.total-cost-wrap .ages-wrap .number {border-radius: 3.502px; border: 0.7px solid rgba(76, 118, 178, 0.50); background: #FFF; box-shadow: 0px -3.502px 2.801px 0px rgba(0, 0, 0, 0.12) inset; color: #0171C2; text-align: center; font-size: 14px; font-weight: 900; line-height: normal; padding: 2px 8px; }
+.total-cost-wrap .other-details-wrap {background: #EFEFEF; padding: 6px 18px 10px 22px; margin: 1px; }
+.total-cost-wrap .other-details-wrap:last-child {border-radius: 0px 0px 5px 5px; }
+.total-cost-wrap.third .title-wrap {background: #DEEEDF; padding: 13px 23px 11px;}
+.total-cost-wrap.third .title-wrap .title {color: #419547; }
+.total-cost-wrap.third .other-details-wrap.last {background: #676A6F;  }
+.total-cost-wrap.third .other-details-wrap.last .title, .total-cost-wrap.third .other-details-wrap.last .amount {color: #fff;}
+.footer-row  {margin-top: 25px;}
+.footer-row .col-start p {font-size: 12px; font-weight: 400; color: #848484; }
+
+@media (min-width: 1500px) {
+	.container, .container-lg, .container-md, .container-sm, .container-xl {max-width: 1500px;}
+	
+	.tour-packages-item {margin-bottom: 15px;}
+
+	.tour-packages-wrap .tour-packages-image img {max-width: 140px;}
+	.tour-packages-edit-wrap {padding: 0 40px 25px}
+	.tour-packages-item .tour-packages-detail {padding: 30px 40px 20px 40px;}
+	.tour-packages-item .tour-packages-group-wrap {padding: 30px 70px 20px 40px;}
+	.tour-packages-item .tour-packages-totalcost {padding: 30px 40px 25px 40px;}
+
+	.tour-packages-item .tour-packages-title-top {font-size: 20px;}
+	.tour-packages-item .tour-packages-title {font-size: 20px;}
+	.tour-packages-item .cancelling-policy-title, 
+	.tour-packages-item .cancelling-policy-detail, 
+	.tour-packages-item .tour-packages-group-title, 
+	.tour-packages-item .tour-packages-selected-people-title, 
+	.tour-packages-item .tour-packages-costcount-title, 
+	.tour-packages-item .tour-packages-costcount-subitem-title, .tour-packages-item .tour-packages-costcount-subitem-cost, 
+	.tour-packages-item .tour-packages-costcount-total-title, .tour-packages-item .tour-packages-costcount-total-cost {font-size: 18px;}
+
+	.tour-packages-item .tour-packages-selected-people-count input {font-size: 18px; width: 42px; height: 25px;}
+	.tour-packages-item .tour-packages-totalcost {max-width: 475px;}
+	.tour-packages-item .tour-packages-costcount-total {min-width: 375px;}
+
+	.tour-packages-couponcode input, 
+	.tour-packages-couponcode .couponcode-apply-btn, 
+	.tour-packages-item .tour-packages-action-btn .action-btn {font-size: 16px;}
+
+	.addmore-package-wrap .addmore-package-btn, 
+	.addmore-package-wrap .checkout-btn {font-size: 20px;}
+}
+
+@media (min-width: 1200px) {
+	.container { max-width: 1200px; }
+	.container-lg, .container-md, .container-sm, .container-xl {max-width: 1050px;}
+
+	.tour-packages-item .tour-packages-detail {width: 60%;}
+	.tour-packages-item .tour-packages-group-wrap {width: 40%;}
+
+	.inner-content-section .container {max-width: 1224px; }
+}
+
+@media (max-width: 1230px) {
+	.scroll-table { overflow: hidden; overflow-x: scroll; }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+	.tour-packages-item .tour-packages-detail {width: 55%;}
+	.tour-packages-item .tour-packages-group-wrap {width: 45%;}
+
+	.inner-content-section .background-color-sec { padding: 20px 30px; }
+    .payment-row .booking-row .booking h2 { font-size: 25px; }
+    .date-booking-row .selectboxes { justify-content: center; margin-bottom: 10px; }
+    .starttime-row .groupofpeople .table tfoot tr td.cost { padding: 10px 20px; }
+    .starttime-row .groupofpeople .table tfoot tr td.total { padding: 10px 20px; }
+    .tour-start-row .duration .btn-info { height: auto; }
+    .tour-start-row .whattobring .bring-group { display: block; }
+    .tour-start-row .whattobring .bring-group .btn-info { height: auto; margin: 0; margin-bottom: 10px; width: 100%;}
+
+	/***** Payment Page Start *****/
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-time {font-size: 22px;}
+	.payment-form-sec {padding-left: 13px; padding-right: 13px;}
+	/***** Payment Page End *****/
+
+	.inner-content-section .background-color-sec {padding: 14px 20px 20px 30px; }
+	.payment-form-sec .form-check {display: flex; }
+	.payment-row .booking-row .booking{display: block; }
+	.payment-form-sec input[type="submit"] {max-width: 446px; }
+}
+
+@media (max-width: 991px) {
+	.tour-packages-item {display: block;}
+	.tour-packages-item .tour-packages-totalcost {width: 100%; max-width: 100%;}
+	.tour-packages-item .tour-packages-totalcost:after {height: 1px; width: 100%;}
+	.tour-packages-item .tour-packages-totalcost:before {top: -10px; left: calc(50% - 5px); transform: rotate(120deg);}
+	.tour-packages-item .tour-packages-inner-wrap {width: 100%;}
+	.tour-packages-item .tour-packages-detail {width: 60%}
+	.tour-packages-item .tour-packages-group-wrap {width: 40%}
+
+	.innerbanner-row .title-box { display: block; }
+    .innerbanner-row .title-box h1 { margin-bottom: 15px; }
+    .inner-content-section .background-color-sec { padding: 20px 15px; }
+    .payment-row .booking-row .booking { justify-content: center; margin-bottom: 15px; }
+    .images-sec {text-align: center; margin-bottom: 30px; }
+    .content-sec { text-align: center; }
+    .hiking-tour-row .content-sec h2 { padding-left: 0px; }
+    .hiking-tour-row .content-sec h2:after { content: none; }
+    .permit-tax .content-sec h2 { padding-left: 0px; }
+    .permit-tax .content-sec h2:after { content: none; }
+
+	/***** Payment Page Start *****/
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail {padding: 12px 17px;}
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-title {font-size: 20px;}
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-time {font-size: 18px;}
+	.starttime-row .groupofpeople h2 {font-size: 20px; margin-bottom: 17px; margin-top: 0;}
+	.payment-form-sec .payment-form-notice {font-size: 14px;}
+	.payment-form-sec label.checkbox-wrap {font-size: 20px;}
+	.payment-form-sec .checkmark {top: 0;}
+	.payment-form-sec .masks-mandatory-notice {font-size: 14px;}
+	.payment-form-sec .form-field-wrp {padding: 24px 17px 17px 20px;}
+	.payment-form-sec .form-field-wrp input {height: 20px;}
+	.payment-form-sec .form-field-wrp label.checkbox-wrap {font-size: 12px;}
+	.payment-form-sec .policy-item-wrp {max-height: 194px;}
+	.payment-form-sec .additional-notes-text {font-size: 14px;}
+	.payment-form-sec .accommodate-your-request {font-size: 14px;}
+	.payment-form-sec .secured-encryption {padding: 9px 15px;}
+	.payment-form-sec .card-detail-wrp {padding: 15px 5px 15px 15px;}
+	.payment-form-sec .makeaayment-wrap {padding: 12px 30px 12px 25px;}
+	.payment-form-sec .makeaayment-wrap input[type="submit"] {height: 50px;}
+	/***** Payment Page End *****/
+
+	/***** Thank You Page Start *****/
+	.thankyou-main-row .status-bar-row .sucessmsg .content h2 { font-size: 24px; margin-bottom: 6px;}
+	.thankyou-main-row .status-bar-row .sucessmsg .content p { font-size: 14px; }
+	.thankyou-main-row .status-bar-row { padding: 20px 10px; }
+	.thankyou-main-row .invoice-row { padding: 27px 10px 35px; }
+	.booking-tbl {overflow: hidden; overflow-x: scroll; }
+	/***** Thank You Page End *****/
+
+	.inner-content-section .background-color-sec {padding: 14px 20px 20px; }
+	.payment-form-sec .contact-wrap {margin: 0 auto;}
+	.payment-form-sec {padding-top: 25px; }
+	.payment-form-sec input[type="submit"] {max-width: 556px;}
+}
+
+@media (max-width: 767px) {
+	.tour-packages-item .tour-packages-inner {display: block;}
+	.tour-packages-item .tour-packages-detail, 
+	.tour-packages-item .tour-packages-group-wrap {width: 100%; padding: 20px 15px;}
+
+	.header-right { justify-content: center; margin-top: 10px; margin-bottom: 5px; }
+    .date-booking-row .calendardate { max-width: 390px; }
+    .starttime-row .select-time .radio-toolbar .time-item {width: 32.38%; }
+    .starttime-row .select-time .radio-toolbar .time-item:nth-child(4n+0) { margin-right: 1.426%; }
+    .starttime-row .select-time .radio-toolbar .time-item:nth-child(3n+0) { margin-right: 0; }
+    .starttime-row .groupofpeople .booknowbtn button {font-size: 20px; padding: 8px 90px 8px 20px; }
+    .starttime-row .groupofpeople .booknowbtn button:after {font-size: 30px; top: 0px; }
+    .fee-tax-row h2 { font-size: 20px; line-height: 1.3; }
+    .fee-tax-row p { padding-bottom: 15px; }
+    .tour-start-row .duration { border-bottom: 1px solid #dfdfdf; border-right: 0; }
+    .footer-row>* {text-align: center !important; }
+    .footer-row .col-start p { margin-bottom: 15px; }
+    .footer-row .col-center img { margin-bottom: 15px; }
+
+	/***** Payment Page Start *****/
+	.booking-dt-sec .booking-dt-title {font-size: 20px; text-align: center;}
+	.booking-dt-sec .booking-dt-wrp {display: block !important;}
+	.booking-dt-sec .booking-dt-wrp .booking-dt-img {min-width: unset; background-color: #f2f9f3; text-align: center; padding-top: 12px; margin-right: 0;}
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail {border-radius: 0; text-align: center;}
+	.starttime-row .groupofpeople h2 {text-align: center;}
+	.payment-form-sec label.checkbox-wrap {font-size: 18px;}
+	.payment-form-sec .masks-mandatory-notice {font-size: 14px; line-height: 18px;}
+	.payment-form-sec .form-field-title {font-size: 20px; margin-bottom: 20px;}
+	.payment-form-sec .form-field-wrp {margin-bottom: 20px;}
+	.payment-form-sec .payment-text {font-size: 20px; text-align: center;}
+	.payment-form-sec .makeaayment-wrap input[type="submit"] {font-size: 20px;}
+	.payment-form-sec .policy-item-wrp {max-height: unset;}
+	.payment-form-sec .payment-form-notice.important-note {margin-top: -24px;}
+	.payment-form-sec .makeaayment-wrap {padding: 12px 30px 12px 13px; border-left: none;}
+	/***** Payment Page End *****/
+
+	/***** Thank You Page Start *****/
+	.thankyou-main-row .status-bar-row { padding: 20px 0px; }
+	.thankyou-main-row .invoice-row {padding: 27px 0px 35px; }
+	.thankyou-main-row .status-bar-row .sucessmsg .content p { line-height: 18px; }
+	.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details [class*="col-"]:nth-child(5) .details-box {border-bottom: 1px solid #c3c3c3; padding: 20px 0 25px; }
+	.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details { padding: 27px 30px 45px; }
+	.thankyou-main-row .invoice-row .top-row .cta .cta-box { display: block; text-align: center; }
+	/***** Thank You Page End *****/
+
+	/***** Table Responsive Start *****/
+	.starttime-row .groupofpeople .table thead, 
+	.starttime-row .groupofpeople .table thead tr, 
+	.starttime-row .groupofpeople .table thead tr th {display: none !important;}
+	.starttime-row .groupofpeople .table, 
+	.starttime-row .groupofpeople .table tbody, 
+	.starttime-row .groupofpeople .table tbody tr, 
+	.starttime-row .groupofpeople .table tbody tr td {display: block !important; position:relative !important;}
+	.starttime-row .groupofpeople .table tbody tr td {padding: 10px 10px 10px 45%;}
+	.starttime-row .groupofpeople table td:before {content: attr(data-label); font-size: 16px; font-weight: 400; color: #333; position:absolute; left: 10px; top: 50%; transform:translateY(-50%); width:42%; text-align: left;}
+	.starttime-row .groupofpeople .table tbody tr td.age {min-width:unset !important;}
+
+	.starttime-row .groupofpeople .table tbody tr {border: 1px solid #dfdfdf; margin-bottom: 20px;}
+	.starttime-row .groupofpeople .table tbody tr td.age {border:none; border-bottom: 1px solid #dfdfdf; min-width:unset !important; text-align: right !important; height:auto !important;}
+	.starttime-row .groupofpeople .table tbody tr td.taxes {border:none; border-bottom: 1px solid #dfdfdf; min-width:unset !important; text-align: right; height:auto !important; background-color: #edf4ff;}
+	.starttime-row .groupofpeople .table tbody tr td.taxes p {line-height:19px; margin-bottom: 0;}
+	
+	.starttime-row .groupofpeople .table tbody tr td.group {border:none; border-bottom: 1px solid #dfdfdf; min-width:unset !important; text-align: right; height:auto !important; background-color: #edf4ff;}
+	.starttime-row .groupofpeople .table tbody tr td.group .form-select {margin: 0 0 0 auto; text-align: right; padding-right: 10px; background: #edf4ff url(data:image/png;base64,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) no-repeat center right 0px;}
+	.starttime-row .groupofpeople .table tbody tr td.price, 
+	.starttime-row .groupofpeople .table tbody tr td.final {border:none; min-width:unset !important; text-align: right; height:auto !important; background-color:transparent;}
+	/***** Table Responsive End *****/
+
+	.payment-form-sec input[type="submit"] {max-width: 415px;}
+}
+
+@media (max-width: 575px) {
+	.tour-packages-item .tour-packages-detail, 
+	.tour-packages-edit-wrap {display: block;}
+	.tour-packages-item .tour-packages-couponcode {margin-top: 10px;}
+	.tour-packages-item .tour-packages-image {text-align: center; margin-bottom: 15px;}
+	.tour-packages-item .tour-packages-title-wrap {margin-left: 0;}
+	.tour-packages-item .tour-packages-group-wrap {padding-top: 0;}
+	.tour-packages-item .tour-packages-title {margin-bottom: 7px;}
+	.tour-packages-item .tour-packages-group-title {margin-bottom: 5px;}
+	.tour-packages-item .tour-packages-totalcost {padding-top: 15px;}
+	.tour-packages-item .tour-packages-action-btn:first-child {padding-left: 0;}
+
+	.addmore-package-wrap .addmore-package-btn-wrap {display: block;}
+	.addmore-package-wrap .addmore-package-btn {width: 100%;}
+	.addmore-package-wrap .checkout-btn {width: 100%;}
+
+	.vuejs3-datepicker__calendar {max-width: 100%; width: auto !important;}
+
+	.payment-row .booking-row { padding: 18px 0px;}
+	.status-row { padding: 3px 0px 6px; }
+	.starttime-row { padding: 25px 0px; }
+	.fee-tax-row { padding: 20px 0px 25px; }
+	.date-booking-row .calendardate {max-width: 330px; }
+	.starttime-row .select-time .radio-toolbar .time-item {width: 49.2%; }
+	.starttime-row .select-time .radio-toolbar .time-item:nth-child(3n+0) { margin-right: 1.426%; }
+    .starttime-row .select-time .radio-toolbar .time-item:nth-child(2n+0) { margin-right: 0; }
+    .starttime-row .select-time h2, .starttime-row .groupofpeople h2 { font-size: 21px; }
+    .hiking-tour-row .content-sec h2 { font-size: 20px; }
+    .permit-tax .content-sec h2 { font-size: 20px; }
+
+	/***** Payment Page Start *****/
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-title {font-size: 18px;}
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-time {font-size: 18px;}
+	.starttime-row .select-time h2, .starttime-row .groupofpeople h2 {font-size: 20px;}
+	.payment-form-sec .masks-mandatory-wrp {padding: 15px 20px 15px;}
+	.payment-form-sec .masks-mandatory-img {min-width: 75px; margin-right: 20px;}
+	.payment-form-sec input[type="submit"] { margin-right: auto; max-width: 320px;}
+	/***** Payment Page End *****/
+
+	/***** Thank You Page Start *****/
+	.thankyou-main-row .invoice-row .top-row .content1 h2 { font-size: 24px; }
+	.thankyou-main-row .invoice-row .top-row .content2 h2 { font-size: 22px; margin-bottom: 5px;}
+	.thankyou-main-row .invoice-row .top-row .content2 p { font-size: 14px; line-height: 1.3; }
+	.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details { padding: 20px 20px 35px; }
+	/***** Thank You Page End *****/
+}
+
+@media (max-width: 480px) {
+	.inner-content-section .background-color-sec { margin-bottom: 30px; }
+	.innerbanner-row { padding: 16px 0px; }
+	.innerbanner-row .title-box h1 { font-size: 25px; }
+	.innerbanner-row .title-box .rating { margin-left: 0px; }
+	.payment-row .booking-row .booking { display: block; text-align: center; }
+	.payment-row .booking-row .booking h2 { margin-bottom: 10px; margin-right: 0px; }
+	.payment-row .booking-row .booking .confirmation { width: 100%; }
+	.payment-row .booking-row .info .tooltipbtn.btn-info { margin: 0 0 10px; }
+	.payment-row .booking-row .info .tooltipbtn { width: 100%; }
+	.date-booking-row .calendardate {max-width: 170px; }
+	.date-booking-row .selectboxes select#calendaryear { margin-right: 0px; }
+	.status-row .status li { padding-left: 14px; }
+	.status-row .status li:after { left: 3px; }
+	.starttime-row .select-time .radio-toolbar .time-item { width: 100%; margin: 0 0 10px; }
+	.starttime-row .groupofpeople .booknowbtn button { width: 100%; }
+	.hiking-tour-row { padding: 30px 0px 30px; }
+	.tour-start-row .duration { padding: 21px 15px 25px; }
+	.tour-start-row .whattobring { padding: 21px 15px 25px; }
+
+	/***** Payment Page Start *****/
+	.booking-dt-sec {padding: 20px 0px 0;}
+	.booking-dt-sec .booking-dt-wrp .booking-dt-img {padding: 10px 10px 0;}
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail {padding: 10px;}
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-title {font-size: 16px; margin-bottom: 5px;}
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-time {font-size: 16px; margin-bottom: 10px;}
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-btn a {font-size: 14px; padding: 8px 10px;}
+	.payment-form-sec .masks-mandatory-wrp {display: block !important; padding: 15px;}
+	.payment-form-sec .masks-mandatory-img {margin-right: 0; text-align: center; margin-bottom: 15px;}
+	.payment-form-sec label.checkbox-wrap {font-size: 16px;}
+	.payment-form-sec .masks-mandatory-notice {font-size: 12px; line-height: 16px;}
+	.payment-form-sec {padding-left: 0; padding-right: 0;}
+	.payment-form-sec .form-field-wrp input {height: 45px;}
+	.payment-form-sec .form-field-wrp label.checkbox-wrap {font-size: 12px; line-height: 18px;}
+	.payment-form-sec .policy-item-wrp ul li {font-size: 14px; line-height: 19px;}
+	.payment-form-sec .policy-item-wrp ul li:last-child {margin-bottom: 0;}
+	.payment-form-sec .form-field-wrp input {padding: 5px 32px;}
+	.payment-form-sec .form-field-wrp .phone-wrap input {padding-left: 93px !important;}
+	.payment-form-sec .form-field-title {font-size: 20px;margin-bottom: 10px;}
+	.payment-form-sec .form-field-wrp {padding: 20px;}
+	.payment-form-sec .payment-text {font-size: 20px;margin-bottom: 10px;margin-top: 20px;}
+	.payment-form-sec .card-detail-wrp {padding: 15px 5px 15px 20px; }
+	.payment-form-sec input[type="submit"] {height: 34px; width: unset;}
+	.total-cost-wrap .title-wrap {padding: 12px;}
+	.total-cost-wrap .title-wrap .title {font-size: 14px;}
+	/***** Payment Page End *****/
+
+	/***** Thank You Page Start *****/
+	.thankyou-main-row .status-bar-row .sucessmsg { display: block; text-align: center; }
+	.thankyou-main-row .status-bar-row .sucessmsg .images { margin-right: 0; margin-bottom: 15px; }
+	.thankyou-main-row .status-bar-row .sucessmsg .content h2 { margin-bottom: 10px; }
+	.thankyou-main-row .invoice-row .top-row .content1 p { font-size: 14px; margin-bottom: 20px; }
+	.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details h2 { font-size: 20px; }
+	.thankyou-main-row .invoice-row {padding: 27px 0px 20px; }
+	/***** Thank You Page End *****/
+
+	.total-cost-col {padding-right: calc(var(--bs-gutter-x) * .5); padding-left: calc(var(--bs-gutter-x) * .5); }
+	.total-cost-col .totalcost [class*="col-"] { font-size: 22px; }
+	.thankyou-main-row .invoice-row .top-row .booking-summery p .printbtn {position: relative; display: block; margin-top: 15px; margin-left: auto; }
+}
+
+@media (max-width: 380px) {
+	.payment-form-sec .card-detail-wrp .form-group.small {
+		width: 100% !important;
+	}
+}
+
+@media (max-width: 360px) {
+	.total-cost-col .totalcost [class*="col-"] {font-size: 20px; }
+	.total-cost-col .totalcost [class*="col-"] span { font-size: 11px; }
+}

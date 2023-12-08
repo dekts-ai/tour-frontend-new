@@ -153,6 +153,7 @@
                           <div class="col-6 text-start">Booking Fees:</div>
                           <div class="col-6 text-end">${{ Number(fees).toFixed(2) }}</div>
                         </div>
+
                         <div class="row totalcost">
                           <div class="col-6 text-start">Total Cost:</div>
                           <div class="col-6 text-end">${{ Number(total).toFixed(2) }}</div>
