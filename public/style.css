@@ -7,7 +7,7 @@
 	Common
 ---------------------------*/
 html { scroll-behavior: smooth; }
-body { padding: 0px; margin: 0px; background: #e7e7e7; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+body { padding: 0px; margin: 0px; background: #e7e7e7; font-family: 'Inter', 'Roboto Slab', serif, sans-serif; overflow-x: hidden; }
 img { max-width: 100%; }
 a { display: inline-block; text-decoration: none;}
 a:hover, a:focus, button:hover, button:focus { outline: none !important; box-shadow: none !important; text-decoration: none !important; }
@@ -495,7 +495,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .payment-form-sec .form-textarea-wrap label {font-size:14px; font-weight:400; line-height:1; color:#333; position:absolute; top:-10px; left:10px; padding:2px 5px; background-color:#fff; z-index:2 }
 .payment-form-sec .form-textarea-wrap textarea {font-size:14px; font-weight:400; line-height:1.2; color:#7E7E7E; height:78px; border-radius: 5px; border: 1px solid rgba(213, 213, 213, 0.50); background: #F6F6F6; box-shadow: 0px -5px 4px 0px rgba(0, 0, 0, 0.12) inset; padding:18px 20px; outline:none; width:100%; resize:none; }
 .payment-form-sec .form-textarea-wrap textarea:focus {border-color:#28a5ff }
-.payment-form-sec .form-check input {min-height: 20px; min-width: 20px; padding: 0 !important; border-radius: 5px; border: 1px solid rgba(213, 213, 213, 0.50); box-shadow: 0px -5px 4px 0px rgba(0, 0, 0, 0.12) inset; margin-right: 12px; }
+.payment-form-sec .form-check input {min-height: 20px; min-width: 20px; padding: 0 !important; border-radius: 5px; border: 1px solid rgba(213, 213, 213, 0.50); box-shadow: 0px -5px 4px 0px rgba(0, 0, 0, 0.12) inset; }
 .payment-form-sec .form-check-label {position: unset !important; padding: 0 !important; line-height: 1.2 !important; }
 .payment-form-sec .secured-encryption {font-size:14px; font-weight:600; line-height:1; color:#fff; background-color:#419547; padding:10px 30px; display: flex; align-items: center; margin-bottom: 10px; }
 .payment-form-sec .secured-encryption img {margin-right: 7px; }

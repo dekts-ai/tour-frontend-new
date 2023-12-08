@@ -135,7 +135,7 @@ ul {
 }
 
 .inner-content-section {
-	margin-top: -55px;
+	margin-top: -110px;
 }
 
 .inner-content-section .background-color-sec {
@@ -1423,28 +1423,28 @@ ul {
 }
 
 .payment-form-sec .form-textarea-wrap label {
-	font-size: 18px;
+	font-size: 14.53px;
 	font-weight: 400;
 	line-height: 1;
 	color: #565656;
 	position: absolute;
 	top: -10px;
-	left: 40px;
+	left: 10px;
 	padding: 2px 5px;
 	background-color: #fff;
 	z-index: 2;
 }
 
 .payment-form-sec .form-textarea-wrap textarea {
-	font-size: 16px;
+	font-size: 14.53px;
 	font-weight: 400;
 	line-height: 1.2;
 	color: #565656;
-	height: 135px;
+	height: 78px;
 	border: 1px solid #d5d5d5;
 	box-shadow: -3px -4px 5px 0px rgba(0, 0, 0, 0.12) inset;
 	border-radius: 5px;
-	padding: 18px 31px;
+	padding: 18px 15px;
 	outline: none;
 	width: 100%;
 	resize: unset;
@@ -1762,6 +1762,10 @@ input.help-block+.checkmark {
 
 .thankyou-main-row .invoice-row .top-row .content1 p a {
 	color: #0071c2;
+}
+
+.thankyou-main-row .invoice-row .top-row .content2 {
+	padding-left: 0;
 }
 
 .thankyou-main-row .invoice-row .top-row .content2 h2 {
