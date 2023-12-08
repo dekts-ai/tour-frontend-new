@@ -463,7 +463,6 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .cta .cta-box ul {list-style: none;}
 .cta .cta-box a {color: #666; text-decoration: none;}
 
-.inner-content-section .background-color-sec {background: #ffffff; padding: 14px 25px 20px 40px; border-radius: 3px; border: 1px solid #DFDFDF; margin: 50px 0px; }
 .payment-row .booking-row .booking {display: flex; align-items: center; }
 .payment-row .booking-row .booking h2 {font-size:30px; font-weight:600; color:#111; line-height:1; margin-right:13px }
 .payment-row .booking-row .booking .confirmation {display:flex; align-items:center; border:1px solid #cbcbcb; border-radius:3px; padding:4px 15px; height:35px; width:228px }
