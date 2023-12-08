@@ -190,6 +190,7 @@ ul {list-style: none; }
 .language-switcher .dropdown-toggle::before {content: ""; position: absolute; background: url(../images/globe.png) no-repeat; width: 11px; height: 11px; top: 12px; left: 0px; }
 .language-switcher .dropdown-toggle:hover, .language-switcher .dropdown-toggle:focus {background: transparent; color: #363535; border-bottom: 1px solid #d3d3d3; }
 .language-switcher .dropdown-menu .dropdown-item {font-size: 13px; padding: 2px 10px; }
+.mind-change {cursor: pointer;}
 
 /***** Payment Page Start *****/
 .booking-dt-sec {padding: 28px 13px 0;}

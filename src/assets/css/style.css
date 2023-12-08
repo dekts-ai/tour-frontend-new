@@ -1100,6 +1100,10 @@ ul {
 	padding: 2px 10px;
 }
 
+.mind-change {
+	cursor: pointer;
+}
+
 /***** Payment Page Start *****/
 .booking-dt-sec {
 	padding: 28px 13px 0;

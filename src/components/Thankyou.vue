@@ -197,13 +197,7 @@
                             </div>
                             <ul>
                               <li>
-                                <a v-if="iframeStatus && data.package_id && data.affiliate_id" :href="`${baseUrl}?oid=${data.tour_operator_id}&pid=${data.package_id}&aid=${data.affiliate_id}&iframe=${iframeStatus}`">
-                                  Home Page
-                                </a>
-                                <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?oid=${data.tour_operator_id}&pid=${data.package_id}&iframe=${iframeStatus}`">
-                                  Home Page
-                                </a>
-                                <a v-else :href="`${baseUrl}`">
+                                <a class="mind-change" @click="mindChange()">
                                   Home Page
                                 </a>
                               </li>
@@ -267,6 +261,37 @@ export default {
         console.log(error);
         self.processLoader(loader);
       });
+    },
+    mindChange() {
+      var routeData = this.tourBooking?.data ? this.tourBooking?.data[0] : null;
+
+      if (this.iframeStatus && routeData && routeData.is_affiliate == 'Yes') {
+        this.$store.dispatch('storePackageId', routeData.package_id)
+        this.$store.dispatch('storeAffiliateId', routeData.customer_id)
+
+        this.$router.push({
+          name: 'Init',
+          query: {
+            iframe: this.iframeStatus,
+            tid: routeData.tenant_id,
+            oid: routeData.tour_operator_id,
+            pid: routeData.package_id,
+            aid: routeData.customer_id
+          }
+        });
+      } else if (this.iframeStatus && routeData && routeData?.tenant_id) {
+        this.$store.dispatch('storePackageId', routeData.package_id)
+
+        this.$router.push({
+          name: 'Init',
+          query: {
+            iframe: this.iframeStatus,
+            tid: routeData.tenant_id,
+            oid: routeData.tour_operator_id,
+            pid: routeData.package_id
+          }
+        });
+      }
     },
     processLoader(loader) {
         loader.hide();
