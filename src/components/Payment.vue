@@ -54,9 +54,9 @@
                             <div class="tour-packages-title-wrap">
                               <div class="tour-packages-title-top">{{ dateFormat(item.date) }} @ {{ item.time_date }}</div>
                               <div class="tour-packages-title">{{ item.package_name }}</div>
-                              <div class="cancelling-policy-wrap">
+                              <!-- <div class="cancelling-policy-wrap">
                                 <button class="cancelling-policy-title" @click="openPolicy()">Terms and conditions</button>
-                              </div>
+                              </div> -->
                             </div>
                           </div>
                           <div class="tour-packages-group-wrap">

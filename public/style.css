@@ -415,6 +415,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .tour-packages-item .tour-packages-costcount-subitem, 
 .tour-packages-item .tour-packages-costcount-total {min-width: 100%;}
 
+.cancelling-policy-title,
 .tour-packages-item button.cancelling-policy-title {background: none; border: none; font-size: 14px; font-weight: 700; line-height: 1; color: #4C76B2; display: inline-block; vertical-align: top; text-decoration: underline; padding: 0;}
 
 .thankyou-wrap {max-width: 700px; text-align: left;}

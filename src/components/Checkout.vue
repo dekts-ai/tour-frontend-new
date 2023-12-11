@@ -67,9 +67,19 @@
                                                 </div>
 			                                    <div class="form-group mb-0">
 			                                    	<div class="form-check">
-  														<input class="form-check-input" type="checkbox" v-model="getemailupdates" id="flexCheckDefault">
-  														<label class="form-check-label" for="flexCheckDefault">
-                                                            Get future email updates from Lower Antelope Canyon Hiking Tour
+  														<input class="form-check-input" type="checkbox" v-model="cancellations_policy" id="cancellations_policy">
+  														<label class="form-check-label" for="cancellations_policy">
+                                                            <span class="required-star"> * </span> 
+                                                            <button class="cancelling-policy-title" @click="openPolicy()"> Terms and conditions</button>
+                                                            I have read and accept all cancellations terms. 
+                                                        </label>
+													</div>
+												</div>
+			                                    <div class="form-group mb-0">
+			                                    	<div class="form-check">
+  														<input class="form-check-input" type="checkbox" v-model="getemailupdates" id="getemailupdates">
+  														<label class="form-check-label" for="getemailupdates">
+                                                            Get future email updates from Lower Antelope Canyon Hiking Tour.
                                                         </label>
 													</div>
 												</div>
@@ -373,6 +383,9 @@ export default {
             if (!this.email) {
                 this.errors.push("Email is required on contact section.");
             }
+            if (!this.cancellations_policy) {
+                this.errors.push("Please read and accept the terms and conditions.");
+            }
             if (!this.cardnumber || !this.expiration || !this.cvv) {
                 this.errors.push("Please add card information.");
             }
@@ -380,6 +393,7 @@ export default {
                 this.name &&
                 this.phone_number &&
                 this.email &&
+                this.cancellations_policy &&
                 this.cardnumber &&
                 this.expiration &&
                 this.cvv
@@ -417,6 +431,8 @@ export default {
                         email: this.email,
                         phone_number: this.phone_number,
                         comment: this.comment,
+                        getemailupdates: this.getemailupdates,
+                        cancellations_policy: this.cancellations_policy,
                         cardnumber: this.cardnumber,
                         expiration: this.expiration,
                         cvv: this.cvv,
