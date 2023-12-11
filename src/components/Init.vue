@@ -440,7 +440,7 @@ export default {
                 this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
                 this.details = this.$store.state.tourPackage;
                 this.details.TourPkgRates = this.details.TourPkgRates[this.form.package_id];
-                this.hotels = this.$store.state.tourPackage.hotels;
+                this.hotels = this.$store.state.tourPackage?.hotels;
                 this.cartView = this.$store.state.tourPackage?.cartView;
                 this.form.service_commission = this.$store.state.tourPackage.TourPkgDetails[0].ServiceCommission
 
@@ -602,7 +602,7 @@ export default {
                 if (response.data.success == "false") {
                     this.errors.push(response.data.message);
                 } else {
-                    if (this.cartView == 0) {
+                    if (this.cartView != 1) {
                         this.cartItem = [];
                     }
 

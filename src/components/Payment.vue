@@ -176,7 +176,7 @@
             <div class="addmore-package-wrap p-0">
               <div class="addmore-package-btn-wrap">
                 <button v-if="cartView == 1" class="btn addmore-package-btn" @click="mindChange()" type="button">+ Add more packages</button>
-                <div class="checkout-btn-wrap" :style="cartView == 0 ? 'display: flex; flex: auto; justify-content: end;' : ''">
+                <div class="checkout-btn-wrap" :style="cartView != 1 ? 'display: flex; flex: auto; justify-content: end;' : ''">
                   <button class="btn checkout-btn" @click="checkout()" type="button">Proceed to Checkout</button>						
                 </div>
               </div>
