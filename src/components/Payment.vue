@@ -175,8 +175,8 @@
 
             <div class="addmore-package-wrap p-0">
               <div class="addmore-package-btn-wrap">
-                <button class="btn addmore-package-btn" @click="mindChange()" type="button">+ Add more packages</button>
-                <div class="checkout-btn-wrap">
+                <button v-if="cartView == 1" class="btn addmore-package-btn" @click="mindChange()" type="button">+ Add more packages</button>
+                <div class="checkout-btn-wrap" :style="cartView == 0 ? 'display: flex; flex: auto; justify-content: end;' : ''">
                   <button class="btn checkout-btn" @click="checkout()" type="button">Proceed to Checkout</button>						
                 </div>
               </div>
@@ -201,6 +201,7 @@ export default {
       bookingId: null,
       baseUrl: process.env.VUE_APP_BASE_URL,
       iframeStatus: false,
+      cartView: 0,
       details: [],
       hotels: [],
       cartItem: {},
@@ -235,6 +236,7 @@ export default {
   created() {
     this.iframeStatus = this.$store.state.iframeStatus;
     this.hotels = this.$store.state.tourPackage?.hotels;
+    this.cartView = this.$store.state.tourPackage?.cartView;
     this.cartItem = this.$store.state.cartItem;
     this.cartItemLength = Object.values(this.cartItem).length;
     if (this.cartItemLength) {

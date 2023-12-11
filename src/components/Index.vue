@@ -32,7 +32,7 @@
                                             <button class="tooltipbtn btn-danger" data-toggle="tooltip" data-placement="top"
                                                 title="">Health &
                                                 Safety</button>
-                                            <button v-if="Object.keys(cartItem).length" @click="viewCart" class="btn btn-warning mt-2"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart ({{ Object.keys(cartItem).length }})</button>
+                                            <button v-if="Object.keys(cartItem).length && cartView == 1" @click="viewCart" class="btn btn-warning mt-2"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart ({{ Object.keys(cartItem).length }})</button>
                                         </div>
                                     </div>
                                 </div>
@@ -77,6 +77,7 @@ export default {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
+            cartView: 0,
             TourPkgDetails: [],
             banner: "",
             tenantId: "dixies",
@@ -95,6 +96,7 @@ export default {
         this.packageId = this.$store.state.packageId;
         this.affiliateId = this.$store.state.affiliateId;
         this.iframeStatus = this.$store.state.iframeStatus;
+        this.cartView = this.$store.state.tourPackage?.cartView;
         this.cartItem = this.$store.state.cartItem;
 
         if (this.packageId > 0) {

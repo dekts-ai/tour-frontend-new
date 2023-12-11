@@ -80,7 +80,7 @@
                                             <button class="tooltipbtn btn-danger" data-toggle="tooltip"
                                                 data-placement="top" title="">Health &
                                                 Safety</button>
-                                            <button v-if="Object.keys(cartItem).length" @click="viewCart" class="btn btn-warning"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart ({{ Object.keys(cartItem).length }})</button>
+                                            <button v-if="Object.keys(cartItem).length && cartView == 1" @click="viewCart" class="btn btn-warning"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart ({{ Object.keys(cartItem).length }})</button>
                                             <button @click="mindChange" class="btn btn-primary mt-2"><i class="fa fa-arrow-left" aria-hidden="true"></i> Home</button>
                                         </div>
                                     </div>
@@ -298,6 +298,7 @@ export default {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
+            cartView: 0,
             TourPkgName: "",
             totalavailableseats: {},
             selectgrouppeoples: [],
@@ -440,6 +441,7 @@ export default {
                 this.details = this.$store.state.tourPackage;
                 this.details.TourPkgRates = this.details.TourPkgRates[this.form.package_id];
                 this.hotels = this.$store.state.tourPackage.hotels;
+                this.cartView = this.$store.state.tourPackage?.cartView;
                 this.form.service_commission = this.$store.state.tourPackage.TourPkgDetails[0].ServiceCommission
 
                 // Define Variables
@@ -600,6 +602,10 @@ export default {
                 if (response.data.success == "false") {
                     this.errors.push(response.data.message);
                 } else {
+                    if (this.cartView == 0) {
+                        this.cartItem = [];
+                    }
+
                     const updatedCart = {};
 
                     for (const slotId in this.cartItem) {

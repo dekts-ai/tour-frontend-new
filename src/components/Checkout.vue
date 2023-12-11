@@ -34,7 +34,7 @@
                                             <button class="tooltipbtn btn-danger" data-toggle="tooltip" data-placement="top">
                                                 Health & Safety
                                             </button>
-                                            <button v-if="cartItemLength" @click="viewCart" class="btn btn-warning"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart ({{ cartItemLength }})</button>
+                                            <button v-if="cartItemLength && cartView == 1" @click="viewCart" class="btn btn-warning"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart ({{ cartItemLength }})</button>
                                             <button @click="mindChange" class="btn btn-primary mt-2"><i class="fa fa-arrow-left" aria-hidden="true"></i> Home</button>
                                         </div>
                                     </div>
@@ -231,6 +231,7 @@ export default {
             processing: false,
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
+            cartView: 0,
             bookingIds: {},
             details: [],
             hotels: [],
@@ -280,6 +281,7 @@ export default {
     created() {
         this.iframeStatus = this.$store.state.iframeStatus;
         this.hotels = this.$store.state.tourPackage?.hotels;
+        this.cartView = this.$store.state.tourPackage?.cartView;
         this.cartItem = this.$store.state.cartItem;
         this.cartItemLength = Object.values(this.cartItem).length;
         if (this.cartItemLength) {
