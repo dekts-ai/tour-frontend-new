@@ -142,7 +142,7 @@
 					            					</div>
 	        									</div>
 	        								</div>
-	        							</div>	
+	        							</div>
         							</div>
 		                            <div class="col-lg-5 order-1 order-md-2">
 		                            	<div class="form-field-title mt-md-0 mt-3">Tour Cost:</div>	
