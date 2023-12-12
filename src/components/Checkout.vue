@@ -177,6 +177,9 @@
 		                            			<div class="title"><strong>Total Cost</strong></div>
                                                 <div class="amount">${{ Number(item.total).toFixed(2) }}</div>
 		                            		</div>
+                                            <p class="text-start tour-packages-detail ms-4 mt-2 mb-2" v-if="seatErrors?.length">
+                                                <ul><li v-for="(error, index) in seatErrors" :key="index" v-bind:class="{'text-danger': error[item.tour_slot_id]?.success }"><small>{{ error[item.tour_slot_id]?.message }}</small></li></ul>
+                                            </p>
 		                            	</div>
 		                            	<div class="total-cost-wrap third">
 		                            		<div class="title-wrap">
@@ -416,12 +419,21 @@ export default {
                             array.indexOf(value) === index
                         )
 
-                        Swal.fire({
-                            toast: true,
-                            title: "Errors!",
-                            html: "Please look over the package section above for any errors!",
-                            icon: "error"
-                        });
+                        if (this.cartView != 1 || this.cartItemLength == 1) {
+                            Swal.fire({
+                                toast: true,
+                                title: "Errors!",
+                                html: response.data[key].message,
+                                icon: "error"
+                            });
+                        } else {
+                            Swal.fire({
+                                toast: true,
+                                title: "Errors!",
+                                html: "Please look over the package cost section for any errors!",
+                                icon: "error"
+                            });
+                        }
 
                         this.processLoader(loader);
                         return true;
