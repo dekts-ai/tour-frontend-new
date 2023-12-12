@@ -166,9 +166,9 @@
                                             <hr>
                                             <p v-if="errors.length">
                                                 <b>Please correct the following error(s):</b>
-                                            <ul>
-                                                <li v-for="error in errors" :key="error" v-bind:class="{'text-danger': error }" style="font-size:25px">{{ error }}</li>
-                                            </ul>
+                                                <ul class="following-error">
+                                                    <li v-for="error in errors" :key="error" v-bind:class="{'text-danger': error }" style="font-size:25px">{{ error }}</li>
+                                                </ul>
                                             </p>
                                             <div class="row groupofpeople">
                                                 <div class="col-12">

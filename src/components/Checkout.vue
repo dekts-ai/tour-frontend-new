@@ -40,7 +40,7 @@
                                     </div>
                                 </div>
                                 <div class="row payment-form-sec">
-                                	<div class="col-lg-7 mb-lg-0 mb-md-5 mb-4">
+                                	<div class="col-lg-7 mb-lg-0 mb-md-5 mb-4 order-2 order-md-1">
                                 		<div class="contact-wrap">
 	                                		<div class="form-field-title">Contact:</div>
 	                                        <div class="form-field-wrp contact-form-field mb-2">
@@ -66,9 +66,9 @@
                                                     <textarea v-model="comment" id="comment" name="comment" placeholder="Please type here ..."></textarea>
                                                 </div>
 			                                    <div class="form-group mb-0">
-			                                    	<div class="form-check">
+			                                    	<div class="form-check text-start">
   														<input class="form-check-input" type="checkbox" v-model="cancellations_policy" id="cancellations_policy">
-  														<label class="form-check-label" for="cancellations_policy">
+  														<label class="form-check-label ms-2" for="cancellations_policy">
                                                             <span class="required-star"> * </span> 
                                                             <button class="cancelling-policy-title" @click="openPolicy()"> Terms and conditions</button>
                                                             I have read and accept all cancellations terms. 
@@ -76,9 +76,9 @@
 													</div>
 												</div>
 			                                    <div class="form-group mb-0">
-			                                    	<div class="form-check">
+			                                    	<div class="form-check text-start">
   														<input class="form-check-input" type="checkbox" v-model="getemailupdates" id="getemailupdates">
-  														<label class="form-check-label" for="getemailupdates">
+  														<label class="form-check-label ms-2" for="getemailupdates">
                                                             Get future email updates from Lower Antelope Canyon Hiking Tour.
                                                         </label>
 													</div>
@@ -125,15 +125,15 @@
 										                        </div>
 										                    </div>
 										                </div>
-                                                        <p class="mb-3" v-if="errors.length">
+                                                        <p class="text-start mb-3 pe-3" v-if="errors.length">
                                                             <b>Please correct the following error(s):</b>
-                                                            <ul>
+                                                            <ul class="following-error">
                                                                 <li v-for="error in errors" :key="error"
                                                                     v-bind:class="{ 'text-danger': error }">{{ error }}
                                                                 </li>
                                                             </ul>
                                                         </p>
-										                <div class="form-group col-12 mb-0">
+										                <div class="form-group col-12 mb-0 text-start">
 										                    <input type="submit" @click="submit()" name="makeaayment" id="makeaayment" class="makeaayment-btn" value="Make a Payment">
 										                </div>
 										               	<div class="form-group col-12 mb-0">
@@ -144,8 +144,8 @@
 	        								</div>
 	        							</div>	
         							</div>
-		                            <div class="col-lg-5">
-		                            	<div class="form-field-title">Tour Cost:</div>	
+		                            <div class="col-lg-5 order-1 order-md-2">
+		                            	<div class="form-field-title mt-md-0 mt-3">Tour Cost:</div>	
 		                            	<div class="total-cost-wrap" v-for="item in cartItem" :key="item.tour_slot_id">
 		                            		<div class="title-wrap">
 		                            			<div class="title">{{ item.package_name }}</div>

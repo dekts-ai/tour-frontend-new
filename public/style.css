@@ -738,22 +738,26 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 }
 
 @media (max-width: 575px) {
+	.tour-packages-item {border: none; box-shadow: none;}
 	.tour-packages-item .tour-packages-detail, 
-	.tour-packages-edit-wrap {display: block;}
+	.tour-packages-edit-wrap {display: block; padding-left: 0 !important; padding-right: 0 !important;}
 	.tour-packages-item .tour-packages-couponcode {margin-top: 10px;}
 	.tour-packages-item .tour-packages-image {text-align: center; margin-bottom: 15px;}
 	.tour-packages-item .tour-packages-title-wrap {margin-left: 0;}
-	.tour-packages-item .tour-packages-group-wrap {padding-top: 0;}
+	.tour-packages-item .tour-packages-group-wrap {padding-top: 0; padding-left: 0; padding-right: 0;}
 	.tour-packages-item .tour-packages-title {margin-bottom: 7px;}
 	.tour-packages-item .tour-packages-group-title {margin-bottom: 5px;}
-	.tour-packages-item .tour-packages-totalcost {padding-top: 15px;}
+	.tour-packages-item .tour-packages-totalcost {padding-top: 15px; padding-left: 0 !important; padding-right: 0 !important;}
 	.tour-packages-item .tour-packages-action-btn:first-child {padding-left: 0;}
-
+	.total-cost-col {margin-top: 0 !important;}
 	.addmore-package-wrap .addmore-package-btn-wrap {display: block;}
 	.addmore-package-wrap .addmore-package-btn {width: 100%;}
 	.addmore-package-wrap .checkout-btn {width: 100%;}
 
 	.vuejs3-datepicker__calendar {max-width: 100%; width: auto !important;}
+	.payment-row .starttime-row .text-danger {font-size: 14px !important;}
+	.following-error {margin-top: 5px; margin-bottom: 5px;}
+	.hotel-section {padding-left: 0 !important; padding-right: 0 !important;}
 
 	.payment-row .booking-row { padding: 18px 0px;}
 	.status-row { padding: 3px 0px 6px; }
@@ -815,7 +819,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.payment-form-sec .masks-mandatory-img {margin-right: 0; text-align: center; margin-bottom: 15px;}
 	.payment-form-sec label.checkbox-wrap {font-size: 16px;}
 	.payment-form-sec .masks-mandatory-notice {font-size: 12px; line-height: 16px;}
-	.payment-form-sec {padding-left: 0; padding-right: 0;}
+	.payment-form-sec {padding-left: 0; padding-right: 0; padding-top: 0;}
 	.payment-form-sec .form-field-wrp input {height: 45px;}
 	.payment-form-sec .form-field-wrp label.checkbox-wrap {font-size: 12px; line-height: 18px;}
 	.payment-form-sec .policy-item-wrp ul li {font-size: 14px; line-height: 19px;}
@@ -823,10 +827,10 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.payment-form-sec .form-field-wrp input {padding: 5px 32px;}
 	.payment-form-sec .form-field-wrp .phone-wrap input {padding-left: 93px !important;}
 	.payment-form-sec .form-field-title {font-size: 20px;margin-bottom: 10px;}
-	.payment-form-sec .form-field-wrp {padding: 20px;}
+	.payment-form-sec .form-field-wrp {padding: 0 !important; border: none !important;}
 	.payment-form-sec .payment-text {font-size: 20px;margin-bottom: 10px;margin-top: 20px;}
 	.payment-form-sec .card-detail-wrp {padding: 15px 5px 15px 20px; }
-	.payment-form-sec input[type="submit"] {height: 34px; width: unset;}
+	.payment-form-sec input[type="submit"] {height: 34px; width: calc(100% - 10px) !important; max-width: unset !important;}
 	.total-cost-wrap .title-wrap {padding: 12px;}
 	.total-cost-wrap .title-wrap .title {font-size: 14px;}
 	/***** Payment Page End *****/
@@ -843,6 +847,9 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.total-cost-col {padding-right: calc(var(--bs-gutter-x) * .5); padding-left: calc(var(--bs-gutter-x) * .5); }
 	.total-cost-col .totalcost [class*="col-"] { font-size: 22px; }
 	.thankyou-main-row .invoice-row .top-row .booking-summery p .printbtn {position: relative; display: block; margin-top: 15px; margin-left: auto; }
+	.payment-row .starttime-row .text-danger {font-size: 14px !important;}
+	.following-error {margin-top: 5px; margin-bottom: 5px;}
+	.hotel-section {padding-left: 0 !important; padding-right: 0 !important;}
 }
 
 @media (max-width: 380px) {
