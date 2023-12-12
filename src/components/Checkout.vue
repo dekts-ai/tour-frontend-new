@@ -145,7 +145,7 @@
 	        							</div>	
         							</div>
 		                            <div class="col-lg-5">
-		                            	<div class="form-field-title">Total cost:</div>	
+		                            	<div class="form-field-title">Tour Cost:</div>	
 		                            	<div class="total-cost-wrap" v-for="item in cartItem" :key="item.tour_slot_id">
 		                            		<div class="title-wrap">
 		                            			<div class="title">{{ item.package_name }}</div>
@@ -430,7 +430,7 @@ export default {
                             Swal.fire({
                                 toast: true,
                                 title: "Errors!",
-                                html: "Please look over the package cost section for any errors!",
+                                html: "Please look over the tour cost section for any errors!",
                                 icon: "error"
                             });
                         }
