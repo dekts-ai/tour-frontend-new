@@ -183,7 +183,7 @@
 		                            	</div>
 		                            	<div class="total-cost-wrap third">
 		                            		<div class="title-wrap">
-		                            			<div class="title">Total Cost</div>
+		                            			<div class="title mb-0">Total Cost</div>
 		                            		</div>
 		                            		<div class="other-details-wrap d-flex justify-content-between align-items-center mt-0">
 		                            			<div class="title">Ticket Cost</div>

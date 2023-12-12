@@ -2674,7 +2674,7 @@ section.iframe-inner-banner.banner-section {
 
 	.payment-form-sec .payment-text {
 		font-size: 20px;
-		text-align: center;
+		text-align: left;
 	}
 
 	.payment-form-sec .makeaayment-wrap input[type="submit"] {
