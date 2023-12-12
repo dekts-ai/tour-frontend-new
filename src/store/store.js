@@ -20,6 +20,7 @@ export default createStore({
         timeDate: null,
         hotelId: 0,
         cartItem: {},
+        tabs: 1
     },
     getters: {
         iframeStatus: state => {
@@ -66,6 +67,9 @@ export default createStore({
         },
         cartItem: state => {
             return state.cartItem;
+        },
+        tabs: state => {
+            return state.tabs;
         }
     },
     mutations: {
@@ -113,6 +117,9 @@ export default createStore({
         },
         CART_ITEM(state, cartItem) {
             state.cartItem = cartItem;
+        },
+        TABS(state, tabs) {
+            state.tabs = tabs;
         }
     },
     actions: {
@@ -160,6 +167,9 @@ export default createStore({
         },
         storeCartItem({ commit }, cartItem) {
             commit('CART_ITEM', cartItem);
+        },
+        storeTabs({ commit }, tabs) {
+            commit('TABS', tabs);
         }
     }
 });

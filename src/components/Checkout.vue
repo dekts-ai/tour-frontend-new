@@ -9,6 +9,21 @@
         </div>
     </section>
 
+	<section class="tabs-section" v-if="iframeStatus">
+		<div class="no-container">
+			<div class="row">
+				<div class="col-12">
+					<div class="tabs-wrap d-flex align-items-center">
+						<button :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')" :disabled="tabs != 1">Tours</button>
+						<button :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')" :disabled="tabs != 2">Schedule</button>
+						<button :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')" :disabled="tabs != 3">My Trip</button>
+						<button :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')" :disabled="tabs != 4">Checkout</button>
+					</div>
+				</div>
+			</div>
+		</div>	
+	</section>
+
     <section class="inner-content-section">
         <div :class="[(iframeStatus == false) ? 'container' : 'no-container', '']">
             <div class="background-color-sec">
@@ -234,6 +249,7 @@ export default {
             processing: false,
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
+            tabs: 4,
             cartView: 0,
             bookingIds: {},
             details: [],
@@ -282,6 +298,7 @@ export default {
         });
     },
     created() {
+        this.$store.dispatch('storeTabs', this.tabs);
         this.iframeStatus = this.$store.state.iframeStatus;
         this.hotels = this.$store.state.tourPackage?.hotels;
         this.cartView = this.$store.state.tourPackage?.cartView;

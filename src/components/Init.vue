@@ -8,6 +8,22 @@
             </div>
         </div>
     </section>
+
+	<section class="tabs-section" v-if="iframeStatus">
+		<div class="no-container">
+			<div class="row">
+				<div class="col-12">
+					<div class="tabs-wrap d-flex align-items-center">
+						<button :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')" :disabled="tabs != 1">Tours</button>
+						<button :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')" :disabled="tabs != 2">Schedule</button>
+						<button :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')" :disabled="tabs != 3">My Trip</button>
+						<button :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')" :disabled="tabs != 4">Checkout</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
     <section class="inner-content-section">
         <div :class="[(iframeStatus == false) ? 'container' : 'no-container', '']">
             <div class="background-color-sec">
@@ -35,29 +51,6 @@
                                     </div>
                                 </div>
                                 <hr class="sep1">
-                            </div>
-                        </div>
-                        <div class="row innerbanner-row"
-                            :class="[(iframeStatus == false) ? 'noiframe-inner-banner' : 'iframe-inner-banner', '']"
-                            v-for="TourPkgDetails in details.TourPkgDetails" :key="TourPkgDetails.pkg_rate_id"
-                            v-bind:style="{ 'background-image': 'url(' + TourPkgDetails.HeaderTwo + ')' }">
-                            <div class="col-12"
-                                :class="[(iframeStatus == false) ? 'noiframe-zero-padding' : 'iframe-zero-padding', '']">
-                                <div class="title-box">
-                                    <h1>{{ TourPkgName }}</h1>
-                                    <div class="rating" v-if="form.package_id == 1">
-                                        <ul>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li class="rate">4.5</li>
-                                            <li class="info"><a href="javascript:void(0);" data-toggle="tooltip"
-                                                    data-placement="top" title=""><img
-                                                        src="../assets/images/info.png"></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <div class="row payment-row">
@@ -341,10 +334,12 @@ export default {
                 discount2_percentage: 0,
                 discount2_value: 0
             },
-            with_rate_groups: 1
+            with_rate_groups: 1,
+            tabs: 2
         };
     },
     created: function () {
+        this.$store.dispatch('storeTabs', this.tabs);
         this.cartItem = this.$store.state.cartItem;
         this.iframeStatus = this.$store.state.iframeStatus;
         if (this.$store.state.formData && this.$store.state.formData?.package_id == this.$store.state.packageId) {
