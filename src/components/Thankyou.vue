@@ -238,6 +238,7 @@ export default {
     };
   },
   created() {
+    this.$store.dispatch('storeCartItem', {});
     this.iframeStatus = this.$store.state.iframeStatus;
     this.customer = this.$store.state.customer;
     this.id = this.$store.state.bookingIds;
