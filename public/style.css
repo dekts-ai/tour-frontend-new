@@ -613,7 +613,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.inner-content-section .background-color-sec {padding: 14px 20px 20px 30px; }
 	.payment-form-sec .form-check {display: flex; }
 	.payment-row .booking-row .booking{display: block; }
-	.payment-form-sec input[type="submit"] {max-width: 446px; }
+	.payment-form-sec input[type="submit"] {max-width: 100%; }
 }
 
 @media (max-width: 991px) {
@@ -668,7 +668,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.inner-content-section .background-color-sec {padding: 14px 20px 20px; }
 	.payment-form-sec .contact-wrap {margin: 0 auto;}
 	.payment-form-sec {padding-top: 25px; }
-	.payment-form-sec input[type="submit"] {max-width: 556px;}
+	.payment-form-sec input[type="submit"] {max-width: 100%;}
 }
 
 @media (max-width: 767px) {
@@ -739,7 +739,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.starttime-row .groupofpeople .table tbody tr td.final {border:none; min-width:unset !important; text-align: right; height:auto !important; background-color:transparent;}
 	/***** Table Responsive End *****/
 
-	.payment-form-sec input[type="submit"] {max-width: 415px;}
+	.payment-form-sec input[type="submit"] {max-width: 100%;}
 }
 
 @media (max-width: 575px) {
@@ -782,7 +782,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.starttime-row .select-time h2, .starttime-row .groupofpeople h2 {font-size: 20px;}
 	.payment-form-sec .masks-mandatory-wrp {padding: 15px 20px 15px;}
 	.payment-form-sec .masks-mandatory-img {min-width: 75px; margin-right: 20px;}
-	.payment-form-sec input[type="submit"] { margin-right: auto; max-width: 320px;}
+	.payment-form-sec input[type="submit"] { margin-right: auto; max-width: 100%;}
 	/***** Payment Page End *****/
 
 	/***** Thank You Page Start *****/
