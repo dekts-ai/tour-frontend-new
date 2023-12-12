@@ -59,7 +59,7 @@
                   </div>
                 </div>
                 <div class="m-2">
-	                <h4 class="mx-auto my-2">Your tour packages details</h4>
+	                <h4 class="mx-auto my-2">Your Trip Items</h4>
                   <div class="tour-packages-wrap">
                     <div class="tour-packages-item" v-for="item in cartItem" :key="item.tour_slot_id">
                       <div class="tour-packages-inner-wrap">
@@ -125,12 +125,12 @@
                         </div>
                       </div>
                       <div class="tour-packages-totalcost">
-                        <div class="tour-packages-costcount-title">Tour Cost:</div>
+                        <div class="tour-packages-costcount-title">Tour Cost:</div><hr>
                         <div class="tour-packages-costcount-subitem">
                           <div class="tour-packages-costcount-subitem-title">Subtotal:</div>
                           <div class="tour-packages-costcount-subitem-cost">${{ Number(item.subtotal).toFixed(2) }}</div>
                         </div>
-                        <div class="tour-packages-costcount-subitem">
+                        <div class="tour-packages-costcount-subitem" v-if="item?.discount2_value > 0">
                           <div class="tour-packages-costcount-subitem-title">Discount:</div>
                           <div class="tour-packages-costcount-subitem-cost">
                             <span v-if="item?.discount2_percentage">({{ item?.discount2_percentage }}%)</span>
@@ -142,7 +142,7 @@
                           <div class="tour-packages-costcount-subitem-cost">${{ Number(item.fees).toFixed(2) }}</div>
                         </div>
                         <div class="tour-packages-costcount-total">
-                          <div class="tour-packages-costcount-total-title">Tour Cost:</div>
+                          <div class="tour-packages-costcount-total-title">Total Cost:</div>
                           <div class="tour-packages-costcount-total-cost">${{ Number(item.total).toFixed(2) }}</div>
                         </div>
                       </div>
@@ -159,7 +159,7 @@
                           <div class="col-6 text-end">${{ Number(subtotal).toFixed(2) }}</div>
                         </div>
 
-                        <div class="row subtotal" v-if="1">
+                        <div class="row subtotal" v-if="discount > 0">
                           <div class="col-6 text-start">Discount:</div>
                           <div class="col-6 text-end">${{ Number(discount).toFixed(2) }}</div>
                         </div>
