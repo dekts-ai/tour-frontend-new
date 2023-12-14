@@ -478,7 +478,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .payment-row .booking-row .info .tooltipbtn.btn-danger::before {content: ""; position: absolute; top: 8px; right: 8px; background: url(health-2.png) no-repeat; height: 15px; width: 15px; }
 .payment-row .booking-row .info .btn-primary {margin-left: 5px; color: #004085; background-color: #cce5ff; border: 1px solid #b8daff; font-size: 13px; vertical-align: baseline; padding: 6px 17px; font-weight: 500; }
 .payment-row .booking-row .info .btn-primary .fa {margin-right: 5px; margin-left: -5px; }
-.payment-form-sec {border-top: 1px solid #DFDFDF; margin-top: 15px; padding-top: 40px; }
+.payment-form-sec {border-top: 1px solid #DFDFDF; margin-top: 15px; padding-top: 12px; }
 .payment-form-sec .contact-wrap {max-width: 615px;}
 .payment-form-sec .form-field-title {font-size: 24px; font-weight: 500; line-height: 1; color: #333; margin-bottom: 13px; text-align: left; }
 .payment-form-sec .form-field-wrp {border: 2px solid #EDEDED; border-radius:5px; padding: 27px 24px 20px;}

@@ -48,8 +48,7 @@
                                             <button class="tooltipbtn btn-danger" data-toggle="tooltip" data-placement="top">
                                                 Health & Safety
                                             </button>
-                                            <button v-if="cartItemLength && cartView == 1" @click="viewCart" class="btn btn-warning"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart ({{ cartItemLength }})</button>
-                                            <button @click="mindChange" class="btn btn-primary mt-2"><i class="fa fa-arrow-left" aria-hidden="true"></i> Home</button>
+                                            <button @click="mindChange(1)" class="btn btn-primary mt-2"><i class="fa fa-arrow-left" aria-hidden="true"></i> Home</button>
                                         </div>
                                     </div>
                                 </div>
@@ -395,19 +394,19 @@ export default {
             var loader = this.$loading.show();
             this.errors = [];
             if (!this.name) {
-                this.errors.push("Name is required on contact section.");
+                this.errors.push("Your name is required.");
             }
             if (!this.phone_number) {
-                this.errors.push("Phone number is required on contact section.");
+                this.errors.push("Your contact number is required.");
             }
             if (!this.email) {
-                this.errors.push("Email is required on contact section.");
+                this.errors.push("Your email address is required.");
             }
             if (!this.cancellations_policy) {
                 this.errors.push("Please read and accept the terms and conditions.");
             }
             if (!this.cardnumber || !this.expiration || !this.cvv) {
-                this.errors.push("Please add card information.");
+                this.errors.push("Please enter your card information.");
             }
             if (this.cartItemLength &&
                 this.name &&
@@ -571,10 +570,6 @@ export default {
 
             let x = Math.pow(10, places);
             return (amount >= 0 ? Math.ceil(amount * x) : Math.floor(amount * x)) / x;
-        },
-        viewCart() {
-            console.log('viewCart');
-            this.$router.push("/");
         }
     }
 };

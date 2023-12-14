@@ -47,7 +47,7 @@
                                             <button class="tooltipbtn btn-danger" data-toggle="tooltip" data-placement="top"
                                                 title="">Health &
                                                 Safety</button>
-                                            <button v-if="Object.keys(cartItem).length && cartView == 1" @click="viewCart" class="btn btn-warning mt-2"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart ({{ Object.keys(cartItem).length }})</button>
+                                            <button v-if="Object.keys(cartItem).length && cartView == 1" @click="checkout" class="btn btn-warning mt-2"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Checkout</button>
                                         </div>
                                     </div>
                                 </div>
@@ -144,9 +144,9 @@ export default {
             this.$store.dispatch('storePackageId', pid);
             this.$router.push("/initialize");
         },
-        viewCart() {
+        checkout() {
             this.$router.push({
-                name: 'Index'
+                name: 'Checkout'
             });
 
             return;
