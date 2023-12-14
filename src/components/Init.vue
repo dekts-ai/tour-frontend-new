@@ -14,10 +14,9 @@
 			<div class="row">
 				<div class="col-12">
 					<div class="tabs-wrap d-flex align-items-center">
-						<button :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')" :disabled="tabs != 1">Tours</button>
-						<button :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')" :disabled="tabs != 2">Schedule</button>
-						<button :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')" :disabled="tabs != 3">My Trip</button>
-						<button :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')" :disabled="tabs != 4">Checkout</button>
+						<button @click="mindChange(1)" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
+						<button @click="mindChange(2)" :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
+						<button @click="mindChange(3)" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">Checkout</button>
 					</div>
 				</div>
 			</div>
@@ -55,7 +54,7 @@
                         </div>
                         <div class="row payment-row">
                             <div class="col-12">
-                                <div class="row booking-row">
+                                <div class="row booking-row" v-if="iframeStatus == false">
                                     <div class="col-lg-5 col-md-12">
                                         <div class="booking">
                                             <h2>Book Online</h2>
@@ -74,7 +73,7 @@
                                                 data-placement="top" title="">Health &
                                                 Safety</button>
                                             <button v-if="Object.keys(cartItem).length && cartView == 1" @click="viewCart" class="btn btn-warning"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart ({{ Object.keys(cartItem).length }})</button>
-                                            <button @click="mindChange" class="btn btn-primary mt-2"><i class="fa fa-arrow-left" aria-hidden="true"></i> Home</button>
+                                            <button @click="mindChange(1)" class="btn btn-primary mt-2"><i class="fa fa-arrow-left" aria-hidden="true"></i> Home</button>
                                         </div>
                                     </div>
                                 </div>
@@ -278,11 +277,12 @@
 import axios from "axios";
 import $ from "jquery";
 import Datepicker from 'vuejs3-datepicker';
+import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import { getUTCDateFromTimeZone } from '../utils/dateUtils';
 
 export default {
-    name: "Index",
+    name: "Init",
     title: "Native American Tours",
     components: {
         Datepicker
@@ -339,7 +339,6 @@ export default {
         };
     },
     created: function () {
-        this.$store.dispatch('storeTabs', this.tabs);
         this.cartItem = this.$store.state.cartItem;
         this.iframeStatus = this.$store.state.iframeStatus;
         if (this.$store.state.formData && this.$store.state.formData?.package_id == this.$store.state.packageId) {
@@ -349,13 +348,8 @@ export default {
             this.form.tour_operator_id = this.$store.state.tourOperatorId;
             this.form.package_id = this.$store.state.packageId;
             this.form.affiliate_id = this.$store.state.affiliateId;
-            // this.form.hotel_id = this.$store.state.hotelId;
             this.form.tour_slot_id = 0;
             this.form.time_date = null;
-        }
-
-        if (this.$store.state.packageId === 0) {
-            this.$router.push("/");
         }
 
         if (this.$store.state.date) {
@@ -371,7 +365,6 @@ export default {
             console.log('configure');
 
             var loader = this.$loading.show();
-            document.title = "Native American Tours";
             var date = format(this.form.date, 'yyyy-MM-dd');
 
             axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id).then((response) => {
@@ -387,13 +380,12 @@ export default {
                         number: index,
                     });
                 }
-
-                this.processLoader(loader);
             }).catch(() => {
                 this.processLoader(loader);
+                return;
             });
 
-            this.updateRateGroups(date);
+            this.updateRateGroups(date, 0, loader);
         },
         selectedDate(date) {
             console.log('selectedDate');
@@ -418,18 +410,16 @@ export default {
                         number: index,
                     });
                 }
-
-                this.processLoader(loader);
             }).catch(() => {
                 this.processLoader(loader);
+                return;
             });
 
-            this.updateRateGroups(date, 1);
+            this.updateRateGroups(date, 1, loader);
         },
-        updateRateGroups(date, calendar = 0) {
+        updateRateGroups(date, calendar = 0, loader) {
             console.log('updateRateGroups');
 
-            var loader = this.$loading.show();
             axios.get("/tour-package/" + date + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + this.with_rate_groups).then((response) => {
                 this.$store.dispatch('storeTourPackage', response.data)
                 this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
@@ -457,12 +447,17 @@ export default {
                 });
 
                 this.processLoader(loader);
+            }).catch(() => {
+                this.processLoader(loader);
             });
 
             if (calendar) {
                 this.form.tour_slot_id = "";
                 this.form.time_date = "";
             }
+
+            this.$store.dispatch('storeTabs', this.tabs);
+            this.$store.dispatch('storeMindChange', 0);
         },
         submit: function () {
             var loader = this.$loading.show();
@@ -527,8 +522,9 @@ export default {
                 this.processLoader(loader);
             }
         },
-        processLoader: function (loader) {
+        processLoader(loader) {
             loader.hide();
+            return;
         },
         getStartDate() {
             // See this issues with datepicker 
@@ -577,12 +573,35 @@ export default {
             let secondDate = new Date('01 13 2024');
             return date >= firstDate && date < secondDate && this.form.package_id == 1;
         },
-        mindChange() {
-            this.$store.dispatch('storePackageId', 0);
-            this.$store.dispatch('storeDate', getUTCDateFromTimeZone());
-            this.$router.push({
-                name: 'Index'
-            });
+        mindChange(tab) {
+            if (tab == 1) {
+                this.$store.dispatch('storeMindChange', 1);
+                this.$router.push({
+                    name: 'Index'
+                });
+
+                return;
+            }
+
+            if (tab == 2) {
+                return;
+            }
+
+            if (tab == 3 && Object.keys(this.cartItem).length) {
+                this.$store.dispatch('storeMindChange', 1);
+                this.$router.push({
+                    name: 'Checkout'
+                });
+
+                return;
+            } else {
+                Swal.fire({
+                    toast: true,
+                    title: "Info!",
+                    html: "In order to proceed with checkout, please schedule a trip.",
+                    icon: "info"
+                });
+            }
         },
         addToCart(loader) {
             let checkSlotarr = {
@@ -616,7 +635,10 @@ export default {
                     data[this.form.tour_slot_id] = this.form;
                     this.cartItem = { ...this.cartItem, ...data };
                     this.$store.dispatch('storeCartItem', this.cartItem);
-                    this.$router.push("/payment");
+                    this.$store.dispatch('storeMindChange', 1);
+                    this.$router.push({
+                        name: 'Index'
+                    });
                 }
 
                 this.processLoader(loader);
@@ -628,7 +650,11 @@ export default {
         },
         viewCart() {
             console.log('viewCart');
-            this.$router.push("/payment");
+            this.$router.push({
+                name: 'Index'
+            });
+
+            return;
         }
     }
 };

@@ -14,10 +14,9 @@
 			<div class="row">
 				<div class="col-12">
 					<div class="tabs-wrap d-flex align-items-center">
-						<button :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')" :disabled="tabs != 1">Tours</button>
-						<button :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')" :disabled="tabs != 2">Schedule</button>
-						<button :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')" :disabled="tabs != 3">My Trip</button>
-						<button :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')" :disabled="tabs != 4">Checkout</button>
+						<button @click="mindChange(1)" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
+						<button @click="mindChange(2)" :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
+						<button @click="mindChange(3)" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">Checkout</button>
 					</div>
 				</div>
 			</div>
@@ -31,7 +30,7 @@
                     <div class="col-12">
                         <div :class="[iframeStatus ? 'row payment-row iframe-row' : 'row payment-row', '']">
                             <div class="col-12">
-                                <div class="row booking-row">
+                                <div class="row booking-row" v-if="iframeStatus == false">
                                     <div class="col-lg-5 col-md-12">
                                         <div class="booking">
                                             <h2>Book Online</h2>
@@ -57,7 +56,7 @@
                                 <div class="row payment-form-sec">
                                 	<div class="col-lg-7 mb-lg-0 mb-md-5 mb-4 order-2 order-md-1">
                                 		<div class="contact-wrap">
-	                                		<div class="form-field-title">Contact:</div>
+	                                		<div class="form-field-title" v-if="iframeStatus == false">Contact:</div>
 	                                        <div class="form-field-wrp contact-form-field mb-2">
 			                                    <div class="form-group">
                                                     <label for="fullname" class="col-form-label">Full Name <span class="required-star">*</span></label>
@@ -160,7 +159,7 @@
 	        							</div>
         							</div>
 		                            <div class="col-lg-5 order-1 order-md-2">
-		                            	<div class="form-field-title mt-md-0 mt-3">Tour Cost:</div>	
+		                            	<div class="form-field-title mt-md-0 mt-3" v-if="iframeStatus == false">Tour Cost:</div>	
 		                            	<div class="total-cost-wrap" v-for="item in cartItem" :key="item.tour_slot_id">
 		                            		<div class="title-wrap">
 		                            			<div class="title">{{ item.package_name }}</div>
@@ -237,10 +236,10 @@ import axios from "axios";
 import Swal from 'sweetalert2';
 import { loadStripe } from '@stripe/stripe-js';
 import { mask } from 'vue-the-mask';
-import { getUTCDateFromTimeZone } from '../utils/dateUtils';
 
 export default {
-    name: "Payment",
+    name: "Checkout",
+    title: "Native American Tours",
     directives: {
         mask
     },
@@ -249,7 +248,7 @@ export default {
             processing: false,
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
-            tabs: 4,
+            tabs: 3,
             cartView: 0,
             bookingIds: {},
             details: [],
@@ -298,7 +297,6 @@ export default {
         });
     },
     created() {
-        this.$store.dispatch('storeTabs', this.tabs);
         this.iframeStatus = this.$store.state.iframeStatus;
         this.hotels = this.$store.state.tourPackage?.hotels;
         this.cartView = this.$store.state.tourPackage?.cartView;
@@ -314,9 +312,9 @@ export default {
                 this.cartItem[key].couponErrors = [];
                 this.cartItem[key].couponSuccess = [];
             }
-        } else {
-            this.$router.push("/");
         }
+        this.$store.dispatch('storeTabs', this.tabs);
+        this.$store.dispatch('storeMindChange', 0);
     },
     methods: {
         createAndMountFormElements() {
@@ -533,43 +531,27 @@ export default {
                 this.processLoader(loader);
             }
         },
-        mindChange(formData = null) {
-            if (formData && formData.tenant_id && formData.tour_operator_id && formData.package_id && formData.affiliate_id) {
-                this.$store.dispatch('storeFormData', formData)
-                this.$store.dispatch('storePackageId', formData.package_id)
-                this.$store.dispatch('storeAffiliateId', formData.affiliate_id)
-                this.$store.dispatch('storeDate', formData.date)
-
-                this.$router.push({
-                    name: 'Init',
-                    query: {
-                        tid: formData.tenant_id,
-                        oid: formData.tour_operator_id,
-                        pid: formData.package_id,
-                        aid: formData.affiliate_id,
-                        iframe: formData.iframeStatusInfo
-                    }
-                });
-            } else if (formData && formData.tenant_id && formData.tour_operator_id && formData.package_id) {
-                this.$store.dispatch('storeFormData', formData)
-                this.$store.dispatch('storePackageId', formData.package_id)
-                this.$store.dispatch('storeDate', formData.date)
-
-                this.$router.push({
-                    name: 'Init',
-                    query: {
-                        tid: formData.tenant_id,
-                        oid: formData.tour_operator_id,
-                        pid: formData.package_id,
-                        iframe: formData.iframeStatusInfo
-                    }
-                });
-            } else {
-                this.$store.dispatch('storePackageId', 0)
-                this.$store.dispatch('storeDate', getUTCDateFromTimeZone())
+        mindChange(tab) {
+            if (tab == 1) {
+                this.$store.dispatch('storeMindChange', 1);
                 this.$router.push({
                     name: 'Index'
                 });
+
+                return;
+            }
+
+            if (tab == 2) {
+                this.$store.dispatch('storeMindChange', 1);
+                this.$router.push({
+                    name: 'Init'
+                });
+
+                return;
+            }
+
+            if (tab == 3) {
+                return;
             }
         },
         dateFormat(date) {
@@ -592,7 +574,7 @@ export default {
         },
         viewCart() {
             console.log('viewCart');
-            this.$router.push("/payment");
+            this.$router.push("/");
         }
     }
 };

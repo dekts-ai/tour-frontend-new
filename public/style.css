@@ -59,7 +59,7 @@ ul {list-style: none; }
 .innerbanner-row .title-box .rating ul li.info img {position: relative; top: -3px; }
 
 /* Payment */
-.payment-row { border: 1px solid #dfdfdf; border-radius: 3px; margin: 34px 0 0; }
+.payment-row { border: 1px solid #dfdfdf; border-radius: 3px; margin: 33px 0 0; }
 .payment-row .booking-row {padding: 18px 13px; border-bottom: 1px solid #dfdfdf; }
 .payment-row .booking-row .booking {display: flex; align-items: center; }
 .payment-row .booking-row .booking h2 {font-size: 30px; font-weight: 600; color: #111111; line-height: 1; margin-right: 13px; }

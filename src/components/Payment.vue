@@ -31,7 +31,7 @@
           <div class="col-12">
             <div :class="[iframeStatus ? 'row payment-row iframe-row' : 'row payment-row', '']">
               <div class="col-12">
-                <div class="row booking-row">
+                <div class="row booking-row" v-if="iframeStatus == false">
                   <div class="col-lg-6 col-md-12">
                     <div class="booking">
                       <h2>Book Online</h2>

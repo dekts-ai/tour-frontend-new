@@ -1,6 +1,6 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './routers'
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './routers';
 import axios from 'axios';
 import store from "./store/store";
 import VueLoading from 'vue-loading-overlay';

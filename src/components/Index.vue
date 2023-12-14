@@ -14,10 +14,9 @@
 			<div class="row">
 				<div class="col-12">
 					<div class="tabs-wrap d-flex align-items-center">
-						<button :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')" :disabled="tabs != 1">Tours</button>
-						<button :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')" :disabled="tabs != 2">Schedule</button>
-						<button :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')" :disabled="tabs != 3">My Trip</button>
-						<button :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')" :disabled="tabs != 4">Checkout</button>
+						<button @click="mindChange(1)" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
+						<button @click="mindChange(2)" :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
+						<button @click="mindChange(3)" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">Checkout</button>
 					</div>
 				</div>
 			</div>
@@ -31,7 +30,7 @@
                     <div class="col-12">
                         <div :class="[iframeStatus ? 'row payment-row iframe-row' : 'row payment-row', '']">
                             <div class="col-12">
-                                <div class="row booking-row">
+                                <div class="row booking-row" v-if="iframeStatus == false">
                                     <div class="col-lg-6 col-md-12">
                                         <div class="booking">
                                             <h2>Book Online</h2>
@@ -84,6 +83,7 @@
 
 <script>
 import axios from "axios";
+import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 
 export default {
@@ -107,7 +107,6 @@ export default {
     },
     async created() {
         var loader = this.$loading.show();
-        this.$store.dispatch('storeTabs', this.tabs);
         this.date = format(this.$store.state.date, 'yyyy-MM-dd');
         this.tenantId = this.$store.state.tenantId;
         this.tourOperatorId = this.$store.state.tourOperatorId;
@@ -117,8 +116,14 @@ export default {
         this.cartView = this.$store.state.tourPackage?.cartView;
         this.cartItem = this.$store.state.cartItem;
 
-        if (this.packageId > 0) {
-            this.$router.push("/initialize");
+        if (this.packageId > 0 && this.$store.state.mindChange == 0) {
+            this.processLoader(loader);
+
+            this.$router.push({
+                name: "Init"
+            });
+
+            return;
         }
 
         axios.get("/tour-package/" + this.date + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId).then((response) => {
@@ -128,6 +133,9 @@ export default {
             self.banner = self.TourPkgDetails[0].HeaderOne;
             self.processLoader(loader);
         });
+
+        this.$store.dispatch('storeTabs', this.tabs);
+        this.$store.dispatch('storeMindChange', 0);
     },
     methods: {
         bookNow(tid, oid, pid) {
@@ -137,10 +145,44 @@ export default {
             this.$router.push("/initialize");
         },
         viewCart() {
-            this.$router.push("/payment");
+            this.$router.push({
+                name: 'Index'
+            });
+
+            return;
         },
-        processLoader: function (loader) {
+        processLoader(loader) {
             loader.hide();
+        },
+        mindChange(tab) {
+            if (tab == 1) {
+                return;
+            }
+
+            if (tab == 2) {
+                this.$store.dispatch('storeMindChange', 1);
+                this.$router.push({
+                    name: 'Init'
+                });
+
+                return;
+            }
+
+            if (tab == 3 && Object.keys(this.cartItem).length) {
+                this.$store.dispatch('storeMindChange', 1);
+                this.$router.push({
+                    name: 'Checkout'
+                });
+
+                return;
+            } else {
+                Swal.fire({
+                    toast: true,
+                    title: "Info!",
+                    html: "In order to proceed with checkout, please select package.",
+                    icon: "info"
+                });
+            }
         },
     }
 };

@@ -12,6 +12,7 @@ import { getUTCDateFromTimeZone } from './utils/dateUtils';
 
 export default {
   name: "App",
+  title: "Native American Tours",
   components: {
     Header,
     Footer
