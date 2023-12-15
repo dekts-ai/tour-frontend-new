@@ -229,7 +229,7 @@
         </div>
     </section>
 </template>
-  
+
 <script>
 import axios from "axios";
 import Swal from 'sweetalert2';
@@ -282,18 +282,6 @@ export default {
     async mounted() {
         this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);
         this.createAndMountFormElements();
-
-        this.toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-            }
-        });
     },
     created() {
         this.iframeStatus = this.$store.state.iframeStatus;
@@ -569,12 +557,13 @@ export default {
             }
 
             let x = Math.pow(10, places);
-            return (amount >= 0 ? Math.ceil(amount * x) : Math.floor(amount * x)) / x;
+            let formul = (amount * x).toFixed(10);
+            return (amount >= 0 ? Math.ceil(formul) : Math.floor(formul)) / x;
         }
     }
 };
 </script>
-  
+
 <style>
 .card-element {
     margin-top: 5px;
@@ -586,4 +575,5 @@ export default {
 
 .error {
     color: #dc3545;
-}</style>
+}
+</style>

@@ -126,6 +126,11 @@ export default {
             return;
         }
 
+        if (this.$store.state.mindChange == 1) {
+            this.packageId = 0;
+            this.affiliateId = 0;
+        }
+
         axios.get("/tour-package/" + this.date + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId).then((response) => {
             this.$store.dispatch('storeTourPackage', response.data)
             var self = this;
