@@ -367,25 +367,69 @@ export default {
             var loader = this.$loading.show();
             var date = format(this.form.date, 'yyyy-MM-dd');
 
-            axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id).then((response) => {
-                this.dateTimeArr = response.data.Time;
-                this.totalavailableseats = response.data.TotalAvailableSeats;
-                this.selectgrouppeoples = [];
-                var seats = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
-                seats = seats + 1;
-                for (let index = 0; index < seats; index++) {
-                    this.selectgrouppeoples.push({
-                        id: index + 1,
-                        value: index,
-                        number: index,
-                    });
-                }
-            }).catch(() => {
-                this.processLoader(loader);
-                return;
-            });
+            axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id)
+                .then((response) => {
+                    this.dateTimeArr = response.data.Time;
+                    this.totalavailableseats = response.data.TotalAvailableSeats;
+                    this.selectgrouppeoples = [];
+                    var seats = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
+                    seats = seats + 1;
+                    for (let index = 0; index < seats; index++) {
+                        this.selectgrouppeoples.push({
+                            id: index + 1,
+                            value: index,
+                            number: index,
+                        });
+                    }
 
-            this.updateRateGroups(date, 0, loader);
+                    this.updateRateGroups(date, 0, loader);
+                }).catch(() => {
+                    this.details.TourPkgRates = [];
+                    this.processLoader(loader);
+                });
+        },
+        updateRateGroups(date, calendar = 0, loader) {
+            console.log('updateRateGroups');
+
+            axios.get("/tour-package/" + date + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + this.with_rate_groups)
+                .then((response) => {
+                    this.$store.dispatch('storeTourPackage', response.data)
+                    this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
+                    this.details = this.$store.state.tourPackage;
+                    this.details.TourPkgRates = this.details.TourPkgRates[this.form.package_id];
+                    this.hotels = this.$store.state.tourPackage?.hotels;
+                    this.cartView = this.$store.state.tourPackage?.cartView;
+                    this.form.service_commission = this.$store.state.tourPackage.TourPkgDetails[0].ServiceCommission
+
+                    // Define Variables
+                    var v1 = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
+
+                    // Append Dropdown Value for TourPkgRates
+                    this.details.TourPkgRates?.forEach((element, i) => {
+                        $("#people_group" + element.pkg_rate_id)
+                            .find("option")
+                            .remove()
+                            .end();
+
+                        for (let j = 0; j <= v1; j++) {
+                            $("#people_group" + element.pkg_rate_id).append(
+                                '<option value=' + j + '>' + j + '</option>'
+                            );
+                        }
+                    });
+
+                    this.processLoader(loader);
+                }).catch(() => {
+                    this.processLoader(loader);
+                });
+
+            if (calendar) {
+                this.form.tour_slot_id = "";
+                this.form.time_date = "";
+            }
+
+            this.$store.dispatch('storeTabs', this.tabs);
+            this.$store.dispatch('storeMindChange', 0);
         },
         selectedDate(date) {
             console.log('selectedDate');
@@ -393,6 +437,7 @@ export default {
             var loader = this.$loading.show();
             this.form.date = date;
             this.dateTimeArr = [];
+            this.errors = [];
 
             var date = format(date, 'yyyy-MM-dd');
 
@@ -410,54 +455,12 @@ export default {
                         number: index,
                     });
                 }
+
+                this.updateRateGroups(date, 1, loader);
             }).catch(() => {
-                this.processLoader(loader);
-                return;
-            });
-
-            this.updateRateGroups(date, 1, loader);
-        },
-        updateRateGroups(date, calendar = 0, loader) {
-            console.log('updateRateGroups');
-
-            axios.get("/tour-package/" + date + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + this.with_rate_groups).then((response) => {
-                this.$store.dispatch('storeTourPackage', response.data)
-                this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
-                this.details = this.$store.state.tourPackage;
-                this.details.TourPkgRates = this.details.TourPkgRates[this.form.package_id];
-                this.hotels = this.$store.state.tourPackage?.hotels;
-                this.cartView = this.$store.state.tourPackage?.cartView;
-                this.form.service_commission = this.$store.state.tourPackage.TourPkgDetails[0].ServiceCommission
-
-                // Define Variables
-                var v1 = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
-
-                // Append Dropdown Value for TourPkgRates
-                this.details.TourPkgRates?.forEach((element, i) => {
-                    $("#people_group" + element.pkg_rate_id)
-                        .find("option")
-                        .remove()
-                        .end();
-
-                    for (let j = 0; j <= v1; j++) {
-                        $("#people_group" + element.pkg_rate_id).append(
-                            '<option value=' + j + '>' + j + '</option>'
-                        );
-                    }
-                });
-
-                this.processLoader(loader);
-            }).catch(() => {
+                this.details.TourPkgRates = [];
                 this.processLoader(loader);
             });
-
-            if (calendar) {
-                this.form.tour_slot_id = "";
-                this.form.time_date = "";
-            }
-
-            this.$store.dispatch('storeTabs', this.tabs);
-            this.$store.dispatch('storeMindChange', 0);
         },
         submit: function () {
             var loader = this.$loading.show();
@@ -524,7 +527,6 @@ export default {
         },
         processLoader(loader) {
             loader.hide();
-            return;
         },
         getStartDate() {
             // See this issues with datepicker 
