@@ -530,6 +530,7 @@ export default {
 
             if (tab == 2) {
                 this.$store.dispatch('storeMindChange', 1);
+                this.$store.dispatch('storeFormData', null);
                 this.$router.push({
                     name: 'Init'
                 });

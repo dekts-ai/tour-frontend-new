@@ -132,7 +132,7 @@
                                     </div>
 
                                     <div v-for="tourPackage in TourPkgDetails" :key="TourPkgDetails.id">
-                                        <div class="tourselected-packages-item remaining-packages-list" v-if="checkPackageIds.includes(tourPackage.TourPackageId.toString()) == false">
+                                        <div class="tourselected-packages-item remaining-packages-list" v-if="checkPackageIds.includes(tourPackage.TourPackageId) == false">
                                             <div class="tourselected-inner-wrap">
                                                 <div class="tourselected-inner">
                                                     <div class="tourselected-detail">
@@ -208,7 +208,8 @@ export default {
 
         if (this.cartItemLength) {
             for (var key in this.cartItem) {
-                this.checkPackageIds.push(this.cartItem[key].package_id);
+                var pId = parseInt(this.cartItem[key].package_id);
+                this.checkPackageIds.push(pId);
             }
         }
 
@@ -256,6 +257,7 @@ export default {
 
             if (tab == 2) {
                 this.$store.dispatch('storeMindChange', 1);
+                this.$store.dispatch('storeFormData', null);
                 this.$router.push({
                     name: 'Init'
                 });
