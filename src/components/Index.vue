@@ -305,6 +305,7 @@ export default {
                 confirmButtonText: "Yes, delete it!"
             }).then((result) => {
                 if (result.isConfirmed) {
+                    this.checkPackageIds = [];
                     delete this.cartItem[formData.tour_slot_id];
                     this.cartItemLength = Object.values(this.cartItem).length;
 
@@ -315,7 +316,6 @@ export default {
                     }).then((result) => {
                         if (result.isConfirmed && this.cartItemLength == 0) {
                             this.$store.dispatch('storeCartItem', {});
-                            this.checkPackageIds = [];
                         }
                     });
 
@@ -329,6 +329,9 @@ export default {
                             this.discount = Number(this.discount) + Number(this.cartItem[key].discount2_value);
                             this.fees = Number(this.fees) + Number(this.cartItem[key].fees);
                             this.total = Number(this.total) + Number(this.cartItem[key].total);
+
+                            var pId = parseInt(this.cartItem[key].package_id);
+                            this.checkPackageIds.push(pId);
                         }
                     }
                 }
