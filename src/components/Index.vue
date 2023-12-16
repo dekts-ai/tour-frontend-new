@@ -132,7 +132,7 @@
                                     </div>
 
                                     <div v-for="tourPackage in TourPkgDetails" :key="TourPkgDetails.id">
-                                        <div class="tourselected-packages-item remaining-packages-list" v-if="checkPackageIds.includes(tourPackage.TourPackageId) == false">
+                                        <div class="tourselected-packages-item remaining-packages-list" v-if="checkPackageIds.includes(tourPackage.TourPackageId.toString()) == false">
                                             <div class="tourselected-inner-wrap">
                                                 <div class="tourselected-inner">
                                                     <div class="tourselected-detail">
