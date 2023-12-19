@@ -232,7 +232,7 @@
                               </div>
                               <div class="form-field-wrp contact-form-field">
                                 <div class="form-group col-12">
-                                  <div class="policy-item-wrp">
+                                  <div class="policy-item-wrp" v-if="data?.tenant_id != 'kens'">
                                     <h5 class="card-label-text-left mb-2">
                                       Cancellation policy
                                     </h5>
@@ -257,6 +257,19 @@
                                       </li>
                                       <li>
                                         In the event that tours are canceled due to weather or unforeseen circumstances, you will receive a full refund.
+                                      </li>
+                                    </ul>
+                                  </div>
+                                  <div class="policy-item-wrp" v-else>
+                                    <h5 class="card-label-text-left mb-2">
+                                      Cancellation policy
+                                    </h5>
+                                    <ul>
+                                      <li>
+                                        Please check-in 30 minutes prior from your confirmed tour time. General tours line up 10 minutes before departure. All Groups who have NOT checked-in and received their tour ticket 10 minutes prior to the scheduled departure of the tour, forfeit their reservation and those spaces will be filled with walk-ins. NO REFUNDS will be given in this situation
+                                      </li>
+                                      <li>
+                                        By checking this box, I have read, understand, and agree to the Cancellation Policy: Cancellations must be made 72 hours prior to tour departure date / time for a refund (The booking surcharge is non-refundable). There is no refund for cancellations within 72 hours of the scheduled time of tour departure.
                                       </li>
                                     </ul>
                                   </div>
