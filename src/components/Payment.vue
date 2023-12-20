@@ -863,7 +863,8 @@ export default {
       }
 
       let x = Math.pow(10, places);
-      return (amount >= 0 ? Math.ceil(amount * x) : Math.floor(amount * x)) / x;
+      let formul = (amount * x).toFixed(10);
+      return (amount >= 0 ? Math.ceil(formul) : Math.floor(formul)) / x;
     },
     addCouponCode() {
       this.state = 'initial';
