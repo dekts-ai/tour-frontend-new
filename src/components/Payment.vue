@@ -266,10 +266,25 @@
                                     </h5>
                                     <ul>
                                       <li>
-                                        Please check-in 30 minutes prior from your confirmed tour time. General tours line up 10 minutes before departure. All Groups who have NOT checked-in and received their tour ticket 10 minutes prior to the scheduled departure of the tour, forfeit their reservation and those spaces will be filled with walk-ins. NO REFUNDS will be given in this situation
+                                        Please check-in 30 minutes prior from your confirmed tour time. General tours line up 10 minutes before departure. All Groups who have NOT checked-in and received their tour ticket 10 minutes prior to the scheduled departure of the tour, forfeit their reservation and those spaces will be filled with walk-ins. NO REFUNDS will be given in this situation.
                                       </li>
+                                    </ul>
+
+                                    <h5 class="card-label-text-left mb-2">
+                                      Refund policy
+                                    </h5>
+                                    <ul>
                                       <li>
-                                        By checking this box, I have read, understand, and agree to the Cancellation Policy: Cancellations must be made 72 hours prior to tour departure date / time for a refund (The booking surcharge is non-refundable). There is no refund for cancellations within 72 hours of the scheduled time of tour departure.
+                                        By checking this box, I have read, understand, and agree to the Cancellation Policy: Cancellations must be made 72 hours prior to tour departure date / time for a refund. We offer full refunds of ticket price (not booking fees) made of the services offered on our Website. Booking Fees are non-refundable. There is no refund for cancellations within 72 hours of the scheduled time of tour departure.
+                                      </li>
+                                    </ul>
+
+                                    <h5 class="card-label-text-left mb-2">
+                                      Weather
+                                    </h5>
+                                    <ul>
+                                      <li>
+                                        Ken’s Tours reserves the right to cancel tours due to inclement weather for the safety of our guests and employees. During rain/weather cancellations, if your scheduled tour has departed, you will forfeit your tour and fees. NO REFUNDS will be given in this situation. If Ken’s Tours cancels tours due to weather prior to your tour’s departure, you will receive a full refund.
                                       </li>
                                     </ul>
                                   </div>

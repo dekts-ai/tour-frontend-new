@@ -191,13 +191,10 @@
                             </div>
                             <ul>
                               <li>
-                                <a v-if="iframeStatus && data.package_id && data.affiliate_id" :href="`${baseUrl}?oid=${data.tour_operator_id}&pid=${data.package_id}&aid=${data.affiliate_id}&iframe=${iframeStatus}`">
+                                <a v-if="iframeStatus && data.affiliate_id" :href="`${baseUrl}?tid=${data.tenant_id}&oid=${data.tour_operator_id}&pid=${data.package_id}&aid=${data.affiliate_id}&iframe=${iframeStatus}`">
                                   Home Page
                                 </a>
-                                <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?oid=${data.tour_operator_id}&pid=${data.package_id}&iframe=${iframeStatus}`">
-                                  Home Page
-                                </a>
-                                <a v-else :href="`${baseUrl}`">
+                                <a v-else-if="iframeStatus" :href="`${baseUrl}?tid=${data.tenant_id}&oid=${data.tour_operator_id}&pid=${data.package_id}&iframe=${iframeStatus}`">
                                   Home Page
                                 </a>
                               </li>
