@@ -238,10 +238,11 @@
                                         <div class="content-sec">
                                             <h2>{{TourPkgDetails.TourPkgName }}</h2>
                                             <p>{{ TourPkgDetails.TourPkgShortDesc }}</p>
+                                            <p v-if="form?.tenant_id == 'kens'">{{ TourPkgDetails.TourPkgLongDesc }}</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row hiking-tour-row" v-for="TourPkgDetails in details.TourPkgDetails"
+                                <div v-if="form?.tenant_id != 'kens'" class="row hiking-tour-row" v-for="TourPkgDetails in details.TourPkgDetails"
                                     :key="TourPkgDetails.pkg_rate_id">
                                     <div class="col-lg-4 col-md-12">
                                         <div class="images-sec">
