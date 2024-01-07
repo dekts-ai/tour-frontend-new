@@ -63,7 +63,7 @@
                                                     <div class="tourselected-title-wrap">
                                                         <div class="tourselected-title">{{ item.package_name }}</div>
                                                         <div class="tourselected-title-top">{{ dateFormat(item.date) }} @ {{ item.time_date }}</div>
-                                                        <div class="what-bring-wrap">
+                                                        <div class="what-bring-wrap-added">
                                                             <div class="what-bring-title">What to bring</div>
                                                             <ul>
                                                                 <li>Bring water for hot days</li>
@@ -146,7 +146,7 @@
                                                             </div>
 
                                                             <div class="tourselected-action-btn">
-                                                                <button class="action-btn action-btn-addmore" @click="bookNow(tourPackage.tenant_id, tourPackage.TourOperatorId, tourPackage.TourPackageId)">+ Add more packages</button>
+                                                                <button class="action-btn action-btn-addmore" @click="bookNow(tourPackage.tenant_id, tourPackage.TourOperatorId, tourPackage.TourPackageId)">+ Add Package</button>
                                                             </div>
                                                         </div>
                                                     </div>

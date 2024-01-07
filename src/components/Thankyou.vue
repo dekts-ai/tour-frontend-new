@@ -188,14 +188,14 @@
                         </div>
                         <div class="col-12 cta p-0">
                           <div class="cta-box">
-                            <div class="content">
+                            <div class="content" v-if="tourBooking?.data[0]?.phone_number">
                               <h3>Need Help?</h3>
                               <p>
                                 Please give us a call for any query or help at:
-                                <a href="tel:928-640-1761">928-640-1761</a>
+                                <a :href="'tel:' + tourBooking.data[0].phone_number">{{ tourBooking.data[0].phone_number }}</a>
                               </p>
                             </div>
-                            <ul>
+                            <ul v-if="iframeStatus == false">
                               <li>
                                 <a class="mind-change" @click="mindChange()">
                                   Home Page
