@@ -101,7 +101,7 @@
                                                 </div>
                                                 <div class="col-12 col-md-8 mt-4 mt-md-0">
                                                     <h2>Select a start time for your tour:</h2>
-                                                    <div v-if="staticDateRange(form.date)">
+                                                    <div v-if="staticDateRange(form.date, form.tenant_id)">
                                                         <h3 class="watermark static-date-range">Canyon is closed for repairs. Please select another day.</h3>
                                                         <br>
                                                     </div>
@@ -553,7 +553,12 @@ export default {
         unflip(hotelId) {
             this.flippedHotelId = null;
         },
-        staticDateRange: function (date) {
+        staticDateRange: function (date, tenant) {
+            const tenants = ["kens", "dixies"];
+            if( tenants.indexOf(tenant) === -1 ){
+                return false
+            }
+
             date = new Date(date);
             let firstDate = new Date('01 06 2024');
             let secondDate = new Date('01 13 2024');
