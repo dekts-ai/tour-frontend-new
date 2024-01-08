@@ -97,6 +97,10 @@
                                                         <h3 class="watermark static-date-range">Canyon is closed for repairs. Please select another day.</h3>
                                                         <br>
                                                     </div>
+                                                    <div v-else-if="begins">
+                                                        <h3 class="watermark static-date-range">Exciting News! Our Tour Begins on <br />{{ begins }}.</h3>
+                                                        <br>
+                                                    </div>
                                                     <div class="radio-toolbar" v-if="dateTimeArr.length > 0">
                                                         <div class="time-item" 
                                                             :class="name.bookable_status == 'Open' && name.dd < name.seats ? 'seats-free-label' : 'watermark-label'" 
@@ -122,9 +126,9 @@
                                                             </text>
                                                         </div>
                                                     </div>
-                                                    <!-- <div class="radio-toolbar" v-else>
-                                                        <h2 v-if="!staticDateRange(form.date)">Slot not found</h2>
-                                                    </div> -->
+                                                    <div class="radio-toolbar" v-else-if="!begins && !staticDateRange(form.date) && dateTimeArr.length == 0">
+                                                        <h3 class="watermark static-date-range">Apologies, No slots available on your chosen date.</h3>
+                                                    </div>
                                                     <div class="row hotel-list-item-wrap">
                                                         <div v-if="hotels.length" class="p-1 pb-2 desired-pickup-location">
                                                             Please select your desired pickup location:
@@ -308,6 +312,7 @@ export default {
             preventDisableDateSelection: true,
             dateTimeArr: [],
             peopleselects: [],
+            begins: null,
             errors: [],
             form: {
                 iframeStatusInfo: false,
@@ -370,6 +375,7 @@ export default {
 
             axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id)
                 .then((response) => {
+                    this.begins = response.data.begins;
                     this.dateTimeArr = response.data.Time;
                     this.totalavailableseats = response.data.TotalAvailableSeats;
                     this.selectgrouppeoples = [];
@@ -384,8 +390,9 @@ export default {
                     }
 
                     this.updateRateGroups(date, 0, loader);
-                }).catch(() => {
+                }).catch(error => {
                     this.details.TourPkgRates = [];
+                    this.begins = error?.response?.data?.data?.begins;
                     this.processLoader(loader);
                 });
         },
@@ -443,6 +450,7 @@ export default {
             var date = format(date, 'yyyy-MM-dd');
 
             axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id).then((response) => {
+                this.begins = response.data.begins;
                 this.dateTimeArr = response.data.Time;
                 this.totalavailableseats = response.data.TotalAvailableSeats;
                 this.selectgrouppeoples = [];
@@ -458,8 +466,9 @@ export default {
                 }
 
                 this.updateRateGroups(date, 1, loader);
-            }).catch(() => {
+            }).catch(error => {
                 this.details.TourPkgRates = [];
+                this.begins = error?.response?.data?.data?.begins;
                 this.processLoader(loader);
             });
         },
