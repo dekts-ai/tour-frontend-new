@@ -299,7 +299,7 @@ export default {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
             TourPkgName: "",
-            totalavailableseats: {},
+            totalavailableseats: 0,
             selectgrouppeoples: [],
             details: [],
             hotels: [],
@@ -362,7 +362,7 @@ export default {
                 this.dateTimeArr = response.data.Time;
                 this.totalavailableseats = response.data.TotalAvailableSeats;
                 this.selectgrouppeoples = [];
-                var seats = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
+                var seats = this.totalavailableseats;
                 seats = seats + 1;
                 for (let index = 0; index < seats; index++) {
                     this.selectgrouppeoples.push({
@@ -392,7 +392,7 @@ export default {
                 this.dateTimeArr = response.data.Time;
                 this.totalavailableseats = response.data.TotalAvailableSeats;
                 this.selectgrouppeoples = [];
-                var seats = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
+                var seats = this.totalavailableseats;
                 seats = seats + 1;
 
                 for (let index = 0; index < seats; index++) {
@@ -422,7 +422,7 @@ export default {
                 this.hotels = response.data.hotels;
 
                 // Define Variables
-                var v1 = this.totalavailableseats?.seats ? this.totalavailableseats?.seats : 0;
+                var v1 = this.totalavailableseats;
 
                 // Append Dropdown Value for TourPkgRates
                 this.details.TourPkgRates?.forEach((element) => {
