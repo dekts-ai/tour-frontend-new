@@ -134,7 +134,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="radio-toolbar" v-else-if="!begins && !staticDateRange(form.date, form.tenant_id) && dateTimeArr.length == 0">
-                                                        <h3 class="watermark static-date-range">Apologies, No slots available on your chosen date.</h3>
+                                                        <h3 class="watermark static-date-range" id="no-slot-found">{{ noSlotFound }}</h3>
                                                     </div>
                                                     <div class="row hotel-list-item-wrap">
                                                         <div v-if="hotels.length" class="p-1 pb-2 desired-pickup-location">
@@ -316,6 +316,7 @@ export default {
             dateTimeArr: [],
             peopleselects: [],
             begins: null,
+            noSlotFound: null,
             errors: [],
             form: {
                 iframeStatusInfo: "",
@@ -360,6 +361,7 @@ export default {
             console.log('configure');
 
             var loader = this.$loading.show();
+            this.noSlotFound = null;
             document.title = "Native American Tours";
             var date = format(this.form.date, 'yyyy-MM-dd');
 
@@ -380,6 +382,7 @@ export default {
 
                 this.processLoader(loader);
             }).catch(error => {
+                this.noSlotFound = "Apologies, No slots available on your chosen date.";
                 this.begins = error?.response?.data?.data?.begins;
                 this.processLoader(loader);
             });
@@ -390,6 +393,7 @@ export default {
             console.log('selectedDate');
 
             var loader = this.$loading.show();
+            this.noSlotFound = null;
             this.form.date = date;
             this.dateTimeArr = [];
 
@@ -413,6 +417,7 @@ export default {
 
                 this.processLoader(loader);
             }).catch(error => {
+                this.noSlotFound = "Apologies, No slots available on your chosen date.";
                 this.begins = error?.response?.data?.data?.begins;
                 this.processLoader(loader);
             });
