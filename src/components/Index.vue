@@ -67,6 +67,7 @@
 
 <script>
 import axios from "axios";
+import { format } from 'date-fns';
 
 export default {
     name: "Index",
@@ -96,7 +97,9 @@ export default {
             this.$router.push("/initialize");
         }
 
-        axios.get("/tour-package/" + this.date + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId).then((response) => {
+        var date = format(this.date, 'yyyy-MM-dd');
+
+        axios.get("/tour-package/" + date + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId).then((response) => {
             var self = this;
             self.TourPkgDetails = response.data.TourPkgDetails;
             self.banner = self.TourPkgDetails[0].HeaderOne;
