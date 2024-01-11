@@ -105,10 +105,10 @@
                                                         <h3 class="watermark static-date-range">Canyon is closed for repairs. Please select another day.</h3>
                                                         <br>
                                                     </div>
-                                                    <!-- <div v-else-if="begins">
+                                                    <div v-else-if="begins">
                                                         <h3 class="watermark static-date-range">Exciting News! Our Tour Begins on <br />{{ begins }}.</h3>
                                                         <br>
-                                                    </div> -->
+                                                    </div>
                                                     <div class="radio-toolbar" v-if="dateTimeArr.length > 0">
                                                         <div class="time-item" 
                                                             :class="name.bookable_status == 'Open' && name.dd < name.seats ? 'seats-free-label' : 'watermark-label'" 
