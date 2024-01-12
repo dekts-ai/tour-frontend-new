@@ -102,7 +102,7 @@
                                   <h3 class="bookingcontact">
                                     Your Contact Number:
                                   </h3>
-                                  <p>+{{customer.phone_number}}</p>
+                                  <p>{{customer.phone_number}}</p>
                                 </div>
                               </div>
                               <div class="col-md-6">
