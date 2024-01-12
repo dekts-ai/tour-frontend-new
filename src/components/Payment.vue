@@ -194,15 +194,25 @@
                                     placeholder="Your Name" />
                                 </div>
                                 <div class="form-group col-12">
+
                                   <div class="phone-wrap">
-                                    <label for="phonenumber" class="col-form-label">Phone Number<span
+
+                                    <label for="phone_number" class="col-form-label">Phone Number<span
                                         class="required-star">*</span></label>
-                                    <div class="field-icon-wrp">
+                                    <!-- <div class="field-icon-wrp">
                                       <i class="fa fa-phone" aria-hidden="true"></i>
-                                    </div>
-                                    <input type="text" id="phonenumber" name="phone_number" v-model="form.phone_number"
-                                      v-mask="'###############'" class="form-control" placeholder="Your Contact Number" />
+                                    </div> -->
+
+                                     <IntPhoneNumber :current_phone_number="form.phone_number" 
+                                                     :current_phone_code="form.phone_code"
+                                                     @onphoneupdate="updatePhoneNumber" /> 
+                                    
+                                    <input type="hidden" id="phonenumber" name="phone_number" v-model="form.phone_number"  />
+                                    <input type="hidden" id="phonecode" name="phone_code" v-model="form.phone_code"  />
+
                                   </div>
+
+
                                 </div>
                                 <div class="form-group col-12">
                                   <label for="Email" class="col-form-label">Email Address<span
@@ -217,7 +227,7 @@
                                   <hr />
                                 </div>
                                 <div class="form-group col-12 mb-0">
-                                  <label class="checkbox-wrap get-email-updates mb-0">Get future email updates from {{
+                                  <label class="checkbox-wrap get-email-updates mb-0" style="text-align: left;">Get future email updates from {{
                                   TourPkgName }}
                                     <input type="checkbox" name="getemailupdates" v-model="form.getemailupdates"
                                       id="getemailupdates" value="getemailupdates" />
@@ -298,7 +308,7 @@
                                         get-email-updates
                                         mb-0
                                         cancellationsterms
-                                      "><span class="required-star">*</span> I have
+                                      " style="text-align: left;"><span class="required-star">*</span> I have
                                     read and accept above all cancellations
                                     terms.
                                     <input type="checkbox" name="cancellations_policy"
@@ -554,9 +564,16 @@
 <script>
 import axios from "axios";
 import { loadStripe } from '@stripe/stripe-js';
-import { mask } from 'vue-the-mask'
+import { mask } from 'vue-the-mask';
+import IntPhoneNumber from './Forms/IntPhoneNumber';
+import CountryCodes from "../utils/countryCode";
+
 export default {
   name: "Payment",
+
+  components:{
+    IntPhoneNumber
+  },
   directives: {
     mask
   },
@@ -576,6 +593,7 @@ export default {
       form: {
         name: "",
         phone_number: "",
+        phone_code: "+1",
         email: "",
         getemailupdates: "",
         cancellations_policy: "",
@@ -697,6 +715,16 @@ export default {
     }
   },
   methods: {
+
+
+    updatePhoneNumber(props){
+
+      this.form.phone_number = props.phone_num;
+      this.form.phone_code = props.phone_ext;
+     
+    },
+
+
     createAndMountFormElements() {
       this.elements = this.stripe.elements({
         fonts: [{
@@ -775,6 +803,10 @@ export default {
           } else {
             let self = this;
             let router = this.$router;
+
+            //append  int phone code to phone number
+            this.form.phone_number = CountryCodes.formatPhoneNumber(this.form.phone_code, this.form.phone_number);
+
             axios.post("/booking-tour", this.form).then((response) => {
               this.$store.dispatch('storeCustomer', this.form);
               if (response.data.success == "false") {
