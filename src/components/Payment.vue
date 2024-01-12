@@ -804,7 +804,7 @@ export default {
             let self = this;
             let router = this.$router;
 
-            //append  int phone code to phone number
+            //append int phone code to phone number
             this.form.phone_number = CountryCodes.formatPhoneNumber(this.form.phone_code, this.form.phone_number);
 
             axios.post("/booking-tour", this.form).then((response) => {
