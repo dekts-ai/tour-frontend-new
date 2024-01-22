@@ -14,13 +14,15 @@
 			<div class="row">
 				<div class="col-12">
 					<div class="tabs-wrap d-flex align-items-center">
-						<button @click="mindChange(1)" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
-						<button @click="mindChange(2)" :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
-						<button @click="mindChange(3)" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">Checkout</button>
+						<button @click="navigateToTab(1, 'Index')" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
+						<button @click="navigateToTab(2, 'Init')" :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
+                        <button @click="navigateToTab(3, 'MyTrip')" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">My Trip</button>
+						<button @click="navigateToTab(4, 'Maps')" :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')">Maps</button>
+						<button @click="navigateToTab(5, 'Checkout')" :class="'tabs tab5 ' + (tabs == 5 ? 'active' : '')">Checkout</button>
 					</div>
 				</div>
 			</div>
-		</div>	
+		</div>
 	</section>
 
     <section class="inner-content-section">
@@ -48,7 +50,7 @@
                                             <button class="tooltipbtn btn-danger" data-toggle="tooltip" data-placement="top">
                                                 Health & Safety
                                             </button>
-                                            <button @click="mindChange(1)" class="btn btn-primary mt-2"><i class="fa fa-arrow-left" aria-hidden="true"></i> Home</button>
+                                            <button @click="navigateToTab(1, 'Index')" class="btn btn-primary mt-2"><i class="fa fa-arrow-left" aria-hidden="true"></i> Home</button>
                                         </div>
                                     </div>
                                 </div>
@@ -248,7 +250,7 @@ export default {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
             tenantId: null,
-            tabs: 3,
+            tabs: 5,
             cartView: 0,
             bookingIds: {},
             details: [],
@@ -555,29 +557,17 @@ export default {
                 this.processLoader(loader);
             }
         },
-        mindChange(tab) {
-            if (tab == 1) {
-                this.$store.dispatch('storeMindChange', 1);
-                this.$router.push({
-                    name: 'Index'
-                });
-
-                return;
+        navigateToTab(tab, destination) {
+            if (tab === 1 || tab === 2 || tab === 3 || tab === 4) {
+                this.handleTab(tab, destination);
             }
-
-            if (tab == 2) {
-                this.$store.dispatch('storeMindChange', 1);
+        },
+        handleTab(tab, destination) {
+            if (tab === 2) {
                 this.$store.dispatch('storeFormData', null);
-                this.$router.push({
-                    name: 'Init'
-                });
-
-                return;
             }
-
-            if (tab == 3) {
-                return;
-            }
+            this.$store.dispatch('storeMindChange', 1);
+            this.$router.push({ name: destination });
         },
         dateFormat(date) {
             this.$store.dispatch('storeDate', date);

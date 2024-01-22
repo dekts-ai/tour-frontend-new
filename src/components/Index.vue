@@ -12,14 +12,26 @@
 	<section class="tabs-section" v-if="iframeStatus">
 		<div class="no-container">
 			<div class="row">
-				<div class="col-12">
+				<div class="col-10">
 					<div class="tabs-wrap d-flex align-items-center">
-						<button @click="mindChange(1)" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
-						<button @click="mindChange(2)" :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
-						<button @click="mindChange(3)" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">Checkout</button>
+						<button @click="navigateToTab(1, '')" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
+						<button @click="handleTab(2, 'Init')" :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
+                        <button @click="navigateToTab(3, 'MyTrip')" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">My Trip</button>
+						<button @click="navigateToTab(4, 'Maps')" :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')">Maps</button>
+						<button @click="navigateToTab(5, 'Checkout')" :class="'tabs tab5 ' + (tabs == 5 ? 'active' : '')">Checkout</button>
+                        <!-- <button @click="toggleDatePicker" class="tooltipbtn btn-info ml-auto">Pick Date</button> -->
+                        <datepicker 
+                            v-if="showDatePicker"
+                            v-model="date"
+                            :value="date"
+                            :inline="false"
+                            :disabled-dates="disabledDates"
+                            :prevent-disable-date-selection="true"
+                            @selected="selectedDate">
+                        </datepicker>
 					</div>
 				</div>
-			</div>
+            </div>
 		</div>
 	</section>
 
@@ -167,11 +179,16 @@
 <script>
 import axios from "axios";
 import Swal from 'sweetalert2';
+import Datepicker from 'vuejs3-datepicker';
 import { format } from 'date-fns';
+import { getUTCDateFromTimeZone } from '../utils/dateUtils';
 
 export default {
     name: "Index",
     title: "Native American Tours",
+    components: {
+        Datepicker
+    },
     data() {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
@@ -183,7 +200,12 @@ export default {
             tourOperatorId: 1,
             packageId: 0,
             affiliateId: 0,
+            showDatePicker: true,
             date: null,
+            disabledDates: {
+                to: this.getStartDate(),
+                from: this.getEndDate()
+            },
             cartItem: {},
             cartItemLength: 0,
             subtotal: 0,
@@ -229,11 +251,15 @@ export default {
         }
 
         axios.get("/tour-package/" + this.date + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId).then((response) => {
-            this.$store.dispatch('storeTourPackage', response.data)
             var self = this;
+            self.$store.dispatch('storeTourPackage', response.data)
             self.TourPkgDetails = response.data.TourPkgDetails;
             self.banner = self.TourPkgDetails[0].HeaderOne;
             self.processLoader(loader);
+        }).catch(error => {
+            this.TourPkgDetails = [];
+            this.banner = "";
+            this.processLoader(loader);
         });
 
         this.$store.dispatch('storeTabs', this.tabs);
@@ -250,34 +276,24 @@ export default {
                 name: 'Init'
             });
         },
-        mindChange(tab) {
-            if (tab == 1) {
-                return;
+        navigateToTab(tab, destination) {
+            if (tab === 1 || tab === 3 || tab === 4 || tab === 5) {
+                this.handleTab(tab, destination);
             }
-
-            if (tab == 2) {
+        },
+        handleTab(tab, destination) {
+            if (tab === 2 || Object.keys(this.cartItem).length) {
+                if (tab === 2) {
+                    this.$store.dispatch('storeFormData', null);
+                }
                 this.$store.dispatch('storeMindChange', 1);
-                this.$store.dispatch('storeFormData', null);
-                this.$router.push({
-                    name: 'Init'
-                });
-
-                return;
-            }
-
-            if (tab == 3 && Object.keys(this.cartItem).length) {
-                this.$store.dispatch('storeMindChange', 1);
-                this.$router.push({
-                    name: 'Checkout'
-                });
-
-                return;
+                this.$router.push({ name: destination });
             } else {
                 Swal.fire({
                     toast: true,
-                    title: "Info!",
-                    html: "In order to proceed with checkout, please select package.",
-                    icon: "info"
+                    title: 'Info!',
+                    html: `In order to proceed with ${destination.toLowerCase()}, please select package.`,
+                    icon: 'info',
                 });
             }
         },
@@ -351,6 +367,41 @@ export default {
             this.$store.dispatch('storeDate', date);
             var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
             return date.toLocaleDateString("en-US", options)
+        },
+        toggleDatePicker() {
+            this.showDatePicker = !this.showDatePicker;
+        },
+        getStartDate() {
+            // See this issues with datepicker 
+            // https://github.com/charliekassel/vuejs-datepicker/issues/118
+            return getUTCDateFromTimeZone();
+        },
+        getEndDate() {
+            let date = new Date(new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' })).getFullYear() + 1, 11, 31);
+            date.setHours(23, 59, 59, 999);
+            return date;
+        },
+        selectedDate(date) {
+            console.log('selectedDate');
+
+            var loader = this.$loading.show();
+            this.date = date;
+            this.$store.dispatch('storeDate', this.date)
+
+            var date = format(date, 'yyyy-MM-dd');
+
+            axios.get("/tour-package/" + date + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId)
+                .then((response) => {
+                    this.$store.dispatch('storeTourPackage', response.data)
+                    var self = this;
+                    self.TourPkgDetails = response.data.TourPkgDetails;
+                    self.banner = this.TourPkgDetails[0].HeaderOne;
+                    self.processLoader(loader);
+                }).catch(error => {
+                    this.TourPkgDetails = [];
+                    this.banner = "";
+                    this.processLoader(loader);
+                });
         },
         roundout(amount, places = 0) {
             if (places < 0) {

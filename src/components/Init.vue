@@ -14,9 +14,11 @@
 			<div class="row">
 				<div class="col-12">
 					<div class="tabs-wrap d-flex align-items-center">
-						<button @click="mindChange(1)" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
-						<button @click="mindChange(2)" :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
-						<button @click="mindChange(3)" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">Checkout</button>
+						<button @click="navigateToTab(1, 'Index')" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
+						<button @click="navigateToTab(2, '')" :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
+                        <button @click="navigateToTab(3, 'MyTrip')" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">My Trip</button>
+						<button @click="navigateToTab(4, 'Maps')" :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')">Maps</button>
+						<button @click="navigateToTab(5, 'Checkout')" :class="'tabs tab5 ' + (tabs == 5 ? 'active' : '')">Checkout</button>
 					</div>
 				</div>
 			</div>
@@ -73,7 +75,7 @@
                                                 data-placement="top" title="">Health &
                                                 Safety</button>
                                             <button v-if="Object.keys(cartItem).length && cartView == 1" @click="checkout" class="btn btn-warning"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Checkout</button>
-                                            <button @click="mindChange(1)" class="btn btn-primary mt-2"><i class="fa fa-arrow-left" aria-hidden="true"></i> Home</button>
+                                            <button @click="navigateToTab(1, 'Index')" class="btn btn-primary mt-2"><i class="fa fa-arrow-left" aria-hidden="true"></i> Home</button>
                                         </div>
                                     </div>
                                 </div>
@@ -585,33 +587,21 @@ export default {
             let secondDate = new Date('01 13 2024');
             return date >= firstDate && date < secondDate && this.form.package_id == 1;
         },
-        mindChange(tab) {
-            if (tab == 1) {
-                this.$store.dispatch('storeMindChange', 1);
-                this.$router.push({
-                    name: 'Index'
-                });
-
-                return;
+        navigateToTab(tab, destination) {
+            if (tab === 1 || tab === 3 || tab === 4 || tab === 5) {
+                this.handleTab(tab, destination);
             }
-
-            if (tab == 2) {
-                return;
-            }
-
-            if (tab == 3 && Object.keys(this.cartItem).length) {
+        },
+        handleTab(tab, destination) {
+            if (tab === 1 || Object.keys(this.cartItem).length) {
                 this.$store.dispatch('storeMindChange', 1);
-                this.$router.push({
-                    name: 'Checkout'
-                });
-
-                return;
+                this.$router.push({ name: destination });
             } else {
                 Swal.fire({
                     toast: true,
-                    title: "Info!",
-                    html: "In order to proceed with checkout, please schedule a trip.",
-                    icon: "info"
+                    title: 'Info!',
+                    html: `In order to proceed with ${destination.toLowerCase()}, please schedule a trip.`,
+                    icon: 'info',
                 });
             }
         },
