@@ -11,6 +11,7 @@ export default createStore({
         tourOperatorId: 0,
         packageId: 0,
         affiliateId: 0,
+        comboIds: 0,
         bookingIds: {},
         formData: null,
         tourPackage: null,
@@ -41,6 +42,9 @@ export default createStore({
         },
         affiliateId: state => {
             return state.affiliateId;
+        },
+        comboIds: state => {
+            return state.comboIds;
         },
         bookingIds: state => {
             return state.bookingIds;
@@ -95,6 +99,9 @@ export default createStore({
         AFFILIATE_ID(state, affiliateId) {
             state.affiliateId = affiliateId;
         },
+        COMBO_IDS(state, comboIds) {
+            state.comboIds = comboIds;
+        },
         BOOKING_IDS(state, bookingIds) {
             state.bookingIds = bookingIds;
         },
@@ -147,6 +154,9 @@ export default createStore({
         },
         storeAffiliateId({ commit }, affiliateId) {
             commit('AFFILIATE_ID', affiliateId);
+        },
+        storeComboIds({ commit }, comboIds) {
+            commit('COMBO_IDS', comboIds);
         },
         storeBookingIds({ commit }, bookingIds) {
             commit('BOOKING_IDS', bookingIds);

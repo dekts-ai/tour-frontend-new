@@ -59,7 +59,7 @@
                                             <button class="tooltipbtn btn-danger" data-toggle="tooltip" data-placement="top"
                                                 title="">Health &
                                                 Safety</button>
-                                            <button v-if="Object.keys(cartItem).length && cartView == 1" @click="checkout" class="btn btn-warning mt-2"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Checkout</button>
+                                            <button v-if="Object.keys(cartItem).length && comboIds != 0" @click="checkout" class="btn btn-warning mt-2"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Checkout</button>
                                         </div>
                                     </div>
                                 </div>
@@ -143,22 +143,22 @@
                                         </div>
                                     </div>
 
-                                    <div v-for="tourPackage in TourPkgDetails" :key="TourPkgDetails.id">
-                                        <div class="tourselected-packages-item remaining-packages-list" v-if="checkPackageIds.includes(tourPackage.TourPackageId) == false">
+                                    <div v-for="tourPackage in tourPackageData" :key="tourPackageData.id">
+                                        <div class="tourselected-packages-item remaining-packages-list" v-if="checkPackageIds.includes(tourPackage.package_id) == false">
                                             <div class="tourselected-inner-wrap">
                                                 <div class="tourselected-inner">
                                                     <div class="tourselected-detail">
-                                                        <div class="tourselected-image"><img :src="tourPackage.FrontendPackageImage" :alt="tourPackage.TourPkgName"></div>
+                                                        <div class="tourselected-image"><img :src="tourPackage.FrontendPackageImage" :alt="tourPackage.package_name"></div>
                                                         <div class="tourselected-title-wrap">
-                                                            <div class="tourselected-title">{{ tourPackage.TourPkgName }}</div>
-                                                            <div class="tourselected-title-top">{{ tourPackage.TourPkgDuration }}</div>
+                                                            <div class="tourselected-title">{{ tourPackage.package_name }}</div>
+                                                            <div class="tourselected-title-top">{{ tourPackage.duration }}</div>
                                                             
                                                             <div class="what-bring-wrap">
-                                                                <p>{{ tourPackage.TourPkgShortDesc }}</p>
+                                                                <p>{{ tourPackage.short_description }}</p>
                                                             </div>
 
                                                             <div class="tourselected-action-btn">
-                                                                <button class="action-btn action-btn-addmore" @click="bookNow(tourPackage.tenant_id, tourPackage.TourOperatorId, tourPackage.TourPackageId)">+ Add Package</button>
+                                                                <button class="action-btn action-btn-addmore" @click="bookNow(tourPackage.tenant_id, tourPackage.tour_operator_id, tourPackage.package_id)">+ Add Package</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -193,13 +193,13 @@ export default {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
-            cartView: 0,
-            TourPkgDetails: [],
+            tourPackageData: [],
             banner: "",
             tenantId: "dixies",
             tourOperatorId: 1,
             packageId: 0,
             affiliateId: 0,
+            comboIds: 0,
             showDatePicker: true,
             date: null,
             disabledDates: {
@@ -223,8 +223,8 @@ export default {
         this.tourOperatorId = this.$store.state.tourOperatorId;
         this.packageId = this.$store.state.packageId;
         this.affiliateId = this.$store.state.affiliateId;
+        this.comboIds = this.$store.state.comboIds;
         this.iframeStatus = this.$store.state.iframeStatus;
-        this.cartView = this.$store.state.tourPackage?.cartView;
         this.cartItem = this.$store.state.cartItem;
         this.cartItemLength = Object.values(this.cartItem).length;
 
@@ -250,14 +250,14 @@ export default {
             this.affiliateId = 0;
         }
 
-        axios.get("/tour-package/" + this.date + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId).then((response) => {
+        axios.get("/tour-package/" + this.date + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId + "/" + this.comboIds).then((response) => {
             var self = this;
             self.$store.dispatch('storeTourPackage', response.data)
-            self.TourPkgDetails = response.data.TourPkgDetails;
-            self.banner = self.TourPkgDetails[0].HeaderOne;
+            self.tourPackageData = response.data.tourPackageData;
+            self.banner = self.tourPackageData[0].HeaderOne;
             self.processLoader(loader);
         }).catch(error => {
-            this.TourPkgDetails = [];
+            this.tourPackageData = [];
             this.banner = "";
             this.processLoader(loader);
         });
@@ -390,15 +390,15 @@ export default {
 
             var date = format(date, 'yyyy-MM-dd');
 
-            axios.get("/tour-package/" + date + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId)
+            axios.get("/tour-package/" + date + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId + "/" + this.comboIds)
                 .then((response) => {
                     this.$store.dispatch('storeTourPackage', response.data)
                     var self = this;
-                    self.TourPkgDetails = response.data.TourPkgDetails;
-                    self.banner = this.TourPkgDetails[0].HeaderOne;
+                    self.tourPackageData = response.data.tourPackageData;
+                    self.banner = this.tourPackageData[0].HeaderOne;
                     self.processLoader(loader);
                 }).catch(error => {
-                    this.TourPkgDetails = [];
+                    this.tourPackageData = [];
                     this.banner = "";
                     this.processLoader(loader);
                 });

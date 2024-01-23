@@ -1,7 +1,7 @@
 <template>
     <section :class="[(iframeStatus == false) ? 'noiframe-inner-banner' : 'iframe-inner-banner', '']"
-        v-for="TourPkgDetails in details.TourPkgDetails" :key="TourPkgDetails.pkg_rate_id" class="banner-section"
-        v-bind:style="{ 'background-image': 'url(' + TourPkgDetails.HeaderOne + ')' }">
+        v-for="tourPackageData in details.tourPackageData" :key="1" class="banner-section"
+        v-bind:style="{ 'background-image': 'url(' + tourPackageData.HeaderOne + ')' }">
         <div class="container">
             <div class="row">
                 <div class="col-12"></div>
@@ -35,17 +35,17 @@
                                 <div class="bradcumb-main">
                                     <ul>
                                         <li class="home">
-                                            <a v-if="iframeStatus && form.package_id && form.affiliate_id" :href="`${baseUrl}?tid=${form.tenant_id}&oid=${form.tour_operator_id}&pid=${form.package_id}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
+                                            <a v-if="iframeStatus && form.package_id && form.affiliate_id" :href="`${baseUrl}?tid=${form.tenant_id}&oid=${form.tour_operator_id}&pid=${form.package_id}&cids=${comboIds}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
                                                 Home
                                             </a>
-                                            <a v-else-if="iframeStatus && form.package_id" :href="`${baseUrl}?tid=${form.tenant_id}&oid=${form.tour_operator_id}&pid=${form.package_id}&iframe=${iframeStatus}`">
+                                            <a v-else-if="iframeStatus && form.package_id" :href="`${baseUrl}?tid=${form.tenant_id}&oid=${form.tour_operator_id}&pid=${form.package_id}&cids=${comboIds}&iframe=${iframeStatus}`">
                                                 Home
                                             </a>
                                             <a v-else :href="`${baseUrl}`">
                                                 Home
                                             </a>
                                         </li>
-                                        <li>{{ TourPkgName }}</li>
+                                        <li>{{ tourPackageName }}</li>
                                     </ul>
                                     <div class="cloasedbtn">
                                         <img src="../assets/images/cross.png">
@@ -74,7 +74,7 @@
                                             <button class="tooltipbtn btn-danger" data-toggle="tooltip"
                                                 data-placement="top" title="">Health &
                                                 Safety</button>
-                                            <button v-if="Object.keys(cartItem).length && cartView == 1" @click="checkout" class="btn btn-warning"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Checkout</button>
+                                            <button v-if="Object.keys(cartItem).length && comboIds != 0" @click="checkout" class="btn btn-warning"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Checkout</button>
                                             <button @click="navigateToTab(1, 'Index')" class="btn btn-primary mt-2"><i class="fa fa-arrow-left" aria-hidden="true"></i> Home</button>
                                         </div>
                                     </div>
@@ -183,35 +183,35 @@
                                                                     <th scope="col">Price</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody v-for="(tour, p) in details.TourPkgRates"
-                                                                :key="tour.pkg_rate_id">
+                                                            <tbody v-for="(tour, p) in details.tourPackageRateGroups"
+                                                                :key="tour.id">
                                                                 <tr>
                                                                     <td class="age" data-label="Age">
                                                                         <img src="../assets/images/aduct.png" />
-                                                                        {{ tour.Age }}
+                                                                        {{ tour.rate_for }}
                                                                     </td>
                                                                     <td class="taxes" data-label="Fees and Taxes">
                                                                         <p v-if="form?.tenant_id == 'dixies' && form.package_id >= 12 && form.package_id <= 15">
                                                                             {{ tour.description }}
                                                                         </p>
                                                                         <p v-else>
-                                                                            Navajo Nation: Permit Fee ${{ tour.PermitFee
-                                                                            }} & Tax ${{ tour.Tax}}
+                                                                            Navajo Nation: Permit Fee ${{ tour.permit_fee
+                                                                            }} & Tax ${{ tour.tax}}
                                                                         </p>
                                                                     </td>
                                                                     <td class="group"
                                                                         data-label="Select Group Of People">
                                                                         <select
                                                                             class="form-select people-group1"
-                                                                            :name="'people_group' + tour.pkg_rate_id "
-                                                                            :id="'people_group'+tour.pkg_rate_id">
+                                                                            :name="'people_group' + tour.id "
+                                                                            :id="'people_group'+tour.id">
                                                                             <option v-for="(item, q) in selectgrouppeoples"
                                                                                 :value="item.value" :key="item.value" :selected="q == this.form.people_group[p]">{{
                                                                                 item.number }}</option>
                                                                         </select>
                                                                     </td>
                                                                     <td class="price" data-label="Price">
-                                                                        <span class="tag">${{ tour.price }}</span>
+                                                                        <span class="tag">${{ tour.rate }}</span>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -226,47 +226,47 @@
                                         </div>
                                     </div>
                                 </form>
-                                <div class="row permit-tax" v-for="TourPkgDetails in details.TourPkgDetails"
-                                    :key="TourPkgDetails.pkg_rate_id">
+                                <div class="row permit-tax" v-for="tourPackageData in details.tourPackageData"
+                                    :key="1">
                                     <div class="col-lg-4 col-md-12">
                                         <div class="images-sec">
-                                            <img :src="TourPkgDetails.HeaderImage" />
+                                            <img :src="tourPackageData.HeaderImage" />
                                         </div>
                                     </div>
                                     <div class="col-lg-8 col-md-12">
                                         <div class="content-sec">
-                                            <h2>{{TourPkgDetails.TourPkgName }}</h2>
-                                            <p>{{ TourPkgDetails.TourPkgShortDesc }}</p>
-                                            <p v-if="form?.tenant_id == 'kens'">{{ TourPkgDetails.TourPkgLongDesc }}</p>
+                                            <h2>{{tourPackageData.package_name }}</h2>
+                                            <p>{{ tourPackageData.short_description }}</p>
+                                            <p v-if="form?.tenant_id == 'kens'">{{ tourPackageData.long_description }}</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div v-if="form?.tenant_id != 'kens'" class="row hiking-tour-row" v-for="TourPkgDetails in details.TourPkgDetails"
-                                    :key="TourPkgDetails.pkg_rate_id">
+                                <div v-if="form?.tenant_id != 'kens'" class="row hiking-tour-row" v-for="tourPackageData in details.tourPackageData"
+                                    :key="tourPackageData.id">
                                     <div class="col-lg-4 col-md-12">
                                         <div class="images-sec">
-                                            <img :src="TourPkgDetails.DescriptionImage" />
+                                            <img :src="tourPackageData.DescriptionImage" />
                                         </div>
                                     </div>
                                     <div class="col-lg-8 col-md-12">
                                         <div class="content-sec">
-                                            <h2>{{ TourPkgDetails.TourPkgName }}</h2>
-                                            <p>{{ TourPkgDetails.TourPkgLongDesc }}</p>
+                                            <h2>{{ tourPackageData.package_name }}</h2>
+                                            <p>{{ tourPackageData.long_description }}</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row tour-start-row">
                                     <div class="col-12 col-sm-12 col-md-6 duration"
-                                        v-for="TourPkgDetails in details.TourPkgDetails"
-                                        :key="TourPkgDetails.pkg_rate_id">
+                                        v-for="tourPackageData in details.tourPackageData"
+                                        :key="tourPackageData.id">
                                         <h2>Duration</h2>
-                                        <button class="btn-info">{{TourPkgDetails.TourPkgDuration }}</button>
+                                        <button class="btn-info">{{tourPackageData.duration }}</button>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 whattobring">
                                         <h2>What to Bring</h2>
                                         <div class="bring-group">
-                                            <button class="btn-info" v-for="ThingsToBring in details.ThingsToBring"
-                                                :key="ThingsToBring.pkg_rate_id">{{ ThingsToBring }}</button>
+                                            <button class="btn-info" v-for="(thingsToBring, key) in details.thingsToBring"
+                                                :key="key">{{ thingsToBring }}</button>
 
                                         </div>
                                     </div>
@@ -298,8 +298,8 @@ export default {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
-            cartView: 0,
-            TourPkgName: "",
+            comboIds: 0,
+            tourPackageName: "",
             totalavailableseats: 0,
             selectgrouppeoples: [],
             details: [],
@@ -347,6 +347,7 @@ export default {
         };
     },
     created: function () {
+        this.comboIds = this.$store.state.comboIds;
         this.cartItem = this.$store.state.cartItem;
         this.iframeStatus = this.$store.state.iframeStatus;
         if (this.$store.state.formData && this.$store.state.formData?.package_id == this.$store.state.packageId) {
@@ -393,7 +394,7 @@ export default {
 
                     this.updateRateGroups(date, 0, loader);
                 }).catch(error => {
-                    this.details.TourPkgRates = [];
+                    this.details.tourPackageRateGroups = [];
                     this.begins = error?.response?.data?.data?.begins;
                     this.processLoader(loader);
                 });
@@ -401,28 +402,27 @@ export default {
         updateRateGroups(date, calendar = 0, loader) {
             console.log('updateRateGroups');
 
-            axios.get("/tour-package/" + date + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + this.with_rate_groups)
+            axios.get("/tour-package/" + date + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + this.comboIds + "/" + this.with_rate_groups)
                 .then((response) => {
                     this.$store.dispatch('storeTourPackage', response.data)
-                    this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
+                    this.tourPackageName = response.data.tourPackageData[0].package_name;
                     this.details = this.$store.state.tourPackage;
-                    this.details.TourPkgRates = this.details.TourPkgRates[this.form.package_id];
+                    this.details.tourPackageRateGroups = this.details.tourPackageRateGroups[this.form.package_id];
                     this.hotels = this.$store.state.tourPackage?.hotels;
-                    this.cartView = this.$store.state.tourPackage?.cartView;
-                    this.form.service_commission = this.$store.state.tourPackage.TourPkgDetails[0].ServiceCommission
+                    this.form.service_commission = this.$store.state.tourPackage.tourPackageData[0].service_commission_percentage
 
                     // Define Variables
                     var v1 = this.totalavailableseats;
 
-                    // Append Dropdown Value for TourPkgRates
-                    this.details.TourPkgRates?.forEach((element, i) => {
-                        $("#people_group" + element.pkg_rate_id)
+                    // Append Dropdown Value for tourPackageRateGroups
+                    this.details.tourPackageRateGroups?.forEach((element, i) => {
+                        $("#people_group" + element.id)
                             .find("option")
                             .remove()
                             .end();
 
                         for (let j = 0; j <= v1; j++) {
-                            $("#people_group" + element.pkg_rate_id).append(
+                            $("#people_group" + element.id).append(
                                 '<option value=' + j + '>' + j + '</option>'
                             );
                         }
@@ -469,7 +469,7 @@ export default {
 
                 this.updateRateGroups(date, 1, loader);
             }).catch(error => {
-                this.details.TourPkgRates = [];
+                this.details.tourPackageRateGroups = [];
                 this.begins = error?.response?.data?.data?.begins;
                 this.processLoader(loader);
             });
@@ -488,21 +488,21 @@ export default {
             let groupPaxArr = [];
             let paxSubtotalArr = [];
 
-            const tourPkgRates = this.details.TourPkgRates;
+            const tourPackageRateGroups = this.details.tourPackageRateGroups;
             let index = 0;
 
-            tourPkgRates?.forEach(number => {
-                let rateGroupField = 'people_group' + number.pkg_rate_id;
+            tourPackageRateGroups?.forEach(number => {
+                let rateGroupField = 'people_group' + number.id;
                 const rateGroup = document.querySelector("select[name=" + rateGroupField + "]").value;
                 groupPaxArr.push(rateGroup);
 
-                const rate = Number(tourPkgRates[index].price) + Number(tourPkgRates[index].PermitFee) + Number(tourPkgRates[index].Tax);
+                const rate = Number(tourPackageRateGroups[index].rate) + Number(tourPackageRateGroups[index].permit_fee) + Number(tourPackageRateGroups[index].tax);
                 paxSubtotalArr.push(rateGroup > 0 ? rateGroup * rate.toFixed(2) : 0);
 
                 const fees = (Number(rate) * Number(this.form.service_commission)) / 100;
                 feesGroupArr.push(rateGroup > 0 ? rateGroup * fees.toFixed(2) : 0);
 
-                rateGroupArr.push(tourPkgRates[index].Age);
+                rateGroupArr.push(tourPackageRateGroups[index].Age);
 
                 index++;
             });
@@ -527,7 +527,7 @@ export default {
                 this.form.rate_group = rateGroupArr;
                 this.form.people_group = groupPaxArr;
                 this.form.iframeStatusInfo = this.iframeStatus;
-                this.form.package_name = this.TourPkgName;
+                this.form.package_name = this.tourPackageName;
                 this.form.subtotal = subtotalSum;
                 this.form.fees = feesSum;
                 this.form.total = subtotalSum + feesSum;
@@ -618,7 +618,7 @@ export default {
                 if (response.data.success == "false") {
                     this.errors.push(response.data.message);
                 } else {
-                    if (this.cartView != 1) {
+                    if (this.comboIds == 0) {
                         this.cartItem = [];
                     }
 
@@ -646,7 +646,7 @@ export default {
                 this.processLoader(loader);
             });
 
-            this.form.package_image = this.details?.TourPkgDetails?.length > 0 ? this.details.TourPkgDetails[0].FrontendPackageImage : "";
+            this.form.package_image = this.details?.tourPackageData?.length > 0 ? this.details.tourPackageData[0].FrontendPackageImage : "";
 
             return true;
         },

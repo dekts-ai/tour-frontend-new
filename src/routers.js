@@ -1,4 +1,3 @@
-
 import Index from'./components/Index.vue';
 import Init from'./components/Init.vue';
 import Checkout from './components/Checkout.vue';
