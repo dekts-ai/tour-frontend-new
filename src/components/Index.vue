@@ -74,16 +74,12 @@
                                                     </div>
                                                     <div class="tourselected-title-wrap">
                                                         <div class="tourselected-title">{{ item.package_name }}</div>
-                                                        <div class="tourselected-title-top">{{ dateFormat(item.date) }} @ {{ item.time_date }}</div>
+                                                        <div class="tourselected-title-top">{{ dateFormat(item.date) }} @ {{ item.time_date }} - <span style="color: #004085;">{{ item.duration }}</span></div>
+                                                        <div class="tourselected-title-top">{{ item.short_description }}</div>
                                                         <div class="what-bring-wrap-added">
                                                             <div class="what-bring-title">What to bring</div>
                                                             <ul>
-                                                                <li>Bring water for hot days</li>
-                                                                <li>Closed Toes Shoes</li>
-                                                                <li>Ladder like staircases inside canyon</li>
-                                                                <li>Dress appropriate for terrain and weather</li>
-                                                                <li>Check the weather before tour</li>
-                                                                <li>Know signs of dehydration</li>
+                                                                <li v-for="bring in item?.things_to_bring">{{ bring }}</li>
                                                             </ul>
                                                         </div>
                                                     </div>

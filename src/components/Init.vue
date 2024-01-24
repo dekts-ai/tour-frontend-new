@@ -340,7 +340,11 @@ export default {
                 service_commission: 0,
                 tour_promotion_id: 0,
                 discount2_percentage: 0,
-                discount2_value: 0
+                discount2_value: 0,
+                things_to_bring: [],
+                short_description: "",
+                long_description: "",
+                duration: ""
             },
             with_rate_groups: 1,
             tabs: 2
@@ -411,7 +415,11 @@ export default {
                     this.details = this.$store.state.tourPackage;
                     this.details.tourPackageRateGroups = this.details.tourPackageRateGroups[this.form.package_id];
                     this.hotels = this.$store.state.tourPackage?.hotels;
-                    this.form.service_commission = this.$store.state.tourPackage.tourPackageData[0].service_commission_percentage
+                    this.form.service_commission = this.$store.state.tourPackage.tourPackageData[0].service_commission_percentage;
+                    this.form.things_to_bring = response.data.thingsToBring;
+                    this.form.short_description = response.data.tourPackageData[0].short_description;
+                    this.form.long_description = response.data.tourPackageData[0].long_description;
+                    this.form.duration = response.data.tourPackageData[0].duration;
 
                     // Define Variables
                     var v1 = this.totalavailableseats;
@@ -504,7 +512,7 @@ export default {
                 const fees = (Number(rate) * Number(this.form.service_commission)) / 100;
                 feesGroupArr.push(rateGroup > 0 ? rateGroup * fees.toFixed(2) : 0);
 
-                rateGroupArr.push(tourPackageRateGroups[index].Age);
+                rateGroupArr.push(tourPackageRateGroups[index].rate_for);
 
                 index++;
             });

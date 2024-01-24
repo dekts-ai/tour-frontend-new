@@ -565,10 +565,10 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .tourselected-packages-item .cancelling-policy-title {font-size: 13px; font-weight: 700; line-height: 1.3; color: #333}
 .tourselected-packages-item .cancelling-policy-detail {font-size: 13px; font-weight: 400; line-height: 1.3; color: #333;}
 .tourselected-packages-item .cancelling-policy-wrap {margin-bottom: 16px;}
-.tourselected-packages-item .what-bring-wrap-added .what-bring-title {font-size: 13px; font-weight: 700; line-height: 1.3; color: #333;}
+.tourselected-packages-item .what-bring-wrap-added .what-bring-title {font-size: 14px; font-weight: 700; line-height: 1.3; color: #333;}
 .tourselected-packages-item .what-bring-wrap-added ul {padding-left: 15px; margin-bottom: 0; list-style-type: disc;}
 .tourselected-packages-item .what-bring-wrap-added li, 
-.tourselected-packages-item .what-bring-wrap-added p {font-size: 14px; font-weight: 400; line-height: 1.3; color: #333;}
+.tourselected-packages-item .what-bring-wrap-added p {font-size: 13px; font-weight: 400; line-height: 1.3; color: #333;}
 .tourselected-packages-item .what-bring-wrap .what-bring-title {font-size: 13px; font-weight: 700; line-height: 1.3; color: #333;}
 .tourselected-packages-item .what-bring-wrap ul {padding-left: 15px; margin-bottom: 0; list-style-type: disc;}
 .tourselected-packages-item .what-bring-wrap li, 
