@@ -402,7 +402,9 @@ export default {
         updateRateGroups(date, calendar = 0, loader) {
             console.log('updateRateGroups');
 
-            axios.get("/tour-package/" + date + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + this.comboIds + "/" + this.with_rate_groups)
+            var comboIds = 0; // Need only selected package data and it's rate groups
+
+            axios.get("/tour-package/" + date + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + comboIds + "/" + this.with_rate_groups)
                 .then((response) => {
                     this.$store.dispatch('storeTourPackage', response.data)
                     this.tourPackageName = response.data.tourPackageData[0].package_name;
