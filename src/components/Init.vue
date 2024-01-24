@@ -74,7 +74,7 @@
                                             <button class="tooltipbtn btn-danger" data-toggle="tooltip"
                                                 data-placement="top" title="">Health &
                                                 Safety</button>
-                                            <button v-if="Object.keys(cartItem).length && comboIds != 0" @click="checkout" class="btn btn-warning"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Checkout</button>
+                                            <button @click="navigateToTab(5, 'Checkout')" class="btn btn-warning"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Checkout</button>
                                             <button @click="navigateToTab(1, 'Index')" class="btn btn-primary mt-2"><i class="fa fa-arrow-left" aria-hidden="true"></i> Home</button>
                                         </div>
                                     </div>
@@ -298,6 +298,7 @@ export default {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
+            packageOrder: [],
             comboIds: 0,
             tourPackageName: "",
             totalavailableseats: 0,
@@ -306,6 +307,7 @@ export default {
             hotels: [],
             flippedHotelId: null,
             cartItem: [],
+            cartItemLength: 0,
             slotId: 0,
             disabledDates: {
                 to: this.getStartDate(),
@@ -351,8 +353,10 @@ export default {
         };
     },
     created: function () {
+        this.packageOrder = this.$store.state.packageOrder;
         this.comboIds = this.$store.state.comboIds;
         this.cartItem = this.$store.state.cartItem;
+        this.cartItemLength = Object.values(this.cartItem).length;
         this.iframeStatus = this.$store.state.iframeStatus;
         if (this.$store.state.formData && this.$store.state.formData?.package_id == this.$store.state.packageId) {
             this.form = this.$store.state.formData;
@@ -638,6 +642,11 @@ export default {
                         const formData = this.cartItem[slotId];
                         if (formData.package_id != this.form.package_id) {
                             updatedCart[slotId] = formData;
+                            // if (this.comboIds != 0) {
+                            //     this.packageOrder = this.packageOrder.push(this.form.package_id);
+                            //     this.$store.dispatch('storePackageOrder', this.packageOrder);
+                            //     this.bufferTimes(this.form.package_id);
+                            // }
                         }
                     }
 
@@ -648,6 +657,7 @@ export default {
                     this.cartItem = { ...this.cartItem, ...data };
                     this.$store.dispatch('storeCartItem', this.cartItem);
                     this.$store.dispatch('storeMindChange', 1);
+
                     this.$router.push({
                         name: 'Index'
                     });
@@ -660,13 +670,12 @@ export default {
 
             return true;
         },
-        checkout() {
-            console.log('checkout');
-            this.$router.push({
-                name: 'Checkout'
+        bufferTimes(packageId) {
+            axios.get("/buffer-times/" + packageId).then((response) => {
+                console.log(response);
+            }).catch(error => {
+                // this.processLoader(loader);
             });
-
-            return;
         }
     }
 };
