@@ -108,7 +108,7 @@
                                                             :class="name.bookable_status == 'Open' && name.dd < name.seats ? 'seats-free-label' : 'watermark-label'" 
                                                             v-for="name in dateTimeArr"
                                                             :key="name.Id" 
-                                                            @click="selectedSlot(name.Id, name.Time)"
+                                                            @click="selectedSlot(name.Id, name.Time, name.slot_time)"
                                                             :style="name.Id == form.tour_slot_id ? 'background-color: #e9f7eb; border-color: #37d150;' : ''">
 
                                                             <label class="time-item-lable" :for="name.Id"></label>
@@ -331,7 +331,7 @@ export default {
                 hotel_image: 0,
                 hotel_address: 0,
                 date: getUTCDateFromTimeZone(),
-                time_date: "",
+                time_date: null,
                 people_group: [],
                 rate_group: [],
                 calucation: [],
@@ -347,6 +347,7 @@ export default {
                 short_description: "",
                 long_description: "",
                 duration: "",
+                slot_time: null,
                 latitude: null,
                 longitude: null
             },
@@ -369,6 +370,7 @@ export default {
             this.form.affiliate_id = this.$store.state.affiliateId;
             this.form.tour_slot_id = 0;
             this.form.time_date = null;
+            this.form.slot_time = null;
         }
 
         if (this.$store.state.date) {
@@ -452,8 +454,9 @@ export default {
                 });
 
             if (calendar) {
-                this.form.tour_slot_id = "";
-                this.form.time_date = "";
+                this.form.tour_slot_id = 0;
+                this.form.time_date = null;
+                this.form.slot_time = null;
             }
 
             this.$store.dispatch('storeTabs', this.tabs);
@@ -573,12 +576,13 @@ export default {
                 return 'disabled';
             }
         },
-        selectedSlot: function (id, timeDate) {
+        selectedSlot: function (id, timeDate, slotTime) {
             console.log('selectedSlot');
 
             this.$store.dispatch('storeSlotId', id)
             this.form.tour_slot_id = id;
             this.form.time_date = timeDate;
+            this.form.slot_time = slotTime;
         },
         selectedHotel: function (hotelId) {
             this.$store.dispatch('storeHotelId', hotelId)

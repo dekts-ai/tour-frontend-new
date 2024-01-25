@@ -247,6 +247,7 @@ export default {
             for (var key in this.cartItem) {
                 var pId = parseInt(this.cartItem[key].package_id);
                 this.checkPackageIds.push(pId);
+                // console.log(this.cartItem[key]);
             }
         }
 
