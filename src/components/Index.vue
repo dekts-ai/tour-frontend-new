@@ -15,7 +15,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="tabs-wrap d-flex align-items-center">
-                            <button @click="navigateToTab(1, '')" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
+                            <button :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
                             <button @click="handleTab(2, 'Init')" :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
                             <button @click="navigateToTab(3, 'MyTrip')" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">My Trip</button>
                             <button @click="navigateToTab(4, 'Maps')" :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')">Maps</button>
@@ -61,11 +61,11 @@
                                             <button class="tooltipbtn btn-danger" data-toggle="tooltip" data-placement="top"
                                                 title="">Health &
                                                 Safety</button>
-                                            <button v-if="Object.keys(cartItem).length && comboIds != 0" @click="checkout" class="btn btn-warning mt-2"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Checkout</button>
+                                            <button @click="navigateToTab(5, 'Checkout')" class="btn btn-warning mt-2"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Checkout</button>
                                         </div>
                                     </div>
                                 </div>
-                                
+
 			                    <div class="tourlist-packages-wrap">
                                     <div class="tourselected-packages-item" v-for="item in cartItem" :key="item.tour_slot_id">
                                         <div class="tourselected-inner-wrap">
@@ -76,7 +76,7 @@
                                                     </div>
                                                     <div class="tourselected-title-wrap">
                                                         <div class="tourselected-title">{{ item.package_name }}</div>
-                                                        <div class="tourselected-title-top">{{ dateFormat(item.date) }} @ {{ item.time_date }} - <span style="color: #004085;">{{ item.duration }}</span></div>
+                                                        <div class="tourselected-title-top">{{ dateFormat(item.date) }} @ {{ item.time_date }} - <span style="color: #004085;">{{ item.duration }} Tour</span></div>
                                                         <div class="tourselected-title-top">{{ item.short_description }}</div>
                                                         <div class="what-bring-wrap-added">
                                                             <div class="what-bring-title">What to bring</div>
@@ -134,7 +134,7 @@
                                                         <a class="action-btn action-btn-delete" @click="removeFromCart(item)">Delete</a>
                                                     </div>
                                                     <div class="tourselected-action-btn">
-                                                        <a class="action-btn action-btn-checkout" @click="checkout(item)">Checkout</a>
+                                                        <a class="action-btn action-btn-checkout" @click="navigateToTab(5, 'Checkout')">Checkout</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -350,13 +350,6 @@ export default {
                     }
                 }
             });
-        },
-        checkout() {
-            this.$router.push({
-                name: 'Checkout'
-            });
-
-            return;
         },
         processLoader(loader) {
             loader.hide();

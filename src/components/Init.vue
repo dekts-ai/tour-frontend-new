@@ -15,7 +15,7 @@
 				<div class="col-12">
 					<div class="tabs-wrap d-flex align-items-center">
 						<button @click="navigateToTab(1, 'Index')" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
-						<button @click="navigateToTab(2, '')" :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
+						<button :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
                         <button @click="navigateToTab(3, 'MyTrip')" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">My Trip</button>
 						<button @click="navigateToTab(4, 'Maps')" :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')">Maps</button>
 						<button @click="navigateToTab(5, 'Checkout')" :class="'tabs tab5 ' + (tabs == 5 ? 'active' : '')">Checkout</button>
@@ -346,7 +346,9 @@ export default {
                 things_to_bring: [],
                 short_description: "",
                 long_description: "",
-                duration: ""
+                duration: "",
+                latitude: null,
+                longitude: null
             },
             with_rate_groups: 1,
             tabs: 2
@@ -424,6 +426,8 @@ export default {
                     this.form.short_description = response.data.tourPackageData[0].short_description;
                     this.form.long_description = response.data.tourPackageData[0].long_description;
                     this.form.duration = response.data.tourPackageData[0].duration;
+                    this.form.latitude = response.data.tourPackageData[0].latitude;
+                    this.form.longitude = response.data.tourPackageData[0].longitude;
 
                     // Define Variables
                     var v1 = this.totalavailableseats;

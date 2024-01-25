@@ -16,7 +16,7 @@
                         <button @click="navigateToTab(1, 'Index')" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
                         <button @click="navigateToTab(2, 'Init')" :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
                         <button @click="navigateToTab(3, 'MyTrip')" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">My Trip</button>
-						<button @click="navigateToTab(4, 'Maps')" :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')">Maps</button>
+						<button :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')">Maps</button>
 						<button @click="navigateToTab(5, 'Checkout')" :class="'tabs tab5 ' + (tabs == 5 ? 'active' : '')">Checkout</button>
                     </div>
                 </div>
@@ -43,14 +43,9 @@
                                     </div>
                                     <div class="col-lg-6 col-md-12 text-center text-lg-end text-md-center text-sm-center">
                                         <div class="info">
-                                            <button class="tooltipbtn btn-info" data-toggle="tooltip" data-placement="top"
-                                                title="">Secured</button>
-                                            <button class="tooltipbtn btn-danger" data-toggle="tooltip" data-placement="top"
-                                                title="">Health &
-                                                Safety</button>
-                                            <button v-if="Object.keys(cartItem).length && cartView == 1" @click="checkout"
-                                                class="btn btn-warning mt-2"><i class="fa fa-shopping-cart"
-                                                    aria-hidden="true"></i> Checkout</button>
+                                            <button class="tooltipbtn btn-info" data-toggle="tooltip" data-placement="top" title="">Secured</button>
+                                            <button class="tooltipbtn btn-danger" data-toggle="tooltip" data-placement="top" title="">Health & Safety</button>
+                                            <button @click="navigateToTab(5, 'Checkout')" class="btn btn-warning mt-2"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Checkout</button>
                                         </div>
                                     </div>
                                 </div>
@@ -74,80 +69,17 @@
 
                                     <div class="tour-details-wrap">
                                         <div class="tour-details-title">Your Day:</div>
-                                        <div class="d-lg-flex border-bottom pb-4 mb-4">
+                                        <div class="d-lg-flex border-bottom pb-4 mb-4" v-for="item in cartItem" :key="item.tour_slot_id">
                                             <div class="details-box mb-3 mb-lg-0">
                                                 <div class="title-wrap d-flex justify-content-between align-items-center">
-                                                    <div class="tour-title">Lower Antelope Canyon</div>
-                                                    <div class="tour-time">1 Hour Tour</div>
+                                                    <div class="tour-title">{{ item.package_name }}</div>
+                                                    <div class="tour-time">{{ item.duration }} Tour</div>
                                                 </div>
-                                                <p class="date-time">Sep. 30th 2023 Monday 3:00PM - 6:00PM</p>
-                                                <p class="details-text">Lorem ipsum dolor sit amet consectetur adipisicing
-                                                    elit. Perferendis, possimus rem. Eveniet maxime consequuntur quos
-                                                    ducimus, perspiciatis beatae repudiandae deleniti id quam placeat soluta
-                                                    veritatis voluptatem hic explicabo delectus facere iure! Nam facilis
-                                                    quis, alias quasi unde a et id deleniti atque aperiam iste reprehenderit
-                                                    repudiandae tempore neque! Excepturi, officia?</p>
+                                                <p class="date-time">{{ dateFormat(item.date) }} @ {{ item.time_date }}</p>
+                                                <p class="details-text">{{ item.long_description }}</p>
                                             </div>
                                             <div class="tourselected-image">
-                                                <img src="https://nat-admin.s3.us-east-1.amazonaws.com/images/tour-operator/dixies/package/1/lacht-frontend-list-image-66.png"
-                                                    alt="Lower Antelope Canyon Hiking Tour">
-                                            </div>
-                                        </div>
-                                        <div class="d-lg-flex border-bottom pb-4 mb-4">
-                                            <div class="details-box mb-3 mb-lg-0">
-                                                <div class="title-wrap d-flex justify-content-between align-items-center">
-                                                    <div class="tour-title">Lower Antelope Canyon</div>
-                                                    <div class="tour-time">1 Hour Tour</div>
-                                                </div>
-                                                <p class="date-time">Sep. 30th 2023 Monday 3:00PM - 6:00PM</p>
-                                                <p class="details-text">Lorem ipsum dolor sit amet consectetur adipisicing
-                                                    elit. Perferendis, possimus rem. Eveniet maxime consequuntur quos
-                                                    ducimus, perspiciatis beatae repudiandae deleniti id quam placeat soluta
-                                                    veritatis voluptatem hic explicabo delectus facere iure! Nam facilis
-                                                    quis, alias quasi unde a et id deleniti atque aperiam iste reprehenderit
-                                                    repudiandae tempore neque! Excepturi, officia?</p>
-                                            </div>
-                                            <div class="tourselected-image">
-                                                <img src="https://nat-admin.s3.us-east-1.amazonaws.com/images/tour-operator/dixies/package/1/lacht-frontend-list-image-66.png"
-                                                    alt="Lower Antelope Canyon Hiking Tour">
-                                            </div>
-                                        </div>
-                                        <div class="d-lg-flex border-bottom pb-4 mb-4">
-                                            <div class="details-box mb-3 mb-lg-0">
-                                                <div class="title-wrap d-flex justify-content-between align-items-center">
-                                                    <div class="tour-title">Lower Antelope Canyon</div>
-                                                    <div class="tour-time">1 Hour Tour</div>
-                                                </div>
-                                                <p class="date-time">Sep. 30th 2023 Monday 3:00PM - 6:00PM</p>
-                                                <p class="details-text">Lorem ipsum dolor sit amet consectetur adipisicing
-                                                    elit. Perferendis, possimus rem. Eveniet maxime consequuntur quos
-                                                    ducimus, perspiciatis beatae repudiandae deleniti id quam placeat soluta
-                                                    veritatis voluptatem hic explicabo delectus facere iure! Nam facilis
-                                                    quis, alias quasi unde a et id deleniti atque aperiam iste reprehenderit
-                                                    repudiandae tempore neque! Excepturi, officia?</p>
-                                            </div>
-                                            <div class="tourselected-image">
-                                                <img src="https://nat-admin.s3.us-east-1.amazonaws.com/images/tour-operator/dixies/package/1/lacht-frontend-list-image-66.png"
-                                                    alt="Lower Antelope Canyon Hiking Tour">
-                                            </div>
-                                        </div>
-                                        <div class="d-lg-flex">
-                                            <div class="details-box mb-3 mb-lg-0">
-                                                <div class="title-wrap d-flex justify-content-between align-items-center">
-                                                    <div class="tour-title">Lower Antelope Canyon</div>
-                                                    <div class="tour-time">1 Hour Tour</div>
-                                                </div>
-                                                <p class="date-time">Sep. 30th 2023 Monday 3:00PM - 6:00PM</p>
-                                                <p class="details-text">Lorem ipsum dolor sit amet consectetur adipisicing
-                                                    elit. Perferendis, possimus rem. Eveniet maxime consequuntur quos
-                                                    ducimus, perspiciatis beatae repudiandae deleniti id quam placeat soluta
-                                                    veritatis voluptatem hic explicabo delectus facere iure! Nam facilis
-                                                    quis, alias quasi unde a et id deleniti atque aperiam iste reprehenderit
-                                                    repudiandae tempore neque! Excepturi, officia?</p>
-                                            </div>
-                                            <div class="tourselected-image">
-                                                <img src="https://nat-admin.s3.us-east-1.amazonaws.com/images/tour-operator/dixies/package/1/lacht-frontend-list-image-66.png"
-                                                    alt="Lower Antelope Canyon Hiking Tour">
+                                                <img :src="item.package_image" :alt="item.package_name">
                                             </div>
                                         </div>
                                     </div>
@@ -162,11 +94,8 @@
 </template>
 
 <script>
-import axios from "axios";
-import Swal from 'sweetalert2';
 import Datepicker from 'vuejs3-datepicker';
 import { format } from 'date-fns';
-import { getUTCDateFromTimeZone } from '../utils/dateUtils';
 
 export default {
     name: "GoogleMap",
@@ -178,135 +107,47 @@ export default {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
-            cartView: 0,
-            TourPkgDetails: [],
             banner: "",
             tenantId: "dixies",
             tourOperatorId: 1,
-            packageId: 0,
-            affiliateId: 0,
-            showDatePicker: true,
-            date: null,
-            disabledDates: {
-                to: this.getStartDate(),
-                from: this.getEndDate()
-            },
             cartItem: {},
             cartItemLength: 0,
-            subtotal: 0,
-            discount: 0,
-            fees: 0,
-            total: 0,
             tabs: 4,
-            checkPackageIds: [],
-            center: { lat: 51.093048, lng: 6.842120 },
-            markers: [
-                {
-                    position: {
-                        lat: 51.093048, lng: 6.842120
-                    },
-                    text: 'Hauptgebäude der ETH Zürich'
-                },
-                {
-                    position: {
-                        lat: 47.376332, lng: 8.547511
-                    },
-                    text: 'Hauptgebäude der ETH Zürich'
-                }
-                , // Along list of clusters
-            ]
+            center: {},
+            markers: []
         };
     },
     async created() {
         this.date = format(this.$store.state.date, 'yyyy-MM-dd');
         this.tenantId = this.$store.state.tenantId;
         this.tourOperatorId = this.$store.state.tourOperatorId;
-        this.packageId = this.$store.state.packageId;
-        this.affiliateId = this.$store.state.affiliateId;
         this.iframeStatus = this.$store.state.iframeStatus;
-        this.cartView = this.$store.state.tourPackage?.cartView;
         this.cartItem = this.$store.state.cartItem;
         this.cartItemLength = Object.values(this.cartItem).length;
 
         if (this.cartItemLength) {
+            var k = 0;
             for (var key in this.cartItem) {
                 var pId = parseInt(this.cartItem[key].package_id);
                 this.checkPackageIds.push(pId);
+                if (this.cartItem[key].latitude && this.cartItem[key].longitude) {
+                    if (k == 0) {
+                        this.center = { lat: Number(this.cartItem[key].latitude), lng: Number(this.cartItem[key].longitude) };
+                    }
+                    this.markers.push({
+                        position: {
+                            lat: Number(this.cartItem[key].latitude), lng: Number(this.cartItem[key].longitude)
+                        }
+                    });
+                }
+                k++;
             }
-        }
-
-        if (this.$store.state.mindChange == 1) {
-            this.packageId = 0;
-            this.affiliateId = 0;
         }
 
         this.$store.dispatch('storeTabs', this.tabs);
         this.$store.dispatch('storeMindChange', 0);
     },
     methods: {
-        editPackage(formData) {
-            if (formData.affiliate_id) {
-                this.$store.dispatch('storeAffiliateId', formData.affiliate_id)
-            }
-
-            this.$store.dispatch('storeFormData', formData)
-            this.$store.dispatch('storePackageId', formData.package_id)
-            this.$store.dispatch('storeDate', formData.date)
-
-            this.$router.push({
-                name: 'Init',
-            });
-        },
-        removeFromCart(formData) {
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    this.checkPackageIds = [];
-                    delete this.cartItem[formData.tour_slot_id];
-                    this.cartItemLength = Object.values(this.cartItem).length;
-
-                    Swal.fire({
-                        title: "Deleted!",
-                        text: "Your package has been deleted.",
-                        icon: "success"
-                    }).then((result) => {
-                        if (result.isConfirmed && this.cartItemLength == 0) {
-                            this.$store.dispatch('storeCartItem', {});
-                        }
-                    });
-
-                    this.subtotal = 0;
-                    this.discount = 0;
-                    this.fees = 0;
-                    this.total = 0;
-                    if (this.cartItemLength) {
-                        for (var key in this.cartItem) {
-                            this.subtotal = Number(this.subtotal) + Number(this.cartItem[key].subtotal);
-                            this.discount = Number(this.discount) + Number(this.cartItem[key].discount2_value);
-                            this.fees = Number(this.fees) + Number(this.cartItem[key].fees);
-                            this.total = Number(this.total) + Number(this.cartItem[key].total);
-
-                            var pId = parseInt(this.cartItem[key].package_id);
-                            this.checkPackageIds.push(pId);
-                        }
-                    }
-                }
-            });
-        },
-        checkout() {
-            this.$router.push({
-                name: 'Checkout'
-            });
-
-            return;
-        },
         processLoader(loader) {
             loader.hide();
         },
@@ -314,36 +155,6 @@ export default {
             this.$store.dispatch('storeDate', date);
             var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
             return date.toLocaleDateString("en-US", options)
-        },
-        toggleDatePicker() {
-            this.showDatePicker = !this.showDatePicker;
-        },
-        getStartDate() {
-            // See this issues with datepicker 
-            // https://github.com/charliekassel/vuejs-datepicker/issues/118
-            return getUTCDateFromTimeZone();
-        },
-        getEndDate() {
-            let date = new Date(new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' })).getFullYear() + 1, 11, 31);
-            date.setHours(23, 59, 59, 999);
-            return date;
-        },
-        selectedDate(date) {
-            console.log('selectedDate');
-
-            this.date = date;
-            this.$store.dispatch('storeDate', this.date)
-
-            var date = format(date, 'yyyy-MM-dd');
-        },
-        roundout(amount, places = 0) {
-            if (places < 0) {
-                places = 0;
-            }
-
-            let x = Math.pow(10, places);
-            let formul = (amount * x).toFixed(10);
-            return (amount >= 0 ? Math.ceil(formul) : Math.floor(formul)) / x;
         },
         navigateToTab(tab, destination) {
             if (tab === 1 || tab === 2 || tab === 3 || tab === 5) {
@@ -356,7 +167,7 @@ export default {
             }
             this.$store.dispatch('storeMindChange', 1);
             this.$router.push({ name: destination });
-        },
+        }
     }
 };
 </script>
