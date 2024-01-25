@@ -94,15 +94,11 @@
 </template>
 
 <script>
-import Datepicker from 'vuejs3-datepicker';
 import { format } from 'date-fns';
 
 export default {
     name: "GoogleMap",
     title: "Native American Tours",
-    components: {
-        Datepicker
-    },
     data() {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
@@ -128,8 +124,6 @@ export default {
         if (this.cartItemLength) {
             var k = 0;
             for (var key in this.cartItem) {
-                var pId = parseInt(this.cartItem[key].package_id);
-                this.checkPackageIds.push(pId);
                 if (this.cartItem[key].latitude && this.cartItem[key].longitude) {
                     if (k == 0) {
                         this.center = { lat: Number(this.cartItem[key].latitude), lng: Number(this.cartItem[key].longitude) };
