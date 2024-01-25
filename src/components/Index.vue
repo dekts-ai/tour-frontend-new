@@ -11,26 +11,28 @@
 
 	<section class="tabs-section" v-if="iframeStatus">
 		<div class="no-container">
-			<div class="row">
-				<div class="col-10">
-					<div class="tabs-wrap d-flex align-items-center">
-						<button @click="navigateToTab(1, '')" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
-						<button @click="handleTab(2, 'Init')" :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
-                        <button @click="navigateToTab(3, 'MyTrip')" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">My Trip</button>
-						<button @click="navigateToTab(4, 'Maps')" :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')">Maps</button>
-						<button @click="navigateToTab(5, 'Checkout')" :class="'tabs tab5 ' + (tabs == 5 ? 'active' : '')">Checkout</button>
-                        <!-- <button @click="toggleDatePicker" class="tooltipbtn btn-info ml-auto">Pick Date</button> -->
-                        <datepicker 
-                            v-if="showDatePicker"
-                            v-model="date"
-                            :value="date"
-                            :inline="false"
-                            :disabled-dates="disabledDates"
-                            :prevent-disable-date-selection="true"
-                            @selected="selectedDate">
-                        </datepicker>
-					</div>
-				</div>
+            <div class="padding-sec">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="tabs-wrap d-flex align-items-center">
+                            <button @click="navigateToTab(1, '')" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
+                            <button @click="handleTab(2, 'Init')" :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
+                            <button @click="navigateToTab(3, 'MyTrip')" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">My Trip</button>
+                            <button @click="navigateToTab(4, 'Maps')" :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')">Maps</button>
+                            <button @click="navigateToTab(5, 'Checkout')" :class="'tabs tab5 me-auto' + (tabs == 5 ? 'active' : '')">Checkout</button>
+                            <!-- <button @click="toggleDatePicker" class="tooltipbtn btn-info ml-auto">Pick Date</button> -->
+                            <datepicker 
+                                v-if="showDatePicker"
+                                v-model="date"
+                                :value="date"
+                                :inline="false"
+                                :disabled-dates="disabledDates"
+                                :prevent-disable-date-selection="true"
+                                @selected="selectedDate">
+                            </datepicker>
+                        </div>
+                    </div>
+                </div>
             </div>
 		</div>
 	</section>

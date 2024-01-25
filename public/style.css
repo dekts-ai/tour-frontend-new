@@ -545,6 +545,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .tabs-section .tabs-wrap .tabs.active {color: #1d875a; border: 1px solid rgba(29,135,90,.5); border-bottom-color: #fff; background: #f2f9f3;}
 .tabs-section .tabs-wrap .tabs:last-child {margin-right: 0;}
 
+.tourlist-packages-wrap {text-align: left; margin: 20px 15px 30px;}
 .tourlist-packages-wrap {text-align: left;}
 .tourlist-packages-wrap input, 
 .tourlist-packages-wrap input:focus {outline: none;}

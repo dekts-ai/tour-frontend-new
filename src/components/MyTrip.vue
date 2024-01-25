@@ -29,9 +29,9 @@
             <div class="background-color-sec">
                 <div class="row">
                     <div class="col-12">
-                        <div :class="[iframeStatus ? 'row payment-row iframe-row' : 'row payment-row', '']">
+                        <div :class="[iframeStatus ? 'row payment-row iframe-row pb-5' : 'row payment-row', '']">
                             <div class="col-12">
-                                <div class="row booking-row" v-if="iframeStatus == false">
+                                <div class="row booking-row pb-5" v-if="iframeStatus == false">
                                     <div class="col-lg-6 col-md-12">
                                         <div class="booking">
                                             <h2>Book Online</h2>
@@ -55,39 +55,160 @@
                                     </div>
                                 </div>
 
-                                <div class="tourlist-packages-wrap">
-                                    <div class="wizard">
-                                        <div class="process">
-                                            <ul class="done">
-                                                <li class="step">
-                                                    <div class="name">07:00</div>
-                                                </li>
-                                                <li class="step completed">
-                                                    <div class="name">07:15</div>
-                                                </li>
-                                                <li class="step current">
-                                                    <div class="name">07:30</div>
-                                                </li>
-                                                <li class="step">
-                                                    <div class="name">07:45</div>
-                                                </li>
-                                                <li class="step">
-                                                    <div class="name">08:00</div>
-                                                </li>
-                                                <li class="step">
-                                                    <div class="name">08:15</div>
-                                                </li>
-                                                <li class="step">
-                                                    <div class="name">08:30</div>
-                                                </li>
-                                                <li class="step">
-                                                    <div class="name">08:45</div>
-                                                </li>
-                                                <li class="step">
-                                                    <div class="name">09:00</div>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                <div class="tourlist-packages-wrap h-100">
+                                    <div class="timeline">
+                                        <ul>
+                                            <li class="booking">
+                                                <div class="right_content">
+                                                    <div class="d-lg-flex justify-content-between align-items-center">
+                                                        <p class="mb-lg-0 mb-2">Lower Antelope Canyon</p>
+                                                        <div>
+                                                            <p>2 Hour Tour</p>
+                                                            <div class="star text-start">
+                                                                <span><svg width="18" height="17" viewBox="0 0 18 17"
+                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path
+                                                                            d="M8.52447 0.463525C8.67415 0.00287008 9.32585 0.00287008 9.47553 0.463525L11.1329 5.56434C11.1998 5.77035 11.3918 5.90983 11.6084 5.90983H16.9717C17.4561 5.90983 17.6575 6.52964 17.2656 6.81434L12.9266 9.96681C12.7514 10.0941 12.678 10.3198 12.745 10.5258L14.4023 15.6266C14.552 16.0873 14.0248 16.4704 13.6329 16.1857L9.29389 13.0332C9.11865 12.9059 8.88135 12.9059 8.70611 13.0332L4.3671 16.1857C3.97524 16.4704 3.448 16.0873 3.59768 15.6266L5.25503 10.5258C5.32197 10.3198 5.24864 10.0941 5.07339 9.96681L0.734384 6.81434C0.342527 6.52964 0.543915 5.90983 1.02828 5.90983H6.39159C6.6082 5.90983 6.80018 5.77035 6.86712 5.56434L8.52447 0.463525Z"
+                                                                            fill="#2C9CF1" />
+                                                                    </svg></span>
+                                                                <span><svg width="18" height="17" viewBox="0 0 18 17"
+                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path
+                                                                            d="M8.52447 0.463525C8.67415 0.00287008 9.32585 0.00287008 9.47553 0.463525L11.1329 5.56434C11.1998 5.77035 11.3918 5.90983 11.6084 5.90983H16.9717C17.4561 5.90983 17.6575 6.52964 17.2656 6.81434L12.9266 9.96681C12.7514 10.0941 12.678 10.3198 12.745 10.5258L14.4023 15.6266C14.552 16.0873 14.0248 16.4704 13.6329 16.1857L9.29389 13.0332C9.11865 12.9059 8.88135 12.9059 8.70611 13.0332L4.3671 16.1857C3.97524 16.4704 3.448 16.0873 3.59768 15.6266L5.25503 10.5258C5.32197 10.3198 5.24864 10.0941 5.07339 9.96681L0.734384 6.81434C0.342527 6.52964 0.543915 5.90983 1.02828 5.90983H6.39159C6.6082 5.90983 6.80018 5.77035 6.86712 5.56434L8.52447 0.463525Z"
+                                                                            fill="#2C9CF1" />
+                                                                    </svg></span>
+                                                                <span><svg width="18" height="17" viewBox="0 0 18 17"
+                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path
+                                                                            d="M8.52447 0.463525C8.67415 0.00287008 9.32585 0.00287008 9.47553 0.463525L11.1329 5.56434C11.1998 5.77035 11.3918 5.90983 11.6084 5.90983H16.9717C17.4561 5.90983 17.6575 6.52964 17.2656 6.81434L12.9266 9.96681C12.7514 10.0941 12.678 10.3198 12.745 10.5258L14.4023 15.6266C14.552 16.0873 14.0248 16.4704 13.6329 16.1857L9.29389 13.0332C9.11865 12.9059 8.88135 12.9059 8.70611 13.0332L4.3671 16.1857C3.97524 16.4704 3.448 16.0873 3.59768 15.6266L5.25503 10.5258C5.32197 10.3198 5.24864 10.0941 5.07339 9.96681L0.734384 6.81434C0.342527 6.52964 0.543915 5.90983 1.02828 5.90983H6.39159C6.6082 5.90983 6.80018 5.77035 6.86712 5.56434L8.52447 0.463525Z"
+                                                                            fill="#2C9CF1" />
+                                                                    </svg></span>
+                                                                <span><svg width="18" height="17" viewBox="0 0 18 17"
+                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path
+                                                                            d="M8.52447 0.463525C8.67415 0.00287008 9.32585 0.00287008 9.47553 0.463525L11.1329 5.56434C11.1998 5.77035 11.3918 5.90983 11.6084 5.90983H16.9717C17.4561 5.90983 17.6575 6.52964 17.2656 6.81434L12.9266 9.96681C12.7514 10.0941 12.678 10.3198 12.745 10.5258L14.4023 15.6266C14.552 16.0873 14.0248 16.4704 13.6329 16.1857L9.29389 13.0332C9.11865 12.9059 8.88135 12.9059 8.70611 13.0332L4.3671 16.1857C3.97524 16.4704 3.448 16.0873 3.59768 15.6266L5.25503 10.5258C5.32197 10.3198 5.24864 10.0941 5.07339 9.96681L0.734384 6.81434C0.342527 6.52964 0.543915 5.90983 1.02828 5.90983H6.39159C6.6082 5.90983 6.80018 5.77035 6.86712 5.56434L8.52447 0.463525Z"
+                                                                            fill="#2C9CF1" />
+                                                                    </svg></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-md-flex align-items-center mt-2">
+                                                        <img src="https://nat-admin.s3.us-east-1.amazonaws.com/images/tour-operator/dixies/package/1/lacht-frontend-list-image-66.png"
+                                                            width="100" height="100" alt="">
+                                                        <div class="content-box">
+                                                            <p class="mb-2">Sep. 30th 2023</p>
+                                                            <p class="mb-md-3 mb-2">Monday 2:00PM</p>
+                                                            <p class="mb-2">2 Adults</p>
+                                                            <p>1 Child</p>
+                                                        </div>
+                                                    </div>
+                                                    <a href="#" class="update">Update</a>
+                                                </div>
+                                                <div class="left_content">
+                                                    <h3>6:00 AM</h3>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="left_content no-booking">
+                                                    <h3>6:15 AM</h3>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="left_content no-booking">
+                                                    <h3>6:30 AM</h3>
+                                                </div>
+                                            </li>
+                                            <li class="booking">
+                                                <div class="right_content">
+                                                    <div class="d-lg-flex justify-content-between align-items-center">
+                                                        <p class="mb-lg-0 mb-2">Lower Antelope Canyon</p>
+                                                        <div>
+                                                            <p>2 Hour Tour</p>
+                                                            <div class="star text-start">
+                                                                <span><svg width="18" height="17" viewBox="0 0 18 17"
+                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path
+                                                                            d="M8.52447 0.463525C8.67415 0.00287008 9.32585 0.00287008 9.47553 0.463525L11.1329 5.56434C11.1998 5.77035 11.3918 5.90983 11.6084 5.90983H16.9717C17.4561 5.90983 17.6575 6.52964 17.2656 6.81434L12.9266 9.96681C12.7514 10.0941 12.678 10.3198 12.745 10.5258L14.4023 15.6266C14.552 16.0873 14.0248 16.4704 13.6329 16.1857L9.29389 13.0332C9.11865 12.9059 8.88135 12.9059 8.70611 13.0332L4.3671 16.1857C3.97524 16.4704 3.448 16.0873 3.59768 15.6266L5.25503 10.5258C5.32197 10.3198 5.24864 10.0941 5.07339 9.96681L0.734384 6.81434C0.342527 6.52964 0.543915 5.90983 1.02828 5.90983H6.39159C6.6082 5.90983 6.80018 5.77035 6.86712 5.56434L8.52447 0.463525Z"
+                                                                            fill="#2C9CF1" />
+                                                                    </svg></span>
+                                                                <span><svg width="18" height="17" viewBox="0 0 18 17"
+                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path
+                                                                            d="M8.52447 0.463525C8.67415 0.00287008 9.32585 0.00287008 9.47553 0.463525L11.1329 5.56434C11.1998 5.77035 11.3918 5.90983 11.6084 5.90983H16.9717C17.4561 5.90983 17.6575 6.52964 17.2656 6.81434L12.9266 9.96681C12.7514 10.0941 12.678 10.3198 12.745 10.5258L14.4023 15.6266C14.552 16.0873 14.0248 16.4704 13.6329 16.1857L9.29389 13.0332C9.11865 12.9059 8.88135 12.9059 8.70611 13.0332L4.3671 16.1857C3.97524 16.4704 3.448 16.0873 3.59768 15.6266L5.25503 10.5258C5.32197 10.3198 5.24864 10.0941 5.07339 9.96681L0.734384 6.81434C0.342527 6.52964 0.543915 5.90983 1.02828 5.90983H6.39159C6.6082 5.90983 6.80018 5.77035 6.86712 5.56434L8.52447 0.463525Z"
+                                                                            fill="#2C9CF1" />
+                                                                    </svg></span>
+                                                                <span><svg width="18" height="17" viewBox="0 0 18 17"
+                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path
+                                                                            d="M8.52447 0.463525C8.67415 0.00287008 9.32585 0.00287008 9.47553 0.463525L11.1329 5.56434C11.1998 5.77035 11.3918 5.90983 11.6084 5.90983H16.9717C17.4561 5.90983 17.6575 6.52964 17.2656 6.81434L12.9266 9.96681C12.7514 10.0941 12.678 10.3198 12.745 10.5258L14.4023 15.6266C14.552 16.0873 14.0248 16.4704 13.6329 16.1857L9.29389 13.0332C9.11865 12.9059 8.88135 12.9059 8.70611 13.0332L4.3671 16.1857C3.97524 16.4704 3.448 16.0873 3.59768 15.6266L5.25503 10.5258C5.32197 10.3198 5.24864 10.0941 5.07339 9.96681L0.734384 6.81434C0.342527 6.52964 0.543915 5.90983 1.02828 5.90983H6.39159C6.6082 5.90983 6.80018 5.77035 6.86712 5.56434L8.52447 0.463525Z"
+                                                                            fill="#2C9CF1" />
+                                                                    </svg></span>
+                                                                <span><svg width="18" height="17" viewBox="0 0 18 17"
+                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path
+                                                                            d="M8.52447 0.463525C8.67415 0.00287008 9.32585 0.00287008 9.47553 0.463525L11.1329 5.56434C11.1998 5.77035 11.3918 5.90983 11.6084 5.90983H16.9717C17.4561 5.90983 17.6575 6.52964 17.2656 6.81434L12.9266 9.96681C12.7514 10.0941 12.678 10.3198 12.745 10.5258L14.4023 15.6266C14.552 16.0873 14.0248 16.4704 13.6329 16.1857L9.29389 13.0332C9.11865 12.9059 8.88135 12.9059 8.70611 13.0332L4.3671 16.1857C3.97524 16.4704 3.448 16.0873 3.59768 15.6266L5.25503 10.5258C5.32197 10.3198 5.24864 10.0941 5.07339 9.96681L0.734384 6.81434C0.342527 6.52964 0.543915 5.90983 1.02828 5.90983H6.39159C6.6082 5.90983 6.80018 5.77035 6.86712 5.56434L8.52447 0.463525Z"
+                                                                            fill="#2C9CF1" />
+                                                                    </svg></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-md-flex align-items-center mt-2">
+                                                        <img src="https://nat-admin.s3.us-east-1.amazonaws.com/images/tour-operator/dixies/package/1/lacht-frontend-list-image-66.png"
+                                                            width="100" height="100" alt="">
+                                                        <div class="content-box">
+                                                            <p class="mb-2">Sep. 30th 2023</p>
+                                                            <p class="mb-md-3 mb-2">Monday 2:00PM</p>
+                                                            <p class="mb-2">2 Adults</p>
+                                                            <p>1 Child</p>
+                                                        </div>
+                                                    </div>
+                                                    <a href="#" class="update">Update</a>
+                                                </div>
+                                                <div class="left_content">
+                                                    <h3>6:45 AM</h3>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="left_content no-booking">
+                                                    <h3>7:00 AM</h3>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="left_content no-booking">
+                                                    <h3>7:15 AM</h3>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="left_content no-booking">
+                                                    <h3>7:30 AM</h3>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="left_content no-booking">
+                                                    <h3>7:45 AM</h3>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="left_content no-booking">
+                                                    <h3>8:00 AM</h3>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="left_content no-booking">
+                                                    <h3>8:15 AM</h3>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="left_content no-booking">
+                                                    <h3>8:30 AM</h3>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="left_content no-booking">
+                                                    <h3>8:45 AM</h3>
+                                                </div>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -282,111 +403,3 @@ export default {
     }
 };
 </script>
-
-<style>
-.wizard {
-    display: grid;
-    grid-template-columns: 320px 1fr;
-    font-family: 'Roboto', sans-serif;
-}
-
-.process {
-    box-model: border-box;
-    align-self: center;
-    justify-self: center;
-    padding: 30px 0;
-}
-
-.process ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-}
-
-.process ul li.step .name {
-    display: flex;
-    align-items: center;
-    color: #939393;
-}
-
-.process ul li.step .name:before {
-    content: '';
-    width: 18px;
-    height: 18px;
-    display: inline-block;
-    border-radius: 50%;
-    margin-right: 8px;
-    background: #ddd;
-}
-
-.process ul li.step.completed .name {
-    color: #005c9f;
-}
-
-.process ul li.step.completed .name:before {
-    content: '\2713';
-    color: white;
-    font-size: 0.8em;
-    text-align: center;
-    background: #005c9f;
-}
-
-.process ul li.step.current .name {
-    color: #e74700;
-}
-
-.process ul li.step.current .name:before {
-    background: #e74700;
-    box-shadow: 0 0 18px #ff9362;
-    animation: 1750ms linear infinite pulse;
-}
-
-.process ul li.step:not(:last-child):after {
-    height: 48px;
-    width: 3px;
-    content: '';
-    display: block;
-    background-color: #ddd;
-    margin-left: 7px;
-    margin-top: 8px;
-    margin-bottom: 8px;
-}
-
-.process ul li.step.completed:not(:last-child):after {
-    background-color: #005c9f;
-}
-
-.process.done ul li.step .name {
-    color: #33673b;
-}
-
-.process.done ul li.step .name:before {
-    background: #33673b;
-    box-shadow: none;
-    content: '\2713';
-    color: white;
-    font-size: 0.8em;
-    text-align: center;
-}
-
-.process.done ul li.step:not(:last-child):after {
-    background-color: #33673b;
-    box-shadow: 0 0 8px #88c492;
-}
-
-@keyframes pulse {
-    0% {
-        box-shadow: 0 0 2px #ff9362;
-    }
-
-    80% {
-        box-shadow: 0 0 18px #ff9362;
-    }
-
-    100% {
-        box-shadow: 0 0 2px #ff9362;
-    }
-}
-</style>

@@ -71,6 +71,86 @@
                                             :icon="m.icon"
                                         />
                                     </GMapMap>
+
+                                    <div class="tour-details-wrap">
+                                        <div class="tour-details-title">Your Day:</div>
+                                        <div class="d-lg-flex border-bottom pb-4 mb-4">
+                                            <div class="details-box mb-3 mb-lg-0">
+                                                <div class="title-wrap d-flex justify-content-between align-items-center">
+                                                    <div class="tour-title">Lower Antelope Canyon</div>
+                                                    <div class="tour-time">1 Hour Tour</div>
+                                                </div>
+                                                <p class="date-time">Sep. 30th 2023 Monday 3:00PM - 6:00PM</p>
+                                                <p class="details-text">Lorem ipsum dolor sit amet consectetur adipisicing
+                                                    elit. Perferendis, possimus rem. Eveniet maxime consequuntur quos
+                                                    ducimus, perspiciatis beatae repudiandae deleniti id quam placeat soluta
+                                                    veritatis voluptatem hic explicabo delectus facere iure! Nam facilis
+                                                    quis, alias quasi unde a et id deleniti atque aperiam iste reprehenderit
+                                                    repudiandae tempore neque! Excepturi, officia?</p>
+                                            </div>
+                                            <div class="tourselected-image">
+                                                <img src="https://nat-admin.s3.us-east-1.amazonaws.com/images/tour-operator/dixies/package/1/lacht-frontend-list-image-66.png"
+                                                    alt="Lower Antelope Canyon Hiking Tour">
+                                            </div>
+                                        </div>
+                                        <div class="d-lg-flex border-bottom pb-4 mb-4">
+                                            <div class="details-box mb-3 mb-lg-0">
+                                                <div class="title-wrap d-flex justify-content-between align-items-center">
+                                                    <div class="tour-title">Lower Antelope Canyon</div>
+                                                    <div class="tour-time">1 Hour Tour</div>
+                                                </div>
+                                                <p class="date-time">Sep. 30th 2023 Monday 3:00PM - 6:00PM</p>
+                                                <p class="details-text">Lorem ipsum dolor sit amet consectetur adipisicing
+                                                    elit. Perferendis, possimus rem. Eveniet maxime consequuntur quos
+                                                    ducimus, perspiciatis beatae repudiandae deleniti id quam placeat soluta
+                                                    veritatis voluptatem hic explicabo delectus facere iure! Nam facilis
+                                                    quis, alias quasi unde a et id deleniti atque aperiam iste reprehenderit
+                                                    repudiandae tempore neque! Excepturi, officia?</p>
+                                            </div>
+                                            <div class="tourselected-image">
+                                                <img src="https://nat-admin.s3.us-east-1.amazonaws.com/images/tour-operator/dixies/package/1/lacht-frontend-list-image-66.png"
+                                                    alt="Lower Antelope Canyon Hiking Tour">
+                                            </div>
+                                        </div>
+                                        <div class="d-lg-flex border-bottom pb-4 mb-4">
+                                            <div class="details-box mb-3 mb-lg-0">
+                                                <div class="title-wrap d-flex justify-content-between align-items-center">
+                                                    <div class="tour-title">Lower Antelope Canyon</div>
+                                                    <div class="tour-time">1 Hour Tour</div>
+                                                </div>
+                                                <p class="date-time">Sep. 30th 2023 Monday 3:00PM - 6:00PM</p>
+                                                <p class="details-text">Lorem ipsum dolor sit amet consectetur adipisicing
+                                                    elit. Perferendis, possimus rem. Eveniet maxime consequuntur quos
+                                                    ducimus, perspiciatis beatae repudiandae deleniti id quam placeat soluta
+                                                    veritatis voluptatem hic explicabo delectus facere iure! Nam facilis
+                                                    quis, alias quasi unde a et id deleniti atque aperiam iste reprehenderit
+                                                    repudiandae tempore neque! Excepturi, officia?</p>
+                                            </div>
+                                            <div class="tourselected-image">
+                                                <img src="https://nat-admin.s3.us-east-1.amazonaws.com/images/tour-operator/dixies/package/1/lacht-frontend-list-image-66.png"
+                                                    alt="Lower Antelope Canyon Hiking Tour">
+                                            </div>
+                                        </div>
+                                        <div class="d-lg-flex">
+                                            <div class="details-box mb-3 mb-lg-0">
+                                                <div class="title-wrap d-flex justify-content-between align-items-center">
+                                                    <div class="tour-title">Lower Antelope Canyon</div>
+                                                    <div class="tour-time">1 Hour Tour</div>
+                                                </div>
+                                                <p class="date-time">Sep. 30th 2023 Monday 3:00PM - 6:00PM</p>
+                                                <p class="details-text">Lorem ipsum dolor sit amet consectetur adipisicing
+                                                    elit. Perferendis, possimus rem. Eveniet maxime consequuntur quos
+                                                    ducimus, perspiciatis beatae repudiandae deleniti id quam placeat soluta
+                                                    veritatis voluptatem hic explicabo delectus facere iure! Nam facilis
+                                                    quis, alias quasi unde a et id deleniti atque aperiam iste reprehenderit
+                                                    repudiandae tempore neque! Excepturi, officia?</p>
+                                            </div>
+                                            <div class="tourselected-image">
+                                                <img src="https://nat-admin.s3.us-east-1.amazonaws.com/images/tour-operator/dixies/package/1/lacht-frontend-list-image-66.png"
+                                                    alt="Lower Antelope Canyon Hiking Tour">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -119,7 +199,7 @@ export default {
             total: 0,
             tabs: 4,
             checkPackageIds: [],
-            center: {lat: 51.093048, lng: 6.842120},
+            center: { lat: 51.093048, lng: 6.842120 },
             markers: [
                 {
                     position: {
@@ -280,7 +360,3 @@ export default {
     }
 };
 </script>
-
-<style>
-
-</style>
