@@ -540,6 +540,10 @@ ul {
 	padding-right: 40px;
 }
 
+.vuejs3-datepicker__calendar {
+	right: 0;
+}
+
 .vuejs3-datepicker__value {
 	border: 1px solid #cbcbcb;
 	border-radius: 3px 3px 0px 0px;
@@ -1209,9 +1213,9 @@ ul {
 	font-size: 16px;
 	color: #121212;
 	font-weight: 600;
-	padding: 7px 7px 7px 46px;
-	width: 48.4%;
-	height: 41px;
+	padding: 7px 10px 7px 46px;
+	width: auto;
+	height: 100%;
 	text-align: left;
 	position: relative;
 }

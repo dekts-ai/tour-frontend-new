@@ -62,7 +62,7 @@
                                                         <p class="mb-lg-0 mb-2">{{ item.data.package_name }}</p>
                                                         <p>{{ item.data.duration }} Tour</p>
                                                     </div>
-                                                    <div class="d-md-flex align-items-center mt-2">
+                                                    <div class="d-md-flex mt-2">
                                                         <img :src="item.data.package_image" width="100" height="100" alt="">
                                                         <div class="content-box">
                                                             <p class="mb-2">{{ dateFormat(item.data.date) }} @ {{ item.data.time_date }}</p>
