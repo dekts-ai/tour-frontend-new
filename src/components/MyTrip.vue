@@ -53,154 +53,26 @@
                                 <div class="tourlist-packages-wrap h-100">
                                     <div class="timeline">
                                         <ul>
-                                            <li class="booking">
-                                                <div class="right_content">
+                                            <li v-for="item in bookings" :class="{ 'booking': item.booking, 'no-booking': !item.booking }">
+                                                <div class="left_content">
+                                                    <h3>{{ item.time }}</h3>
+                                                </div>
+                                                <div v-if="item.booking" class="right_content">
                                                     <div class="d-lg-flex justify-content-between align-items-center">
-                                                        <p class="mb-lg-0 mb-2">Lower Antelope Canyon</p>
-                                                        <div>
-                                                            <p>2 Hour Tour</p>
-                                                            <div class="star text-start">
-                                                                <span><svg width="18" height="17" viewBox="0 0 18 17"
-                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <path
-                                                                            d="M8.52447 0.463525C8.67415 0.00287008 9.32585 0.00287008 9.47553 0.463525L11.1329 5.56434C11.1998 5.77035 11.3918 5.90983 11.6084 5.90983H16.9717C17.4561 5.90983 17.6575 6.52964 17.2656 6.81434L12.9266 9.96681C12.7514 10.0941 12.678 10.3198 12.745 10.5258L14.4023 15.6266C14.552 16.0873 14.0248 16.4704 13.6329 16.1857L9.29389 13.0332C9.11865 12.9059 8.88135 12.9059 8.70611 13.0332L4.3671 16.1857C3.97524 16.4704 3.448 16.0873 3.59768 15.6266L5.25503 10.5258C5.32197 10.3198 5.24864 10.0941 5.07339 9.96681L0.734384 6.81434C0.342527 6.52964 0.543915 5.90983 1.02828 5.90983H6.39159C6.6082 5.90983 6.80018 5.77035 6.86712 5.56434L8.52447 0.463525Z"
-                                                                            fill="#2C9CF1" />
-                                                                    </svg></span>
-                                                                <span><svg width="18" height="17" viewBox="0 0 18 17"
-                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <path
-                                                                            d="M8.52447 0.463525C8.67415 0.00287008 9.32585 0.00287008 9.47553 0.463525L11.1329 5.56434C11.1998 5.77035 11.3918 5.90983 11.6084 5.90983H16.9717C17.4561 5.90983 17.6575 6.52964 17.2656 6.81434L12.9266 9.96681C12.7514 10.0941 12.678 10.3198 12.745 10.5258L14.4023 15.6266C14.552 16.0873 14.0248 16.4704 13.6329 16.1857L9.29389 13.0332C9.11865 12.9059 8.88135 12.9059 8.70611 13.0332L4.3671 16.1857C3.97524 16.4704 3.448 16.0873 3.59768 15.6266L5.25503 10.5258C5.32197 10.3198 5.24864 10.0941 5.07339 9.96681L0.734384 6.81434C0.342527 6.52964 0.543915 5.90983 1.02828 5.90983H6.39159C6.6082 5.90983 6.80018 5.77035 6.86712 5.56434L8.52447 0.463525Z"
-                                                                            fill="#2C9CF1" />
-                                                                    </svg></span>
-                                                                <span><svg width="18" height="17" viewBox="0 0 18 17"
-                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <path
-                                                                            d="M8.52447 0.463525C8.67415 0.00287008 9.32585 0.00287008 9.47553 0.463525L11.1329 5.56434C11.1998 5.77035 11.3918 5.90983 11.6084 5.90983H16.9717C17.4561 5.90983 17.6575 6.52964 17.2656 6.81434L12.9266 9.96681C12.7514 10.0941 12.678 10.3198 12.745 10.5258L14.4023 15.6266C14.552 16.0873 14.0248 16.4704 13.6329 16.1857L9.29389 13.0332C9.11865 12.9059 8.88135 12.9059 8.70611 13.0332L4.3671 16.1857C3.97524 16.4704 3.448 16.0873 3.59768 15.6266L5.25503 10.5258C5.32197 10.3198 5.24864 10.0941 5.07339 9.96681L0.734384 6.81434C0.342527 6.52964 0.543915 5.90983 1.02828 5.90983H6.39159C6.6082 5.90983 6.80018 5.77035 6.86712 5.56434L8.52447 0.463525Z"
-                                                                            fill="#2C9CF1" />
-                                                                    </svg></span>
-                                                                <span><svg width="18" height="17" viewBox="0 0 18 17"
-                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <path
-                                                                            d="M8.52447 0.463525C8.67415 0.00287008 9.32585 0.00287008 9.47553 0.463525L11.1329 5.56434C11.1998 5.77035 11.3918 5.90983 11.6084 5.90983H16.9717C17.4561 5.90983 17.6575 6.52964 17.2656 6.81434L12.9266 9.96681C12.7514 10.0941 12.678 10.3198 12.745 10.5258L14.4023 15.6266C14.552 16.0873 14.0248 16.4704 13.6329 16.1857L9.29389 13.0332C9.11865 12.9059 8.88135 12.9059 8.70611 13.0332L4.3671 16.1857C3.97524 16.4704 3.448 16.0873 3.59768 15.6266L5.25503 10.5258C5.32197 10.3198 5.24864 10.0941 5.07339 9.96681L0.734384 6.81434C0.342527 6.52964 0.543915 5.90983 1.02828 5.90983H6.39159C6.6082 5.90983 6.80018 5.77035 6.86712 5.56434L8.52447 0.463525Z"
-                                                                            fill="#2C9CF1" />
-                                                                    </svg></span>
-                                                            </div>
-                                                        </div>
+                                                        <p class="mb-lg-0 mb-2">{{ item.data.package_name }}</p>
+                                                        <p>{{ item.data.duration }} Tour</p>
                                                     </div>
                                                     <div class="d-md-flex align-items-center mt-2">
-                                                        <img src="https://nat-admin.s3.us-east-1.amazonaws.com/images/tour-operator/dixies/package/1/lacht-frontend-list-image-66.png"
-                                                            width="100" height="100" alt="">
+                                                        <img :src="item.data.package_image" width="100" height="100" alt="">
                                                         <div class="content-box">
-                                                            <p class="mb-2">Sep. 30th 2023</p>
-                                                            <p class="mb-md-3 mb-2">Monday 2:00PM</p>
-                                                            <p class="mb-2">2 Adults</p>
-                                                            <p>1 Child</p>
+                                                            <p class="mb-2">{{ dateFormat(item.data.date) }} @ {{ item.data.time_date }}</p>
+                                                            <p class="mb-2" v-for="(pax, key) in item.data.people_group" :key="key">
+                                                                <span v-if="pax > 0">{{ pax }} {{ item.data.rate_group[key] }}</span>
+                                                            </p>
+                                                            <small class="text-muted">{{ item.data.short_description }}</small>
                                                         </div>
                                                     </div>
-                                                    <a href="#" class="update">Update</a>
-                                                </div>
-                                                <div class="left_content">
-                                                    <h3>6:00 AM</h3>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="left_content no-booking">
-                                                    <h3>6:15 AM</h3>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="left_content no-booking">
-                                                    <h3>6:30 AM</h3>
-                                                </div>
-                                            </li>
-                                            <li class="booking">
-                                                <div class="right_content">
-                                                    <div class="d-lg-flex justify-content-between align-items-center">
-                                                        <p class="mb-lg-0 mb-2">Lower Antelope Canyon</p>
-                                                        <div>
-                                                            <p>2 Hour Tour</p>
-                                                            <div class="star text-start">
-                                                                <span><svg width="18" height="17" viewBox="0 0 18 17"
-                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <path
-                                                                            d="M8.52447 0.463525C8.67415 0.00287008 9.32585 0.00287008 9.47553 0.463525L11.1329 5.56434C11.1998 5.77035 11.3918 5.90983 11.6084 5.90983H16.9717C17.4561 5.90983 17.6575 6.52964 17.2656 6.81434L12.9266 9.96681C12.7514 10.0941 12.678 10.3198 12.745 10.5258L14.4023 15.6266C14.552 16.0873 14.0248 16.4704 13.6329 16.1857L9.29389 13.0332C9.11865 12.9059 8.88135 12.9059 8.70611 13.0332L4.3671 16.1857C3.97524 16.4704 3.448 16.0873 3.59768 15.6266L5.25503 10.5258C5.32197 10.3198 5.24864 10.0941 5.07339 9.96681L0.734384 6.81434C0.342527 6.52964 0.543915 5.90983 1.02828 5.90983H6.39159C6.6082 5.90983 6.80018 5.77035 6.86712 5.56434L8.52447 0.463525Z"
-                                                                            fill="#2C9CF1" />
-                                                                    </svg></span>
-                                                                <span><svg width="18" height="17" viewBox="0 0 18 17"
-                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <path
-                                                                            d="M8.52447 0.463525C8.67415 0.00287008 9.32585 0.00287008 9.47553 0.463525L11.1329 5.56434C11.1998 5.77035 11.3918 5.90983 11.6084 5.90983H16.9717C17.4561 5.90983 17.6575 6.52964 17.2656 6.81434L12.9266 9.96681C12.7514 10.0941 12.678 10.3198 12.745 10.5258L14.4023 15.6266C14.552 16.0873 14.0248 16.4704 13.6329 16.1857L9.29389 13.0332C9.11865 12.9059 8.88135 12.9059 8.70611 13.0332L4.3671 16.1857C3.97524 16.4704 3.448 16.0873 3.59768 15.6266L5.25503 10.5258C5.32197 10.3198 5.24864 10.0941 5.07339 9.96681L0.734384 6.81434C0.342527 6.52964 0.543915 5.90983 1.02828 5.90983H6.39159C6.6082 5.90983 6.80018 5.77035 6.86712 5.56434L8.52447 0.463525Z"
-                                                                            fill="#2C9CF1" />
-                                                                    </svg></span>
-                                                                <span><svg width="18" height="17" viewBox="0 0 18 17"
-                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <path
-                                                                            d="M8.52447 0.463525C8.67415 0.00287008 9.32585 0.00287008 9.47553 0.463525L11.1329 5.56434C11.1998 5.77035 11.3918 5.90983 11.6084 5.90983H16.9717C17.4561 5.90983 17.6575 6.52964 17.2656 6.81434L12.9266 9.96681C12.7514 10.0941 12.678 10.3198 12.745 10.5258L14.4023 15.6266C14.552 16.0873 14.0248 16.4704 13.6329 16.1857L9.29389 13.0332C9.11865 12.9059 8.88135 12.9059 8.70611 13.0332L4.3671 16.1857C3.97524 16.4704 3.448 16.0873 3.59768 15.6266L5.25503 10.5258C5.32197 10.3198 5.24864 10.0941 5.07339 9.96681L0.734384 6.81434C0.342527 6.52964 0.543915 5.90983 1.02828 5.90983H6.39159C6.6082 5.90983 6.80018 5.77035 6.86712 5.56434L8.52447 0.463525Z"
-                                                                            fill="#2C9CF1" />
-                                                                    </svg></span>
-                                                                <span><svg width="18" height="17" viewBox="0 0 18 17"
-                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <path
-                                                                            d="M8.52447 0.463525C8.67415 0.00287008 9.32585 0.00287008 9.47553 0.463525L11.1329 5.56434C11.1998 5.77035 11.3918 5.90983 11.6084 5.90983H16.9717C17.4561 5.90983 17.6575 6.52964 17.2656 6.81434L12.9266 9.96681C12.7514 10.0941 12.678 10.3198 12.745 10.5258L14.4023 15.6266C14.552 16.0873 14.0248 16.4704 13.6329 16.1857L9.29389 13.0332C9.11865 12.9059 8.88135 12.9059 8.70611 13.0332L4.3671 16.1857C3.97524 16.4704 3.448 16.0873 3.59768 15.6266L5.25503 10.5258C5.32197 10.3198 5.24864 10.0941 5.07339 9.96681L0.734384 6.81434C0.342527 6.52964 0.543915 5.90983 1.02828 5.90983H6.39159C6.6082 5.90983 6.80018 5.77035 6.86712 5.56434L8.52447 0.463525Z"
-                                                                            fill="#2C9CF1" />
-                                                                    </svg></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-md-flex align-items-center mt-2">
-                                                        <img src="https://nat-admin.s3.us-east-1.amazonaws.com/images/tour-operator/dixies/package/1/lacht-frontend-list-image-66.png"
-                                                            width="100" height="100" alt="">
-                                                        <div class="content-box">
-                                                            <p class="mb-2">Sep. 30th 2023</p>
-                                                            <p class="mb-md-3 mb-2">Monday 2:00PM</p>
-                                                            <p class="mb-2">2 Adults</p>
-                                                            <p>1 Child</p>
-                                                        </div>
-                                                    </div>
-                                                    <a href="#" class="update">Update</a>
-                                                </div>
-                                                <div class="left_content">
-                                                    <h3>6:45 AM</h3>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="left_content no-booking">
-                                                    <h3>7:00 AM</h3>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="left_content no-booking">
-                                                    <h3>7:15 AM</h3>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="left_content no-booking">
-                                                    <h3>7:30 AM</h3>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="left_content no-booking">
-                                                    <h3>7:45 AM</h3>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="left_content no-booking">
-                                                    <h3>8:00 AM</h3>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="left_content no-booking">
-                                                    <h3>8:15 AM</h3>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="left_content no-booking">
-                                                    <h3>8:30 AM</h3>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="left_content no-booking">
-                                                    <h3>8:45 AM</h3>
+                                                    <a role="button" @click="editPackage(item.data)" class="update">Update</a>
                                                 </div>
                                             </li>
                                         </ul>
@@ -231,7 +103,8 @@ export default {
             cartItem: {},
             cartItemLength: 0,
             tabs: 3,
-            checkPackageIds: []
+            checkPackageIds: [],
+            bookings: []
         };
     },
     async created() {
@@ -247,9 +120,10 @@ export default {
             for (var key in this.cartItem) {
                 var pId = parseInt(this.cartItem[key].package_id);
                 this.checkPackageIds.push(pId);
-                // console.log(this.cartItem[key]);
             }
         }
+        this.bookings = [];
+        this.bookings = this.generateTimeSlots();
 
         this.$store.dispatch('storeTabs', this.tabs);
         this.$store.dispatch('storeMindChange', 0);
@@ -267,6 +141,64 @@ export default {
             this.$router.push({
                 name: 'Init',
             });
+        },
+        generateTimeSlots() {
+            const startTime = '05:45:00';
+            const endTime = '19:45:00';
+            const interval = 15; // in minutes
+
+            this.bookings = [];
+            let currentTime = startTime;
+
+            while (currentTime <= endTime) {
+                const [hours, minutes] = currentTime.split(':').map(Number);
+                const totalMinutes = hours * 60 + minutes + interval;
+                currentTime = `${Math.floor(totalMinutes / 60)
+                    .toString()
+                    .padStart(2, '0')}:${(totalMinutes % 60).toString().padStart(2, '0')}:00`;
+
+                let bookingNotExists = 0;
+                if (this.cartItemLength) {
+                    for (var key in this.cartItem) {
+                        if (this.cartItem[key].slot_time == currentTime) {
+                            this.bookings.push({
+                                time: this.formatTime(currentTime),
+                                booking: true,
+                                data: this.cartItem[key]
+                            });
+                            bookingNotExists = 0;
+                            break;
+                        } else {
+                            bookingNotExists = 1;
+                        }
+                    }
+                } else {
+                    this.bookings.push({
+                        time: this.formatTime(currentTime),
+                        booking: false,
+                        data: null
+                    });
+                }
+
+                if (bookingNotExists) {
+                    this.bookings.push({
+                        time: this.formatTime(currentTime),
+                        booking: false,
+                        data: null
+                    });
+                }
+            }
+
+            return this.bookings;
+        },
+        formatTime(timeString) {
+            const [hours, minutes, seconds] = timeString.split(':').map(Number);
+
+            const period = hours >= 12 ? 'PM' : 'AM';
+            const formattedHours = hours % 12 || 12;
+            const formattedMinutes = minutes.toString().padStart(2, '0');
+
+            return `${formattedHours}:${formattedMinutes} ${period}`;
         },
         dateFormat(date) {
             this.$store.dispatch('storeDate', date);
