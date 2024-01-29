@@ -16,8 +16,8 @@
 					<div class="tabs-wrap d-flex align-items-center">
 						<button @click="navigateToTab(1, 'Index')" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
 						<button @click="navigateToTab(2, 'Init')" :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
-                        <button @click="navigateToTab(3, 'MyTrip')" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">My Trip</button>
-						<button @click="navigateToTab(4, 'Maps')" :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')">Maps</button>
+                        <button v-if="comboIds" @click="navigateToTab(3, 'MyTrip')" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">My Trip</button>
+						<button v-if="comboIds" @click="navigateToTab(4, 'Maps')" :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')">Maps</button>
 						<button :class="'tabs tab5 ' + (tabs == 5 ? 'active' : '')">Checkout</button>
 					</div>
 				</div>
@@ -251,7 +251,7 @@ export default {
             iframeStatus: false,
             tenantId: null,
             tabs: 5,
-            cartView: 0,
+            comboIds: 0,
             bookingIds: {},
             details: [],
             hotels: [],
@@ -290,7 +290,7 @@ export default {
         this.iframeStatus = this.$store.state.iframeStatus;
         this.tenantId = this.$store.state.tenantId;
         this.hotels = this.$store.state.tourPackage?.hotels;
-        this.cartView = this.$store.state.tourPackage?.cartView;
+        this.comboIds = this.$store.state.comboIds;
         this.cartItem = this.$store.state.cartItem;
         this.cartItemLength = Object.values(this.cartItem).length;
         if (this.cartItemLength) {
@@ -460,7 +460,7 @@ export default {
                             array.indexOf(value) === index
                         )
 
-                        if (this.cartView != 1 || this.cartItemLength == 1) {
+                        if (this.comboIds == 0 || this.cartItemLength == 1) {
                             Swal.fire({
                                 toast: true,
                                 title: "Errors!",
