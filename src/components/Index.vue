@@ -82,7 +82,7 @@
 
                                                         <div class="tourselected-title-top">{{ dateFormat(item.date) }} @ {{ item.time_date }}</div> 
                                                         <div class="tourselected-title-top">{{ item.short_description }}</div>
-                                                        <div class="what-bring-wrap-added">
+                                                        <div class="what-bring-wrap-added" v-if="item?.things_to_bring?.length">
                                                             <div class="what-bring-title">What to bring</div>
                                                             <ul>
                                                                 <li v-for="bring in item?.things_to_bring">{{ bring }}</li>
