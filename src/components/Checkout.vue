@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
                                 <div class="row payment-form-sec">
-                                	<div class="col-lg-7 mb-lg-0 mb-md-5 mb-4 order-2 order-md-1">
+                                	<div class="col-lg-7 mt-lg-0 mt-md-5 mt-4 order-2 order-md-1">
                                 		<div class="contact-wrap">
 	                                		<div class="form-field-title" v-if="iframeStatus == false">Contact:</div>
 	                                        <div class="form-field-wrp contact-form-field mb-2">

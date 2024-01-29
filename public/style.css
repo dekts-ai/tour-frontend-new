@@ -896,8 +896,8 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.starttime-row .select-time .radio-toolbar .time-item { width: 100%; margin: 0 0 10px; }
 	.starttime-row .groupofpeople .booknowbtn button { width: 100%; }
 	.hiking-tour-row { padding: 30px 0px 30px; }
-	.tour-start-row .duration { padding: 21px 15px 25px; }
 	.tour-start-row .whattobring { padding: 21px 15px 25px; }
+	.tourlist-packages-wrap img {max-width: 100% !important;}
 
 	/***** Payment Page Start *****/
 	.booking-dt-sec {padding: 20px 0px 0;}
@@ -910,7 +910,6 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.payment-form-sec .masks-mandatory-img {margin-right: 0; text-align: center; margin-bottom: 15px;}
 	.payment-form-sec label.checkbox-wrap {font-size: 16px;}
 	.payment-form-sec .masks-mandatory-notice {font-size: 12px; line-height: 16px;}
-	.payment-form-sec {padding-left: 0; padding-right: 0; padding-top: 0;}
 	.payment-form-sec .form-field-wrp input {height: 45px;}
 	.payment-form-sec .form-field-wrp label.checkbox-wrap {font-size: 12px; line-height: 18px;}
 	.payment-form-sec .policy-item-wrp ul li {font-size: 14px; line-height: 19px;}
@@ -951,6 +950,10 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.tourselected-packages-item .tourselected-action-wrap .action-btn {width: 75px;}
 	.tourselected-packages-item .tourselected-detail {padding: 20px 20px;}
 	.tourselected-packages-item .tourselected-totalcost {padding: 0 15px 20px;}
+
+	.right_content p {
+		font-size: 14px;
+	}
 }
 
 @media (max-width: 380px) {

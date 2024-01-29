@@ -342,9 +342,6 @@ ul {
 	.right_content a {
 		margin-top: 10px;
 	}
-	.tourlist-packages-wrap img {
-		max-width: 300px;
-	}
 }
 @media (max-width: 767px){
 	.tourlist-packages-wrap {
@@ -2559,6 +2556,15 @@ section.iframe-inner-banner.banner-section {
 }
 
 @media (max-width: 1199px) {
+	.tabs-section .tabs-wrap {
+		display: flex !important;
+		justify-content: center;
+	}
+
+	.tabs-section .tabs-wrap .tabs {
+		margin-right: 6px !important;
+	}
+
 	.inner-content-section .background-color-sec {
 		padding: 20px 30px;
 	}
