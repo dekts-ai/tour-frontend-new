@@ -551,7 +551,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .tourlist-packages-wrap img {max-width: 250px; width: auto; height: auto;}
 .tourselected-packages-item {border-radius: 5px; border: 1px solid #A6B6CE; background: #FFF; box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.12); display: flex; justify-content: space-between; margin-top: 12px; margin-bottom: 12px; width: 100%; position: relative;}
 
-.tourselected-packages-item .tourselected-inner-wrap {width: 70%;}
+.tourselected-packages-item .tourselected-inner-wrap {width: 75%;}
 .tourselected-packages-item.remaining-packages-list .tourselected-inner-wrap {width: 100%;}
 .tourselected-packages-item .tourselected-totalcost {width: 30%; padding: 20px 30px 15px 30px; max-width: 320px; position: relative; overflow: hidden;}
 .tourselected-packages-item .tourselected-title {color: #0070FF; font-size: 16px; font-weight: 700; line-height: 1; margin-bottom: 10px;}
