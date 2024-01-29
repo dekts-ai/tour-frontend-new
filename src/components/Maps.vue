@@ -53,9 +53,18 @@
                                 <div class="tourlist-packages-wrap">
                                     <GMapMap
                                         :center="center"
-                                        ref="mmm"
-                                        :zoom="12"
+                                        ref="map"
+                                        :zoom="10"
                                         style="width: 100%; height: 400px"
+                                        :options="{
+                                            zoomControl: true,
+                                            mapTypeControl: true,
+                                            scaleControl: true,
+                                            streetViewControl: true,
+                                            rotateControl: true,
+                                            fullscreenControl: true,
+                                            disableDefaultUi: false
+                                        }"
                                     >
                                         <GMapMarker
                                             :key="index"
@@ -64,7 +73,10 @@
                                             :position="m.position"
                                             :clickable="true"
                                             :icon="m.icon"
-                                        />
+                                            :title="m.title"
+                                            @click="onMarkerClick(m)"
+                                        >
+                                        </GMapMarker>
                                     </GMapMap>
 
                                     <div class="tour-details-wrap">
@@ -95,6 +107,7 @@
 
 <script>
 import { format } from 'date-fns';
+import Swal from 'sweetalert2';
 
 export default {
     name: "GoogleMap",
@@ -131,7 +144,13 @@ export default {
                     this.markers.push({
                         position: {
                             lat: Number(this.cartItem[key].latitude), lng: Number(this.cartItem[key].longitude)
-                        }
+                        },
+                        title: this.cartItem[key].package_name,
+                        image: this.cartItem[key].package_image,
+                        duration: this.cartItem[key].duration,
+                        date: this.cartItem[key].date,
+                        time_date: this.cartItem[key].time_date,
+                        short_description: this.cartItem[key].short_description,
                     });
                 }
                 k++;
@@ -161,7 +180,29 @@ export default {
             }
             this.$store.dispatch('storeMindChange', 1);
             this.$router.push({ name: destination });
-        }
+        },
+        onMarkerClick(marker) {
+            Swal.fire({
+                type: 'info',
+                toast: true,
+                timer: 5000,
+                timerProgressBar: true,
+                showConfirmButton: false,
+                html: `
+                <div class="d-md-flex mt-2">
+                    <img src="${marker.image}" width="100" height="100" alt="" />
+                    <div class="content-box">
+                        <div class="d-lg-flex">
+                            <b>${marker.title}</b>
+                        </div>
+                        <!--<div class="d-lg-flex">
+                            <p class="text-blue">${marker.duration} Tour</p>
+                        </div>-->
+                        <p class="mb-2">${this.dateFormat(marker.date)} @ ${marker.time_date}</p>
+                    </div>
+                </div>`,
+            });
+        },
     }
 };
 </script>
