@@ -3136,8 +3136,9 @@ section.iframe-inner-banner.banner-section {
 
 @media (max-width: 480px) {
 	.vuejs3-datepicker__calendar {
-		width: 325px !important;
-		max-width: 325px;
+		width: 345px !important;
+		max-width: 345px;
+		margin-top: -5px;
 	}
 
 	.inner-content-section .background-color-sec {
