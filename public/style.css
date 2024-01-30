@@ -544,6 +544,21 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .tabs-section .tabs-wrap .tabs.active {color: #1d875a; border: 1px solid rgba(29,135,90,.5); border-bottom-color: #fff; background: #f2f9f3;}
 .tabs-section .tabs-wrap .tabs:last-child {margin-right: 0;}
 
+.tabs-section .dropdown-toggle::after {content: none;}
+.tabs-section .hamburger-menu {position: relative; width: 26px; height: 24px; transition: .5s ease-in-out; cursor: pointer;}
+.tabs-section .hamburger-menu span {display: block; position: absolute; height: 3px; width: 100%; background: #000; border-radius: 10px; opacity: 1; left: 0; transition: .25s ease-in-out;}
+.tabs-section .hamburger-menu span:nth-child(1) {top: 2px;}
+.tabs-section .hamburger-menu span:nth-child(2), 
+.tabs-section .hamburger-menu span:nth-child(3) {top: 10px;}
+.tabs-section .hamburger-menu span:nth-child(4) {top: 18px;}
+.tabs-section .hamburger-menu.show span:nth-child(1) {top: 18px; width: 0; left: 50%;}
+.tabs-section .hamburger-menu.show span:nth-child(2) {transform: rotate(45deg);}
+.tabs-section .hamburger-menu.show span:nth-child(3) {transform: rotate(-45deg);}
+.tabs-section .hamburger-menu.show span:nth-child(4) {top: 18px; width: 0; left: 50%;}
+.dropdown-menu {padding: 10px !important; border: 1px solid #cbcbcb !important; font-size: 13px !important; font-weight: 700; transform: translate(0px, 34px) !important; border-radius: 3px 0px 3px 0px !important; border-top: 0 !important;}
+.dropdown-item {color: #004085 !important; background-color: #cce5ff !important; border: 1px solid #b8daff !important; font-size: 13px; font-weight: 700 !important; padding: 6px 20px !important; max-width: 150px; text-align: center !important; margin: 0px 0px 5px !important; border-radius: 3px;}
+.dropdown-item.active, .dropdown-item:active {color: #1d875a !important; border: 1px solid rgba(29,135,90,.5) !important; background-color: #f2f9f3 !important;}
+
 .tourlist-packages-wrap {text-align: left; margin: 20px 15px 30px;}
 .tourlist-packages-wrap {text-align: left;}
 .tourlist-packages-wrap input, 
@@ -558,7 +573,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .tourselected-packages-item .tourselected-title-top {color: #333; font-size: 14px; font-weight: 400; line-height: 1; margin-bottom: 16px;}
 .tourselected-packages-item .tourselected-inner {display: flex;}
 .tourselected-packages-item .tourselected-detail {display: flex; padding: 20px; width: 100%;}
-.tourselected-packages-item .tourselected-title-wrap {padding-left: 20px;}
+.tourselected-packages-item .tourselected-title-wrap {padding-left: 20px; width: 100%;}
 .tourselected-packages-item.remaining-packages-list .tourselected-title-wrap {width: 100%;}
 .tourselected-packages-item .tourselected-detail .tourselected-image {max-width: 300px;}
 
@@ -751,6 +766,12 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 }
 
 @media (max-width: 767px) {
+	.tabs-section {background: #fff; margin: 0px; padding: 20px 15px 0px;}
+	.tabs-section .padding-sec{padding-right: 0px !important;}
+	.tabs-section .tabs-wrap {flex-wrap: wrap; justify-content: start !important;}
+	.tabs-section .tabs-wrap .tabs {margin-bottom: 6px; max-width: 125px; border-radius: 3px;}
+	.tabs-section .tabs-wrap .tabs.active {border-bottom-color: rgba(29,135,90,.5);}
+
 	.tour-packages-item .tour-packages-inner {display: block;}
 	.tour-packages-item .tour-packages-detail, 
 	.tour-packages-item .tour-packages-group-wrap {width: 100%; padding: 20px 15px;}
@@ -941,9 +962,6 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.following-error {margin-top: 5px; margin-bottom: 5px;}
 	.hotel-section {padding-left: 0 !important; padding-right: 0 !important;}
 
-	.tabs-section {margin-left: 15px;}
-	.tabs-section .tabs-wrap .tabs {padding: 5px 10px; max-width: 100px; margin-right: 0px; }
-
 	.iframe-row {margin-top: 34px !important;}
 	.addmore-package-wrap {margin-bottom: 25px;}
 
@@ -951,9 +969,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.tourselected-packages-item .tourselected-detail {padding: 20px 20px;}
 	.tourselected-packages-item .tourselected-totalcost {padding: 0 15px 20px;}
 
-	.right_content p {
-		font-size: 14px;
-	}
+	.right_content p {font-size: 14px;}
 }
 
 @media (max-width: 380px) {

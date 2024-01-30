@@ -81,7 +81,7 @@
 
                                     <div class="tour-details-wrap">
                                         <div class="tour-details-title">Your Day:</div>
-                                        <div class="d-lg-flex border-bottom pb-4 mb-4" v-for="item in cartItem" :key="item.tour_slot_id">
+                                        <div class="d-lg-flex justify-content-between border-bottom pb-4 mb-4 w-100" v-for="item in cartItem" :key="item.tour_slot_id">
                                             <div class="details-box mb-3 mb-lg-0">
                                                 <div class="title-wrap d-flex justify-content-between align-items-center">
                                                     <div class="tour-title">{{ item.package_name }}</div>
