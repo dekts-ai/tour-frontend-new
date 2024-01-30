@@ -103,7 +103,7 @@
                                                     <div class="tourselected-title-wrap">
                                                         <div class="d-flex align-items-start justify-content-between">
                                                             <div class="tourselected-title">{{ item.package_name }}</div>
-                                                            <div class=""><span style="color: #004085;">{{ item.duration }} Tour</span></div>
+                                                            <div class="tourselected-title"><span style="color: #004085;">{{ item.duration }} Tour</span></div>
                                                         </div>
 
                                                         <div class="tourselected-title-top">{{ dateFormat(item.date) }} @ {{ item.time_date }}</div> 

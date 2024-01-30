@@ -3141,6 +3141,10 @@ section.iframe-inner-banner.banner-section {
 		margin-top: -5px;
 	}
 
+	.tourselected-packages-item .tourselected-detail .tourselected-image {
+		max-width: 315px;
+	}
+
 	.inner-content-section .background-color-sec {
 		margin-bottom: 30px;
 	}
