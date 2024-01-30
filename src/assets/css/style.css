@@ -3136,8 +3136,8 @@ section.iframe-inner-banner.banner-section {
 
 @media (max-width: 480px) {
 	.vuejs3-datepicker__calendar {
-		width: 250px !important;
-		max-width: 250px;
+		width: 325px !important;
+		max-width: 325px;
 	}
 
 	.inner-content-section .background-color-sec {
@@ -3346,6 +3346,11 @@ section.iframe-inner-banner.banner-section {
 }
 
 @media (max-width: 360px) {
+	.vuejs3-datepicker__calendar {
+		width: 250px !important;
+		max-width: 250px;
+	}
+
 	.total-cost-col .totalcost [class*="col-"] {
 		font-size: 20px;
 	}
