@@ -143,9 +143,9 @@ export default {
             });
         },
         generateTimeSlots() {
-            const startTime = '05:45:00';
-            const endTime = '19:45:00';
-            const interval = 15; // in minutes
+            const startTime = '05:30:00';
+            const endTime = '18:30:00';
+            const interval = 30; // in minutes
 
             this.bookings = [];
             let currentTime = startTime;
@@ -157,30 +157,23 @@ export default {
                     .toString()
                     .padStart(2, '0')}:${(totalMinutes % 60).toString().padStart(2, '0')}:00`;
 
-                let bookingNotExists = 0;
+                let bookingsForCurrentTime = [];
+                
                 if (this.cartItemLength) {
                     for (var key in this.cartItem) {
                         if (this.cartItem[key].slot_time == currentTime) {
-                            this.bookings.push({
+                            bookingsForCurrentTime.push({
                                 time: this.formatTime(currentTime),
                                 booking: true,
                                 data: this.cartItem[key]
                             });
-                            bookingNotExists = 0;
-                            break;
-                        } else {
-                            bookingNotExists = 1;
                         }
                     }
-                } else {
-                    this.bookings.push({
-                        time: this.formatTime(currentTime),
-                        booking: false,
-                        data: null
-                    });
                 }
 
-                if (bookingNotExists) {
+                if (bookingsForCurrentTime.length > 0) {
+                    this.bookings = this.bookings.concat(bookingsForCurrentTime);
+                } else {
                     this.bookings.push({
                         time: this.formatTime(currentTime),
                         booking: false,
