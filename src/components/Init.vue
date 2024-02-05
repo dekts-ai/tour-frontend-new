@@ -13,13 +13,28 @@
 		<div class="no-container">
 			<div class="row">
 				<div class="col-12">
-					<div class="tabs-wrap d-flex align-items-center">
-						<button @click="navigateToTab(1, 'Index')" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
-						<button :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
+					<div class="dropdown text-start d-md-none">
+                        <a class="hamburger-menu dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><button @click="navigateToTab(1, 'Index')" :class="'tabs tab1 dropdown-item ' + (tabs == 1 ? 'active' : '')">Tours</button></li>
+                            <li><button :class="'tabs tab2 dropdown-item ' + (tabs == 2 ? 'active' : '')">Schedule</button></li>
+                            <li><button v-if="comboIds" @click="navigateToTab(3, 'MyTrip')" :class="'tabs tab3 dropdown-item ' + (tabs == 3 ? 'active' : '')">My Trip</button></li>
+                            <li><button v-if="comboIds" @click="navigateToTab(4, 'Maps')" :class="'tabs tab4 dropdown-item ' + (tabs == 4 ? 'active' : '')">Maps</button></li>
+                            <li><button @click="navigateToTab(5, 'Checkout')" :class="'tabs tab5 dropdown-item ' + (tabs == 5 ? 'active' : '')">Checkout</button></li>
+                        </ul>
+                    </div>
+                    <div class="tabs-wrap d-flex align-items-center w-100">
+                        <button @click="navigateToTab(1, 'Index')" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
+                        <button :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
                         <button v-if="comboIds" @click="navigateToTab(3, 'MyTrip')" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">My Trip</button>
-						<button v-if="comboIds" @click="navigateToTab(4, 'Maps')" :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')">Maps</button>
-						<button @click="navigateToTab(5, 'Checkout')" :class="'tabs tab5 ' + (tabs == 5 ? 'active' : '')">Checkout</button>
-					</div>
+                        <button v-if="comboIds" @click="navigateToTab(4, 'Maps')" :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')">Maps</button>
+                        <button @click="navigateToTab(5, 'Checkout')" :class="'tabs tab5 ' + (tabs == 5 ? 'active' : '')">Checkout</button>
+                    </div>
 				</div>
 			</div>
 		</div>
@@ -267,7 +282,6 @@
                                         <div class="bring-group">
                                             <button class="btn-info" v-for="(thingsToBring, key) in details.thingsToBring"
                                                 :key="key">{{ thingsToBring }}</button>
-
                                         </div>
                                     </div>
                                 </div>
@@ -317,6 +331,7 @@ export default {
             dateTimeArr: [],
             peopleselects: [],
             begins: null,
+            blockedTimes: [],
             errors: [],
             form: {
                 iframeStatusInfo: false,
@@ -379,6 +394,22 @@ export default {
             this.form.date = this.getStartDate();
         }
 
+        if (this.comboIds != 0) {
+            for (const key in this.cartItem) {
+                if (this.form.package_id != this.cartItem[key].package_id) {
+                    this.blockedTimes.push(this.cartItem[key].slot_time);
+                } else {
+                    this.blockedTimes.filter(function(e) {
+                        return e != this.cartItem[key].slot_time
+                    });
+                }
+            }
+            // console.log(this.blockedTimes)
+            // this.packageOrder = this.packageOrder.push(this.form.package_id);
+            // this.$store.dispatch('storePackageOrder', this.packageOrder);
+            // this.bufferTimes(this.form.package_id);
+        }
+
         this.configure();
     },
     methods: {
@@ -391,7 +422,8 @@ export default {
             axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id)
                 .then((response) => {
                     this.begins = response.data.begins;
-                    this.dateTimeArr = response.data.Time;
+                    const filteredArray = response.data.Time.filter(slot => !this.blockedTimes.includes(slot.slot_time));
+                    this.dateTimeArr = filteredArray;
                     this.totalavailableseats = response.data.TotalAvailableSeats;
                     this.selectgrouppeoples = [];
                     var seats = this.totalavailableseats;
@@ -650,11 +682,6 @@ export default {
                         const formData = this.cartItem[slotId];
                         if (formData.package_id != this.form.package_id) {
                             updatedCart[slotId] = formData;
-                            // if (this.comboIds != 0) {
-                            //     this.packageOrder = this.packageOrder.push(this.form.package_id);
-                            //     this.$store.dispatch('storePackageOrder', this.packageOrder);
-                            //     this.bufferTimes(this.form.package_id);
-                            // }
                         }
                     }
 
@@ -666,9 +693,15 @@ export default {
                     this.$store.dispatch('storeCartItem', this.cartItem);
                     this.$store.dispatch('storeMindChange', 1);
 
-                    this.$router.push({
-                        name: 'Index'
-                    });
+                    if (this.comboIds == 0) {
+                        this.$router.push({
+                            name: 'Checkout'
+                        });
+                    } else {
+                        this.$router.push({
+                            name: 'Index'
+                        });
+                    }
                 }
 
                 this.processLoader(loader);
