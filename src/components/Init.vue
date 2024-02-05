@@ -394,21 +394,21 @@ export default {
             this.form.date = this.getStartDate();
         }
 
-        if (this.comboIds != 0) {
-            for (const key in this.cartItem) {
-                if (this.form.package_id != this.cartItem[key].package_id) {
-                    this.blockedTimes.push(this.cartItem[key].slot_time);
-                } else {
-                    this.blockedTimes.filter(function(e) {
-                        return e != this.cartItem[key].slot_time
-                    });
-                }
-            }
-            // console.log(this.blockedTimes)
-            // this.packageOrder = this.packageOrder.push(this.form.package_id);
-            // this.$store.dispatch('storePackageOrder', this.packageOrder);
-            // this.bufferTimes(this.form.package_id);
-        }
+        // if (this.comboIds != 0) {
+        //     for (const key in this.cartItem) {
+        //         if (this.form.package_id != this.cartItem[key].package_id) {
+        //             this.blockedTimes.push(this.cartItem[key].slot_time);
+        //         } else {
+        //             this.blockedTimes.filter(function(e) {
+        //                 return e != this.cartItem[key].slot_time
+        //             });
+        //         }
+        //     }
+        //     console.log(this.blockedTimes)
+        //     this.packageOrder = this.packageOrder.push(this.form.package_id);
+        //     this.$store.dispatch('storePackageOrder', this.packageOrder);
+        //     this.bufferTimes(this.form.package_id);
+        // }
 
         this.configure();
     },
