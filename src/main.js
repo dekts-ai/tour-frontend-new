@@ -1,11 +1,11 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './routers'
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './routers';
 import axios from 'axios';
 import store from "./store/store";
-import eventBus from './eventBus';
 import VueLoading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
+import VueGoogleMaps from '@fawmi/vue-google-maps'
 
 // axios.defaults.baseURL = process.env.VUE_APP_API_URL;
 
@@ -23,4 +23,16 @@ if (tenant) {
     axios.defaults.baseURL = `https://${tenant}.${url}`;
 }
 
-createApp(App).use(router).use(store).use(eventBus).use(VueLoading).mount('#app')
+const app = createApp(App);
+
+app.use(router);
+app.use(store);
+app.use(VueLoading);
+app.use(VueGoogleMaps, {
+    load: {
+      key: process?.env?.VUE_APP_MAP_KEY ?? 'AIzaSyDF9aefrWoTkLQzx5HJUmPOy3_o6vxJmyw',
+      version: 'weekly'
+    }
+});
+
+app.mount('#app');

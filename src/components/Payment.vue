@@ -9,62 +9,29 @@
     </div>
   </section>
 
+	<section class="tabs-section" v-if="iframeStatus">
+		<div class="no-container">
+			<div class="row">
+				<div class="col-12">
+					<div class="tabs-wrap d-flex align-items-center">
+						<button :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')" :disabled="tabs != 1">Tours</button>
+						<button :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')" :disabled="tabs != 2">Schedule</button>
+						<button :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')" :disabled="tabs != 3">My Trip</button>
+						<button :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')" :disabled="tabs != 4">Checkout</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
   <section class="inner-content-section">
     <div :class="[(iframeStatus == false) ? 'container' : 'no-container', '']">
       <div class="background-color-sec">
         <div class="row">
           <div class="col-12">
-            <div class="row bradcumb-row" v-if="iframeStatus == false">
+            <div :class="[iframeStatus ? 'row payment-row iframe-row' : 'row payment-row', '']">
               <div class="col-12">
-                <div class="bradcumb-main">
-                  <ul>
-                    <li class="home">
-                      <a v-if="iframeStatus && data.package_id && form.affiliate_id" :href="`${baseUrl}?tid=${data.tenant_id}&oid=${data.tour_operator_id}&pid=${data.package_id}&aid=${form.affiliate_id}&iframe=${iframeStatus}`">
-                          Home
-                      </a>
-                      <a v-else-if="iframeStatus && data.package_id" :href="`${baseUrl}?tid=${data.tenant_id}&oid=${data.tour_operator_id}&pid=${data.package_id}&iframe=${iframeStatus}`">
-                          Home
-                      </a>
-                      <a v-else :href="`${baseUrl}`">
-                          Home
-                      </a>
-                    </li>
-                    <li>{{ TourPkgName }}</li>
-                  </ul>
-                  <div class="cloasedbtn">
-                    <img src="../assets/images/cross.png" />
-                  </div>
-                </div>
-                <hr class="sep1" />
-              </div>
-            </div>
-            <div class="row innerbanner-row"
-              :class="[(iframeStatus == false) ? 'noiframe-inner-banner' : 'iframe-inner-banner', '']"
-              v-for="TourPkgDetails in details.TourPkgDetails" :key="TourPkgDetails.pkg_rate_id"
-              v-bind:style="{ 'background-image': 'url(' + TourPkgDetails.HeaderTwo + ')' }">
-              <div class="col-12"
-                :class="[(iframeStatus == false) ? 'noiframe-zero-padding' : 'iframe-zero-padding', '']">
-                <div class="title-box">
-                  <h1>{{ TourPkgName }}</h1>
-                  <div class="rating" v-if="data.package_id == 1">
-                    <ul>
-                      <li><i class="fa fa-star"></i></li>
-                      <li><i class="fa fa-star"></i></li>
-                      <li><i class="fa fa-star"></i></li>
-                      <li><i class="fa fa-star"></i></li>
-                      <li class="rate">4.5</li>
-                      <li class="info">
-                        <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top"
-                          title=""><img src="../assets/images/info.png" /></a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row payment-row">
-              <div class="col-12">
-                <div class="row booking-row">
+                <div class="row booking-row" v-if="iframeStatus == false">
                   <div class="col-lg-6 col-md-12">
                     <div class="booking">
                       <h2>Book Online</h2>
@@ -87,461 +54,146 @@
                         title="">
                         Health & Safety
                       </button>
+                      <button @click="mindChange" class="btn btn-primary mt-2"><i class="fa fa-arrow-left" aria-hidden="true"></i> Home</button>
                     </div>
                   </div>
                 </div>
-                <div class="row booking-dt-sec">
+                <div class="m-2">
+	                <h4 class="mx-auto my-2">Your Trip Items</h4>
+                  <div class="tour-packages-wrap">
+                    <div class="tour-packages-item" v-for="item in cartItem" :key="item.tour_slot_id">
+                      <div class="tour-packages-inner-wrap">
+                        <div class="tour-packages-inner">
+                          <div class="tour-packages-detail">
+                            <div class="tour-packages-image"><img :src="item.package_image" alt="package-item-image"></div>
+                            <div class="tour-packages-title-wrap">
+                              <div class="tour-packages-title-top">{{ dateFormat(item.date) }} @ {{ item.time_date }}</div>
+                              <div class="tour-packages-title">{{ item.package_name }}</div>
+                              <!-- <div class="cancelling-policy-wrap">
+                                <button class="cancelling-policy-title" @click="openPolicy()">Terms and conditions</button>
+                              </div> -->
+                            </div>
+                          </div>
+                          <div class="tour-packages-group-wrap">
+                            <div class="tour-packages-group-title">Your selected group of people:</div>
+                            <div class="tour-packages-group-people">
+                              <div v-for="(pax, key) in item.people_group" :key="key">
+                                <div class="tour-packages-selected-people" v-if="pax > 0">
+                                  <div class="tour-packages-selected-people-icon">
+                                    <svg width="8" height="11" viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.07976 5.3184C5.3978 5.3184 6.46628 4.24991 6.46628 2.93187C6.46628 1.61383 5.3978 0.545349 4.07976 0.545349C2.76172 0.545349 1.69324 1.61383 1.69324 2.93187C1.69324 4.24991 2.76172 5.3184 4.07976 5.3184Z" fill="#4C76B2"/><path d="M5.6879 6.11444H2.47167C1.94894 6.11507 1.44781 6.323 1.07819 6.69263C0.708563 7.06225 0.500632 7.56338 0.5 8.08611L0.5 10.092H7.65957V8.08611C7.65894 7.56338 7.45101 7.06225 7.08139 6.69263C6.71176 6.323 6.21063 6.11507 5.6879 6.11444V6.11444Z" fill="#4C76B2"/></svg>
+                                  </div>
+                                  <div class="tour-packages-selected-people-title">{{ item.rate_group[key] }}</div>
+                                  <div class="tour-packages-selected-people-count"><input type="text" name="count" :disabled="true" :value="pax"></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div v-if="item.hotel_id" class="col-12 mb-4 hotel-section" style="font-size: 12px;">
+                          <div class="hotel-wrapper d-sm-flex">
+                            <div class="hotel-image">
+                              <img :src="item.hotel_image" :alt="item.hotel_name">
+                            </div>
+                            <div class="hotel-detail w-100">
+                              <div class="hotel-title">Hotel Pickup Location:</div>
+                              <div class="hotel-name">{{ item.hotel_name }}</div>
+                              <div class="hotel-detail-address">{{ item.hotel_address }}</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="tour-packages-edit-wrap">
+                          <div class="tour-packages-action-wrap">
+                            <div class="tour-packages-action-btn">
+                              <a class="action-btn action-btn-edit pe-auto" @click="mindChange(item)">Edit</a>
+                            </div>
+                            <div class="tour-packages-action-btn">
+                              <a class="action-btn action-btn-edit pe-auto" @click="removeFromCart(item)">Delete</a>
+                            </div>
+                          </div>
+                          <div class="tour-packages-couponcode-wrap">
+                            <div class="tour-packages-couponcode">
+                              <input type="text" name="couponcode" placeholder="Promo Code" v-model="item.code" :id="'couponCode-' + item.tour_slot_id" @keyup="addCouponCode(item)">
+                              <button class="couponcode-apply-btn ms-1" :class="item?.code ? 'btn-success' : 'btn-primary'" :disabled="item?.code ? true : false" :id="'applyCouponButton-' + item.tour_slot_id" @click="applyCoupon(item)">{{ item?.code ? 'Applied' : 'Apply' }}</button>
+                            </div>
+                            <p v-if="item?.couponSuccess?.length" v-for="success in item?.couponSuccess" :key="success" v-bind:class="{'text-success': success }">
+                              {{ success }}
+                            </p>
+                            <p v-if="item?.couponErrors?.length" v-for="error in item?.couponErrors" :key="error" v-bind:class="{'text-danger': error }">
+                              {{ error }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tour-packages-totalcost">
+                        <div class="tour-packages-costcount-title">Tour Cost:</div><hr>
+                        <div class="tour-packages-costcount-subitem">
+                          <div class="tour-packages-costcount-subitem-title">Subtotal:</div>
+                          <div class="tour-packages-costcount-subitem-cost">${{ Number(item.subtotal).toFixed(2) }}</div>
+                        </div>
+                        <div class="tour-packages-costcount-subitem" v-if="item?.discount2_value > 0">
+                          <div class="tour-packages-costcount-subitem-title">Discount:</div>
+                          <div class="tour-packages-costcount-subitem-cost">
+                            <span v-if="item?.discount2_percentage">({{ item?.discount2_percentage }}%)</span>
+                            ${{ item?.discount2_value ? Number(item?.discount2_value).toFixed(2) : Number(0).toFixed(2) }}
+                          </div>
+                        </div>
+                        <div class="tour-packages-costcount-subitem">
+                          <div class="tour-packages-costcount-subitem-title">Booking Fees:</div>
+                          <div class="tour-packages-costcount-subitem-cost">${{ Number(item.fees).toFixed(2) }}</div>
+                        </div>
+                        <div class="tour-packages-costcount-total">
+                          <div class="tour-packages-costcount-total-title">Total Cost:</div>
+                          <div class="tour-packages-costcount-total-cost">${{ Number(item.total).toFixed(2) }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row payment-form-sec">
                   <div class="col-12">
-                    <div class="booking-dt-title">
-                      You're booking date and time:
-                    </div>
-                    <div class="booking-dt-wrp d-flex">
-                      <div class="booking-dt-img" v-for="TourPkgDetails in details.TourPkgDetails"
-                        :key="TourPkgDetails.pkg_rate_id">
-                        <img style="height: 210px; width: 220px;" :src="TourPkgDetails.PaymentPageDateTimeSectionImage"
-                          alt="">
-                      </div>
-                      <div class="booking-dt-detail w-100">
-                        <div class="booking-dt-detail-title">
-                          {{ TourPkgName }}
+                    <div class="row">
+                      <div class="col-12 total-cost-col">
+                        <div class="row subtotal">
+                          <div class="col-6 text-start">Ticket Cost:</div>
+                          <div class="col-6 text-end">${{ Number(subtotal).toFixed(2) }}</div>
                         </div>
-                        <div class="booking-dt-detail-time">
 
-                          {{ dateFormat(data.date) }} @ {{
-                          data.timedate }}
+                        <div class="row subtotal" v-if="discount > 0">
+                          <div class="col-6 text-start">Discount:</div>
+                          <div class="col-6 text-end">${{ Number(discount).toFixed(2) }}</div>
                         </div>
-                        <div class="booking-dt-detail-btn">
-                          <a @click="mindChange">
-                            <i class="fa fa-angle-left" aria-hidden="true"> Select a Different
-                              Time & Date
-                            </i>
-                          </a>
+
+                        <div class="row fees">
+                          <div class="col-6 text-start">Booking Fees:</div>
+                          <div class="col-6 text-end">${{ Number(fees).toFixed(2) }}</div>
+                        </div>
+
+                        <div class="row totalcost">
+                          <div class="col-6 text-start">Total Cost:</div>
+                          <div class="col-6 text-end">${{ Number(total).toFixed(2) }}</div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </div>
-                <form @submit.prevent="submit" id="myForm" method="post">
-                  <input type="hidden" id="bookingID" name="bookingID">
-                  <div class="row starttime-row border-0">
-                    <div class="col-12">
-                      <div class="row groupofpeople">
-                        <div class="col-12">
-                          <h2>Select your group of people for the tour:</h2>
-                          <div class="scroll-table">
-                            <table class="table">
-                              <thead>
-                                <tr>
-                                  <th scope="col">Age</th>
-                                  <th scope="col">Fees and Taxes</th>
-                                  <th scope="col">
-                                    Select Group <br />Of People
-                                  </th>
-                                  <th scope="col">Price</th>
-                                </tr>
-                              </thead>
-                              <tbody v-for="(tour, index) in details.TourPkgRates" :key="index">
-                                <tr>
-                                  <td class="age pay" data-label="Age">
-                                    <img src="../assets/images/aduct.png" />
-                                    {{ tour.Age }}
-                                  </td>
-                                  <td class="taxes" data-label="Fees and Taxes">
-                                    
-                                    <p v-if="tour.description === ''">Navajo Nation: Permit Fee ${{tour.PermitFee}} & Tax ${{tour.Tax}}</p>
-                                    <p v-else>{{ tour.description }}</p>
-                                  
-                                  </td>
-                                  <td class="group" data-label="Select Group Of People">
-                                    <input type="text" :value="form.touristsArr[index]" class="form-select noarrow" />
-                                  </td>
-                                  <td class="final" data-label="Price">
-                                    $<span class="finalprice1"><input type="hidden"
-                                        :name="'grpt'+ tour.pkg_rate_id + ''" :id="tour.pkg_rate_id"
-                                        :value="form.calucation[index]">{{ form.calucation[index]}}</span>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
-                  <div class="row payment-form-sec">
-                    <div class="col-12">
-
-                      <div class="row">
-                        <div class="col-12">
-                          <span class="payment-form-notice">
-                            Please fill all fields marked with <span>*</span> to
-                            complete your booking
-                          </span>
-                        </div>
-                        <div class="col-12 mb-2">
-                          <div class="row">
-                            <div class="col-12 col-md-6">
-                              <div class="form-field-title">Contact</div>
-                              <div class="form-field-wrp contact-form-field">
-                                <div class="form-group col-12">
-                                  <label for="fullname" class="col-form-label">Full Name<span
-                                      class="required-star">*</span></label>
-                                  <div class="field-icon-wrp">
-                                    <i class="fa fa-user" aria-hidden="true"></i>
-                                  </div>
-                                  <input type="text" id="name" name="name" v-model="form.name" class="form-control"
-                                    placeholder="Your Name" />
-                                </div>
-                                <div class="form-group col-12">
-                                  <div class="phone-wrap">
-                                    <label for="phonenumber" class="col-form-label">Phone Number<span
-                                        class="required-star">*</span></label>
-                                    <div class="field-icon-wrp">
-                                      <i class="fa fa-phone" aria-hidden="true"></i>
-                                    </div>
-                                    <input type="text" id="phonenumber" name="phone_number" v-model="form.phone_number"
-                                      v-mask="'###############'" class="form-control" placeholder="Your Contact Number" />
-                                  </div>
-                                </div>
-                                <div class="form-group col-12">
-                                  <label for="Email" class="col-form-label">Email Address<span
-                                      class="required-star">*</span></label>
-                                  <div class="field-icon-wrp">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i>
-                                  </div>
-                                  <input type="email" id="emailaddress" name="email" v-model="form.email"
-                                    class="form-control" placeholder="Your Email Address" />
-                                </div>
-                                <div class="form-group col-12">
-                                  <hr />
-                                </div>
-                                <div class="form-group col-12 mb-0">
-                                  <label class="checkbox-wrap get-email-updates mb-0">Get future email updates from {{
-                                  TourPkgName }}
-                                    <input type="checkbox" name="getemailupdates" v-model="form.getemailupdates"
-                                      id="getemailupdates" value="getemailupdates" />
-                                    <span class="checkmark"></span>
-                                  </label>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-12 col-md-6">
-                              <div class="form-field-title">
-                                Terms of Service
-                              </div>
-                              <div class="form-field-wrp contact-form-field">
-                                <div class="form-group col-12">
-                                  <div class="policy-item-wrp" v-if="data?.tenant_id != 'kens'">
-                                    <h5 class="card-label-text-left mb-2">
-                                      Cancellation policy
-                                    </h5>
-                                    <ul>
-                                      <li>
-                                        We offer cancellations on purchases made of the services offered on our Website. We offer cancellations only prior to performance of the service. You may cancel your order by contacting us via email or phone.
-                                      </li>
-                                      <li>
-                                        We reserve the right to cancel your purchase for any reason, at our sole discretion, including but not limited to fraud, inaccuracies, and unavailability of the items or services purchased. We will let you know immediately if we plan on canceling your purchase.
-                                      </li>
-                                      <li>
-                                        We will issue a partial refund of the purchase price that you paid if we cancel your purchase.
-                                      </li>
-                                    </ul>
-
-                                    <h5 class="card-label-text-left mb-2">
-                                      Refund policy
-                                    </h5>
-                                    <ul>
-                                      <li>
-                                        We offer full refunds of ticket price (not booking fees) made of the services offered on our Website. Booking Fees are non-refundable. To qualify for a full refund of the ticket price, you must submit your request to us via phone or email 48 hours prior to the day you booked for. If your booking is canceled within the 48 hour timeframe of your tour, you may be eligible for a 50% refund. If you miss your tour for any reason, you will not be given a refund.
-                                      </li>
-                                      <li>
-                                        In the event that tours are canceled due to weather or unforeseen circumstances, you will receive a full refund.
-                                      </li>
-                                    </ul>
-                                  </div>
-                                  <div class="policy-item-wrp" v-else>
-                                    <h5 class="card-label-text-left mb-2">
-                                      Cancellation policy
-                                    </h5>
-                                    <ul>
-                                      <li>
-                                        Please check-in 30 minutes prior from your confirmed tour time. General tours line up 10 minutes before departure. All Groups who have NOT checked-in and received their tour ticket 10 minutes prior to the scheduled departure of the tour, forfeit their reservation and those spaces will be filled with walk-ins. NO REFUNDS will be given in this situation.
-                                      </li>
-                                    </ul>
-
-                                    <h5 class="card-label-text-left mb-2">
-                                      Refund policy
-                                    </h5>
-                                    <ul>
-                                      <li>
-                                        By checking this box, I have read, understand, and agree to the Cancellation Policy: Cancellations must be made 72 hours prior to tour departure date / time for a refund. We offer full refunds of ticket price (not booking fees) made of the services offered on our Website. Booking Fees are non-refundable. There is no refund for cancellations within 72 hours of the scheduled time of tour departure.
-                                      </li>
-                                    </ul>
-
-                                    <h5 class="card-label-text-left mb-2">
-                                      Weather
-                                    </h5>
-                                    <ul>
-                                      <li>
-                                        Ken’s Tours reserves the right to cancel tours due to inclement weather for the safety of our guests and employees. During rain/weather cancellations, if your scheduled tour has departed, you will forfeit your tour and fees. NO REFUNDS will be given in this situation. If Ken’s Tours cancels tours due to weather prior to your tour’s departure, you will receive a full refund.
-                                      </li>
-                                    </ul>
-                                  </div>
-                                </div>
-                                <div class="form-group col-12">
-                                  <hr />
-                                </div>
-                                <div class="form-group col-12 mb-0">
-                                  <label class="
-                                        checkbox-wrap
-                                        get-email-updates
-                                        mb-0
-                                        cancellationsterms
-                                      "><span class="required-star">*</span> I have
-                                    read and accept above all cancellations
-                                    terms.
-                                    <input type="checkbox" name="cancellations_policy"
-                                      v-model="form.cancellations_policy" id="cancellations_policy" />
-                                    <span class="checkmark"></span>
-                                  </label>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div v-if="selectedHotel" class="col-12 mb-4 hotel-section">
-                          <div class="col-12">
-                            <div class="hotel-wrapper d-flex">
-                              <div class="hotel-image">
-                                <img :src="selectedHotel.image" :alt="selectedHotel.name">
-                              </div>
-                              <div class="hotel-detail w-100">
-                                <div class="hotel-title">Hotel Pickup Location:</div>
-                                <div class="hotel-name">{{ selectedHotel.name }}</div>
-                                <div class="hotel-detail-address">{{ selectedHotel.address }}</div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-12">
-                          <span class="payment-form-notice important-note w-100">
-                            <span class="notice-title">Important Note:</span>
-                            All guests must arrive 45 minutes prior to their
-                            reserved tour time. All guests must stay with their
-                            guides.
-                          </span>
-                        </div>
-                        <div class="form-group form-textarea-wrap col-12">
-                          <label for="comment" class="col-form-label">Comments</label>
-                          <textarea id="comment" name="comment" v-model="form.comment"
-                            placeholder="Please type here ..."></textarea>
-                        </div>
-                        <ul>
-                          <li class="text-danger" style="font-size:25px">
-                            {{message}}
-                          </li>
-                        </ul>
-                        <div class="col-12">
-                          <div class="row">
-                            <div class="col-12 col-md-6 text-center text-md-start">
-                              <div class="additional-notes-text">
-                                Any additional notes or special requests?
-                              </div>
-                            </div>
-                            <div class="col-12 col-md-6 text-center text-md-end">
-                              <div class="accommodate-your-request">
-                                We will do our best to accommodate your request.
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div id="pageloader">
-                          <img src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif"
-                            alt="processing..." />
-                        </div>
-
-                        <div class="col-12 total-cost-col">
-                          <div class="row mb-2">
-                            <div class="col-6 text-start"></div>
-                            <div class="form-group col-6 text-end d-flex align-items-center justify-content-end">
-                              <input @keyup="addCouponCode" class="form-control form-control-sm me-1 pe-0" type="text" id="couponCode" placeholder="Coupon Code" style="max-width: 180px;">
-                              <button type="button" @click="applyCoupon" id="applyCouponButton" class="btn btn-sm btn-primary" style="padding: 2px 7px 5px 7px;">Apply</button>
-                            </div>
-                            <p class="text-end" v-if="couponSuccess.length">
-                              <ul>
-                                <li v-for="success in couponSuccess" :key="success" v-bind:class="{'text-success': success }">{{ success }}</li>
-                              </ul>
-                            </p>
-                            <p class="text-end" v-if="couponErrors.length">
-                              <ul>
-                                <li v-for="error in couponErrors" :key="error" v-bind:class="{'text-danger': error }">{{ error }}</li>
-                              </ul>
-                            </p>
-                          </div>
-
-                          <div class="row subtotal" v-if="ticket_cost">
-                            <div class="col-6 text-start">Ticket Cost:</div>
-                            <div class="col-6 text-end">
-                              $<label class="ticket_cost1">{{ ticket_cost }}</label>
-                              <input type="hidden" id="ticket_cost1" name="ticket_cost" :value="ticket_cost">
-                            </div>
-                          </div>
-
-                          <div class="row subtotal" v-if="form.discount2_value">
-                            <div class="col-6 text-start">Discount:</div>
-                            <div class="col-6 text-end">
-                              <span v-if="form.discount2_percentage">({{ form.discount2_percentage }}%)</span>
-                              $<label class="discount2_value">{{ form.discount2_value }}</label>
-                              <input type="hidden" id="discount2_value" name="discount2_value" :value="form.discount2_value">
-                            </div>
-                          </div>
-
-                          <div class="row subtotal">
-                            <div class="col-6 text-start">Subtotal:</div>
-                            <div class="col-6 text-end">
-                              $<label class="subgrandtotal">{{ subtotal }}</label>
-                              <input type="hidden" id="subtotal" name="subtotal" :value="subtotal">
-                            </div>
-                          </div>
-                          <div class="row fees">
-                            <div class="col-6 text-start">Booking Fees:</div>
-                            <div class="col-6 text-end">
-                              ${{ softwarefee }}
-                              <input type="hidden" id="fees" name="softwarefee" :value="softwarefee" />
-                            </div>
-                          </div>
-                          <div class="row totalcost">
-                            <div class="col-6 text-start">
-                              Total Cost:
-                            </div>
-                            <div class="col-6 text-end">
-                              $<label class="grandtotalfinal">{{ form.total }}</label>
-                              <input type="hidden" name="total" :value="form.total">
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="col-12 mb-3">
-                          <div class="row">
-                            <div class="col-12">
-                              <div class="payment-text card-label-text-left"><img src="../assets/images/shield.png"
-                                  alt="shield"> Payment</div>
-                            </div>
-                            <div class="col-12">
-                              <div class="secured-encryption card-label-text-left"><img
-                                  src="../assets/images/lock-white.png" alt="lock"> Secured with 2048-bit encryption
-                              </div>
-                            </div>
-                          </div>
-                          <div class="row mt-3">
-                            <div class="col-12">
-                              <div class="card-detail-main">
-                                <div class="row align-items-center">
-                                  <div class="col-12 col-md-5 border-right">
-                                    <div class="card-detail-wrp card-form-field">
-                                      <div class="form-group col-12 card-label-text-left">
-                                        <label for="cardnumber" class="col-form-label">Card Number<span
-                                            class="required-star">*</span></label>
-                                        <div class="field-icon-wrp">
-                                          <i class="fa fa-lock" aria-hidden="true"></i>
-                                        </div>
-                                        <input type="text" id="cardnumber" name="cardnumber" class="form-control"
-                                          v-model="form.cardnumber" v-mask="'#### #### #### ####'"
-                                          placeholder="1234 1234 1234 1234">
-                                        <div class="validation-icon-wrp">
-                                          <i class="fa fa-check-circle" aria-hidden="true"></i>
-                                        </div>
-                                      </div>
-                                      <div class="form-group col-12">
-                                        <div class="phone-wrap card-label-text-left">
-                                          <label for="nameoncard" class="col-form-label">Name on Card<span
-                                              class="required-star">*</span></label>
-                                          <div class="field-icon-wrp">
-                                            <i class="fa fa-user" aria-hidden="true"></i>
-                                          </div>
-                                          <input type="text" id="nameoncard" name="nameoncard" class="form-control"
-                                            v-model="form.nameoncard" placeholder="">
-                                          <div class="validation-icon-wrp">
-                                            <i class="fa fa-check-circle" aria-hidden="true"></i>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="form-group col-12 mb-0">
-                                        <div class="row">
-                                          <div class="form-group col-7 card-label-text-left">
-                                            <label for="expiration" class="col-form-label">Expiration<span
-                                                class="required-star">*</span></label>
-                                            <div class="field-icon-wrp">
-                                              <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
-                                            </div>
-                                            <input type="text" id="expiration" name="expiration" class="form-control"
-                                              v-model="form.expiration" v-mask="'##/##'" placeholder="MM/YY">
-                                            <div class="validation-icon-wrp">
-                                              <i class="fa fa-check-circle" aria-hidden="true"></i>
-                                            </div>
-                                          </div>
-                                          <div class="form-group col-5 card-label-text-left">
-                                            <label for="cvv" class="col-form-label">CVC<span
-                                                class="required-star">*</span><img src="../assets/images/radio-info.png"
-                                                data-toggle="tooltip" data-placement="top"
-                                                title="Please select Number of Adults (Ages 13 & Up) want to go the tour"></label>
-                                            <div class="field-icon-wrp">
-                                              <i class="fa fa-lock" aria-hidden="true"></i>
-                                            </div>
-                                            <input type="text" id="cvv" name="cvv" class="form-control"
-                                              v-model="form.cvv" v-mask="'####'" placeholder="CVC">
-                                            <div class="validation-icon-wrp">
-                                              <i class="fa fa-check-circle" aria-hidden="true"></i>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="col-12 col-md-7">
-                                    <div class="makeaayment-wrap">
-                                      <div class="form-group col-12">
-                                        <div class="makeaayment-detail-title card-label-text-left">
-                                          We accept all major credit and debit cards:
-                                        </div>
-                                        <div class="makeaayment-detail-wrp">
-                                          <img src="../assets/images/card-name.png" alt="card-name">
-                                        </div>
-                                      </div>
-                                      <div class="form-group col-12">
-                                        <hr>
-                                      </div>
-                                      <div class="form-group col-12 mb-0">
-                                        <input type="submit" name="makeaayment" id="makeaayment" value="Make a Payment"
-                                          class="makeaayment-btn">
-                                      </div>
-                                      <div class="form-group col-12 mb-0">
-                                        <div class="booking-you-text card-label-text-left">By booking you also agree to
-                                          our <a
-                                            href="https://nativeamericantours.com/privacy-policy.html">policies</a>, and
-                                          Stripe <a href="https://stripe.com/legal/end-users">terms of
-                                            service</a>.</div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <p class="mb-3" v-if="errors.length">
-                          <b>Please correct the following error(s):</b>
+                      <p class="mb-3" v-if="errors.length">
+                        <b>Please correct the following error(s):</b>
                         <ul>
                           <li v-for="error in errors" :key="error" v-bind:class="{'text-danger': error }">{{ error }}
                           </li>
                         </ul>
-                        </p>
-                      </div>
+                      </p>
                     </div>
                   </div>
-                </form>
+                </div>
+              </div>
+            </div>
+
+            <div class="addmore-package-wrap p-0">
+              <div class="addmore-package-btn-wrap">
+                <button v-if="cartView == 1" class="btn addmore-package-btn" @click="mindChange()" type="button">+ Add more packages</button>
+                <div class="checkout-btn-wrap" :style="cartView != 1 ? 'display: flex; flex: auto; justify-content: end;' : ''">
+                  <button class="btn checkout-btn" @click="checkout()" type="button">Proceed to Checkout</button>						
+                </div>
               </div>
             </div>
           </div>
@@ -553,310 +205,143 @@
 
 <script>
 import axios from "axios";
-import { loadStripe } from '@stripe/stripe-js';
-import { mask } from 'vue-the-mask'
+import Swal from 'sweetalert2';
+import { getUTCDateFromTimeZone } from '../utils/dateUtils';
+
 export default {
   name: "Payment",
-  directives: {
-    mask
-  },
   data() {
     return {
       processing: false,
       bookingId: null,
       baseUrl: process.env.VUE_APP_BASE_URL,
       iframeStatus: false,
-      TourPkgName: '',
-      data: [],
+      cartView: 0,
       details: [],
       hotels: [],
-      selectgrouppeoples: [],
-      selectedHotel: null,
-      with_rate_groups: 1,
-      form: {
-        name: "",
-        phone_number: "",
-        email: "",
-        getemailupdates: "",
-        cancellations_policy: "",
-        comment: "",
-        cardnumber: "",
-        nameoncard: "",
-        expiration: "",
-        cvv: "",
-        tour_operator_id: "",
-        tour_package_id: "",
-        affiliate_id: "",
-        hotel_id: "",
-        total: "",
-        touristsArr: "",
-        tourists: "",
-        cost: [],
-        tour_slot_id: "",
-        calucation: "",
-        service_commission: "",
-        date: "",
-        time: "",
-        code: "",
-        tour_promotion_id: "",
-        discount2_value: 0,
-        discount2_percentage: 0,
-      },
+      cartItem: {},
+      cartItemLength: 0,
       errors: [],
-      couponErrors: [],
-      couponSuccess: [],
-      price: "",
-      grpt: [],
-      ticket_cost: "",
-      subtotal: "",
-      fees: "",
-      total: "",
-      softwarefee: "",
+      subtotal: 0,
+      discount: 0,
+      fees: 0,
+      total: 0,
       message: "",
       stripe: "",
       elements: "",
       cardElement: null,
       stripeValidationError: "",
-      state: 'initial'
+      state: 'initial',
+      toast: null,
+      tabs: 3
     };
   },
   async mounted() {
-    this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);
-    this.createAndMountFormElements();
-  },
-  created() {
-    this.form.affiliate_id = this.$store.state.affiliateId;
-    this.form.hotel_id = this.$store.state.hotelId;
-    this.data = this.$store.state.formData;
-    if (this.data == null) {
-      window.location.href = '/';
-    }
-    if (this.data.iframeStatusInfo != null && this.data.iframeStatusInfo == 'true') {
-      this.iframeStatus = this.data.iframeStatusInfo;
-    } else {
-      this.iframeStatus = false;
-    }
-
-	var date = new Date(this.data.date);
-  date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-
-	axios.get("/tour-package/" + date + "/" + this.data.tour_operator_id + "/" + this.data.package_id + "/" + this.data.affiliate_id + "/" + this.with_rate_groups).then((response) => {
-      this.TourPkgName = response.data.TourPkgDetails[0].TourPkgName;
-      this.details = response.data;
-      this.details.TourPkgRates = this.details.TourPkgRates[this.data.package_id];
-      this.PermitFee = response.data.TourPkgRates[0].PermitFee;
-      this.ProcessingFee = response.data.TourPkgRates[0].ProcessingFee;
-      this.Tax = response.data.TourPkgRates[0].Tax;
-      this.fees = response.data.TourPkgDetails[0].ServiceCommission; // after discussion with anil I keep the service commission for affiliate too otherwise I planned to remove it for affiliate as per the backend process
-      this.form.date = this.data.date;
-      this.form.time = this.data.timedate;
-      this.form.affiliate_id = this.data.affiliate_id;
-      this.hotels = response.data.hotels;
-      if (this.hotels.length) {
-        this.hotels.forEach(hotel => {
-          if (hotel.id == this.form.hotel_id) {
-            this.selectedHotel = hotel;
-          }
-        });
+    this.toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
       }
     });
-    this.form.touristsArr = this.data.peoplegroup;
-    this.form.calucation = this.data.calucation;
-    var ts = this.data.peoplegroup;
-    this.form.tourists = ts.join();
-    this.form.tour_slot_id = this.$store.state.slotId;
   },
-  updated() {
-    const n = this.details.TourPkgRates;
-    const field1 = 0;
-    let serviceCommissionTotal = 0;
-    let costStoreArr = [];
-    if (n && this.state == 'initial') {
-      n.forEach(number => {
-        let names_field = 'grpt' + number.pkg_rate_id;
-        const field1 = document.querySelector("input[name=" + names_field + "]").value;
-        costStoreArr.push(field1);
-      });
-      costStoreArr.forEach((pax, key) => {
-        if (Number(pax) > 0) {
-          var paxRate = Number(n[key].price) + Number(n[key].additional_charge) + Number(n[key].permit_fee);
-          var serviceCommissionPerPax = this.roundout((paxRate * this.fees) / 100, 2);
-          serviceCommissionTotal += Number(this.form.touristsArr[key]) * serviceCommissionPerPax;
-        }
-      })
-      this.form.tour_package_id = this.details.TourPkgDetails[0].TourPackageId;
-      var ct = [field1];
-      this.form.cost = ct.join();
-      const sum = costStoreArr.reduce((a, b) => Number(a) + Number(b), 0);
-      this.subtotal = sum.toFixed(2);
-      var softwarefee = serviceCommissionTotal;
-      this.softwarefee = softwarefee.toFixed(2);
-      this.form.service_commission = this.softwarefee;
-      var totals = Number(softwarefee) + Number(sum);
-      this.form.total = totals.toFixed(2);
+  created() {
+    this.$store.dispatch('storeTabs', this.tabs);
+    this.iframeStatus = this.$store.state.iframeStatus;
+    this.hotels = this.$store.state.tourPackage?.hotels;
+    this.cartView = this.$store.state.tourPackage?.cartView;
+    this.cartItem = this.$store.state.cartItem;
+    this.cartItemLength = Object.values(this.cartItem).length;
+    if (this.cartItemLength) {
+      for (var key in this.cartItem) {
+        this.subtotal = Number(this.subtotal) + Number(this.cartItem[key].subtotal);
+        this.discount = Number(this.discount) + Number(this.cartItem[key].discount2_value);
+        this.fees = Number(this.fees) + Number(this.cartItem[key].fees);
+        this.total = Number(this.total) + Number(this.cartItem[key].total);
+
+        this.cartItem[key].couponErrors = [];
+        this.cartItem[key].couponSuccess = [];
+      }
+    } else {
+      this.$router.push("/");
     }
   },
   methods: {
-    createAndMountFormElements() {
-      this.elements = this.stripe.elements({
-        fonts: [{
-          cssSrc: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'
-        }]
-      });
+    removeFromCart(formData) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          delete this.cartItem[formData.tour_slot_id];
+          this.cartItemLength = Object.values(this.cartItem).length;
 
-      this.cardElement = this.elements.create("card", {
-        style: {
-          base: {
-            color: "#464646",
-            fontFamily: 'Inter, sans-serif',
-            fontSmoothing: "antialiased",
-            fontSize: "14px",
-            "::placeholder": {
-              color: "#32325d"
-            },
-            backgroundColor: 'transparent',
-            lineHeight: '26px'
-          },
-          invalid: {
-            fontFamily: 'Inter, sans-serif',
-            color: "#fa755a",
-            iconColor: "#fa755a"
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your package has been deleted.",
+            icon: "success"
+          }).then((result) => {
+            if (result.isConfirmed && this.cartItemLength == 0) {
+              this.$router.push("/");
+            }
+          });
+
+          this.subtotal = 0;
+          this.discount = 0;
+          this.fees = 0;
+          this.total = 0;
+          for (var key in this.cartItem) {
+            this.subtotal = Number(this.subtotal) + Number(this.cartItem[key].subtotal);
+            this.discount = Number(this.discount) + Number(this.cartItem[key].discount2_value);
+            this.fees = Number(this.fees) + Number(this.cartItem[key].fees);
+            this.total = Number(this.total) + Number(this.cartItem[key].total);
           }
         }
       });
     },
-    submit(e) {
-      e.preventDefault();
-      // if an async request is processing
-      if (this.processing === true) {
-        return;
-      }
-      // set the async state
-      this.processing = true;
-      var loader = this.$loading.show();
-      this.errors = [];
-      if (!this.form.name) {
-        this.errors.push("Name is required on contact section.");
-      }
-      if (!this.form.phone_number) {
-        this.errors.push("Phone number is required on contact section.");
-      }
-      if (!this.form.email) {
-        this.errors.push("Email is required on contact section.");
-      }
-      if (!this.form.cancellations_policy) {
-        this.errors.push("Cancellations policy checkbox is required.");
-      }
-      if (!this.form.cardnumber || !this.form.expiration || !this.form.cvv) {
-        this.errors.push("Please add card information.");
-      }
-      if (
-        this.$store.state.slotId &&
-        this.form.name &&
-        this.form.phone_number &&
-        this.form.email &&
-        this.form.cancellations_policy &&
-        this.form.cardnumber &&
-        this.form.expiration &&
-        this.form.cvv
-      ) {
-        let checkSlotarr = {
-          'tour_slot_id': this.$store.state.slotId,
-          'package_id': this.form.tour_package_id,
-          'affiliate_id': this.form.affiliate_id,
-          'tourists': this.form.touristsArr,
-          'tour_slot_time': this.form.time
-        };
-        axios.post("/available-seats", checkSlotarr).then((response) => {
-          if (response.data.success == "false") {
-            this.processLoader(loader);
-            this.message = response.data.message;
-            return true;
-          } else {
-            let self = this;
-            let router = this.$router;
-            axios.post("/booking-tour", this.form).then((response) => {
-              this.$store.dispatch('storeCustomer', this.form);
-              if (response.data.success == "false") {
-                self.processLoader(loader);
-                this.message = response.data.message;
-                return true;
-              } else if (response.data.clientSecret) {
-                this.stripe
-                  .confirmCardPayment(response.data.clientSecret)
-                  .then(function () {
-                    self.bookingId = response.data.bookingId;
-                    self.$store.dispatch('storeBookingId', self.bookingId)
-                    var stripeObject = {
-                      booking_id: response.data.bookingId,
-                      payment_intent: response.data.intentId,
-                      payment_intent_client_secret: response.data.clientSecret
-                    };
-                    axios.post("/booking-3ds-payment", stripeObject).then(() => {
-                      self.processLoader(loader);
-                      router.push("/Thankyou");
-                    }).catch(function (error) {
-                      self.processLoader(loader);
-                      if (error.response) {
-                        // Request made and server responded
-                        self.errors.push(error.response.data.message)
-                      } else if (error.request) {
-                        // The request was made but no response was received
-                        console.log(error.request);
-                      } else {
-                        // Something happened in setting up the request that triggered an Error
-                        console.log('Error', error.message);
-                      }
-                    });
-                  });
-              } else {
-                self.processLoader(loader);
-                this.bookingId = response.data.BookingId;
-                this.$store.dispatch('storeBookingId', this.bookingId);
-                this.$router.push("/Thankyou");
-              }
-            }).catch(function (error) {
-              self.processLoader(loader);
-              if (error.response) {
-                // Request made and server responded
-                self.errors.push(error.response.data.message)
-              } else if (error.request) {
-                // The request was made but no response was received
-                console.log(error.request);
-              } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
-              }
-            });
-          }
-        });
-      } else {
-        this.processLoader(loader);
-      }
-    },
-    mindChange() {
-      if (this.iframeStatus && this.data.package_id && this.form.affiliate_id) {
+    mindChange(formData = null) {
+      if (formData && formData.tenant_id && formData.tour_operator_id && formData.package_id && formData.affiliate_id) {
+        this.$store.dispatch('storeFormData', formData)
+        this.$store.dispatch('storePackageId', formData.package_id)
+        this.$store.dispatch('storeAffiliateId', formData.affiliate_id)
+        this.$store.dispatch('storeDate', formData.date)
+
         this.$router.push({
           name: 'Init',
           query: {
-            tid: this.data.tenant_id,
-            oid: this.data.tour_operator_id,
-            pid: this.data.package_id,
-            aid: this.form.affiliate_id,
-            iframe: this.iframeStatus
+            tid: formData.tenant_id,
+            oid: formData.tour_operator_id,
+            pid: formData.package_id,
+            aid: formData.affiliate_id,
+            iframe: formData.iframeStatusInfo
           }
         });
-      } else if (this.iframeStatus && this.data.package_id) {
+      } else if (formData && formData.tenant_id && formData.tour_operator_id && formData.package_id) {
+        this.$store.dispatch('storeFormData', formData)
+        this.$store.dispatch('storePackageId', formData.package_id)
+        this.$store.dispatch('storeDate', formData.date)
+
         this.$router.push({
           name: 'Init',
           query: {
-            tid: this.data.tenant_id,
-            oid: this.data.tour_operator_id,
-            pid: this.data.package_id,
-            iframe: this.iframeStatus
+            tid: formData.tenant_id,
+            oid: formData.tour_operator_id,
+            pid: formData.package_id,
+            iframe: formData.iframeStatusInfo
           }
         });
       } else {
+        this.$store.dispatch('storePackageId', 0)
+        this.$store.dispatch('storeDate', getUTCDateFromTimeZone())
         this.$router.push({
           name: 'Index'
         });
@@ -881,34 +366,57 @@ export default {
       let formul = (amount * x).toFixed(10);
       return (amount >= 0 ? Math.ceil(formul) : Math.floor(formul)) / x;
     },
-    addCouponCode() {
+    addCouponCode(formData) {
+      console.log('addCouponCode');
+      if (this.cartItem[formData.tour_slot_id]?.discount2_value) {
+        this.cartItem[formData.tour_slot_id].subtotal = Number(this.cartItem[formData.tour_slot_id].subtotal) + Number(this.cartItem[formData.tour_slot_id].discount2_value);
+        this.cartItem[formData.tour_slot_id].fees = this.roundout(Number(this.cartItem[formData.tour_slot_id].subtotal) * Number(this.cartItem[formData.tour_slot_id].service_commission) / 100, 2);
+        var total = Number(this.cartItem[formData.tour_slot_id].subtotal) + Number(this.cartItem[formData.tour_slot_id].fees);
+        this.cartItem[formData.tour_slot_id].total = Number(total).toFixed(2);
+
+        this.subtotal = 0;
+        this.discount = 0;
+        this.fees = 0;
+        this.total = 0;
+        for (var key in this.cartItem) {
+          this.subtotal = Number(this.subtotal) + Number(this.cartItem[key].subtotal);
+          this.discount = Number(this.discount) + Number(this.cartItem[key].discount2_value);
+          this.fees = Number(this.fees) + Number(this.cartItem[key].fees);
+          this.total = Number(this.total) + Number(this.cartItem[key].total);
+        }
+      }
+
       this.state = 'initial';
-      this.ticket_cost = 0;
-      this.form.tour_promotion_id = "";
-      this.form.discount2_value = 0;
-      this.form.discount2_percentage = 0;
-      this.couponSuccess = [];
-      this.couponErrors = [];
-      $('#applyCouponButton').text('Apply').removeClass('btn-success').addClass('btn-primary').attr('disabled', false);
+      this.cartItem[formData.tour_slot_id].tour_promotion_id = "";
+      this.cartItem[formData.tour_slot_id].discount2_value = 0;
+      this.cartItem[formData.tour_slot_id].discount2_percentage = 0;
+      this.cartItem[formData.tour_slot_id].couponSuccess = [];
+      this.cartItem[formData.tour_slot_id].couponErrors = [];
+
+      $('#applyCouponButton-' + formData.tour_slot_id)
+        .text('Apply')
+        .removeClass('btn-success')
+        .addClass('btn-primary')
+        .attr('disabled', false);
     },
-    applyCoupon() {
+    applyCoupon(formData) {
+      console.log('applyCoupon');
       this.processing = true;
       var loader = this.$loading.show();
-      this.form.code = document.querySelector("#couponCode").value;
+      this.cartItem[formData.tour_slot_id].code = document.querySelector("#couponCode-" + formData.tour_slot_id).value;
 
-      this.couponSuccess = [];
-      this.couponErrors = [];
-      if (!this.form.code) {
-        this.couponErrors.push("To receive a discount, please enter the promo code.");
+      this.cartItem[formData.tour_slot_id].couponSuccess = [];
+      this.cartItem[formData.tour_slot_id].couponErrors = [];
+      if (!this.cartItem[formData.tour_slot_id].code) {
+        this.cartItem[formData.tour_slot_id].couponErrors.push("To receive a discount, please enter the promo code.");
         this.processLoader(loader);
       } else {
         let self = this;
-        axios.get("/apply-coupon/" + this.form.tour_package_id + "/" + this.form.code).then((response) => {
+        axios.get("/apply-coupon/" + this.cartItem[formData.tour_slot_id].package_id + "/" + this.cartItem[formData.tour_slot_id].code).then((response) => {
           this.state = 'changed';
 
           var promocode = response.data.data;
-          var ticketCost = this.subtotal;
-          var subtotal = this.subtotal;
+          var subtotal = this.cartItem[formData.tour_slot_id].subtotal;
           var discount2Percentage = 0;
           if (promocode.discount_value_type == "Percent") {
             discount2Percentage = Number(promocode.discount_value);
@@ -922,36 +430,126 @@ export default {
           if (subtotal <= 0) {
             this.couponErrors.push("Your coupon code is not valid.");
           } else {
-            this.form.discount2_percentage = discount2Percentage;
-            this.subtotal = subtotal;
-            this.ticket_cost = ticketCost;
-            this.form.tour_promotion_id = promocode.id;
-            this.form.discount2_value = Number(discountedAmount).toFixed(2);
-            this.softwarefee = this.roundout(this.subtotal * this.fees / 100, 2);
-            this.form.service_commission = this.softwarefee;
-            var total = Number(this.subtotal) + Number(this.softwarefee);
-            this.total = Number(total).toFixed(2);
-            this.form.total = this.total;
+            this.cartItem[formData.tour_slot_id].discount2_percentage = discount2Percentage;
+            this.cartItem[formData.tour_slot_id].tour_promotion_id = promocode.id;
+            this.cartItem[formData.tour_slot_id].discount2_value = Number(discountedAmount).toFixed(2);
 
-            $('#applyCouponButton').text('Applied').removeClass('btn-primary').addClass('btn-success').attr('disabled', true);
-            this.couponSuccess.push(response.data.message);
+            this.cartItem[formData.tour_slot_id].subtotal = Number(subtotal).toFixed(2);
+            this.cartItem[formData.tour_slot_id].fees = this.roundout(subtotal * this.cartItem[formData.tour_slot_id].service_commission / 100, 2);
+
+            var total = Number(subtotal) + Number(this.cartItem[formData.tour_slot_id].fees);
+            this.cartItem[formData.tour_slot_id].total = Number(total).toFixed(2);
+
+            $('#applyCouponButton-' + formData.tour_slot_id)
+              .text('Applied')
+              .removeClass('btn-primary')
+              .addClass('btn-success')
+              .attr('disabled', true);
+
+            this.cartItem[formData.tour_slot_id].couponSuccess.push(response.data.message);
+
+            this.subtotal = 0;
+            this.discount = 0;
+            this.fees = 0;
+            this.total = 0;
+            for (var key in this.cartItem) {
+              this.subtotal = Number(this.subtotal) + Number(this.cartItem[key].subtotal);
+              this.discount = Number(this.discount) + Number(this.cartItem[key].discount2_value);
+              this.fees = Number(this.fees) + Number(this.cartItem[key].fees);
+              this.total = Number(this.total) + Number(this.cartItem[key].total);
+            }
           }
 
           this.processLoader(loader);
         }).catch(function (error) {
           self.state = 'initial';
-          self.ticket_cost = 0;
-          self.form.tour_promotion_id = "";
-          self.form.discount2_value = 0;
-          self.form.discount2_percentage = 0;
+          self.cartItem[formData.tour_slot_id].code = "";
+          self.cartItem[formData.tour_slot_id].tour_promotion_id = "";
+          self.cartItem[formData.tour_slot_id].discount2_value = 0;
+          self.cartItem[formData.tour_slot_id].discount2_percentage = 0;
           self.processLoader(loader);
           if (error.response) {
-            self.couponErrors.push(error.response.data.message);
+            self.cartItem[formData.tour_slot_id].couponErrors.push(error.response.data.message);
           } else if (error.request) {
             console.log(error.request);
           } else {
             console.log('Error', error.message);
           }
+        });
+      }
+    },
+    async openPolicy(formData) {
+      Swal.bindClickHandler();
+      const { value: accept } = await Swal.fire({
+        toast: true,
+        title: "Terms and conditions",
+        html: `<div class="form-group col-12">
+          <div class="policy-item-wrp">
+            <h6 class="card-label-text-left mb-2">
+              <i>Cancellation policy</i>
+            </h6>
+            <ul>
+              <li class="ms-2">
+                We offer cancellations on purchases made of the services offered on our Website. We offer cancellations only prior to performance of the service. You may cancel your order by contacting us via email or phone.
+              </li>
+              <li class="ms-2">
+                We reserve the right to cancel your purchase for any reason, at our sole discretion, including but not limited to fraud, inaccuracies, and unavailability of the items or services purchased. We will let you know immediately if we plan on canceling your purchase.
+              </li>
+              <li class="ms-2">
+                We will issue a partial refund of the purchase price that you paid if we cancel your purchase.
+              </li>
+            </ul>
+            <br>
+            <h6 class="card-label-text-left mb-2">
+              <i>Refund policy</i>
+            </h6>
+            <ul>
+              <li class="ms-2">
+                We offer full refunds of ticket price (not booking fees) made of the services offered on our Website. Booking Fees are non-refundable. To qualify for a full refund of the ticket price, you must submit your request to us via phone or email 48 hours prior to the day you booked for. If your booking is canceled within the 48 hour timeframe of your tour, you may be eligible for a 50% refund. If you miss your tour for any reason, you will not be given a refund.
+              </li>
+              <li class="ms-2">
+                In the event that tours are canceled due to weather or unforeseen circumstances, you will receive a full refund.
+              </li>
+            </ul>
+          </div>
+        </div>`,
+        input: "checkbox",
+        inputValue: 1,
+        inputPlaceholder: `
+          I agree with the terms and conditions
+        `,
+        customClass: {
+          input: "tnc-checkbox"
+        },
+        confirmButtonText: `
+          Continue&nbsp;<i class="fa fa-arrow-right"></i>
+        `,
+        inputValidator: (result) => {
+          return !result && "You need to agree with T&C";
+        }
+      });
+      if (accept) {
+        this.toast.fire({
+          icon: "success",
+          title: "You agreed with T&C :)"
+        });
+      }
+    },
+    checkout() {
+      var loader = this.$loading.show();
+      this.cartItemLength = Object.values(this.cartItem).length;
+      if (this.cartItemLength) {
+        this.$store.dispatch('storeCartItem', this.cartItem);
+        this.processLoader(loader);
+        this.$router.push({
+          name: 'Checkout'
+        });
+      } else {
+        this.processLoader(loader);
+        Swal.fire({
+          title: "Empty!",
+          text: "Please select package to process booking.",
+          icon: "info"
         });
       }
     }
