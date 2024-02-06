@@ -200,6 +200,7 @@ ul {list-style: none; }
 .booking-dt-sec .booking-dt-wrp .booking-dt-detail-time {font-size: 24px; font-weight: 400; line-height: 1.2; color: #4c76b2; letter-spacing: -0.48px; margin-bottom: 17px;}
 .booking-dt-sec .booking-dt-wrp .booking-dt-detail-btn a {font-size: 16px; font-weight: 400; line-height: 1; color: #2f2f2f; letter-spacing: 0.32px; background-color: #ebf3ff; border: 1px solid #5bbaff; border-radius: 5px; padding: 8px 16px;}
 .booking-dt-sec .booking-dt-wrp .booking-dt-detail-btn a .fa {font-size: 21px;}
+.booking-dt-detail-btn a{ cursor: pointer;}
 .payment-form-sec form {max-width: 975px; margin: 0 auto;}
 .payment-form-sec .required-star {color: #ef5b53;}
 .payment-form-sec .payment-form-notice {background-color: #ffecee; border-radius: 5px; font-size: 16px; font-weight: 400; line-height: 1.2; color: #333; padding: 13px 15px; display: inline-block; margin-bottom: 22px;}
