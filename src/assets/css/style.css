@@ -134,13 +134,9 @@ ul {
 	height: 257px;
 }
 
-.inner-content-section {
-	margin-top: -55px;
-}
-
 .inner-content-section .background-color-sec {
 	background: #fff;
-	padding: 20px 50px;
+	padding: 20px 40px;
 	border-radius: 3px;
 	margin-bottom: 60px;
 	/*border: 1px solid #d5d5d5;*/
@@ -267,11 +263,136 @@ ul {
 	top: -3px;
 }
 
+/* My Trip  */
+.timeline{position:relative; margin: 50px auto; padding:0px 0px 50px; height: 100%; }
+.timeline:before {content: ''; position:absolute; height:100%; left:50%; width:2px; top:-20px; background:#808080; }
+.timeline ul{margin:0; padding:0 ; }
+.timeline ul li{list-style:none; box-sizing:border-box; line-height:normal; position:relative; width:50%; padding: 25px 70px 25px 25px;}
+
+
+.timeline ul li:nth-child(odd){float:left; text-align:right; clear:both;  }
+.timeline ul li:nth-child(even){float:right; text-align:right; clear:both; padding: 25px 25px 25px 70px; }
+
+.left_content{
+  padding-bottom:20px;
+}
+
+
+
+
+.timeline ul li:before {
+  content: '';
+  position:absolute;
+  width:20px;
+  height:20px;
+  background: #fff;
+  border: 1px solid #808080;  
+  border-radius:50%;
+  top:25px;
+  z-index:1;
+}
+.timeline ul li.booking:before {background: #fb7e05; }
+.timeline ul li:nth-child(odd):before{right:-10px;}
+.timeline ul li:nth-child(even):before{left:-10px;}
+
+
+
+
+/* @media (max-width: 1000px){
+  .timeline{width:100%; }
+}
+@media (max-width: 767px){
+  .timeline{width:100%; }
+  .timeline:before{left:20px; }
+  .timeline ul li:nth-child(odd), .timeline ul li:nth-child(even){width:100%; text-align:left; padding-left:50px; }
+  .timeline ul li:nth-child(odd):before {top:-18px; left:16px; }
+  .timeline ul li:nth-child(even):before {top:-18px; left:16px; }
+  .timeline ul li:nth-child(odd) .left_content, .timeline ul li:nth-child(even) .left_content {top:-30px; left:50px; right:inherit; }
+} */
+
+.right_content {border-radius: 10px; background: #FFF; padding: 20px; box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.14); position: relative; }
+.right_content:after {content: ''; position: absolute; background: url(../images/arrow-line-2.svg) no-repeat; width: 70px; height: 72px; right: -70px; top: 10px; }
+.timeline ul li:nth-child(2n) .right_content:after {background: url(../images/arrow-line.svg) no-repeat; width: 70px; height: 72px; left: -70px; }
+.right_content img {max-width: 100px; height: revert-layer;}
+.content-box {margin-left: 15px; text-align: left; }
+
+.right_content p {font-size: 16px; font-weight: 700; color: #111111; line-height: 1; margin-bottom: 0; }
+.right_content a {color: #004085; background-color: #0071c2; border: 1px solid #0071c2; font-size: 12px; padding: 4px 15px; font-weight: 500; text-decoration: none; color: #fff; border-radius: 5px; }
+.left_content {position: absolute; top: 12px; right: -130px; margin: 0; padding: 8px 16px; border-radius: 10px; background: #0071c2; border: 1px solid #0071c2; width: fit-content; }
+.left_content.no-booking {background: #4c76b2; border-color: #4c76b2; }
+.timeline ul li:nth-child(odd) .left_content{right:-130px; }
+.timeline ul li:nth-child(even) .left_content{left:-130px; }
+.left_content h3 {margin-bottom: 0; font-size: 18px; font-weight: 600; color: #fff; }
+
+
+
+@media (max-width: 1199px){
+	.timeline ul li  {
+		padding: 25px 70px 25px 0px;
+	}
+	.timeline ul li:nth-child(2n) {
+		padding: 25px 0px 25px 70px;
+	}
+}
+@media (max-width: 991px){
+	.right_content {
+		padding: 15px;
+	}
+	.timeline ul li:nth-child(2n+1), .timeline ul li:nth-child(2n) {
+		text-align: left;
+	}
+	.right_content a {
+		margin-top: 10px;
+	}
+}
+@media (max-width: 767px){
+	.tourlist-packages-wrap {
+		margin: 20px 0px;
+	}
+	.timeline ul li {
+		padding: 25px 25px 25px 0px;
+	}
+	.timeline ul li:nth-child(2n) {
+		padding: 25px 0px 25px 25px;
+	}
+	.right_content::after {
+		right: -25px;
+		top: 10px;
+		width: 25px;
+		height: 1px;
+		background: #000;
+	  }
+	  .timeline ul li:nth-child(2n) .right_content::after {
+		width: 25px;
+		height: 1px;
+		background: #000;
+		left: -25px;
+	  }
+	  .content-box {
+		margin-left: 0;
+		margin-top: 5px;
+	  }
+	  .timeline ul li:nth-child(2n+1) .left_content{
+		right: -120px;
+	  }
+	  .timeline ul li:nth-child(2n) .left_content {
+		left: -120px;
+	  }
+	  .left_content {
+		padding: 6px 13px;
+		top: 20px;
+	  }
+	  .left_content h3 {
+		font-size: 16px;
+		line-height: 1.1;
+	  }
+}
+
 /* Payment */
 .payment-row {
 	border: 1px solid #dfdfdf;
 	border-radius: 3px;
-	margin: 20px 0 0;
+	margin: 34px 0 0;
 }
 
 .payment-row .booking-row {
@@ -377,6 +498,79 @@ ul {
 	width: 15px;
 }
 
+/* Map Tour Details CSS */
+.tour-details-wrap {
+	margin-top: 20px;
+}
+
+.tour-details-wrap .tour-details-title {
+	font-size: 30px;
+	font-weight: 600;
+	color: #111111;
+	line-height: 1.2;
+	margin-bottom: 20px;
+}
+
+.tour-details-wrap .date-time {
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.2;
+	color: #2c3e50;
+	margin-bottom: 10px;
+}
+
+.tour-details-wrap .details-box {
+	margin-right: 20px;
+	width: 100%;
+}
+
+.tour-details-wrap .title-wrap,
+.tour-details-wrap .tour-rating {
+	margin-bottom: 10px;
+}
+
+.tour-details-wrap .title-wrap .tour-title,
+.tour-details-wrap .title-wrap .tour-time {
+	font-size: 18px;
+	font-weight: 500;
+	color: #111111;
+	line-height: 1.2;
+}
+
+.details-text {
+	font-size: 14px;
+	font-weight: 400;
+	color: #80807f;
+	line-height: 1.2;
+}
+
+.tabs-section .padding-sec {
+	padding-right: 40px;
+}
+
+.vuejs3-datepicker__calendar {
+	right: 0;
+}
+
+.vuejs3-datepicker__value {
+	border: 1px solid #cbcbcb;
+	border-radius: 3px 3px 0px 0px;
+	font-size: 13px;
+	font-weight: 500;
+	color: #000000;
+	padding: 6px 20px;
+	display: flex;
+	min-width: 150px;
+	justify-content: center;
+}
+
+.vuejs3-datepicker__value span {
+	line-height: 1.2;
+}
+
+.vuejs3-datepicker__content {
+	font-size: 13px;
+}
 .date-booking-row {
 	padding: 0px 13px;
 	border-bottom: 1px solid #dfdfdf;
@@ -1028,11 +1222,13 @@ ul {
 	font-size: 16px;
 	color: #121212;
 	font-weight: 600;
-	padding: 7px 7px 7px 46px;
-	width: 48.4%;
-	height: 41px;
+	padding: 7px 10px 7px 46px;
+	width: auto;
+	height: 100%;
 	text-align: left;
 	position: relative;
+	margin-bottom: 10px;
+	margin-right: 15px;
 }
 
 .tour-start-row .whattobring .bring-group .btn-info:after {
@@ -1098,6 +1294,10 @@ ul {
 .language-switcher .dropdown-menu .dropdown-item {
 	font-size: 13px;
 	padding: 2px 10px;
+}
+
+.mind-change {
+	cursor: pointer;
 }
 
 /***** Payment Page Start *****/
@@ -1346,7 +1546,7 @@ ul {
 	font-weight: 400;
 	line-height: 1;
 	color: #565656;
-	height: 55px;
+	height: 20px;
 	border: 1px solid #d5d5d5;
 	box-shadow: -3px -4px 5px 0px rgba(0, 0, 0, 0.12) inset;
 	border-radius: 5px;
@@ -1419,28 +1619,28 @@ ul {
 }
 
 .payment-form-sec .form-textarea-wrap label {
-	font-size: 18px;
+	font-size: 14.53px;
 	font-weight: 400;
 	line-height: 1;
 	color: #565656;
 	position: absolute;
 	top: -10px;
-	left: 40px;
+	left: 10px;
 	padding: 2px 5px;
 	background-color: #fff;
 	z-index: 2;
 }
 
 .payment-form-sec .form-textarea-wrap textarea {
-	font-size: 16px;
+	font-size: 14.53px;
 	font-weight: 400;
 	line-height: 1.2;
 	color: #565656;
-	height: 135px;
+	height: 78px;
 	border: 1px solid #d5d5d5;
 	box-shadow: -3px -4px 5px 0px rgba(0, 0, 0, 0.12) inset;
 	border-radius: 5px;
-	padding: 18px 31px;
+	padding: 18px 15px;
 	outline: none;
 	width: 100%;
 	resize: unset;
@@ -1760,6 +1960,10 @@ input.help-block+.checkmark {
 	color: #0071c2;
 }
 
+.thankyou-main-row .invoice-row .top-row .content2 {
+	padding-left: 0;
+}
+
 .thankyou-main-row .invoice-row .top-row .content2 h2 {
 	font-size: 24px;
 	font-weight: 400;
@@ -1924,49 +2128,11 @@ input.help-block+.checkmark {
 	vertical-align: top;
 }
 
-.thankyou-main-row .invoice-row .top-row .booking-summery table tr th:first-child {
-	padding-left: 0;
-	border-left: 0;
-}
-
-.thankyou-main-row .invoice-row .top-row .booking-summery table tr th:last-child {
-	padding-right: 0;
-	border-right: 0;
-	text-align: right;
-}
-
 .thankyou-main-row .invoice-row .top-row .booking-summery table tr td {
 	border: 1px solid #dee2e6;
 	padding: 10px 15px;
 	vertical-align: top;
 	line-height: 1.3;
-}
-
-.thankyou-main-row .invoice-row .top-row .booking-summery table tr td:first-child {
-	padding-left: 0;
-	border-left: 0;
-}
-
-.thankyou-main-row .invoice-row .top-row .booking-summery table tr td:last-child {
-	padding-right: 0;
-	border-right: 0;
-	text-align: right;
-}
-
-.thankyou-main-row .invoice-row .top-row .booking-summery table tr td:first-child {
-	width: 200px;
-}
-
-.thankyou-main-row .invoice-row .top-row .booking-summery table tr td:nth-child(2) {
-	width: 120px;
-}
-
-.thankyou-main-row .invoice-row .top-row .booking-summery table tr td:nth-child(3) {
-	width: 330px;
-}
-
-.thankyou-main-row .invoice-row .top-row .booking-summery table tr td:nth-child(4) {
-	width: 90px;
 }
 
 .thankyou-main-row .invoice-row .top-row .cta .cta-box {
@@ -2090,775 +2256,6 @@ input.help-block+.checkmark {
 }
 
 /***** Thank You Page End *****/
-
-
-@media (min-width: 1200px) {
-	.container {
-		max-width: 1200px;
-	}
-
-	.inner-content-section .container {
-		max-width: 1225px;
-	}
-}
-
-@media (max-width: 1230px) {
-	.scroll-table {
-		overflow: hidden;
-		overflow-x: scroll;
-	}
-}
-
-@media (max-width: 1199px) {
-	.inner-content-section .background-color-sec {
-		padding: 20px 30px;
-	}
-
-	.payment-row .booking-row .booking h2 {
-		font-size: 25px;
-	}
-
-	.date-booking-row .selectboxes {
-		justify-content: center;
-		margin-bottom: 10px;
-	}
-
-	.starttime-row .groupofpeople .table tfoot tr td.cost {
-		padding: 10px 20px;
-	}
-
-	.starttime-row .groupofpeople .table tfoot tr td.total {
-		padding: 10px 20px;
-	}
-
-	.tour-start-row .duration .btn-info {
-		height: auto;
-	}
-
-	.tour-start-row .whattobring .bring-group {
-		display: block;
-	}
-
-	.tour-start-row .whattobring .bring-group .btn-info {
-		height: auto;
-		margin: 0;
-		margin-bottom: 10px;
-		width: 100%;
-	}
-
-	/***** Payment Page Start *****/
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-time {
-		font-size: 22px;
-	}
-
-	.payment-form-sec {
-		padding-left: 13px;
-		padding-right: 13px;
-	}
-
-	/***** Payment Page End *****/
-}
-
-@media (max-width: 991px) {
-	.innerbanner-row .title-box {
-		display: block;
-	}
-
-	.innerbanner-row .title-box h1 {
-		margin-bottom: 15px;
-	}
-
-	.inner-content-section .background-color-sec {
-		padding: 20px 15px;
-	}
-
-	.payment-row .booking-row .booking {
-		justify-content: center;
-		margin-bottom: 15px;
-	}
-
-	.images-sec {
-		text-align: center;
-		margin-bottom: 30px;
-	}
-
-	.content-sec {
-		text-align: center;
-	}
-
-	.hiking-tour-row .content-sec h2 {
-		padding-left: 0px;
-	}
-
-	.hiking-tour-row .content-sec h2:after {
-		content: none;
-	}
-
-	.permit-tax .content-sec h2 {
-		padding-left: 0px;
-	}
-
-	.permit-tax .content-sec h2:after {
-		content: none;
-	}
-
-	/***** Payment Page Start *****/
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail {
-		padding: 12px 17px;
-	}
-
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-title {
-		font-size: 20px;
-	}
-
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-time {
-		font-size: 18px;
-	}
-
-	.starttime-row .groupofpeople h2 {
-		font-size: 20px;
-		margin-bottom: 17px;
-		margin-top: 0;
-	}
-
-	.payment-form-sec .payment-form-notice {
-		font-size: 14px;
-	}
-
-	.payment-form-sec label.checkbox-wrap {
-		font-size: 20px;
-	}
-
-	.payment-form-sec .checkmark {
-		top: 0;
-	}
-
-	.payment-form-sec .masks-mandatory-notice {
-		font-size: 14px;
-	}
-
-	.payment-form-sec .form-field-wrp {
-		padding: 24px 17px 17px 20px;
-	}
-
-	.payment-form-sec .form-field-wrp input {
-		height: 50px;
-	}
-
-	.payment-form-sec .form-field-wrp label.checkbox-wrap {
-		font-size: 12px;
-	}
-
-	.payment-form-sec .policy-item-wrp {
-		max-height: 194px;
-	}
-
-	.payment-form-sec .additional-notes-text {
-		font-size: 14px;
-	}
-
-	.payment-form-sec .accommodate-your-request {
-		font-size: 14px;
-	}
-
-	.payment-form-sec .secured-encryption {
-		padding: 9px 15px;
-	}
-
-	.payment-form-sec .card-detail-wrp {
-		padding: 15px 5px 15px 15px;
-	}
-
-	.payment-form-sec .makeaayment-wrap {
-		padding: 12px 30px 12px 25px;
-	}
-
-	.payment-form-sec .makeaayment-wrap input[type="submit"] {
-		height: 50px;
-	}
-
-	/***** Payment Page End *****/
-	/***** Thank You Page Start *****/
-	.thankyou-main-row .status-bar-row .sucessmsg .content h2 {
-		font-size: 24px;
-		margin-bottom: 6px;
-	}
-
-	.thankyou-main-row .status-bar-row .sucessmsg .content p {
-		font-size: 14px;
-	}
-
-	.thankyou-main-row .status-bar-row {
-		padding: 20px 10px;
-	}
-
-	.thankyou-main-row .invoice-row {
-		padding: 27px 10px 35px;
-	}
-
-	.booking-tbl {
-		overflow: hidden;
-		overflow-x: scroll;
-	}
-
-	/***** Thank You Page End *****/
-}
-
-@media (max-width: 767px) {
-	.header-right {
-		justify-content: center;
-		margin-top: 10px;
-		margin-bottom: 5px;
-	}
-
-	.date-booking-row .calendardate {
-		max-width: 390px;
-	}
-
-	.starttime-row .select-time .radio-toolbar .time-item {
-		width: 32.38%;
-	}
-
-	.starttime-row .select-time .radio-toolbar .time-item:nth-child(4n+0) {
-		margin-right: 1.426%;
-	}
-
-	.starttime-row .select-time .radio-toolbar .time-item:nth-child(3n+0) {
-		margin-right: 0;
-	}
-
-	.starttime-row .groupofpeople .booknowbtn button {
-		font-size: 20px;
-		padding: 8px 90px 8px 20px;
-	}
-
-	.starttime-row .groupofpeople .booknowbtn button:after {
-		font-size: 30px;
-		top: 0px;
-	}
-
-	.fee-tax-row h2 {
-		font-size: 20px;
-		line-height: 1.3;
-	}
-
-	.fee-tax-row p {
-		padding-bottom: 15px;
-	}
-
-	.tour-start-row .duration {
-		border-bottom: 1px solid #dfdfdf;
-		border-right: 0;
-	}
-
-	.footer-row>* {
-		text-align: center !important;
-	}
-
-	.footer-row .col-start p {
-		margin-bottom: 15px;
-	}
-
-	.footer-row .col-center img {
-		margin-bottom: 15px;
-	}
-
-	/***** Payment Page Start *****/
-	.booking-dt-sec .booking-dt-title {
-		font-size: 20px;
-		text-align: center;
-	}
-
-	.booking-dt-sec .booking-dt-wrp {
-		display: block !important;
-	}
-
-	.booking-dt-sec .booking-dt-wrp .booking-dt-img {
-		min-width: unset;
-		background-color: #f2f9f3;
-		text-align: center;
-		padding-top: 12px;
-		margin-right: 0;
-	}
-
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail {
-		border-radius: 0;
-		text-align: center;
-	}
-
-	.starttime-row .groupofpeople h2 {
-		text-align: center;
-	}
-
-	.payment-form-sec label.checkbox-wrap {
-		font-size: 18px;
-	}
-
-	.payment-form-sec .masks-mandatory-notice {
-		font-size: 14px;
-		line-height: 18px;
-	}
-
-	.payment-form-sec .form-field-title {
-		font-size: 20px;
-		text-align: center;
-		margin-bottom: 20px;
-	}
-
-	.payment-form-sec .form-field-wrp {
-		margin-bottom: 20px;
-	}
-
-	.payment-form-sec .payment-text {
-		font-size: 20px;
-		text-align: center;
-	}
-
-	.payment-form-sec .makeaayment-wrap input[type="submit"] {
-		font-size: 20px;
-	}
-
-	.payment-form-sec .policy-item-wrp {
-		max-height: unset;
-	}
-
-	.payment-form-sec .payment-form-notice.important-note {
-		margin-top: -24px;
-	}
-
-	.payment-form-sec .makeaayment-wrap {
-		padding: 12px 30px 12px 13px;
-		border-left: none;
-	}
-
-	/***** Payment Page End *****/
-	/***** Thank You Page Start *****/
-	.thankyou-main-row .status-bar-row {
-		padding: 20px 0px;
-	}
-
-	.thankyou-main-row .invoice-row {
-		padding: 27px 0px 35px;
-	}
-
-	.thankyou-main-row .status-bar-row .sucessmsg .content p {
-		line-height: 18px;
-	}
-
-	.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details [class*="col-"]:nth-child(5) .details-box {
-		border-bottom: 1px solid #c3c3c3;
-		padding: 20px 0 25px;
-	}
-
-	.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details {
-		padding: 27px 30px 45px;
-	}
-
-	.thankyou-main-row .invoice-row .top-row .cta .cta-box {
-		display: block;
-		text-align: center;
-	}
-
-	/***** Thank You Page End *****/
-
-	/***** Table Responsive Start *****/
-	.starttime-row .groupofpeople .table thead,
-	.starttime-row .groupofpeople .table thead tr,
-	.starttime-row .groupofpeople .table thead tr th {
-		display: none !important;
-	}
-
-	.starttime-row .groupofpeople .table,
-	.starttime-row .groupofpeople .table tbody,
-	.starttime-row .groupofpeople .table tbody tr,
-	.starttime-row .groupofpeople .table tbody tr td {
-		display: block !important;
-		position: relative !important;
-	}
-
-	.starttime-row .groupofpeople .table tbody tr td {
-		padding: 10px 10px 10px 45%;
-	}
-
-	.starttime-row .groupofpeople table td:before {
-		content: attr(data-label);
-		font-size: 16px;
-		font-weight: 400;
-		color: #333;
-		position: absolute;
-		left: 10px;
-		top: 50%;
-		transform: translateY(-50%);
-		width: 42%;
-		text-align: left;
-	}
-
-	.starttime-row .groupofpeople .table tbody tr td.age {
-		min-width: unset !important;
-	}
-
-	.starttime-row .groupofpeople .table tbody tr {
-		border: 1px solid #dfdfdf;
-		margin-bottom: 20px;
-	}
-
-	.starttime-row .groupofpeople .table tbody tr td.age {
-		border: none;
-		border-bottom: 1px solid #dfdfdf;
-		min-width: unset !important;
-		text-align: right !important;
-		height: auto !important;
-	}
-
-	.starttime-row .groupofpeople .table tbody tr td.taxes {
-		border: none;
-		border-bottom: 1px solid #dfdfdf;
-		min-width: unset !important;
-		text-align: right;
-		height: auto !important;
-		background-color: #edf4ff;
-	}
-
-	.starttime-row .groupofpeople .table tbody tr td.taxes p {
-		line-height: 19px;
-		margin-bottom: 0;
-	}
-
-	.starttime-row .groupofpeople .table tbody tr td.group {
-		border: none;
-		border-bottom: 1px solid #dfdfdf;
-		min-width: unset !important;
-		text-align: right;
-		height: auto !important;
-		background-color: #edf4ff;
-	}
-
-	.starttime-row .groupofpeople .table tbody tr td.group .form-select {
-		margin: 0 0 0 auto;
-		text-align: right;
-		padding-right: 10px;
-		background: #edf4ff url(data:image/png;base64,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) no-repeat center right 0px;
-	}
-
-	.starttime-row .groupofpeople .table tbody tr td.price,
-	.starttime-row .groupofpeople .table tbody tr td.final {
-		border: none;
-		min-width: unset !important;
-		text-align: right;
-		height: auto !important;
-		background-color: transparent;
-	}
-
-	/***** Table Responsive End *****/
-}
-
-@media (max-width: 575px) {
-	.payment-row .booking-row {
-		padding: 18px 0px;
-	}
-
-	.status-row {
-		padding: 3px 0px 6px;
-	}
-
-	.starttime-row {
-		padding: 25px 0px;
-	}
-
-	.fee-tax-row {
-		padding: 20px 0px 25px;
-	}
-
-	.date-booking-row .calendardate {
-		max-width: 330px;
-	}
-
-	.starttime-row .select-time .radio-toolbar .time-item {
-		width: 49.2%;
-	}
-
-	.starttime-row .select-time .radio-toolbar .time-item:nth-child(3n+0) {
-		margin-right: 1.426%;
-	}
-
-	.starttime-row .select-time .radio-toolbar .time-item:nth-child(2n+0) {
-		margin-right: 0;
-	}
-
-	.starttime-row .select-time h2,
-	.starttime-row .groupofpeople h2 {
-		font-size: 21px;
-	}
-
-	.hiking-tour-row .content-sec h2 {
-		font-size: 20px;
-	}
-
-	.permit-tax .content-sec h2 {
-		font-size: 20px;
-	}
-
-	/***** Payment Page Start *****/
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-title {
-		font-size: 18px;
-	}
-
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-time {
-		font-size: 18px;
-	}
-
-	.starttime-row .select-time h2,
-	.starttime-row .groupofpeople h2 {
-		font-size: 20px;
-	}
-
-	.payment-form-sec .masks-mandatory-wrp {
-		padding: 15px 20px 15px;
-	}
-
-	.payment-form-sec .masks-mandatory-img {
-		min-width: 75px;
-		margin-right: 20px;
-	}
-
-	/***** Payment Page End *****/
-	/***** Thank You Page Start *****/
-	.thankyou-main-row .invoice-row .top-row .content1 h2 {
-		font-size: 24px;
-	}
-
-	.thankyou-main-row .invoice-row .top-row .content2 h2 {
-		font-size: 22px;
-		margin-bottom: 5px;
-	}
-
-	.thankyou-main-row .invoice-row .top-row .content2 p {
-		font-size: 14px;
-		line-height: 1.3;
-	}
-
-	.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details {
-		padding: 20px 20px 35px;
-	}
-
-	/***** Thank You Page End *****/
-}
-
-@media (max-width: 480px) {
-	.inner-content-section .background-color-sec {
-		margin-bottom: 30px;
-	}
-
-	.innerbanner-row {
-		padding: 16px 0px;
-	}
-
-	.innerbanner-row .title-box h1 {
-		font-size: 25px;
-	}
-
-	.innerbanner-row .title-box .rating {
-		margin-left: 0px;
-	}
-
-	.payment-row .booking-row .booking {
-		display: block;
-		text-align: center;
-	}
-
-	.payment-row .booking-row .booking h2 {
-		margin-bottom: 10px;
-		margin-right: 0px;
-	}
-
-	.payment-row .booking-row .booking .confirmation {
-		width: 100%;
-	}
-
-	.payment-row .booking-row .info .tooltipbtn.btn-info {
-		margin: 0 0 10px;
-	}
-
-	.payment-row .booking-row .info .tooltipbtn {
-		width: 100%;
-	}
-
-	.date-booking-row .calendardate {
-		max-width: 170px;
-	}
-
-	.date-booking-row .selectboxes select#calendaryear {
-		margin-right: 0px;
-	}
-
-	.status-row .status li {
-		padding-left: 14px;
-	}
-
-	.status-row .status li:after {
-		left: 3px;
-	}
-
-	.starttime-row .select-time .radio-toolbar .time-item {
-		width: 100%;
-		margin: 0 0 10px;
-	}
-
-	.starttime-row .groupofpeople .booknowbtn button {
-		width: 100%;
-	}
-
-	.hiking-tour-row {
-		padding: 30px 0px 30px;
-	}
-
-	.tour-start-row .duration {
-		padding: 21px 15px 25px;
-	}
-
-	.tour-start-row .whattobring {
-		padding: 21px 15px 25px;
-	}
-
-	/***** Payment Page Start *****/
-	.booking-dt-sec {
-		padding: 20px 0px 0;
-	}
-
-	.booking-dt-sec .booking-dt-wrp .booking-dt-img {
-		padding: 10px 10px 0;
-	}
-
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail {
-		padding: 10px;
-	}
-
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-title {
-		font-size: 16px;
-		margin-bottom: 5px;
-	}
-
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-time {
-		font-size: 16px;
-		margin-bottom: 10px;
-	}
-
-	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-btn a {
-		font-size: 14px;
-		padding: 8px 10px;
-	}
-
-	.payment-form-sec .masks-mandatory-wrp {
-		display: block !important;
-		padding: 15px;
-	}
-
-	.payment-form-sec .masks-mandatory-img {
-		margin-right: 0;
-		text-align: center;
-		margin-bottom: 15px;
-	}
-
-	.payment-form-sec label.checkbox-wrap {
-		font-size: 16px;
-	}
-
-	.payment-form-sec .masks-mandatory-notice {
-		font-size: 12px;
-		line-height: 16px;
-	}
-
-	.payment-form-sec {
-		padding-left: 0;
-		padding-right: 0;
-	}
-
-	.payment-form-sec .form-field-wrp {
-		padding: 15px 10px 10px 10px;
-	}
-
-	.payment-form-sec .form-field-wrp input {
-		height: 45px;
-	}
-
-	.payment-form-sec .form-field-wrp label.checkbox-wrap {
-		font-size: 12px;
-		line-height: 18px;
-	}
-
-	.payment-form-sec .policy-item-wrp ul li {
-		font-size: 14px;
-		line-height: 19px;
-	}
-
-	.payment-form-sec .policy-item-wrp ul li:last-child {
-		margin-bottom: 0;
-	}
-
-	.payment-form-sec .form-field-wrp input {
-		padding: 5px 32px;
-	}
-
-	.payment-form-sec .form-field-wrp .phone-wrap input {
-		padding-left: 93px !important;
-	}
-
-	/***** Payment Page End *****/
-	/***** Thank You Page Start *****/
-	.thankyou-main-row .status-bar-row .sucessmsg {
-		display: block;
-		text-align: center;
-	}
-
-	.thankyou-main-row .status-bar-row .sucessmsg .images {
-		margin-right: 0;
-		margin-bottom: 15px;
-	}
-
-	.thankyou-main-row .status-bar-row .sucessmsg .content h2 {
-		margin-bottom: 10px;
-	}
-
-	.thankyou-main-row .invoice-row .top-row .content1 p {
-		font-size: 14px;
-		margin-bottom: 20px;
-	}
-
-	.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details h2 {
-		font-size: 20px;
-	}
-
-	.thankyou-main-row .invoice-row {
-		padding: 27px 0px 20px;
-	}
-
-	/***** Thank You Page End *****/
-	.total-cost-col {
-		padding-right: calc(var(--bs-gutter-x) * .5);
-		padding-left: calc(var(--bs-gutter-x) * .5);
-	}
-
-	.total-cost-col .totalcost [class*="col-"] {
-		font-size: 22px;
-	}
-
-	.thankyou-main-row .invoice-row .top-row .booking-summery p .printbtn {
-		position: relative;
-		display: block;
-		margin-top: 15px;
-		margin-left: auto;
-	}
-}
-
-@media (max-width: 360px) {
-	.total-cost-col .totalcost [class*="col-"] {
-		font-size: 20px;
-	}
-
-	.total-cost-col .totalcost [class*="col-"] span {
-		font-size: 11px;
-	}
-}
 
 .slider-not-active {
 	pointer-events: none;
@@ -3107,32 +2504,36 @@ section.iframe-inner-banner.banner-section {
 }
 
 .hotel-section {
-    padding: 13px 13px 0;
+    padding: 13px 30px 0;
 }
 
 .hotel-section .hotel-title {
-    font-size: 20px;
+	font-size: 14px;
     font-weight: 400;
-    line-height: 1.2;
+    line-height: 1.3;
     color: #333;
-    letter-spacing: -0.288px;
 }
 
 .hotel-section .hotel-name {
-    color: #333;
-    letter-spacing: -0.288px;
+	font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #4C76B2;
+    margin-bottom: 8px;
 }
 
-.hotel-section .hotel-wrapper {
-    border: 1px dotted #b2d4ed;
-    padding: 5px;
-    border-radius: 5px;
+.hotel-detail-address {
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 1.3;
+	color: #333;
 }
 
 .hotel-section .hotel-wrapper .hotel-image {
     max-width: 100px;
-    margin-right: 5px;
-    max-height: 100px
+    margin-right: 13px;
+    max-height: 100px;
+	min-width: 100px;
 }
 
 .hotel-section .hotel-wrapper .hotel-image img {
@@ -3140,13 +2541,826 @@ section.iframe-inner-banner.banner-section {
 }
 
 .hotel-section .hotel-wrapper .hotel-detail {
-    background-color: #f2f9f3;
+    /* background-color: #f2f9f3; */
     border-radius: 5px;
-    padding: 10px 20px;
+    /* padding: 10px 20px; */
 	text-align: left;
 }
 
-.contact-form-field{
-	max-height: 330px;
-	overflow: hidden;
+.tnc-checkbox {
+	display: block !important;
+}
+
+
+@media (min-width: 1200px) {
+	.container {
+		max-width: 1200px;
+	}
+
+	.inner-content-section .container {
+		max-width: 1225px;
+	}
+}
+
+@media (max-width: 1230px) {
+	.scroll-table {
+		overflow: hidden;
+		overflow-x: scroll;
+	}
+}
+
+@media (max-width: 1199px) {
+	.tabs-section .tabs-wrap {
+		display: flex !important;
+		justify-content: center;
+	}
+
+	.tabs-section .tabs-wrap .tabs {
+		margin-right: 6px !important;
+	}
+
+	.inner-content-section .background-color-sec {
+		padding: 20px 30px;
+	}
+
+	.payment-row .booking-row .booking h2 {
+		font-size: 25px;
+	}
+
+	.date-booking-row .selectboxes {
+		justify-content: center;
+		margin-bottom: 10px;
+	}
+
+	.starttime-row .groupofpeople .table tfoot tr td.cost {
+		padding: 10px 20px;
+	}
+
+	.starttime-row .groupofpeople .table tfoot tr td.total {
+		padding: 10px 20px;
+	}
+
+	.tour-start-row .duration .btn-info {
+		height: auto;
+	}
+
+	.tour-start-row .whattobring .bring-group {
+		display: block;
+	}
+
+	.tour-start-row .whattobring .bring-group .btn-info {
+		height: auto;
+		margin: 0;
+		margin-bottom: 10px;
+		width: 100%;
+	}
+
+	/***** Payment Page Start *****/
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-time {
+		font-size: 22px;
+	}
+
+	.payment-form-sec {
+		padding-left: 13px;
+		padding-right: 13px;
+	}
+
+	/***** Payment Page End *****/
+}
+
+@media (max-width: 991px) {
+	.innerbanner-row .title-box {
+		display: block;
+	}
+
+	.innerbanner-row .title-box h1 {
+		margin-bottom: 15px;
+	}
+
+	.inner-content-section .background-color-sec {
+		padding: 20px 15px;
+	}
+
+	.payment-row .booking-row .booking {
+		justify-content: center;
+		margin-bottom: 15px;
+	}
+
+	.images-sec {
+		text-align: center;
+		margin-bottom: 30px;
+	}
+
+	.content-sec {
+		text-align: center;
+	}
+
+	.hiking-tour-row .content-sec h2 {
+		padding-left: 0px;
+	}
+
+	.hiking-tour-row .content-sec h2:after {
+		content: none;
+	}
+
+	.permit-tax .content-sec h2 {
+		padding-left: 0px;
+	}
+
+	.permit-tax .content-sec h2:after {
+		content: none;
+	}
+
+	/***** Payment Page Start *****/
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail {
+		padding: 12px 17px;
+	}
+
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-title {
+		font-size: 20px;
+	}
+
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-time {
+		font-size: 18px;
+	}
+
+	.starttime-row .groupofpeople h2 {
+		font-size: 20px;
+		margin-bottom: 17px;
+		margin-top: 0;
+	}
+
+	.payment-form-sec .payment-form-notice {
+		font-size: 14px;
+	}
+
+	.payment-form-sec label.checkbox-wrap {
+		font-size: 20px;
+	}
+
+	.payment-form-sec .checkmark {
+		top: 0;
+	}
+
+	.payment-form-sec .masks-mandatory-notice {
+		font-size: 14px;
+	}
+
+	.payment-form-sec .form-field-wrp {
+		padding: 24px 17px 17px 20px;
+	}
+
+	.payment-form-sec .form-field-wrp input {
+		height: 20px;
+	}
+
+	.payment-form-sec .form-field-wrp label.checkbox-wrap {
+		font-size: 12px;
+	}
+
+	.payment-form-sec .policy-item-wrp {
+		max-height: 194px;
+	}
+
+	.payment-form-sec .additional-notes-text {
+		font-size: 14px;
+	}
+
+	.payment-form-sec .accommodate-your-request {
+		font-size: 14px;
+	}
+
+	.payment-form-sec .secured-encryption {
+		padding: 9px 15px;
+	}
+
+	.payment-form-sec .card-detail-wrp {
+		padding: 15px 5px 15px 15px;
+	}
+
+	.payment-form-sec .makeaayment-wrap {
+		padding: 12px 30px 12px 25px;
+	}
+
+	.payment-form-sec .makeaayment-wrap input[type="submit"] {
+		height: 50px;
+	}
+
+	/***** Payment Page End *****/
+	/***** Thank You Page Start *****/
+	.thankyou-main-row .status-bar-row .sucessmsg .content h2 {
+		font-size: 24px;
+		margin-bottom: 6px;
+	}
+
+	.thankyou-main-row .status-bar-row .sucessmsg .content p {
+		font-size: 14px;
+	}
+
+	.thankyou-main-row .status-bar-row {
+		padding: 20px 10px;
+	}
+
+	.thankyou-main-row .invoice-row {
+		padding: 27px 10px 35px;
+	}
+
+	.booking-tbl {
+		overflow: hidden;
+		overflow-x: scroll;
+	}
+
+	/***** Thank You Page End *****/
+}
+
+@media (max-width: 767px) {
+	.tabs-section .tabs-wrap {
+		display: none !important;
+	}
+
+	.header-right {
+		justify-content: center;
+		margin-top: 10px;
+		margin-bottom: 5px;
+	}
+
+	.date-booking-row .calendardate {
+		max-width: 390px;
+	}
+
+	.starttime-row .select-time .radio-toolbar .time-item {
+		width: 32.38%;
+	}
+
+	.starttime-row .select-time .radio-toolbar .time-item:nth-child(4n+0) {
+		margin-right: 1.426%;
+	}
+
+	.starttime-row .select-time .radio-toolbar .time-item:nth-child(3n+0) {
+		margin-right: 0;
+	}
+
+	.starttime-row .groupofpeople .booknowbtn button {
+		font-size: 20px;
+		padding: 8px 90px 8px 20px;
+	}
+
+	.starttime-row .groupofpeople .booknowbtn button:after {
+		font-size: 30px;
+		top: 0px;
+	}
+
+	.fee-tax-row h2 {
+		font-size: 20px;
+		line-height: 1.3;
+	}
+
+	.fee-tax-row p {
+		padding-bottom: 15px;
+	}
+
+	.tour-start-row .duration {
+		border-bottom: 1px solid #dfdfdf;
+		border-right: 0;
+	}
+
+	.footer-row>* {
+		text-align: center !important;
+	}
+
+	.footer-row .col-start p {
+		margin-bottom: 15px;
+	}
+
+	.footer-row .col-center img {
+		margin-bottom: 15px;
+	}
+
+	/***** Payment Page Start *****/
+	.booking-dt-sec .booking-dt-title {
+		font-size: 20px;
+		text-align: center;
+	}
+
+	.booking-dt-sec .booking-dt-wrp {
+		display: block !important;
+	}
+
+	.booking-dt-sec .booking-dt-wrp .booking-dt-img {
+		min-width: unset;
+		background-color: #f2f9f3;
+		text-align: center;
+		padding-top: 12px;
+		margin-right: 0;
+	}
+
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail {
+		border-radius: 0;
+		text-align: center;
+	}
+
+	.starttime-row .groupofpeople h2 {
+		text-align: center;
+	}
+
+	.payment-form-sec label.checkbox-wrap {
+		font-size: 18px;
+	}
+
+	.payment-form-sec .masks-mandatory-notice {
+		font-size: 14px;
+		line-height: 18px;
+	}
+
+	.payment-form-sec .form-field-title {
+		font-size: 20px;
+		margin-bottom: 20px;
+	}
+
+	.payment-form-sec .form-field-wrp {
+		margin-bottom: 20px;
+	}
+
+	.payment-form-sec .payment-text {
+		font-size: 20px;
+		text-align: left;
+	}
+
+	.payment-form-sec .makeaayment-wrap input[type="submit"] {
+		font-size: 20px;
+	}
+
+	.payment-form-sec .policy-item-wrp {
+		max-height: unset;
+	}
+
+	.payment-form-sec .makeaayment-wrap {
+		padding: 12px 30px 12px 13px;
+		border-left: none;
+	}
+
+	/***** Payment Page End *****/
+	/***** Thank You Page Start *****/
+	.thankyou-main-row .status-bar-row {
+		padding: 20px 0px;
+	}
+
+	.thankyou-main-row .invoice-row {
+		padding: 27px 0px 35px;
+	}
+
+	.thankyou-main-row .status-bar-row .sucessmsg .content p {
+		line-height: 18px;
+	}
+
+	.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details [class*="col-"]:nth-child(5) .details-box {
+		border-bottom: 1px solid #c3c3c3;
+		padding: 20px 0 25px;
+	}
+
+	.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details {
+		padding: 27px 30px 45px;
+	}
+
+	.thankyou-main-row .invoice-row .top-row .cta .cta-box {
+		display: block;
+		text-align: center;
+	}
+
+	/***** Thank You Page End *****/
+
+	/***** Table Responsive Start *****/
+	.starttime-row .groupofpeople .table thead,
+	.starttime-row .groupofpeople .table thead tr,
+	.starttime-row .groupofpeople .table thead tr th {
+		display: none !important;
+	}
+
+	.starttime-row .groupofpeople .table,
+	.starttime-row .groupofpeople .table tbody,
+	.starttime-row .groupofpeople .table tbody tr,
+	.starttime-row .groupofpeople .table tbody tr td {
+		display: block !important;
+		position: relative !important;
+	}
+
+	.starttime-row .groupofpeople .table tbody tr td {
+		padding: 10px 10px 10px 45%;
+	}
+
+	.starttime-row .groupofpeople table td:before {
+		content: attr(data-label);
+		font-size: 16px;
+		font-weight: 400;
+		color: #333;
+		position: absolute;
+		left: 10px;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 42%;
+		text-align: left;
+	}
+
+	.starttime-row .groupofpeople .table tbody tr td.age {
+		min-width: unset !important;
+	}
+
+	.starttime-row .groupofpeople .table tbody tr {
+		border: 1px solid #dfdfdf;
+		margin-bottom: 20px;
+	}
+
+	.starttime-row .groupofpeople .table tbody tr td.age {
+		border: none;
+		border-bottom: 1px solid #dfdfdf;
+		min-width: unset !important;
+		text-align: right !important;
+		height: auto !important;
+	}
+
+	.starttime-row .groupofpeople .table tbody tr td.taxes {
+		border: none;
+		border-bottom: 1px solid #dfdfdf;
+		min-width: unset !important;
+		text-align: right;
+		height: auto !important;
+		background-color: #edf4ff;
+	}
+
+	.starttime-row .groupofpeople .table tbody tr td.taxes p {
+		line-height: 19px;
+		margin-bottom: 0;
+	}
+
+	.starttime-row .groupofpeople .table tbody tr td.group {
+		border: none;
+		border-bottom: 1px solid #dfdfdf;
+		min-width: unset !important;
+		text-align: right;
+		height: auto !important;
+		background-color: #edf4ff;
+	}
+
+	.starttime-row .groupofpeople .table tbody tr td.group .form-select {
+		margin: 0 0 0 auto;
+		text-align: right;
+		padding-right: 10px;
+		background: #edf4ff url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAHCAYAAAA1WQxeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAKT2lDQ1BQaG90b3Nob3AgSUNDIHByb2ZpbGUAAHjanVNnVFPpFj333vRCS4iAlEtvUhUIIFJCi4AUkSYqIQkQSoghodkVUcERRUUEG8igiAOOjoCMFVEsDIoK2AfkIaKOg6OIisr74Xuja9a89+bN/rXXPues852zzwfACAyWSDNRNYAMqUIeEeCDx8TG4eQuQIEKJHAAEAizZCFz/SMBAPh+PDwrIsAHvgABeNMLCADATZvAMByH/w/qQplcAYCEAcB0kThLCIAUAEB6jkKmAEBGAYCdmCZTAKAEAGDLY2LjAFAtAGAnf+bTAICd+Jl7AQBblCEVAaCRACATZYhEAGg7AKzPVopFAFgwABRmS8Q5ANgtADBJV2ZIALC3AMDOEAuyAAgMADBRiIUpAAR7AGDIIyN4AISZABRG8lc88SuuEOcqAAB4mbI8uSQ5RYFbCC1xB1dXLh4ozkkXKxQ2YQJhmkAuwnmZGTKBNA/g88wAAKCRFRHgg/P9eM4Ors7ONo62Dl8t6r8G/yJiYuP+5c+rcEAAAOF0ftH+LC+zGoA7BoBt/qIl7gRoXgugdfeLZrIPQLUAoOnaV/Nw+H48PEWhkLnZ2eXk5NhKxEJbYcpXff5nwl/AV/1s+X48/Pf14L7iJIEyXYFHBPjgwsz0TKUcz5IJhGLc5o9H/LcL//wd0yLESWK5WCoU41EScY5EmozzMqUiiUKSKcUl0v9k4t8s+wM+3zUAsGo+AXuRLahdYwP2SycQWHTA4vcAAPK7b8HUKAgDgGiD4c93/+8//UegJQCAZkmScQAAXkQkLlTKsz/HCAAARKCBKrBBG/TBGCzABhzBBdzBC/xgNoRCJMTCQhBCCmSAHHJgKayCQiiGzbAdKmAv1EAdNMBRaIaTcA4uwlW4Dj1wD/phCJ7BKLyBCQRByAgTYSHaiAFiilgjjggXmYX4IcFIBBKLJCDJiBRRIkuRNUgxUopUIFVIHfI9cgI5h1xGupE7yAAygvyGvEcxlIGyUT3UDLVDuag3GoRGogvQZHQxmo8WoJvQcrQaPYw2oefQq2gP2o8+Q8cwwOgYBzPEbDAuxsNCsTgsCZNjy7EirAyrxhqwVqwDu4n1Y8+xdwQSgUXACTYEd0IgYR5BSFhMWE7YSKggHCQ0EdoJNwkDhFHCJyKTqEu0JroR+cQYYjIxh1hILCPWEo8TLxB7iEPENyQSiUMyJ7mQAkmxpFTSEtJG0m5SI+ksqZs0SBojk8naZGuyBzmULCAryIXkneTD5DPkG+Qh8lsKnWJAcaT4U+IoUspqShnlEOU05QZlmDJBVaOaUt2ooVQRNY9aQq2htlKvUYeoEzR1mjnNgxZJS6WtopXTGmgXaPdpr+h0uhHdlR5Ol9BX0svpR+iX6AP0dwwNhhWDx4hnKBmbGAcYZxl3GK+YTKYZ04sZx1QwNzHrmOeZD5lvVVgqtip8FZHKCpVKlSaVGyovVKmqpqreqgtV81XLVI+pXlN9rkZVM1PjqQnUlqtVqp1Q61MbU2epO6iHqmeob1Q/pH5Z/YkGWcNMw09DpFGgsV/jvMYgC2MZs3gsIWsNq4Z1gTXEJrHN2Xx2KruY/R27iz2qqaE5QzNKM1ezUvOUZj8H45hx+Jx0TgnnKKeX836K3hTvKeIpG6Y0TLkxZVxrqpaXllirSKtRq0frvTau7aedpr1Fu1n7gQ5Bx0onXCdHZ4/OBZ3nU9lT3acKpxZNPTr1ri6qa6UbobtEd79up+6Ynr5egJ5Mb6feeb3n+hx9L/1U/W36p/VHDFgGswwkBtsMzhg8xTVxbzwdL8fb8VFDXcNAQ6VhlWGX4YSRudE8o9VGjUYPjGnGXOMk423GbcajJgYmISZLTepN7ppSTbmmKaY7TDtMx83MzaLN1pk1mz0x1zLnm+eb15vft2BaeFostqi2uGVJsuRaplnutrxuhVo5WaVYVVpds0atna0l1rutu6cRp7lOk06rntZnw7Dxtsm2qbcZsOXYBtuutm22fWFnYhdnt8Wuw+6TvZN9un2N/T0HDYfZDqsdWh1+c7RyFDpWOt6azpzuP33F9JbpL2dYzxDP2DPjthPLKcRpnVOb00dnF2e5c4PziIuJS4LLLpc+Lpsbxt3IveRKdPVxXeF60vWdm7Obwu2o26/uNu5p7ofcn8w0nymeWTNz0MPIQ+BR5dE/C5+VMGvfrH5PQ0+BZ7XnIy9jL5FXrdewt6V3qvdh7xc+9j5yn+M+4zw33jLeWV/MN8C3yLfLT8Nvnl+F30N/I/9k/3r/0QCngCUBZwOJgUGBWwL7+Hp8Ib+OPzrbZfay2e1BjKC5QRVBj4KtguXBrSFoyOyQrSH355jOkc5pDoVQfujW0Adh5mGLw34MJ4WHhVeGP45wiFga0TGXNXfR3ENz30T6RJZE3ptnMU85ry1KNSo+qi5qPNo3ujS6P8YuZlnM1VidWElsSxw5LiquNm5svt/87fOH4p3iC+N7F5gvyF1weaHOwvSFpxapLhIsOpZATIhOOJTwQRAqqBaMJfITdyWOCnnCHcJnIi/RNtGI2ENcKh5O8kgqTXqS7JG8NXkkxTOlLOW5hCepkLxMDUzdmzqeFpp2IG0yPTq9MYOSkZBxQqohTZO2Z+pn5mZ2y6xlhbL+xW6Lty8elQfJa7OQrAVZLQq2QqboVFoo1yoHsmdlV2a/zYnKOZarnivN7cyzytuQN5zvn//tEsIS4ZK2pYZLVy0dWOa9rGo5sjxxedsK4xUFK4ZWBqw8uIq2Km3VT6vtV5eufr0mek1rgV7ByoLBtQFr6wtVCuWFfevc1+1dT1gvWd+1YfqGnRs+FYmKrhTbF5cVf9go3HjlG4dvyr+Z3JS0qavEuWTPZtJm6ebeLZ5bDpaql+aXDm4N2dq0Dd9WtO319kXbL5fNKNu7g7ZDuaO/PLi8ZafJzs07P1SkVPRU+lQ27tLdtWHX+G7R7ht7vPY07NXbW7z3/T7JvttVAVVN1WbVZftJ+7P3P66Jqun4lvttXa1ObXHtxwPSA/0HIw6217nU1R3SPVRSj9Yr60cOxx++/p3vdy0NNg1VjZzG4iNwRHnk6fcJ3/ceDTradox7rOEH0x92HWcdL2pCmvKaRptTmvtbYlu6T8w+0dbq3nr8R9sfD5w0PFl5SvNUyWna6YLTk2fyz4ydlZ19fi753GDborZ752PO32oPb++6EHTh0kX/i+c7vDvOXPK4dPKy2+UTV7hXmq86X23qdOo8/pPTT8e7nLuarrlca7nuer21e2b36RueN87d9L158Rb/1tWeOT3dvfN6b/fF9/XfFt1+cif9zsu72Xcn7q28T7xf9EDtQdlD3YfVP1v+3Njv3H9qwHeg89HcR/cGhYPP/pH1jw9DBY+Zj8uGDYbrnjg+OTniP3L96fynQ89kzyaeF/6i/suuFxYvfvjV69fO0ZjRoZfyl5O/bXyl/erA6xmv28bCxh6+yXgzMV70VvvtwXfcdx3vo98PT+R8IH8o/2j5sfVT0Kf7kxmTk/8EA5jz/GMzLdsAAAAgY0hSTQAAeiUAAICDAAD5/wAAgOkAAHUwAADqYAAAOpgAABdvkl/FRgAAAGdJREFUeNp0zLEJg1AAhOEvTwfKJC4gOIER0gZxC+cQSZfeMlPEAYSkDbF5DyTowTX//dypfPzOyOxnyVHheiAUAR1eO+OAe8AHl7/xjQZCBGNsSot5K0Ad357oE8w3wowbJnwTXAcAAVISjzKgWnYAAAAASUVORK5CYII=) no-repeat center right 0px;
+	}
+
+	.starttime-row .groupofpeople .table tbody tr td.price,
+	.starttime-row .groupofpeople .table tbody tr td.final {
+		border: none;
+		min-width: unset !important;
+		text-align: right;
+		height: auto !important;
+		background-color: transparent;
+	}
+
+	/***** Table Responsive End *****/
+}
+
+@media (max-width: 575px) {
+	.payment-row .booking-row {
+		padding: 18px 0px;
+	}
+
+	.status-row {
+		padding: 3px 0px 6px;
+	}
+
+	.starttime-row {
+		padding: 25px 0px;
+	}
+
+	.fee-tax-row {
+		padding: 20px 0px 25px;
+	}
+
+	.date-booking-row .calendardate {
+		max-width: 330px;
+	}
+
+	.starttime-row .select-time .radio-toolbar .time-item {
+		width: 49.2%;
+	}
+
+	.starttime-row .select-time .radio-toolbar .time-item:nth-child(3n+0) {
+		margin-right: 1.426%;
+	}
+
+	.starttime-row .select-time .radio-toolbar .time-item:nth-child(2n+0) {
+		margin-right: 0;
+	}
+
+	.starttime-row .select-time h2,
+	.starttime-row .groupofpeople h2 {
+		font-size: 21px;
+	}
+
+	.hiking-tour-row .content-sec h2 {
+		font-size: 20px;
+	}
+
+	.permit-tax .content-sec h2 {
+		font-size: 20px;
+	}
+
+	/***** Payment Page Start *****/
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-title {
+		font-size: 18px;
+	}
+
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-time {
+		font-size: 18px;
+	}
+
+	.starttime-row .select-time h2,
+	.starttime-row .groupofpeople h2 {
+		font-size: 20px;
+	}
+
+	.payment-form-sec .masks-mandatory-wrp {
+		padding: 15px 20px 15px;
+	}
+
+	.payment-form-sec .masks-mandatory-img {
+		min-width: 75px;
+		margin-right: 20px;
+	}
+
+	/***** Payment Page End *****/
+	/***** Thank You Page Start *****/
+	.thankyou-main-row .invoice-row .top-row .content1 h2 {
+		font-size: 24px;
+	}
+
+	.thankyou-main-row .invoice-row .top-row .content2 h2 {
+		font-size: 22px;
+		margin-bottom: 5px;
+	}
+
+	.thankyou-main-row .invoice-row .top-row .content2 p {
+		font-size: 14px;
+		line-height: 1.3;
+	}
+
+	.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details {
+		padding: 20px 20px 35px;
+	}
+
+	/***** Thank You Page End *****/
+
+	.hotel-section {
+		padding: 13px 15px 0;
+	}
+
+	.hotel-section .hotel-wrapper .hotel-image {
+		text-align: center;
+		margin-right: 0px;
+		margin-bottom: 10px;
+	}
+
+	.tour-packages-edit-wrap {
+		padding: 0 15px 15px;
+	}
+
+	.tour-packages-item .tour-packages-totalcost {
+		padding: 20px 15px 15px 15px;
+	}
+
+	.tour-packages-item .tour-packages-costcount-title {
+		text-align: center;
+	}
+}
+
+@media (max-width: 480px) {
+	.vuejs3-datepicker__calendar {
+		width: 325px !important;
+		max-width: 325px;
+		margin-top: -5px;
+	}
+
+	.tourselected-packages-item .tourselected-detail .tourselected-image {
+		max-width: 315px;
+	}
+
+	.inner-content-section .background-color-sec {
+		margin-bottom: 30px;
+	}
+
+	.innerbanner-row {
+		padding: 16px 0px;
+	}
+
+	.innerbanner-row .title-box h1 {
+		font-size: 25px;
+	}
+
+	.innerbanner-row .title-box .rating {
+		margin-left: 0px;
+	}
+
+	.payment-row .booking-row .booking {
+		display: block;
+		text-align: center;
+	}
+
+	.payment-row .booking-row .booking h2 {
+		margin-bottom: 10px;
+		margin-right: 0px;
+	}
+
+	.payment-row .booking-row .booking .confirmation {
+		width: 100%;
+	}
+
+	.payment-row .booking-row .info .tooltipbtn.btn-info {
+		margin: 0 0 10px;
+	}
+
+	.payment-row .booking-row .info .tooltipbtn {
+		width: 100%;
+	}
+
+	.date-booking-row .calendardate {
+		max-width: 170px;
+	}
+
+	.date-booking-row .selectboxes select#calendaryear {
+		margin-right: 0px;
+	}
+
+	.status-row .status li {
+		padding-left: 14px;
+	}
+
+	.status-row .status li:after {
+		left: 3px;
+	}
+
+	.starttime-row .select-time .radio-toolbar .time-item {
+		width: 100%;
+		margin: 0 0 10px;
+	}
+
+	.starttime-row .groupofpeople .booknowbtn button {
+		width: 100%;
+	}
+
+	.hiking-tour-row {
+		padding: 30px 0px 30px;
+	}
+
+	.tour-start-row .duration {
+		padding: 21px 15px 25px;
+	}
+
+	.tour-start-row .whattobring {
+		padding: 21px 15px 25px;
+	}
+
+	/***** Payment Page Start *****/
+	.booking-dt-sec {
+		padding: 20px 0px 0;
+	}
+
+	.booking-dt-sec .booking-dt-wrp .booking-dt-img {
+		padding: 10px 10px 0;
+	}
+
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail {
+		padding: 10px;
+	}
+
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-title {
+		font-size: 16px;
+		margin-bottom: 5px;
+	}
+
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-time {
+		font-size: 16px;
+		margin-bottom: 10px;
+	}
+
+	.booking-dt-sec .booking-dt-wrp .booking-dt-detail-btn a {
+		font-size: 14px;
+		padding: 8px 10px;
+	}
+
+	.payment-form-sec .masks-mandatory-wrp {
+		display: block !important;
+		padding: 15px;
+	}
+
+	.payment-form-sec .masks-mandatory-img {
+		margin-right: 0;
+		text-align: center;
+		margin-bottom: 15px;
+	}
+
+	.payment-form-sec label.checkbox-wrap {
+		font-size: 16px;
+	}
+
+	.payment-form-sec .masks-mandatory-notice {
+		font-size: 12px;
+		line-height: 16px;
+	}
+
+	.payment-form-sec {
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	.payment-form-sec .form-field-wrp {
+		padding: 15px 10px 10px 10px;
+	}
+
+	.payment-form-sec .form-field-wrp input {
+		height: 20px;
+	}
+
+	.payment-form-sec .form-field-wrp label.checkbox-wrap {
+		font-size: 12px;
+		line-height: 18px;
+	}
+
+	.payment-form-sec .policy-item-wrp ul li {
+		font-size: 14px;
+		line-height: 19px;
+	}
+
+	.payment-form-sec .policy-item-wrp ul li:last-child {
+		margin-bottom: 0;
+	}
+
+	.payment-form-sec .form-field-wrp input {
+		padding: 5px 32px;
+	}
+
+	.payment-form-sec .form-field-wrp .phone-wrap input {
+		padding-left: 32px !important;
+	}
+
+	/***** Payment Page End *****/
+	/***** Thank You Page Start *****/
+	.thankyou-main-row .status-bar-row .sucessmsg {
+		display: block;
+		text-align: center;
+	}
+
+	.thankyou-main-row .status-bar-row .sucessmsg .images {
+		margin-right: 0;
+		margin-bottom: 15px;
+	}
+
+	.thankyou-main-row .status-bar-row .sucessmsg .content h2 {
+		margin-bottom: 10px;
+	}
+
+	.thankyou-main-row .invoice-row .top-row .content1 p {
+		font-size: 14px;
+		margin-bottom: 20px;
+	}
+
+	.thankyou-main-row .invoice-row .top-row .booking-details-inner .invoice-details h2 {
+		font-size: 20px;
+	}
+
+	.thankyou-main-row .invoice-row {
+		padding: 27px 0px 20px;
+	}
+
+	/***** Thank You Page End *****/
+	.total-cost-col {
+		padding-right: calc(var(--bs-gutter-x) * .5);
+		padding-left: calc(var(--bs-gutter-x) * .5);
+	}
+
+	.total-cost-col .totalcost [class*="col-"] {
+		font-size: 22px;
+	}
+
+	.thankyou-main-row .invoice-row .top-row .booking-summery p .printbtn {
+		position: relative;
+		display: block;
+		margin-top: 15px;
+		margin-left: auto;
+	}
+}
+
+@media (max-width: 360px) {
+	.vuejs3-datepicker__calendar {
+		width: 250px !important;
+		max-width: 250px;
+	}
+
+	.total-cost-col .totalcost [class*="col-"] {
+		font-size: 20px;
+	}
+
+	.total-cost-col .totalcost [class*="col-"] span {
+		font-size: 11px;
+	}
 }

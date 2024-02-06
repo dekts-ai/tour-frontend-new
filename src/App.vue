@@ -8,10 +8,11 @@
 import axios from "axios";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
-import {getUTCDateFromTimeZone} from './utils/dateUtils';
+import { getUTCDateFromTimeZone } from './utils/dateUtils';
 
 export default {
   name: "App",
+  title: "Native American Tours",
   components: {
     Header,
     Footer
@@ -25,6 +26,7 @@ export default {
       tourOperatorId: 1,
       packageId: 0,
       affiliateId: 0,
+      comboIds: 0,
       date: null
     }
   },
@@ -37,6 +39,7 @@ export default {
       this.tourOperatorId = params.get("oid") !== null ? params.get("oid") : 1;
       this.packageId = params.get("pid") !== null ? params.get("pid") : 0;
       this.affiliateId = params.get("aid") !== null ? params.get("aid") : 0;
+      this.comboIds = params.get("cids") !== null ? params.get("cids") : 0;
     } else {
       this.iframeStatus = false;
     }
@@ -45,14 +48,17 @@ export default {
     this.$store.dispatch('storeTourOperatorId', this.tourOperatorId);
     this.$store.dispatch('storePackageId', this.packageId);
     this.$store.dispatch('storeAffiliateId', this.affiliateId);
+    this.$store.dispatch('storeComboIds', this.comboIds);
     this.$store.dispatch('storeIframeStatus', this.iframeStatus);
 
     this.date = getUTCDateFromTimeZone();
     this.$store.dispatch('storeDate', this.date);
 
-    axios.get("/tour-operator-logo/" + this.tourOperatorId).then((response) => {
-      this.TourOperatorLogo = response.data.TourOperatorLogo;
-    });
+    if (this.iframeStatus == false) {
+      axios.get("/tour-operator-logo/" + this.tourOperatorId).then((response) => {
+        this.TourOperatorLogo = response.data.TourOperatorLogo;
+      });
+    }
   }
 };
 </script>

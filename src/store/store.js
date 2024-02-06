@@ -1,22 +1,29 @@
 // store/index.js
 
 import { createStore } from "vuex";
+import { getUTCDateFromTimeZone } from '../utils/dateUtils';
 
 export default createStore({
     state: {
         iframeStatus: false,
-        date: null,
+        date: getUTCDateFromTimeZone(),
         tenantId: 0,
         tourOperatorId: 0,
         packageId: 0,
         affiliateId: 0,
-        bookingId: null,
+        comboIds: 0,
+        bookingIds: {},
         formData: null,
         tourPackage: null,
         tourPackageLogo: null,
         customer: null,
-        slotId: null,
+        slotId: 0,
+        timeDate: null,
         hotelId: 0,
+        cartItem: {},
+        tabs: 1,
+        mindChange: 0,
+        packageOrder: []
     },
     getters: {
         iframeStatus: state => {
@@ -37,8 +44,11 @@ export default createStore({
         affiliateId: state => {
             return state.affiliateId;
         },
-        bookingId: state => {
-            return state.bookingId;
+        comboIds: state => {
+            return state.comboIds;
+        },
+        bookingIds: state => {
+            return state.bookingIds;
         },
         formData: state => {
             return state.formData;
@@ -55,8 +65,23 @@ export default createStore({
         slotId: state => {
             return state.slotId;
         },
+        timeDate: state => {
+            return state.timeDate;
+        },
         hotelId: state => {
             return state.hotelId;
+        },
+        cartItem: state => {
+            return state.cartItem;
+        },
+        tabs: state => {
+            return state.tabs;
+        },
+        mindChange: state => {
+            return state.mindChange;
+        },
+        packageOrder: state => {
+            return state.packageOrder;
         }
     },
     mutations: {
@@ -78,8 +103,11 @@ export default createStore({
         AFFILIATE_ID(state, affiliateId) {
             state.affiliateId = affiliateId;
         },
-        BOOKING_ID(state, bookingId) {
-            state.bookingId = bookingId;
+        COMBO_IDS(state, comboIds) {
+            state.comboIds = comboIds;
+        },
+        BOOKING_IDS(state, bookingIds) {
+            state.bookingIds = bookingIds;
         },
         FORM_DATA(state, formData) {
             state.formData = formData;
@@ -96,9 +124,24 @@ export default createStore({
         SLOT_ID(state, slotId) {
             state.slotId = slotId;
         },
+        TIME_DATE(state, timeDate) {
+            state.timeDate = timeDate;
+        },
         HOTEL_ID(state, hotelId) {
             state.hotelId = hotelId;
         },
+        CART_ITEM(state, cartItem) {
+            state.cartItem = cartItem;
+        },
+        TABS(state, tabs) {
+            state.tabs = tabs;
+        },
+        MIND_CHANGE(state, mindChange) {
+            state.mindChange = mindChange;
+        },
+        PACKAGE_ORDER(state, packageOrder) {
+            state.packageOrder = packageOrder;
+        }
     },
     actions: {
         storeIframeStatus({ commit }, iframeStatus) {
@@ -119,8 +162,11 @@ export default createStore({
         storeAffiliateId({ commit }, affiliateId) {
             commit('AFFILIATE_ID', affiliateId);
         },
-        storeBookingId({ commit }, bookingId) {
-            commit('BOOKING_ID', bookingId);
+        storeComboIds({ commit }, comboIds) {
+            commit('COMBO_IDS', comboIds);
+        },
+        storeBookingIds({ commit }, bookingIds) {
+            commit('BOOKING_IDS', bookingIds);
         },
         storeFormData({ commit }, formData) {
             commit('FORM_DATA', formData);
@@ -137,8 +183,23 @@ export default createStore({
         storeSlotId({ commit }, slotId) {
             commit('SLOT_ID', slotId);
         },
+        storeTimeDate({ commit }, timeDate) {
+            commit('TIME_DATE', timeDate);
+        },
         storeHotelId({ commit }, hotelId) {
             commit('HOTEL_ID', hotelId);
         },
+        storeCartItem({ commit }, cartItem) {
+            commit('CART_ITEM', cartItem);
+        },
+        storeTabs({ commit }, tabs) {
+            commit('TABS', tabs);
+        },
+        storeMindChange({ commit }, mindChange) {
+            commit('MIND_CHANGE', mindChange);
+        },
+        storePackageOrder({ commit }, packageOrder) {
+            commit('PACKAGE_ORDER', packageOrder);
+        }
     }
 });
