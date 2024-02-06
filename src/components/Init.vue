@@ -502,7 +502,6 @@ export default {
             console.log('selectedDate');
 
             var loader = this.$loading.show();
-            this.noSlotFound = null;
             this.form.date = date;
             this.dateTimeArr = [];
             this.errors = [];
