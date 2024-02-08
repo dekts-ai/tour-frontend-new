@@ -137,7 +137,7 @@ export default {
                 this.checkPackageIds.push(pId);
             }
         }
-        this.bookings = [];
+
         this.bookings = this.generateTimeSlots();
 
         this.$store.dispatch('storeTabs', this.tabs);
@@ -158,9 +158,9 @@ export default {
             });
         },
         generateTimeSlots() {
-            const startTime = '05:30:00';
-            const endTime = '18:30:00';
-            const interval = 30; // in minutes
+            const startTime = '05:45:00';
+            const endTime = '21:45:00';
+            const interval = 15; // in minutes
 
             this.bookings = [];
             let currentTime = startTime;
@@ -173,7 +173,7 @@ export default {
                     .padStart(2, '0')}:${(totalMinutes % 60).toString().padStart(2, '0')}:00`;
 
                 let bookingsForCurrentTime = [];
-                
+
                 if (this.cartItemLength) {
                     for (var key in this.cartItem) {
                         if (this.cartItem[key].slot_time == currentTime) {

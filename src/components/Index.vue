@@ -55,7 +55,7 @@
                                 :prevent-disable-date-selection="true"
                                 @selected="selectedDate">
                             </datepicker>
-                        </div>    
+                        </div>
                     </div>
                 </div>
             </div>
