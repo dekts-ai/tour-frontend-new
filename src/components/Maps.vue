@@ -100,7 +100,7 @@
                                             <div class="details-box mb-3 mb-lg-0">
                                                 <div class="title-wrap d-flex justify-content-between align-items-center">
                                                     <div class="tour-title">{{ item.package_name }}</div>
-                                                    <div class="tour-time">{{ item.duration }} Tour</div>
+                                                    <div class="tour-time">{{ item.duration }} {{ item.category }}</div>
                                                 </div>
                                                 <p class="date-time">{{ dateFormat(item.date) }} @ {{ item.time_date }}</p>
                                                 <p class="details-text">{{ item.long_description }}</p>
