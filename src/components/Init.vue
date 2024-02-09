@@ -368,7 +368,9 @@ export default {
                 duration: "",
                 slot_time: null,
                 latitude: null,
-                longitude: null
+                longitude: null,
+                category: 'Tour',
+                travel_duration: '02:00:00'
             },
             with_rate_groups: 1,
             tabs: 2
@@ -416,7 +418,7 @@ export default {
                     if (this.comboIds != 0 && this.cartItemLength) {
                         this.blockedTimes = {};
                         for (const key in this.cartItem) {
-                            this.generateTimeArray(this.cartItem[key], '02:00:00');
+                            this.generateTimeArray(this.cartItem[key]);
                         }
 
                         for (let packageId in this.blockedTimes) {
@@ -478,6 +480,8 @@ export default {
                     this.form.duration = response.data.tourPackageData[0].duration;
                     this.form.latitude = response.data.tourPackageData[0].latitude;
                     this.form.longitude = response.data.tourPackageData[0].longitude;
+                    this.form.category = response.data.tourPackageData[0].category;
+                    this.form.travel_duration = response.data.tourPackageData[0].travel_duration;
 
                     // Define Variables
                     var v1 = this.totalavailableseats;
@@ -527,7 +531,7 @@ export default {
                 if (this.comboIds != 0 && this.cartItemLength) {
                     this.blockedTimes = {};
                     for (const key in this.cartItem) {
-                        this.generateTimeArray(this.cartItem[key], '02:00:00');
+                        this.generateTimeArray(this.cartItem[key]);
                     }
 
                     for (let packageId in this.blockedTimes) {
@@ -767,13 +771,14 @@ export default {
                 // this.processLoader(loader);
             });
         },
-        generateTimeArray(cartItem, offsetValue) {
+        generateTimeArray(cartItem) {
             var packageId = cartItem.package_id;
             var date = cartItem.date;
             var time = cartItem.slot_time;
+            var offset = cartItem.travel_duration;
 
             const timeFormat = 'HH:mm:ss';
-            const [offsetHours, offsetMinutes] = offsetValue.split(':').map(Number);
+            const [offsetHours, offsetMinutes] = offset.split(':').map(Number);
             const timeBefore = this.calculateTime(time, -offsetHours, -offsetMinutes, timeFormat);
             const timeAfter = this.calculateTime(time, offsetHours, offsetMinutes, timeFormat);
 
@@ -790,7 +795,13 @@ export default {
             const time = new Date(`2000-01-01T${timeValue}`);
             time.setHours(time.getHours() + hoursToAdd);
             time.setMinutes(time.getMinutes() + minutesToAdd);
-            return time.toLocaleTimeString('en-US', {hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit'});
+
+            return time.toLocaleTimeString('en-US', {
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
         }
     }
 };
