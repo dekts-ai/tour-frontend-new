@@ -552,6 +552,10 @@ ul {
 	right: 0;
 }
 
+.vuejs3-datepicker__calendar-topbar {
+	display: none;
+}
+
 .vuejs3-datepicker__value {
 	border: 1px solid #cbcbcb;
 	border-radius: 3px 3px 0px 0px;
