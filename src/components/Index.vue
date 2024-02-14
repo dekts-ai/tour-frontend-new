@@ -296,13 +296,33 @@ export default {
     },
     methods: {
         bookNow(tid, oid, pid) {
+            if (this.comboIds) {
+                const strCids = this.comboIds.split(",");
+                const isPackageSelected = this.checkPackageIds.includes(parseInt(strCids[0])) || strCids[0] == pid;
+
+                if (isPackageSelected) {
+                    this.handlePackageSelection(tid, oid, pid);
+                } else {
+                    this.showPackageSelectionInfo();
+                }
+            } else {
+                this.handlePackageSelection(tid, oid, pid);
+            }
+        },
+        handlePackageSelection(tid, oid, pid) {
             this.$store.dispatch('storeTenantId', tid);
             this.$store.dispatch('storeTourOperatorId', oid);
             this.$store.dispatch('storePackageId', pid);
             this.$store.dispatch('storeFormData', null);
 
-            this.$router.push({
-                name: 'Init'
+            this.$router.push({ name: 'Init' });
+        },
+        showPackageSelectionInfo() {
+            Swal.fire({
+                toast: true,
+                title: 'Info!',
+                html: `In order to proceed, please first schedule a lower antelope canyon tour package.`,
+                icon: 'info',
             });
         },
         navigateToTab(tab, destination) {
