@@ -66,31 +66,44 @@
                                 </div>
 
                                 <div class="tourlist-packages-wrap h-100">
-                                    <div class="timeline">
-                                        <ul>
-                                            <li v-for="item in bookings" :class="{ 'booking': item.booking, 'no-booking': !item.booking }">
-                                                <div class="left_content">
-                                                    <h3>{{ item.time }}</h3>
-                                                </div>
-                                                <div v-if="item.booking" class="right_content">
-                                                    <div class="d-lg-flex justify-content-between align-items-center">
-                                                        <p class="mb-lg-0 mb-2">{{ item.data.package_name }}</p>
-                                                        <p>{{ item.data.duration }} {{ item.data.category }}</p>
+                                    <div class="accordion" id="accordionExample">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingOne">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                    Wed, February 14, 2024
+                                                </button>
+                                            </h2>
+                                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body p-0">
+                                                    <div class="timeline">
+                                                        <ul>
+                                                            <li v-for="item in bookings" :class="{ 'booking': item.booking, 'no-booking': !item.booking }">
+                                                                <div class="left_content">
+                                                                    <h3>{{ item.time }}</h3>
+                                                                </div>
+                                                                <div v-if="item.booking" class="right_content">
+                                                                    <div class="d-lg-flex justify-content-between align-items-center">
+                                                                        <p class="mb-lg-0 mb-2">{{ item.data.package_name }}</p>
+                                                                        <p>{{ item.data.duration }} {{ item.data.category }}</p>
+                                                                    </div>
+                                                                    <div class="d-md-flex mt-2">
+                                                                        <img :src="item.data.package_image" width="100" height="100" alt="">
+                                                                        <div class="content-box">
+                                                                            <p class="mb-2">{{ dateFormat(item.data.date) }} @ {{ item.data.time_date }}</p>
+                                                                            <p class="mb-2" v-for="(pax, key) in item.data.people_group" :key="key">
+                                                                                <span v-if="pax > 0">{{ pax }} {{ item.data.rate_group[key] }}</span>
+                                                                            </p>
+                                                                            <small class="text-muted">{{ item.data.short_description }}</small>
+                                                                        </div>
+                                                                    </div>
+                                                                    <a role="button" @click="editPackage(item.data)" class="update">Update</a>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
                                                     </div>
-                                                    <div class="d-md-flex mt-2">
-                                                        <img :src="item.data.package_image" width="100" height="100" alt="">
-                                                        <div class="content-box">
-                                                            <p class="mb-2">{{ dateFormat(item.data.date) }} @ {{ item.data.time_date }}</p>
-                                                            <p class="mb-2" v-for="(pax, key) in item.data.people_group" :key="key">
-                                                                <span v-if="pax > 0">{{ pax }} {{ item.data.rate_group[key] }}</span>
-                                                            </p>
-                                                            <small class="text-muted">{{ item.data.short_description }}</small>
-                                                        </div>
-                                                    </div>
-                                                    <a role="button" @click="editPackage(item.data)" class="update">Update</a>
                                                 </div>
-                                            </li>
-                                        </ul>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -164,6 +177,7 @@ export default {
 
             this.bookings = [];
             let currentTime = startTime;
+            let consecutiveNullCount = 0;
 
             while (currentTime <= endTime) {
                 const [hours, minutes] = currentTime.split(':').map(Number);
@@ -187,13 +201,17 @@ export default {
                 }
 
                 if (bookingsForCurrentTime.length > 0) {
+                    consecutiveNullCount = 0;
                     this.bookings = this.bookings.concat(bookingsForCurrentTime);
                 } else {
-                    this.bookings.push({
-                        time: this.formatTime(currentTime),
-                        booking: false,
-                        data: null
-                    });
+                    if (consecutiveNullCount < 2) {
+                        consecutiveNullCount++;
+                        this.bookings.push({
+                            time: this.formatTime(currentTime),
+                            booking: false,
+                            data: null
+                        });
+                    }
                 }
             }
 
