@@ -67,17 +67,17 @@
 
                                 <div class="tourlist-packages-wrap h-100">
                                     <div class="accordion" id="accordionExample">
-                                        <div class="accordion-item">
-                                            <h2 class="accordion-header" id="headingOne">
-                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                    Wed, February 14, 2024
+                                        <div class="accordion-item" v-for="(value, key, index) in bookings" :key="key">
+                                            <h2 class="accordion-header" :id="'heading-'+index">
+                                                <button class="accordion-button" :class="index ? 'collapsed' : ''" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse-'+index" aria-expanded="true" :aria-controls="'collapse-'+index">
+                                                    {{ formatDate(key) }}
                                                 </button>
                                             </h2>
-                                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                            <div :id="'collapse-'+index" class="accordion-collapse collapse" :class="index ? '' : 'show'" :aria-labelledby="'heading-'+index" data-bs-parent="#accordionExample">
                                                 <div class="accordion-body p-0">
                                                     <div class="timeline">
                                                         <ul>
-                                                            <li v-for="item in bookings" :class="{ 'booking': item.booking, 'no-booking': !item.booking }">
+                                                            <li v-for="item in value" :class="{ 'booking': item.booking, 'no-booking': !item.booking }">
                                                                 <div class="left_content">
                                                                     <h3>{{ item.time }}</h3>
                                                                 </div>
@@ -116,6 +116,7 @@
 </template>
 
 <script>
+import { format } from 'date-fns';
 export default {
     name: "MyTrip",
     title: "Native American Tours",
@@ -175,47 +176,61 @@ export default {
             const endTime = '21:45:00';
             const interval = 15; // in minutes
 
-            this.bookings = [];
-            let currentTime = startTime;
-            let consecutiveNullCount = 0;
+            // Initialize an empty object to hold bookings by date
+            const bookingsByDate = {};
 
-            while (currentTime <= endTime) {
-                const [hours, minutes] = currentTime.split(':').map(Number);
-                const totalMinutes = hours * 60 + minutes + interval;
-                currentTime = `${Math.floor(totalMinutes / 60)
-                    .toString()
-                    .padStart(2, '0')}:${(totalMinutes % 60).toString().padStart(2, '0')}:00`;
-
-                let bookingsForCurrentTime = [];
-
-                if (this.cartItemLength) {
-                    for (var key in this.cartItem) {
-                        if (this.cartItem[key].slot_time == currentTime) {
-                            bookingsForCurrentTime.push({
-                                time: this.formatTime(currentTime),
-                                booking: true,
-                                data: this.cartItem[key]
-                            });
-                        }
-                    }
-                }
-
-                if (bookingsForCurrentTime.length > 0) {
-                    consecutiveNullCount = 0;
-                    this.bookings = this.bookings.concat(bookingsForCurrentTime);
-                } else {
-                    if (consecutiveNullCount < 2) {
-                        consecutiveNullCount++;
-                        this.bookings.push({
-                            time: this.formatTime(currentTime),
-                            booking: false,
-                            data: null
-                        });
-                    }
+            // Extract unique dates from cart items
+            const dates = [];
+            for (const key in this.cartItem) {
+                const date = format(this.cartItem[key].date, 'yyyy-MM-dd');
+                if (!dates.includes(date)) {
+                    dates.push(date);
                 }
             }
 
+            // Initialize bookings array for each date
+            dates.forEach(date => {
+                bookingsByDate[date] = [];
+            });
+
+            // Loop through each cart item
+            for (const key in this.cartItem) {
+                const currentItem = this.cartItem[key];
+                const currentDate = format(currentItem.date, 'yyyy-MM-dd');
+
+                // Loop through time slots within the date range
+                let currentTime = startTime;
+                while (currentTime <= endTime) {
+                    const [hours, minutes] = currentTime.split(':').map(Number);
+                    const totalMinutes = hours * 60 + minutes;
+                    const slotTime = `${Math.floor(totalMinutes / 60)
+                        .toString()
+                        .padStart(2, '0')}:${(totalMinutes % 60).toString().padStart(2, '0')}:00`;
+
+                    // Check if the current time slot matches the cart item's time
+                    if (currentItem.slot_time === slotTime) {
+                        // Push the booking into the array for the current date
+                        bookingsByDate[currentDate].push({
+                            time: this.formatTime(slotTime),
+                            booking: true,
+                            data: currentItem
+                        });
+                    }
+
+                    // Increment time by interval
+                    const nextTime = new Date(`2000-01-01T${currentTime}`);
+                    nextTime.setMinutes(nextTime.getMinutes() + interval);
+                    currentTime = nextTime.toTimeString().slice(0, 8);
+                }
+            }
+
+            this.bookings = bookingsByDate;
+
             return this.bookings;
+        },
+        formatDate(dateString) {
+            var date = new Date(dateString);
+            return format(date, 'EEE, MMMM d, yyyy');
         },
         formatTime(timeString) {
             const [hours, minutes, seconds] = timeString.split(':').map(Number);
