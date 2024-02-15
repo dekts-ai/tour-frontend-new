@@ -236,9 +236,21 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
-                                                    <div class="booknowbtn text-end">
-                                                        <button type="submit">Continue</button>
-                                                        <!-- <button @click="addToCart" class="m-1">Add to Cart</button> -->
+
+                                                    <div class="row">
+                                                        <div class="col-6 text-start">
+                                                            <div v-if="form.questions.length">
+                                                                <h2 class="mb-2">Your Input Matters:</h2>
+                                                                <div class="form-group text-start" v-for="(data, index) in form.questions" :key="index">
+                                                                    <label for="questions" class="col-form-label">{{ data.question }} <span class="required-star">*</span></label>
+                                                                    <input type="text" v-model="form.answers[index]" :id="'answers-'+index" class="form-control" placeholder="Please type your answer ...">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6 booknowbtn text-end">
+                                                            <button type="submit">Continue</button>
+                                                            <!-- <button @click="addToCart" class="m-1">Add to Cart</button> -->
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -370,7 +382,9 @@ export default {
                 latitude: null,
                 longitude: null,
                 category: 'Tour',
-                travel_duration: '02:00:00'
+                travel_duration: '02:00:00',
+                questions: [],
+                answers: [],
             },
             with_rate_groups: 1,
             tabs: 2
@@ -471,8 +485,9 @@ export default {
                     this.$store.dispatch('storeTourPackage', response.data)
                     this.tourPackageName = response.data.tourPackageData[0].package_name;
                     this.details = this.$store.state.tourPackage;
+                    this.hotels = response.data.hotels;
                     this.details.tourPackageRateGroups = this.details.tourPackageRateGroups[this.form.package_id];
-                    this.hotels = this.$store.state.tourPackage?.hotels;
+
                     this.form.service_commission = this.$store.state.tourPackage.tourPackageData[0].service_commission_percentage;
                     this.form.things_to_bring = response.data.thingsToBring;
                     this.form.short_description = response.data.tourPackageData[0].short_description;
@@ -482,6 +497,7 @@ export default {
                     this.form.longitude = response.data.tourPackageData[0].longitude;
                     this.form.category = response.data.tourPackageData[0].category;
                     this.form.travel_duration = response.data.tourPackageData[0].travel_duration;
+                    this.form.questions = response.data.questions;
 
                     // Define Variables
                     var v1 = this.totalavailableseats;
