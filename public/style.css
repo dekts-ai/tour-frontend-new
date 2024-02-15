@@ -345,6 +345,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 /* slider right arrow end */
 
 .pe-auto { cursor: pointer;}
+.required-star {color: #EF5B53;}
 
 .tour-packages-wrap input, 
 .tour-packages-wrap input:focus {outline: none;}
