@@ -73,13 +73,13 @@
                                                     {{ formatDate(key) }}
                                                 </button>
                                             </h2>
-                                            <div :id="'collapse-'+index" class="accordion-collapse collapse" :class="index ? '' : 'show'" :aria-labelledby="'heading-'+index" data-bs-parent="#accordionExample">
+                                            <div :id="'collapse-'+index" class="accordion-collapse collapse show" :aria-labelledby="'heading-'+index" data-bs-parent="#accordionExample">
                                                 <div class="accordion-body p-0">
                                                     <div class="timeline">
                                                         <ul>
                                                             <li v-for="item in value" :class="{ 'booking': item.booking, 'no-booking': !item.booking }">
                                                                 <div class="left_content">
-                                                                    <h3>{{ item.time }}</h3>
+                                                                    <h3>{{ item.slot_time }}</h3>
                                                                 </div>
                                                                 <div v-if="item.booking" class="right_content">
                                                                     <div class="d-lg-flex justify-content-between align-items-center">
@@ -211,7 +211,8 @@ export default {
                     if (currentItem.slot_time === slotTime) {
                         // Push the booking into the array for the current date
                         bookingsByDate[currentDate].push({
-                            time: this.formatTime(slotTime),
+                            time: slotTime,
+                            slot_time: this.formatTime(slotTime),
                             booking: true,
                             data: currentItem
                         });
@@ -222,6 +223,16 @@ export default {
                     nextTime.setMinutes(nextTime.getMinutes() + interval);
                     currentTime = nextTime.toTimeString().slice(0, 8);
                 }
+            }
+
+            for (const date in bookingsByDate) {
+                // Sort the bookings array by time
+                bookingsByDate[date].sort((a, b) => {
+                    // Sort based on time
+                    const timeA = new Date(`2000-01-01T${a.time}`);
+                    const timeB = new Date(`2000-01-01T${b.time}`);
+                    return timeA - timeB;
+                });
             }
 
             this.bookings = bookingsByDate;
