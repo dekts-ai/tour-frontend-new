@@ -320,7 +320,6 @@ export default {
         showPackageSelectionInfo() {
             Swal.fire({
                 toast: true,
-                title: 'Info!',
                 html: `In order to proceed, please first schedule a lower antelope canyon tour package.`,
                 icon: 'info',
             });
@@ -340,7 +339,6 @@ export default {
             } else {
                 Swal.fire({
                     toast: true,
-                    title: 'Info!',
                     html: `In order to proceed with ${destination.toLowerCase()}, please select package.`,
                     icon: 'info',
                 });

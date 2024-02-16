@@ -722,7 +722,6 @@ export default {
             } else {
                 Swal.fire({
                     toast: true,
-                    title: 'Info!',
                     html: `In order to proceed with ${destination.toLowerCase()}, please schedule a trip.`,
                     icon: 'info',
                 });
