@@ -264,39 +264,62 @@ ul {
 }
 
 /* My Trip  */
-.timeline{position:relative; margin: 50px auto; padding:0px 0px 50px; height: 100%; }
-.timeline:before {content: ''; position:absolute; height:100%; left:50%; width:2px; top:-20px; background:#808080; }
+.timeline{position:relative; margin: 0px auto; padding:0px 0px 50px; height: 100%; }
+.timeline .date-title {position: absolute; left: 33%;}
+/* .timeline:before {content: ''; position:absolute; height:100%; left:50%; width:2px; top:-20px; background:#808080; } */
 .timeline ul{margin:0; padding:0 ; }
 .timeline ul li{list-style:none; box-sizing:border-box; line-height:normal; position:relative; width:50%; padding: 25px 70px 25px 25px;}
 
-
 .timeline ul li:nth-child(odd){float:left; text-align:right; clear:both;  }
 .timeline ul li:nth-child(even){float:right; text-align:right; clear:both; padding: 25px 25px 25px 70px; }
-
-.left_content{
-  padding-bottom:20px;
-}
-
-
-
+.timeline ul li:last-child {margin-bottom: 50px;}
+.left_content{padding-bottom:20px;}
 
 .timeline ul li:before {
-  content: '';
-  position:absolute;
-  width:20px;
-  height:20px;
-  background: #fff;
-  border: 1px solid #808080;  
-  border-radius:50%;
-  top:25px;
-  z-index:1;
+	content: '';
+	position:absolute;
+	width:20px;
+	height:20px;
+	background: #fff;
+	border: 1px solid #808080;  
+	border-radius:50%;
+	top:25px;
+  	z-index:1;
 }
 .timeline ul li.booking:before {background: #fb7e05; }
 .timeline ul li:nth-child(odd):before{right:-10px;}
 .timeline ul li:nth-child(even):before{left:-10px;}
-
-
-
+.timeline ul li::after {
+	content: '';
+	height: 100%;
+	width: 1px;
+	background-color: #808080;
+	position: absolute;
+	top: 0;
+}
+.timeline ul li:nth-child(odd):after{right:-1px;}
+.timeline ul li:nth-child(even):after{left:0;}
+.tourlist-packages-wrap .accordion .accordion-item .accordion-button {height: 50px;}
+.tourlist-packages-wrap .accordion .accordion-item .accordion-button:hover, .tourlist-packages-wrap .accordion .accordion-item .accordion-button:not(.collapsed) {
+	background: #fb7e05;
+	color: #ffffff;
+	border: 1px solid #fb7e05;
+	border-radius: 5px;
+	box-shadow: -1px -3px 0px 0px rgb(0 0 0 / 12%) inset;
+	transition: all .4s ease-in-out;
+}
+.tourlist-packages-wrap .accordion .accordion-item .accordion-button::after {
+	position: absolute;
+	right: 20px;
+	top: calc(50% - 10px);
+	box-shadow: -1px -3px 0px 0px rgb(0 0 0 / 12%) inset;
+	background-color: #fff;
+	padding: 10px;
+	width: 25px;
+	height: 25px;
+	background-position: center;
+	border-radius: 3px;
+}
 
 /* @media (max-width: 1000px){
   .timeline{width:100%; }
@@ -550,6 +573,10 @@ ul {
 
 .vuejs3-datepicker__calendar {
 	right: 0;
+}
+
+.vuejs3-datepicker__calendar-topbar {
+	display: none;
 }
 
 .vuejs3-datepicker__value {

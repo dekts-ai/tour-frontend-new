@@ -236,9 +236,21 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
-                                                    <div class="booknowbtn text-end">
-                                                        <button type="submit">Continue</button>
-                                                        <!-- <button @click="addToCart" class="m-1">Add to Cart</button> -->
+
+                                                    <div class="row">
+                                                        <div class="col-6 text-start">
+                                                            <div v-if="form.questions.length">
+                                                                <h2 class="mb-2">Your Input Matters:</h2>
+                                                                <div class="form-group text-start" v-for="(data, index) in form.questions" :key="index">
+                                                                    <label for="questions" class="col-form-label">{{ data.question }} <span class="required-star">*</span></label>
+                                                                    <input type="text" v-model="form.answers[index]" :id="'answers-'+index" class="form-control" placeholder="Please type your answer ...">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6 booknowbtn text-end">
+                                                            <button type="submit">Continue</button>
+                                                            <!-- <button @click="addToCart" class="m-1">Add to Cart</button> -->
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -335,7 +347,7 @@ export default {
             dateTimeArr: [],
             peopleselects: [],
             begins: null,
-            blockedTimes: [],
+            blockedTimes: {},
             errors: [],
             form: {
                 iframeStatusInfo: false,
@@ -368,7 +380,11 @@ export default {
                 duration: "",
                 slot_time: null,
                 latitude: null,
-                longitude: null
+                longitude: null,
+                category: 'Tour',
+                travel_duration: '02:00:00',
+                questions: [],
+                answers: [],
             },
             with_rate_groups: 1,
             tabs: 2
@@ -398,22 +414,6 @@ export default {
             this.form.date = this.getStartDate();
         }
 
-        // if (this.comboIds != 0) {
-        //     for (const key in this.cartItem) {
-        //         if (this.form.package_id != this.cartItem[key].package_id) {
-        //             this.blockedTimes.push(this.cartItem[key].slot_time);
-        //         } else {
-        //             this.blockedTimes.filter(function(e) {
-        //                 return e != this.cartItem[key].slot_time
-        //             });
-        //         }
-        //     }
-        //     console.log(this.blockedTimes)
-        //     this.packageOrder = this.packageOrder.push(this.form.package_id);
-        //     this.$store.dispatch('storePackageOrder', this.packageOrder);
-        //     this.bufferTimes(this.form.package_id);
-        // }
-
         this.configure();
     },
     methods: {
@@ -426,8 +426,36 @@ export default {
             axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id)
                 .then((response) => {
                     this.begins = response.data.begins;
-                    const filteredArray = response.data.Time.filter(slot => !this.blockedTimes.includes(slot.slot_time));
-                    this.dateTimeArr = filteredArray;
+
+                    var slotTimes = response.data.Time
+
+                    if (this.comboIds != 0 && this.cartItemLength) {
+                        this.blockedTimes = {};
+                        for (const key in this.cartItem) {
+                            this.generateTimeArray(this.cartItem[key]);
+                        }
+
+                        for (let packageId in this.blockedTimes) {
+                            if (this.blockedTimes.hasOwnProperty(packageId)) {
+                                let packageData = this.blockedTimes[packageId];
+                                if (packageData.date == date) {
+                                    slotTimes = slotTimes.filter(element => {
+                                        // Convert element.slot_time to Date object for comparison
+                                        let slotTime = new Date(`2000-01-01T${element.slot_time}`);
+
+                                        // Convert packageData.time to Date objects for comparison
+                                        let startTime = new Date(`2000-01-01T${packageData.time[0]}`);
+                                        let endTime = new Date(`2000-01-01T${packageData.time[1]}`);
+
+                                        // Check if slotTime falls within the time range
+                                        return !(slotTime >= startTime && slotTime <= endTime);
+                                    });
+                                }
+                            }
+                        }
+                    }
+
+                    this.dateTimeArr = slotTimes;
                     this.totalavailableseats = response.data.TotalAvailableSeats;
                     this.selectgrouppeoples = [];
                     var seats = this.totalavailableseats;
@@ -457,8 +485,9 @@ export default {
                     this.$store.dispatch('storeTourPackage', response.data)
                     this.tourPackageName = response.data.tourPackageData[0].package_name;
                     this.details = this.$store.state.tourPackage;
+                    this.hotels = response.data.hotels;
                     this.details.tourPackageRateGroups = this.details.tourPackageRateGroups[this.form.package_id];
-                    this.hotels = this.$store.state.tourPackage?.hotels;
+
                     this.form.service_commission = this.$store.state.tourPackage.tourPackageData[0].service_commission_percentage;
                     this.form.things_to_bring = response.data.thingsToBring;
                     this.form.short_description = response.data.tourPackageData[0].short_description;
@@ -466,6 +495,9 @@ export default {
                     this.form.duration = response.data.tourPackageData[0].duration;
                     this.form.latitude = response.data.tourPackageData[0].latitude;
                     this.form.longitude = response.data.tourPackageData[0].longitude;
+                    this.form.category = response.data.tourPackageData[0].category;
+                    this.form.travel_duration = response.data.tourPackageData[0].travel_duration;
+                    this.form.questions = response.data.questions;
 
                     // Define Variables
                     var v1 = this.totalavailableseats;
@@ -510,7 +542,35 @@ export default {
 
             axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id).then((response) => {
                 this.begins = response.data.begins;
-                this.dateTimeArr = response.data.Time;
+                var slotTimes = response.data.Time
+
+                if (this.comboIds != 0 && this.cartItemLength) {
+                    this.blockedTimes = {};
+                    for (const key in this.cartItem) {
+                        this.generateTimeArray(this.cartItem[key]);
+                    }
+
+                    for (let packageId in this.blockedTimes) {
+                        if (this.blockedTimes.hasOwnProperty(packageId)) {
+                            let packageData = this.blockedTimes[packageId];
+                            if (packageData.date == date) {
+                                slotTimes = slotTimes.filter(element => {
+                                    // Convert element.slot_time to Date object for comparison
+                                    let slotTime = new Date(`2000-01-01T${element.slot_time}`);
+
+                                    // Convert packageData.time to Date objects for comparison
+                                    let startTime = new Date(`2000-01-01T${packageData.time[0]}`);
+                                    let endTime = new Date(`2000-01-01T${packageData.time[1]}`);
+
+                                    // Check if slotTime falls within the time range
+                                    return !(slotTime >= startTime && slotTime <= endTime);
+                                });
+                            }
+                        }
+                    }
+                }
+
+                this.dateTimeArr = slotTimes;
                 this.totalavailableseats = response.data.TotalAvailableSeats;
                 this.selectgrouppeoples = [];
                 var seats = this.totalavailableseats;
@@ -662,7 +722,6 @@ export default {
             } else {
                 Swal.fire({
                     toast: true,
-                    title: 'Info!',
                     html: `In order to proceed with ${destination.toLowerCase()}, please schedule a trip.`,
                     icon: 'info',
                 });
@@ -725,6 +784,38 @@ export default {
                 console.log(response);
             }).catch(error => {
                 // this.processLoader(loader);
+            });
+        },
+        generateTimeArray(cartItem) {
+            var packageId = cartItem.package_id;
+            var date = cartItem.date;
+            var time = cartItem.slot_time;
+            var offset = cartItem.travel_duration;
+
+            const timeFormat = 'HH:mm:ss';
+            const [offsetHours, offsetMinutes] = offset.split(':').map(Number);
+            const timeBefore = this.calculateTime(time, -offsetHours, -offsetMinutes, timeFormat);
+            const timeAfter = this.calculateTime(time, offsetHours, offsetMinutes, timeFormat);
+
+            if (this.blockedTimes[this.form.package_id] || this.form.package_id == packageId) {
+                // this.blockedTimes.splice(this.form.package_id, 1);
+            } else {
+                this.blockedTimes[packageId] = {
+                    date: format(date, 'yyyy-MM-dd'),
+                    time: [timeBefore, timeAfter]
+                };
+            }
+        },
+        calculateTime(timeValue, hoursToAdd, minutesToAdd, format) {
+            const time = new Date(`2000-01-01T${timeValue}`);
+            time.setHours(time.getHours() + hoursToAdd);
+            time.setMinutes(time.getMinutes() + minutesToAdd);
+
+            return time.toLocaleTimeString('en-US', {
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
             });
         }
     }

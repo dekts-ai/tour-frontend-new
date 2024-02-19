@@ -55,7 +55,7 @@
                                 :prevent-disable-date-selection="true"
                                 @selected="selectedDate">
                             </datepicker>
-                        </div>    
+                        </div>
                     </div>
                 </div>
             </div>
@@ -102,7 +102,7 @@
                                                     <div class="tourselected-title-wrap">
                                                         <div class="d-flex align-items-start justify-content-between">
                                                             <div class="tourselected-title">{{ item.package_name }}</div>
-                                                            <div class="tourselected-title"><span style="color: #004085;">{{ item.duration }} Tour</span></div>
+                                                            <div class="tourselected-title"><span style="color: #004085;">{{ item.duration }} {{ item.category }}</span></div>
                                                         </div>
 
                                                         <div class="tourselected-title-top">{{ dateFormat(item.date) }} @ {{ item.time_date }}</div> 
@@ -178,8 +178,8 @@
                                                         <div class="tourselected-image"><img :src="tourPackage.FrontendPackageImage" :alt="tourPackage.package_name"></div>
                                                         <div class="tourselected-title-wrap">
                                                             <div class="tourselected-title">{{ tourPackage.package_name }}</div>
-                                                            <div class="tourselected-title-top">{{ tourPackage.duration }}</div>
-                                                            
+                                                            <div class="tourselected-title-top">{{ tourPackage.duration }} {{ tourPackage.category }}</div>
+
                                                             <div class="what-bring-wrap">
                                                                 <p>{{ tourPackage.short_description }}</p>
                                                             </div>
@@ -296,13 +296,32 @@ export default {
     },
     methods: {
         bookNow(tid, oid, pid) {
+            if (this.comboIds) {
+                const strCids = this.comboIds.split(",");
+                const isPackageSelected = this.checkPackageIds.includes(parseInt(strCids[0])) || strCids[0] == pid;
+
+                if (isPackageSelected) {
+                    this.handlePackageSelection(tid, oid, pid);
+                } else {
+                    this.showPackageSelectionInfo();
+                }
+            } else {
+                this.handlePackageSelection(tid, oid, pid);
+            }
+        },
+        handlePackageSelection(tid, oid, pid) {
             this.$store.dispatch('storeTenantId', tid);
             this.$store.dispatch('storeTourOperatorId', oid);
             this.$store.dispatch('storePackageId', pid);
             this.$store.dispatch('storeFormData', null);
 
-            this.$router.push({
-                name: 'Init'
+            this.$router.push({ name: 'Init' });
+        },
+        showPackageSelectionInfo() {
+            Swal.fire({
+                toast: true,
+                html: `In order to proceed, please first schedule a lower antelope canyon tour package.`,
+                icon: 'info',
             });
         },
         navigateToTab(tab, destination) {
@@ -320,7 +339,6 @@ export default {
             } else {
                 Swal.fire({
                     toast: true,
-                    title: 'Info!',
                     html: `In order to proceed with ${destination.toLowerCase()}, please select package.`,
                     icon: 'info',
                 });

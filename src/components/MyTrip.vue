@@ -66,31 +66,44 @@
                                 </div>
 
                                 <div class="tourlist-packages-wrap h-100">
-                                    <div class="timeline">
-                                        <ul>
-                                            <li v-for="item in bookings" :class="{ 'booking': item.booking, 'no-booking': !item.booking }">
-                                                <div class="left_content">
-                                                    <h3>{{ item.time }}</h3>
-                                                </div>
-                                                <div v-if="item.booking" class="right_content">
-                                                    <div class="d-lg-flex justify-content-between align-items-center">
-                                                        <p class="mb-lg-0 mb-2">{{ item.data.package_name }}</p>
-                                                        <p>{{ item.data.duration }} Tour</p>
+                                    <div class="accordion" id="accordionExample">
+                                        <div class="accordion-item" v-for="(value, key, index) in bookings" :key="key">
+                                            <h2 class="accordion-header" :id="'heading-'+index">
+                                                <button class="accordion-button" :class="index ? 'collapsed' : ''" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse-'+index" aria-expanded="true" :aria-controls="'collapse-'+index">
+                                                    {{ formatDate(key) }}
+                                                </button>
+                                            </h2>
+                                            <div :id="'collapse-'+index" class="accordion-collapse collapse show" :aria-labelledby="'heading-'+index" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body p-0">
+                                                    <div class="timeline">
+                                                        <ul>
+                                                            <li v-for="item in value" :class="{ 'booking': item.booking, 'no-booking': !item.booking }">
+                                                                <div class="left_content">
+                                                                    <h3>{{ item.slot_time }}</h3>
+                                                                </div>
+                                                                <div v-if="item.booking" class="right_content">
+                                                                    <div class="d-lg-flex justify-content-between align-items-center">
+                                                                        <p class="mb-lg-0 mb-2">{{ item.data.package_name }}</p>
+                                                                        <p>{{ item.data.duration }} {{ item.data.category }}</p>
+                                                                    </div>
+                                                                    <div class="d-md-flex mt-2">
+                                                                        <img :src="item.data.package_image" width="100" height="100" alt="">
+                                                                        <div class="content-box">
+                                                                            <p class="mb-2">{{ dateFormat(item.data.date) }} @ {{ item.data.time_date }}</p>
+                                                                            <p class="mb-2" v-for="(pax, key) in item.data.people_group" :key="key">
+                                                                                <span v-if="pax > 0">{{ pax }} {{ item.data.rate_group[key] }}</span>
+                                                                            </p>
+                                                                            <small class="text-muted">{{ item.data.short_description }}</small>
+                                                                        </div>
+                                                                    </div>
+                                                                    <a role="button" @click="editPackage(item.data)" class="update">Update</a>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
                                                     </div>
-                                                    <div class="d-md-flex mt-2">
-                                                        <img :src="item.data.package_image" width="100" height="100" alt="">
-                                                        <div class="content-box">
-                                                            <p class="mb-2">{{ dateFormat(item.data.date) }} @ {{ item.data.time_date }}</p>
-                                                            <p class="mb-2" v-for="(pax, key) in item.data.people_group" :key="key">
-                                                                <span v-if="pax > 0">{{ pax }} {{ item.data.rate_group[key] }}</span>
-                                                            </p>
-                                                            <small class="text-muted">{{ item.data.short_description }}</small>
-                                                        </div>
-                                                    </div>
-                                                    <a role="button" @click="editPackage(item.data)" class="update">Update</a>
                                                 </div>
-                                            </li>
-                                        </ul>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -103,6 +116,7 @@
 </template>
 
 <script>
+import { format } from 'date-fns';
 export default {
     name: "MyTrip",
     title: "Native American Tours",
@@ -137,7 +151,7 @@ export default {
                 this.checkPackageIds.push(pId);
             }
         }
-        this.bookings = [];
+
         this.bookings = this.generateTimeSlots();
 
         this.$store.dispatch('storeTabs', this.tabs);
@@ -158,46 +172,76 @@ export default {
             });
         },
         generateTimeSlots() {
-            const startTime = '05:30:00';
-            const endTime = '18:30:00';
-            const interval = 30; // in minutes
+            const startTime = '05:45:00';
+            const endTime = '21:45:00';
+            const interval = 15; // in minutes
 
-            this.bookings = [];
-            let currentTime = startTime;
+            // Initialize an empty object to hold bookings by date
+            const bookingsByDate = {};
 
-            while (currentTime <= endTime) {
-                const [hours, minutes] = currentTime.split(':').map(Number);
-                const totalMinutes = hours * 60 + minutes + interval;
-                currentTime = `${Math.floor(totalMinutes / 60)
-                    .toString()
-                    .padStart(2, '0')}:${(totalMinutes % 60).toString().padStart(2, '0')}:00`;
-
-                let bookingsForCurrentTime = [];
-                
-                if (this.cartItemLength) {
-                    for (var key in this.cartItem) {
-                        if (this.cartItem[key].slot_time == currentTime) {
-                            bookingsForCurrentTime.push({
-                                time: this.formatTime(currentTime),
-                                booking: true,
-                                data: this.cartItem[key]
-                            });
-                        }
-                    }
-                }
-
-                if (bookingsForCurrentTime.length > 0) {
-                    this.bookings = this.bookings.concat(bookingsForCurrentTime);
-                } else {
-                    this.bookings.push({
-                        time: this.formatTime(currentTime),
-                        booking: false,
-                        data: null
-                    });
+            // Extract unique dates from cart items
+            const dates = [];
+            for (const key in this.cartItem) {
+                const date = format(this.cartItem[key].date, 'yyyy-MM-dd');
+                if (!dates.includes(date)) {
+                    dates.push(date);
                 }
             }
 
+            // Initialize bookings array for each date
+            dates.forEach(date => {
+                bookingsByDate[date] = [];
+            });
+
+            // Loop through each cart item
+            for (const key in this.cartItem) {
+                const currentItem = this.cartItem[key];
+                const currentDate = format(currentItem.date, 'yyyy-MM-dd');
+
+                // Loop through time slots within the date range
+                let currentTime = startTime;
+                while (currentTime <= endTime) {
+                    const [hours, minutes] = currentTime.split(':').map(Number);
+                    const totalMinutes = hours * 60 + minutes;
+                    const slotTime = `${Math.floor(totalMinutes / 60)
+                        .toString()
+                        .padStart(2, '0')}:${(totalMinutes % 60).toString().padStart(2, '0')}:00`;
+
+                    // Check if the current time slot matches the cart item's time
+                    if (currentItem.slot_time === slotTime) {
+                        // Push the booking into the array for the current date
+                        bookingsByDate[currentDate].push({
+                            time: slotTime,
+                            slot_time: this.formatTime(slotTime),
+                            booking: true,
+                            data: currentItem
+                        });
+                    }
+
+                    // Increment time by interval
+                    const nextTime = new Date(`2000-01-01T${currentTime}`);
+                    nextTime.setMinutes(nextTime.getMinutes() + interval);
+                    currentTime = nextTime.toTimeString().slice(0, 8);
+                }
+            }
+
+            for (const date in bookingsByDate) {
+                // Sort the bookings array by time
+                bookingsByDate[date].sort((a, b) => {
+                    // Sort based on time
+                    const timeA = new Date(`2000-01-01T${a.time}`);
+                    const timeB = new Date(`2000-01-01T${b.time}`);
+                    return timeA - timeB;
+                });
+            }
+
+            this.bookings = bookingsByDate;
+
             return this.bookings;
+        },
+        formatDate(dateString) {
+            var date = new Date(dateString);
+            return format(date, 'EEE, MMMM d, yyyy');
         },
         formatTime(timeString) {
             const [hours, minutes, seconds] = timeString.split(':').map(Number);

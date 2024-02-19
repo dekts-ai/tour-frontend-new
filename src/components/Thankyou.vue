@@ -105,7 +105,7 @@
                                     <span class="tour-name">{{ tourBooking.package_name }}</span>
                                   </button>
                                 </h2>
-                                <div :id="'collapse-' + tourBooking.id" :class="'accordion-collapse collapse ' + (index == 0 ? 'show' : '')" :aria-labelledby="'heading-' + tourBooking.id" data-bs-parent="#accordion-parent">
+                                <div :id="'collapse-' + tourBooking.id" :class="'accordion-collapse collapse show'" :aria-labelledby="'heading-' + tourBooking.id" data-bs-parent="#accordion-parent">
                                   <div class="accordion-body">
                                     <div class="row">
                                       <div class="col-md-6">
