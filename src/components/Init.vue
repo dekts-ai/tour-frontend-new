@@ -835,8 +835,8 @@ export default {
         },
         calculateTime(timeValue, hoursToAdd, minutesToAdd, format) {
             const time = new Date(`2000-01-01T${timeValue}`);
-            time.setHours(time.getHours() + hoursToAdd);
-            time.setMinutes(time.getMinutes() + minutesToAdd);
+            time.setHours(time.getHours() + hoursToAdd * 2);
+            time.setMinutes(time.getMinutes() + minutesToAdd * 2);
 
             return time.toLocaleTimeString('en-US', {
                 hour12: false,
