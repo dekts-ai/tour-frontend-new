@@ -429,31 +429,31 @@ export default {
 
                     var slotTimes = response.data.Time
 
-                    if (this.comboIds != 0 && this.cartItemLength) {
-                        this.blockedTimes = {};
-                        for (const key in this.cartItem) {
-                            this.generateTimeArray(this.cartItem[key]);
-                        }
+                    // if (this.comboIds != 0 && this.cartItemLength) {
+                    //     this.blockedTimes = {};
+                    //     for (const key in this.cartItem) {
+                    //         this.generateTimeArray(this.cartItem[key]);
+                    //     }
 
-                        for (let packageId in this.blockedTimes) {
-                            if (this.blockedTimes.hasOwnProperty(packageId)) {
-                                let packageData = this.blockedTimes[packageId];
-                                if (packageData.date == date) {
-                                    slotTimes = slotTimes.filter(element => {
-                                        // Convert element.slot_time to Date object for comparison
-                                        let slotTime = new Date(`2000-01-01T${element.slot_time}`);
+                    //     for (let packageId in this.blockedTimes) {
+                    //         if (this.blockedTimes.hasOwnProperty(packageId)) {
+                    //             let packageData = this.blockedTimes[packageId];
+                    //             if (packageData.date == date) {
+                    //                 slotTimes = slotTimes.filter(element => {
+                    //                     // Convert element.slot_time to Date object for comparison
+                    //                     let slotTime = new Date(`2000-01-01T${element.slot_time}`);
 
-                                        // Convert packageData.time to Date objects for comparison
-                                        let startTime = new Date(`2000-01-01T${packageData.time[0]}`);
-                                        let endTime = new Date(`2000-01-01T${packageData.time[1]}`);
+                    //                     // Convert packageData.time to Date objects for comparison
+                    //                     let startTime = new Date(`2000-01-01T${packageData.time[0]}`);
+                    //                     let endTime = new Date(`2000-01-01T${packageData.time[1]}`);
 
-                                        // Check if slotTime falls within the time range
-                                        return !(slotTime >= startTime && slotTime <= endTime);
-                                    });
-                                }
-                            }
-                        }
-                    }
+                    //                     // Check if slotTime falls within the time range
+                    //                     return !(slotTime >= startTime && slotTime <= endTime);
+                    //                 });
+                    //             }
+                    //         }
+                    //     }
+                    // }
 
                     this.dateTimeArr = slotTimes;
                     this.totalavailableseats = response.data.TotalAvailableSeats;
@@ -516,6 +516,32 @@ export default {
                         }
                     });
 
+                    if (this.comboIds != 0 && this.cartItemLength) {
+                        this.blockedTimes = {};
+                        for (const key in this.cartItem) {
+                            this.generateTimeArray(this.cartItem[key]);
+                        }
+
+                        for (let packageId in this.blockedTimes) {
+                            if (this.blockedTimes.hasOwnProperty(packageId)) {
+                                let packageData = this.blockedTimes[packageId];
+                                if (packageData.date == date) {
+                                    this.dateTimeArr = this.dateTimeArr.filter(element => {
+                                        // Convert element.slot_time to Date object for comparison
+                                        let slotTime = new Date(`2000-01-01T${element.slot_time}`);
+
+                                        // Convert packageData.time to Date objects for comparison
+                                        let startTime = new Date(`2000-01-01T${packageData.time[0]}`);
+                                        let endTime = new Date(`2000-01-01T${packageData.time[1]}`);
+
+                                        // Check if slotTime falls within the time range
+                                        return !(slotTime >= startTime && slotTime <= endTime);
+                                    });
+                                }
+                            }
+                        }
+                    }
+
                     this.processLoader(loader);
                 }).catch(() => {
                     this.processLoader(loader);
@@ -544,31 +570,31 @@ export default {
                 this.begins = response.data.begins;
                 var slotTimes = response.data.Time
 
-                if (this.comboIds != 0 && this.cartItemLength) {
-                    this.blockedTimes = {};
-                    for (const key in this.cartItem) {
-                        this.generateTimeArray(this.cartItem[key]);
-                    }
+                // if (this.comboIds != 0 && this.cartItemLength) {
+                //     this.blockedTimes = {};
+                //     for (const key in this.cartItem) {
+                //         this.generateTimeArray(this.cartItem[key]);
+                //     }
 
-                    for (let packageId in this.blockedTimes) {
-                        if (this.blockedTimes.hasOwnProperty(packageId)) {
-                            let packageData = this.blockedTimes[packageId];
-                            if (packageData.date == date) {
-                                slotTimes = slotTimes.filter(element => {
-                                    // Convert element.slot_time to Date object for comparison
-                                    let slotTime = new Date(`2000-01-01T${element.slot_time}`);
+                //     for (let packageId in this.blockedTimes) {
+                //         if (this.blockedTimes.hasOwnProperty(packageId)) {
+                //             let packageData = this.blockedTimes[packageId];
+                //             if (packageData.date == date) {
+                //                 slotTimes = slotTimes.filter(element => {
+                //                     // Convert element.slot_time to Date object for comparison
+                //                     let slotTime = new Date(`2000-01-01T${element.slot_time}`);
 
-                                    // Convert packageData.time to Date objects for comparison
-                                    let startTime = new Date(`2000-01-01T${packageData.time[0]}`);
-                                    let endTime = new Date(`2000-01-01T${packageData.time[1]}`);
+                //                     // Convert packageData.time to Date objects for comparison
+                //                     let startTime = new Date(`2000-01-01T${packageData.time[0]}`);
+                //                     let endTime = new Date(`2000-01-01T${packageData.time[1]}`);
 
-                                    // Check if slotTime falls within the time range
-                                    return !(slotTime >= startTime && slotTime <= endTime);
-                                });
-                            }
-                        }
-                    }
-                }
+                //                     // Check if slotTime falls within the time range
+                //                     return !(slotTime >= startTime && slotTime <= endTime);
+                //                 });
+                //             }
+                //         }
+                //     }
+                // }
 
                 this.dateTimeArr = slotTimes;
                 this.totalavailableseats = response.data.TotalAvailableSeats;
@@ -790,7 +816,7 @@ export default {
             var packageId = cartItem.package_id;
             var date = cartItem.date;
             var time = cartItem.slot_time;
-            var offset = cartItem.travel_duration;
+            var offset = this.form.travel_duration;
 
             const timeFormat = 'HH:mm:ss';
             const [offsetHours, offsetMinutes] = offset.split(':').map(Number);
@@ -805,6 +831,7 @@ export default {
                     time: [timeBefore, timeAfter]
                 };
             }
+            console.log(this.blockedTimes);
         },
         calculateTime(timeValue, hoursToAdd, minutesToAdd, format) {
             const time = new Date(`2000-01-01T${timeValue}`);
