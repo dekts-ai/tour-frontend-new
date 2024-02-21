@@ -210,7 +210,7 @@
                                                                         {{ tour.rate_for }}
                                                                     </td>
                                                                     <td class="taxes" data-label="Fees and Taxes">
-                                                                        <p v-if="form?.tenant_id == 'dixies' && form.package_id >= 12 && form.package_id <= 15">
+                                                                        <p v-if="form?.tenant_id == 'dixies' && tour.description">
                                                                             {{ tour.description }}
                                                                         </p>
                                                                         <p v-else>
