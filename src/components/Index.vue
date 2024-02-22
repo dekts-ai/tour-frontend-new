@@ -37,7 +37,7 @@
                                 <button v-if="comboIds" @click="navigateToTab(4, 'Maps')" :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')">Maps</button>
                                 <button @click="navigateToTab(5, 'Checkout')" :class="'tabs tab5 me-auto' + (tabs == 5 ? 'active' : '')">Checkout</button>
                                 <datepicker class="d-md-block d-none"
-                                    v-if="showDatePicker && comboIds"
+                                    v-if="comboIds"
                                     v-model="date"
                                     :value="date"
                                     :inline="false"
@@ -47,7 +47,7 @@
                                 </datepicker>
                             </div>
                             <datepicker class="d-md-none d-block"
-                                v-if="showDatePicker && comboIds"
+                                v-if="comboIds"
                                 v-model="date"
                                 :value="date"
                                 :inline="false"
@@ -229,7 +229,6 @@ export default {
             packageId: 0,
             affiliateId: 0,
             comboIds: 0,
-            showDatePicker: true,
             date: null,
             disabledDates: {
                 to: this.getStartDate(),
@@ -243,7 +242,8 @@ export default {
             total: 0,
             tabs: 1,
             checkPackageIds: [],
-            firstPackageId: 0
+            firstPackageId: 0,
+            firstPackageName: 'lower antelope canyon tour'
         };
     },
     async created() {
@@ -281,21 +281,25 @@ export default {
         }
 
         axios.get("/tour-package/" + this.date + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId + "/" + this.comboIds).then((response) => {
-            var self = this;
-            self.$store.dispatch('storeTourPackage', response.data)
-            self.tourPackageData = response.data.tourPackageData;
-            self.banner = self.tourPackageData[0].HeaderOne;
-            self.processLoader(loader);
+            this.$store.dispatch('storeTourPackage', response.data)
+            this.tourPackageData = response.data.tourPackageData;
+            this.banner = this.tourPackageData[0].HeaderOne;
+            if (this.comboIds) {
+                const strCids = this.comboIds.split(",");
+                this.firstPackageId = parseInt(strCids[0]);
+                this.tourPackageData.forEach(element => {
+                    if (element.package_id == this.firstPackageId) {
+                        this.firstPackageName = element.package_name;
+                    }
+                });
+            }
+
+            this.processLoader(loader);
         }).catch(error => {
             this.tourPackageData = [];
             this.banner = "";
             this.processLoader(loader);
         });
-
-        if (this.comboIds) {
-            const strCids = this.comboIds.split(",");
-            this.firstPackageId = parseInt(strCids[0]);
-        }
 
         this.$store.dispatch('storeTabs', this.tabs);
         this.$store.dispatch('storeMindChange', 0);
@@ -325,7 +329,7 @@ export default {
         showPackageSelectionInfo() {
             Swal.fire({
                 toast: true,
-                html: `In order to proceed, please first schedule a lower antelope canyon tour package.`,
+                html: `In order to proceed, please first schedule a ${this.firstPackageName.toLowerCase()} package.`,
                 icon: 'info',
             });
         },
@@ -413,9 +417,6 @@ export default {
             var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
             return date.toLocaleDateString("en-US", options)
         },
-        toggleDatePicker() {
-            this.showDatePicker = !this.showDatePicker;
-        },
         getStartDate() {
             // See this issues with datepicker 
             // https://github.com/charliekassel/vuejs-datepicker/issues/118
@@ -447,15 +448,6 @@ export default {
                     this.banner = "";
                     this.processLoader(loader);
                 });
-        },
-        roundout(amount, places = 0) {
-            if (places < 0) {
-                places = 0;
-            }
-
-            let x = Math.pow(10, places);
-            let formul = (amount * x).toFixed(10);
-            return (amount >= 0 ? Math.ceil(formul) : Math.floor(formul)) / x;
         }
     }
 };
