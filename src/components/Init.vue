@@ -642,7 +642,7 @@ export default {
                 const rate = Number(tourPackageRateGroups[index].rate) + Number(tourPackageRateGroups[index].permit_fee) + Number(tourPackageRateGroups[index].tax);
                 paxSubtotalArr.push(rateGroup > 0 ? rateGroup * rate.toFixed(2) : 0);
 
-                const fees = (Number(rate) * Number(this.form.service_commission)) / 100;
+                const fees = this.roundout((Number(rate) * Number(this.form.service_commission)) / 100, 2);
                 feesGroupArr.push(rateGroup > 0 ? rateGroup * fees.toFixed(2) : 0);
 
                 rateGroupArr.push(tourPackageRateGroups[index].rate_for);
@@ -679,6 +679,15 @@ export default {
             } else {
                 this.processLoader(loader);
             }
+        },
+        roundout(amount, places = 0) {
+            if (places < 0) {
+                places = 0;
+            }
+
+            let x = Math.pow(10, places);
+            let formul = (amount * x).toFixed(10);
+            return (amount >= 0 ? Math.ceil(formul) : Math.floor(formul)) / x;
         },
         processLoader(loader) {
             loader.hide();

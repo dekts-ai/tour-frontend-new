@@ -159,7 +159,7 @@
                                                     <div class="tourselected-action-btn">
                                                         <a class="action-btn action-btn-edit" @click="editPackage(item)">Edit</a>
                                                     </div>
-                                                    <div class="tourselected-action-btn">
+                                                    <div v-if="this.firstPackageId != item.package_id" class="tourselected-action-btn">
                                                         <a class="action-btn action-btn-delete" @click="removeFromCart(item)">Delete</a>
                                                     </div>
                                                     <div class="tourselected-action-btn">
@@ -242,7 +242,8 @@ export default {
             fees: 0,
             total: 0,
             tabs: 1,
-            checkPackageIds: []
+            checkPackageIds: [],
+            firstPackageId: 0
         };
     },
     async created() {
@@ -291,14 +292,18 @@ export default {
             this.processLoader(loader);
         });
 
+        if (this.comboIds) {
+            const strCids = this.comboIds.split(",");
+            this.firstPackageId = parseInt(strCids[0]);
+        }
+
         this.$store.dispatch('storeTabs', this.tabs);
         this.$store.dispatch('storeMindChange', 0);
     },
     methods: {
         bookNow(tid, oid, pid) {
             if (this.comboIds) {
-                const strCids = this.comboIds.split(",");
-                const isPackageSelected = this.checkPackageIds.includes(parseInt(strCids[0])) || strCids[0] == pid;
+                const isPackageSelected = this.checkPackageIds.includes(this.firstPackageId) || this.firstPackageId == pid;
 
                 if (isPackageSelected) {
                     this.handlePackageSelection(tid, oid, pid);
