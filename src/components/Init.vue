@@ -212,7 +212,7 @@
                                                                         {{ tour.rate_for }}
                                                                     </td>
                                                                     <td class="taxes" data-label="Fees and Taxes">
-                                                                        <p v-if="tour.description" style="white-space: pre">
+                                                                        <p v-if="tour.description" style="white-space: pre-line;">
                                                                             {{ tour.description }}
                                                                         </p>
                                                                         <p v-else>
