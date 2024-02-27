@@ -76,9 +76,9 @@
                               <div class="col-lg-4 col-md-6">
                                 <div class="details-box">
                                   <h3 class="bookingcontact">
-                                    Your Contact Number:
+                                    Your Phone Number:
                                   </h3>
-                                  <p>+{{ customer.phone_number }}</p>
+                                  <p>{{ customer.phone_number }}</p>
                                 </div>
                               </div>
                               <div class="col-lg-4 col-md-6">
