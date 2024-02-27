@@ -82,8 +82,16 @@
                                                 <div class="form-group">
                                                     <div class="phone-wrap">
                                                         <label for="phonenumber" class="col-form-label">Phone Number <span class="required-star">*</span> </label>
-                                                        <div class="field-icon-wrp"> <i class="fa fa-phone" aria-hidden="true"></i> </div>
-                                                        <input type="text" v-model="phone_number" id="phonenumber" name="phone_number" class="form-control" placeholder="Your Contact Number">
+                                                        <!-- <div class="field-icon-wrp"> <i class="fa fa-phone" aria-hidden="true"></i> </div> -->
+                                                        <!-- <input type="text" v-model="phone_number" id="phonenumber" name="phone_number" class="form-control" placeholder="Your Contact Number"> -->
+
+                                                    <IntPhoneNumber :current_phone_number="phone_number" 
+                                                     :current_phone_code="phone_code"
+                                                     @onphoneupdate="updatePhoneNumber" /> 
+
+                                                     <input type="hidden" id="phonenumber" name="phone_number" v-model="phone_number"  />
+                                                    <input type="hidden" id="phonecode" name="phone_code" v-model="phone_code"  />
+
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -253,9 +261,18 @@ import Swal from 'sweetalert2';
 import { loadStripe } from '@stripe/stripe-js';
 import { mask } from 'vue-the-mask';
 
+import IntPhoneNumber from './Forms/IntPhoneNumber';
+import CountryCodes from "../utils/countryCode";
+
+
 export default {
     name: "Checkout",
     title: "Native American Tours",
+
+    components:{
+        IntPhoneNumber
+    },
+
     directives: {
         mask
     },
@@ -287,6 +304,7 @@ export default {
             toast: null,
             name: null,
             phone_number: null,
+            phone_code: "+1",
             email: null,
             getemailupdates: 0,
             cancellations_policy: 0,
@@ -301,6 +319,7 @@ export default {
         this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);
         this.createAndMountFormElements();
     },
+
     created() {
         this.iframeStatus = this.$store.state.iframeStatus;
         this.tenantId = this.$store.state.tenantId;
@@ -323,6 +342,13 @@ export default {
         this.$store.dispatch('storeMindChange', 0);
     },
     methods: {
+
+        updatePhoneNumber(props){
+            this.phone_number = props.phone_num;
+            this.phone_code = props.phone_ext;
+        },
+
+
         createAndMountFormElements() {
             this.elements = this.stripe.elements({
                 fonts: [{
@@ -439,7 +465,10 @@ export default {
                 this.errors.push("Your name is required.");
             }
             if (!this.phone_number) {
-                this.errors.push("Your contact number is required.");
+                this.errors.push("Your phone number is required.");
+            }
+            if (!CountryCodes.validatePhoneNumber(this.phone_number)) {
+                this.errors.push("Your phone number is invalid.");
             }
             if (!this.email) {
                 this.errors.push("Your email address is required.");
@@ -457,7 +486,8 @@ export default {
                 this.cancellations_policy &&
                 this.cardnumber &&
                 this.expiration &&
-                this.cvv
+                this.cvv &&
+                this.errors.length === 0
             ) {
                 this.seatErrors = [];
                 axios.post("/bulk-check-available-seats", {
@@ -495,11 +525,14 @@ export default {
                         return true;
                     }
 
+                    // append the country code to phone number
+                    let phone_number = CountryCodes.formatPhoneNumber(this.phone_code, this.phone_number);
+
                     let payload = {
                         items: this.cartItem,
                         name: this.name,
                         email: this.email,
-                        phone_number: this.phone_number,
+                        phone_number: phone_number,
                         comment: this.comment,
                         getemailupdates: this.getemailupdates,
                         cancellations_policy: this.cancellations_policy,
