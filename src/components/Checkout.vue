@@ -486,7 +486,8 @@ export default {
                 this.cancellations_policy &&
                 this.cardnumber &&
                 this.expiration &&
-                this.cvv
+                this.cvv &&
+                this.errors.length === 0
             ) {
                 this.seatErrors = [];
                 axios.post("/bulk-check-available-seats", {
