@@ -1,6 +1,13 @@
 
 class CountryCodes {
 
+
+  static validatePhoneNumber (number) {
+     return /^(1\s|1|)?((\(\d{3}\))|\d{3})(\-|\s)?(\d{3})(\-|\s)?(\d{4})$/.test(number.toString());
+  }
+
+
+
   //try our best to format the number like: +1 (111) 222-3333
   static formatPhoneNumber (code, number) {
 
