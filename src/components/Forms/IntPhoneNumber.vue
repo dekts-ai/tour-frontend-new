@@ -27,7 +27,7 @@
       </div>
 
       <input @keydown="updateParent" @change="updateParent" type="text" id="phone_number" name="phone_number" v-model="phone_num"
-       v-mask="'#############'" class="form-control int_phone_number" placeholder="(Area Code) Phone Number" />
+       v-mask="'################'" class="form-control int_phone_number" placeholder="(Area Code) Phone Number" />
 
   </div>
 
