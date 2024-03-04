@@ -189,15 +189,17 @@
                                             </p>
                                             <div class="row groupofpeople">
                                                 <div class="col-12">
-                                                    <h2>Select your group of people for the tour:</h2>
+                                                    <h2>
+                                                        {{ form.category == 'Hotel Night' ? 'Select your room for the night stay:' : 'Select your group of people for the tour:' }}
+                                                    </h2>
                                                     <div class="scroll-table">
                                                         <table class="table">
                                                             <thead>
                                                                 <tr>
-                                                                    <th scope="col">Age</th>
+                                                                    <th scope="col">{{ form.category == 'Hotel Night' ? 'Name' : 'Age' }}</th>
                                                                     <th scope="col">Fees and Taxes</th>
                                                                     <th scope="col">
-                                                                        Select Group Of People
+                                                                        {{ form.category == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
                                                                     </th>
                                                                     <th scope="col">Price</th>
                                                                 </tr>
@@ -210,7 +212,7 @@
                                                                         {{ tour.rate_for }}
                                                                     </td>
                                                                     <td class="taxes" data-label="Fees and Taxes">
-                                                                        <p v-if="form?.tenant_id == 'dixies' && tour.description">
+                                                                        <p v-if="tour.description" style="white-space: pre-line;">
                                                                             {{ tour.description }}
                                                                         </p>
                                                                         <p v-else>
