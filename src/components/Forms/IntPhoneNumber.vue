@@ -1,10 +1,6 @@
 <template>
-
 <div class="int_phone">
   <div class="int_phone_group">
-
-
-
       <div class="int_phone_select_warp">
 
           <div @click="displayCodes" class="init_phone_select_btn">
@@ -23,13 +19,8 @@
                     {{ ele.flag }} {{ele.code}} {{ele.name}}
                   </div>
                 </div>
-
-
-     
-
               <hr />
           </div>
-
       </div>
 
       <input @keydown="updateParent" @change="updateParent" type="text" id="phone_number" name="phone_number" v-model="phone_num"
@@ -100,7 +91,6 @@ export default {
     
     },
 
-
     displayCodes(){
       this.show_codes = true;
     },
@@ -134,9 +124,7 @@ export default {
       const {phone_ext, phone_num} = this;
       this.$emit('onphoneupdate', {phone_ext, phone_num});
     }
-
   }
-
 }
 
 
