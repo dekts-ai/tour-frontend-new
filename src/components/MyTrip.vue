@@ -179,16 +179,13 @@ export default {
             // Initialize an empty object to hold bookings by date
             const bookingsByDate = {};
 
-            // Extract unique dates from cart items
-            const dates = [];
-            for (const key in this.cartItem) {
-                const date = format(this.cartItem[key].date, 'yyyy-MM-dd');
-                if (!dates.includes(date)) {
-                    dates.push(date);
-                }
-            }
+            // Extract unique dates from cart items and sort them
+            const dates = Object.values(this.cartItem)
+                .map(item => format(item.date, 'yyyy-MM-dd'))
+                .filter((date, index, self) => self.indexOf(date) === index)
+                .sort();
 
-            // Initialize bookings array for each date
+            // Initialize bookings array for each sorted date
             dates.forEach(date => {
                 bookingsByDate[date] = [];
             });
