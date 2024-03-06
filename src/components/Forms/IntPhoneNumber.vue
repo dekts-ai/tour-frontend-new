@@ -3,10 +3,12 @@
 <div class="int_phone">
   <div class="int_phone_group">
 
+
+
       <div class="int_phone_select_warp">
 
           <div @click="displayCodes" class="init_phone_select_btn">
-            <div :class="`iti-flag ${phone_cnt}`"></div> {{ phone_ext }} 
+            {{ phone_flag }} {{ phone_ext }} 
           </div>
           
           <div class="int_phone_number_list" :style="`display: ${show_codes ? 'block' : 'none' }`" >
@@ -15,12 +17,16 @@
 
                 <div v-on:mouseleave="hideCodes" class="int_phone_number_country_list">
                   <div v-for="(ele, idx) in country_codes" 
-                    @click="()=>updateExt(ele.code, ele.key)" 
+                    @click="()=>updateExt(ele.code, ele.key, ele.flag)" 
                     :key="`phone-int-code-${idx}`" 
                     class="int_phone_countries_btn"> 
-                    <div :class="`iti-flag ${ele.key}`"></div> {{ele.code}} {{ele.name}}
+                    {{ ele.flag }} {{ele.code}} {{ele.name}}
                   </div>
                 </div>
+
+
+     
+
               <hr />
           </div>
 
@@ -58,6 +64,7 @@ export default {
   mounted(){
     this.phone_num = this.current_phone_number;
     this.phone_ext = this.current_phone_code;
+    this.phone_flag = this.getFlagEmoji(this.phone_ext, true);
   },
 
   created(){
@@ -67,6 +74,7 @@ export default {
   data: ()=>{return {
       phone_ext: "+1",
       phone_num: "",
+      phone_flag: "",
       phone_cnt: "us",
       country_codes: [],
       show_codes: false,
@@ -74,6 +82,25 @@ export default {
   }},
 
   methods:{
+
+    getFlagEmoji(countryCode, useExt=false) {
+      let code = countryCode;
+      if( useExt ){
+        const codes = CountryCodes.getCodes();
+        const result =  codes.filter((c)=>c.code === code);
+        if(result.length > 0 ){
+            code = result[0].key;
+        }
+      }
+      const codePoints = code
+        .toUpperCase()
+        .split('')
+        .map(char =>  127397 + char.charCodeAt());
+      return String.fromCodePoint(...codePoints);
+    
+    },
+
+
     displayCodes(){
       this.show_codes = true;
     },
@@ -95,10 +122,11 @@ export default {
 
     },
 
-    updateExt(ext, cnt){
+    updateExt(ext, cnt, flag){
         this.phone_ext = ext;
         this.phone_cnt = cnt;
         this.show_codes = false;
+        this.phone_flag = flag;
         this.updateParent();
     },
 
