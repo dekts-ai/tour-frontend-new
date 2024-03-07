@@ -699,7 +699,7 @@ export default {
                         errors.push("Please select a minimum of " + number.min_pax_allowed + " " + number.rate_for + " people to process your booking");
                     }
 
-                    if (number.max_pax_allowed != null && number.max_pax_allowed < rateGroup) {
+                    if (number.max_pax_allowed != null && number.max_pax_allowed != 0 && number.max_pax_allowed < rateGroup) {
                         errors.push("Please select a maximum of " + number.max_pax_allowed + " " + number.rate_for + " people to process your booking");
                     }
                 });
