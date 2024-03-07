@@ -628,12 +628,19 @@ export default {
                 this.errors.push("Please select a start time for your tour");
             }
 
+            const tourPackageRateGroups = this.details.tourPackageRateGroups;
+
+            let minMaxScenarioCheck = this.validateMinMaxScenario(tourPackageRateGroups);
+            if (minMaxScenarioCheck) {
+                this.processLoader(loader);
+                return;
+            }
+
             let rateGroupArr = [];
             let feesGroupArr = [];
             let groupPaxArr = [];
             let paxSubtotalArr = [];
 
-            const tourPackageRateGroups = this.details.tourPackageRateGroups;
             let index = 0;
 
             tourPackageRateGroups?.forEach(number => {
@@ -652,20 +659,8 @@ export default {
                 index++;
             });
 
-            const rateGroupsum = groupPaxArr.reduce((a, b) => Number(a) + Number(b), 0);
             const feesSum = feesGroupArr.reduce((a, b) => Number(a) + Number(b), 0);
             const subtotalSum = paxSubtotalArr.reduce((a, b) => Number(a) + Number(b), 0);
-
-            if (rateGroupsum == 0) {
-                this.errors.push("Please select your group of people for the tour");
-            } else {
-                delete (this.errors.length > 1 ? this.errors[1] : this.errors[0]);
-                if (this.form.tenant_id == 'apm' && rateGroupsum == 1) {
-                    this.errors.push("Please select a minimum of two people to process your booking");
-                } else if (groupPaxArr[0] == 0) {
-                    this.errors.push("Please select a minimum of one adult to process your booking");
-                }
-            }
 
             if (this.errors.length == 0) {
                 this.form.calucation = paxSubtotalArr;
@@ -681,6 +676,38 @@ export default {
             } else {
                 this.processLoader(loader);
             }
+        },
+        validateMinMaxScenario(tourPackageRateGroups) {
+            let groupPaxArr = [];
+            let errors = [];
+
+            tourPackageRateGroups?.forEach(number => {
+                let rateGroupField = 'people_group' + number.id;
+                const rateGroup = document.querySelector("select[name=" + rateGroupField + "]").value;
+                groupPaxArr.push(rateGroup);
+            });
+
+            const rateGroupsum = groupPaxArr.reduce((a, b) => Number(a) + Number(b), 0);
+            if (rateGroupsum == 0) {
+                errors.push("Please select your group of people for the tour");
+            } else {
+                tourPackageRateGroups?.forEach(number => {
+                    let rateGroupField = 'people_group' + number.id;
+                    const rateGroup = document.querySelector("select[name=" + rateGroupField + "]").value;
+
+                    if (number.min_pax_allowed > rateGroup) {
+                        errors.push("Please select a minimum of " + number.min_pax_allowed + " " + number.rate_for + " people to process your booking");
+                    }
+
+                    if (number.max_pax_allowed != null && number.max_pax_allowed < rateGroup) {
+                        errors.push("Please select a maximum of " + number.max_pax_allowed + " " + number.rate_for + " people to process your booking");
+                    }
+                });
+            }
+
+            this.errors.push(...errors);
+
+            return this.errors.length > 0;
         },
         roundout(amount, places = 0) {
             if (places < 0) {
