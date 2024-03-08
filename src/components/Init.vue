@@ -431,7 +431,7 @@ export default {
 
                     var slotTimes = response.data.Time;
 
-                    if (response.data.closedSlotVisibility) {
+                    if (response.data.closedSlotVisibility === false) {
                         let filteredSlotTimes = slotTimes.filter(element => {
                             return element.bookable_status == 'Open' && element.dd < element.seats;
                         });
@@ -555,7 +555,7 @@ export default {
                 this.begins = response.data.begins;
                 var slotTimes = response.data.Time
 
-                if (response.data.closedSlotVisibility) {
+                if (response.data.closedSlotVisibility === false) {
                     let filteredSlotTimes = slotTimes.filter(element => {
                         return element.bookable_status == 'Open' && element.dd < element.seats;
                     });
