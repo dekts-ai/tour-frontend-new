@@ -429,35 +429,18 @@ export default {
                 .then((response) => {
                     this.begins = response.data.begins;
 
-                    var slotTimes = response.data.Time
+                    var slotTimes = response.data.Time;
 
-                    // if (this.comboIds != 0 && this.cartItemLength) {
-                    //     this.blockedTimes = {};
-                    //     for (const key in this.cartItem) {
-                    //         this.generateTimeArray(this.cartItem[key]);
-                    //     }
+                    if (response.data.closedSlotVisibility) {
+                        let filteredSlotTimes = slotTimes.filter(element => {
+                            return element.bookable_status == 'Open' && element.dd < element.seats;
+                        });
 
-                    //     for (let packageId in this.blockedTimes) {
-                    //         if (this.blockedTimes.hasOwnProperty(packageId)) {
-                    //             let packageData = this.blockedTimes[packageId];
-                    //             if (packageData.date == date) {
-                    //                 slotTimes = slotTimes.filter(element => {
-                    //                     // Convert element.slot_time to Date object for comparison
-                    //                     let slotTime = new Date(`2000-01-01T${element.slot_time}`);
+                        this.dateTimeArr = filteredSlotTimes;
+                    } else {
+                        this.dateTimeArr = slotTimes;
+                    }
 
-                    //                     // Convert packageData.time to Date objects for comparison
-                    //                     let startTime = new Date(`2000-01-01T${packageData.time[0]}`);
-                    //                     let endTime = new Date(`2000-01-01T${packageData.time[1]}`);
-
-                    //                     // Check if slotTime falls within the time range
-                    //                     return !(slotTime >= startTime && slotTime <= endTime);
-                    //                 });
-                    //             }
-                    //         }
-                    //     }
-                    // }
-
-                    this.dateTimeArr = slotTimes;
                     this.totalavailableseats = response.data.TotalAvailableSeats;
                     this.selectgrouppeoples = [];
                     var seats = this.totalavailableseats;
@@ -572,33 +555,16 @@ export default {
                 this.begins = response.data.begins;
                 var slotTimes = response.data.Time
 
-                // if (this.comboIds != 0 && this.cartItemLength) {
-                //     this.blockedTimes = {};
-                //     for (const key in this.cartItem) {
-                //         this.generateTimeArray(this.cartItem[key]);
-                //     }
+                if (response.data.closedSlotVisibility) {
+                    let filteredSlotTimes = slotTimes.filter(element => {
+                        return element.bookable_status == 'Open' && element.dd < element.seats;
+                    });
 
-                //     for (let packageId in this.blockedTimes) {
-                //         if (this.blockedTimes.hasOwnProperty(packageId)) {
-                //             let packageData = this.blockedTimes[packageId];
-                //             if (packageData.date == date) {
-                //                 slotTimes = slotTimes.filter(element => {
-                //                     // Convert element.slot_time to Date object for comparison
-                //                     let slotTime = new Date(`2000-01-01T${element.slot_time}`);
+                    this.dateTimeArr = filteredSlotTimes;
+                } else {
+                    this.dateTimeArr = slotTimes;
+                }
 
-                //                     // Convert packageData.time to Date objects for comparison
-                //                     let startTime = new Date(`2000-01-01T${packageData.time[0]}`);
-                //                     let endTime = new Date(`2000-01-01T${packageData.time[1]}`);
-
-                //                     // Check if slotTime falls within the time range
-                //                     return !(slotTime >= startTime && slotTime <= endTime);
-                //                 });
-                //             }
-                //         }
-                //     }
-                // }
-
-                this.dateTimeArr = slotTimes;
                 this.totalavailableseats = response.data.TotalAvailableSeats;
                 this.selectgrouppeoples = [];
                 var seats = this.totalavailableseats;
@@ -628,12 +594,19 @@ export default {
                 this.errors.push("Please select a start time for your tour");
             }
 
+            const tourPackageRateGroups = this.details.tourPackageRateGroups;
+
+            let minMaxScenarioCheck = this.validateMinMaxScenario(tourPackageRateGroups);
+            if (minMaxScenarioCheck) {
+                this.processLoader(loader);
+                return;
+            }
+
             let rateGroupArr = [];
             let feesGroupArr = [];
             let groupPaxArr = [];
             let paxSubtotalArr = [];
 
-            const tourPackageRateGroups = this.details.tourPackageRateGroups;
             let index = 0;
 
             tourPackageRateGroups?.forEach(number => {
@@ -652,20 +625,8 @@ export default {
                 index++;
             });
 
-            const rateGroupsum = groupPaxArr.reduce((a, b) => Number(a) + Number(b), 0);
             const feesSum = feesGroupArr.reduce((a, b) => Number(a) + Number(b), 0);
             const subtotalSum = paxSubtotalArr.reduce((a, b) => Number(a) + Number(b), 0);
-
-            if (rateGroupsum == 0) {
-                this.errors.push("Please select your group of people for the tour");
-            } else {
-                delete (this.errors.length > 1 ? this.errors[1] : this.errors[0]);
-                if (this.form.tenant_id == 'apm' && rateGroupsum == 1) {
-                    this.errors.push("Please select a minimum of two people to process your booking");
-                } else if (groupPaxArr[0] == 0) {
-                    this.errors.push("Please select a minimum of one adult to process your booking");
-                }
-            }
 
             if (this.errors.length == 0) {
                 this.form.calucation = paxSubtotalArr;
@@ -681,6 +642,38 @@ export default {
             } else {
                 this.processLoader(loader);
             }
+        },
+        validateMinMaxScenario(tourPackageRateGroups) {
+            let groupPaxArr = [];
+            let errors = [];
+
+            tourPackageRateGroups?.forEach(number => {
+                let rateGroupField = 'people_group' + number.id;
+                const rateGroup = document.querySelector("select[name=" + rateGroupField + "]").value;
+                groupPaxArr.push(rateGroup);
+            });
+
+            const rateGroupsum = groupPaxArr.reduce((a, b) => Number(a) + Number(b), 0);
+            if (rateGroupsum == 0) {
+                errors.push("Please select your group of people for the tour");
+            } else {
+                tourPackageRateGroups?.forEach(number => {
+                    let rateGroupField = 'people_group' + number.id;
+                    const rateGroup = document.querySelector("select[name=" + rateGroupField + "]").value;
+
+                    if (number.min_pax_allowed > rateGroup) {
+                        errors.push("Please select a minimum of " + number.min_pax_allowed + " " + number.rate_for + " people to process your booking");
+                    }
+
+                    if (number.max_pax_allowed != null && number.max_pax_allowed != 0 && number.max_pax_allowed < rateGroup) {
+                        errors.push("Please select a maximum of " + number.max_pax_allowed + " " + number.rate_for + " people to process your booking");
+                    }
+                });
+            }
+
+            this.errors.push(...errors);
+
+            return this.errors.length > 0;
         },
         roundout(amount, places = 0) {
             if (places < 0) {
