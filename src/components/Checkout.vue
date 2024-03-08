@@ -260,19 +260,15 @@ import axios from "axios";
 import Swal from 'sweetalert2';
 import { loadStripe } from '@stripe/stripe-js';
 import { mask } from 'vue-the-mask';
-
 import IntPhoneNumber from './Forms/IntPhoneNumber';
 import CountryCodes from "../utils/countryCode";
-
 
 export default {
     name: "Checkout",
     title: "Native American Tours",
-
     components:{
         IntPhoneNumber
     },
-
     directives: {
         mask
     },
@@ -319,7 +315,6 @@ export default {
         this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);
         this.createAndMountFormElements();
     },
-
     created() {
         this.iframeStatus = this.$store.state.iframeStatus;
         this.tenantId = this.$store.state.tenantId;
@@ -342,13 +337,10 @@ export default {
         this.$store.dispatch('storeMindChange', 0);
     },
     methods: {
-
         updatePhoneNumber(props){
             this.phone_number = props.phone_num;
             this.phone_code = props.phone_ext;
         },
-
-
         createAndMountFormElements() {
             this.elements = this.stripe.elements({
                 fonts: [{
