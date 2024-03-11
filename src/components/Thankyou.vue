@@ -188,11 +188,11 @@
                         </div>
                         <div class="col-12 cta p-0">
                           <div class="cta-box">
-                            <div class="content" v-if="tourBooking?.data[0]?.phone_number">
+                            <div class="content" v-if="tourBooking?.data[0]?.company_number">
                               <h3>Need Help?</h3>
                               <p>
                                 Please give us a call for any query or help at:
-                                <a :href="'tel:' + tourBooking.data[0].phone_number">{{ tourBooking.data[0].phone_number }}</a>
+                                <a :href="'tel:' + tourBooking.data[0].company_number">{{ tourBooking.data[0].company_number }}</a>
                               </p>
                             </div>
                             <ul v-if="iframeStatus == false">

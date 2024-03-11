@@ -809,13 +809,6 @@ export default {
 
             return true;
         },
-        bufferTimes(packageId) {
-            axios.get("/buffer-times/" + packageId).then((response) => {
-                console.log(response);
-            }).catch(error => {
-                // this.processLoader(loader);
-            });
-        },
         generateTimeArray(cartItem) {
             var packageId = cartItem.package_id;
             var date = cartItem.date;
@@ -835,7 +828,6 @@ export default {
                     time: [timeBefore, timeAfter]
                 };
             }
-            console.log(this.blockedTimes);
         },
         calculateTime(timeValue, hoursToAdd, minutesToAdd, format) {
             const time = new Date(`2000-01-01T${timeValue}`);
