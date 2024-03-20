@@ -99,10 +99,15 @@
                                                     <div class="field-icon-wrp"> <i class="fa fa-envelope" aria-hidden="true"></i> </div>
                                                     <input type="email" v-model="email" id="emailaddress" name="email" class="form-control" placeholder="Your Email Address">
                                                 </div>
+                                                
+                                                
+                                                <CustomFields path="http://localhost:8000/backend/api.php?r=get_form&packageId=1`" />
+                                                
                                                 <div class="form-group form-textarea-wrap">
                                                     <label for="comment" class="col-form-label">Comments</label>
                                                     <textarea v-model="comment" id="comment" name="comment" placeholder="Please type here ..."></textarea>
                                                 </div>
+
 			                                    <div class="form-group mb-0">
 			                                    	<div class="form-check text-start">
   														<input class="form-check-input" type="checkbox" v-model="cancellations_policy" id="cancellations_policy">
@@ -261,13 +266,15 @@ import Swal from 'sweetalert2';
 import { loadStripe } from '@stripe/stripe-js';
 import { mask } from 'vue-the-mask';
 import IntPhoneNumber from './Forms/IntPhoneNumber';
+import CustomFields from '../components/Tours/CustomFields';
 import CountryCodes from "../utils/countryCode";
 
 export default {
     name: "Checkout",
     title: "Native American Tours",
     components:{
-        IntPhoneNumber
+        IntPhoneNumber, 
+        CustomFields
     },
     directives: {
         mask
