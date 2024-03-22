@@ -200,8 +200,9 @@
                                                     :display_height="250"
                                                     @customformexists="hasCustomFormFields"
                                                     :endpoint="`/package/custom/form/${form.package_id}`" />
+                                                    <hr />
                                             </div>
-                                            <hr />
+                                            
 
                                             <div class="row groupofpeople">
                                                 <div class="col-12">
@@ -829,6 +830,12 @@ export default {
             axios.post("/available-seats", checkSlotarr).then((response) => {
                 if (response.data.success == "false") {
                     this.errors.push(response.data.message);
+                    this.$refs.packageErrorDisplay.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                            inline: "nearest"
+                    });
+
                 } else {
                     if (this.comboIds == 0) {
                         this.cartItem = [];

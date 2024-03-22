@@ -1,7 +1,6 @@
 <template>
-<div class="row"> 
+<div v-if="display_form" class="row"> 
     <div class="col-12 custom-form-wrap" :style="`height: ${display_height}px;`">
-        
     <div v-if="loading_form">
         Featching Checkout Options...
     </div>
@@ -102,7 +101,11 @@
 
             </div>
         </div>
-        <hr />
+       
+        <div v-if="display_submit">
+            <hr />
+        </div>
+        
         <div v-if="display_submit" class="custom-from-actions">
             <input class="btn btn-success text-white float-end" type="button" @click="submitForm" value="Submit" />
         </div>
