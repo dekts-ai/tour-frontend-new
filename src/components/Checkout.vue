@@ -99,15 +99,10 @@
                                                     <div class="field-icon-wrp"> <i class="fa fa-envelope" aria-hidden="true"></i> </div>
                                                     <input type="email" v-model="email" id="emailaddress" name="email" class="form-control" placeholder="Your Email Address">
                                                 </div>
-                                                
-                                                
-                                                <CustomFields path="http://localhost:8000/backend/api.php?r=get_form&packageId=1`" />
-                                                
                                                 <div class="form-group form-textarea-wrap">
                                                     <label for="comment" class="col-form-label">Comments</label>
                                                     <textarea v-model="comment" id="comment" name="comment" placeholder="Please type here ..."></textarea>
                                                 </div>
-
 			                                    <div class="form-group mb-0">
 			                                    	<div class="form-check text-start">
   														<input class="form-check-input" type="checkbox" v-model="cancellations_policy" id="cancellations_policy">
@@ -190,6 +185,8 @@
 		                            <div class="col-lg-5 order-1 order-md-2">
 		                            	<div class="form-field-title mt-md-0 mt-3" v-if="iframeStatus == false">Tour Cost:</div>	
 		                            	<div class="total-cost-wrap" v-for="item in cartItem" :key="item.tour_slot_id">
+
+
 		                            		<div class="title-wrap">
 		                            			<div class="title">{{ item.package_name }}</div>
 		                            			<div class="time">{{ dateFormat(item.date) }} @ {{ item.time_date }}</div>
@@ -208,6 +205,17 @@
 		                            			<div class="title">Discount</div>
 						                       	<div class="amount"><span v-if="item?.discount2_percentage">({{ item?.discount2_percentage }}%)</span> ${{ item?.discount2_value ? Number(item?.discount2_value).toFixed(2) : Number(0).toFixed(2) }}</div>	
 		                            		</div>
+
+                                        
+                                            <div v-if="item.custom_fields">
+                                                <div v-for="(option, idx) in item.custom_fields" :key="`custom-option-${idx}`">
+                                                    <div v-if="option.priceInfo.enabled" class="other-details-wrap d-flex justify-content-between align-items-center">
+                                                        <div class="title">{{ option.name }}</div>
+                                                        <div class="amount" > {{ Number(option.priceInfo.price ).toFixed(2) }} </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
 		                            		<!-- <div class="other-details-wrap d-flex justify-content-between align-items-center" v-if="item?.discount2_value > 0">
 		                            			<div class="title">Subtotal</div>
 						                       	<div class="amount">${{ Number(item.fees).toFixed(2) }}</div>	
@@ -266,15 +274,13 @@ import Swal from 'sweetalert2';
 import { loadStripe } from '@stripe/stripe-js';
 import { mask } from 'vue-the-mask';
 import IntPhoneNumber from './Forms/IntPhoneNumber';
-import CustomFields from '../components/Tours/CustomFields';
 import CountryCodes from "../utils/countryCode";
 
 export default {
     name: "Checkout",
     title: "Native American Tours",
     components:{
-        IntPhoneNumber, 
-        CustomFields
+        IntPhoneNumber
     },
     directives: {
         mask
