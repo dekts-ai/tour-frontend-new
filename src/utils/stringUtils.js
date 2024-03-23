@@ -24,6 +24,16 @@ class StringUtils{
         const id = s.toString().replace(/[^a-zA-Z0-9]/gi, '').toLowerCase();
         return `${prefix}${id}`;
     }
+    /**
+     * input( my_title-text ) -> ( My Title Text )
+     * @param {*} s input string value
+     * @returns str
+     */
+    static toTitle(s){
+        return s.toString().replace("_", " ").replace("-", " ").replace(/\w\S*/g,txt=>txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+    }
+
+
 }
 
 export { StringUtils };

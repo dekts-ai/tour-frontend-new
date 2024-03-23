@@ -59,16 +59,14 @@ import { defaultDateFormat } from '../../utils/dateUtils';
 
 export default {
     name: "ItemizedList",
-    props: ["items", "seatErrors"],
+    props: ["items", "seatErrors", "iframeStatus"],
 
     data:()=>{
         return {
-
         }
     },
 
     methods:{
-
         dateFormat(date){
             this.$store.dispatch('storeDate', date)
             return defaultDateFormat(date);

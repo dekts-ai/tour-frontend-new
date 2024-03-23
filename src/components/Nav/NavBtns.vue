@@ -30,7 +30,6 @@
 </template>
 
 <script>
-
 export default {
     name: "NavBtns",
     props: ["comboIds", "tabs"],
@@ -43,5 +42,4 @@ export default {
         }
     }
 }
-
 </script>

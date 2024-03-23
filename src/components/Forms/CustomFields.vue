@@ -23,8 +23,7 @@
                     
                 <div v-if="field.type === 'text'">
                     <FormLabel :id="str.toId(field.id)" className="custom-form-label" >
-                        {{ renderReq(field.required) }}
-                        {{ renderTitle(field.name) }} 
+                        <CustomFieldLabel :field="field" />
                     </FormLabel>
                     <input :ref="field.id"
                            :class="renderStyle(field.error)" 
@@ -35,8 +34,7 @@
 
                 <div v-if="field.type === 'textarea'">
                     <FormLabel :id="str.toId(field.id)" className="custom-form-label" >
-                        {{ renderReq(field.required) }}
-                        {{ renderTitle(field.name) }}
+                        <CustomFieldLabel :field="field" />
                     </FormLabel>
                     <textarea :ref="field.id"
                               :class="renderStyle(field.error)" 
@@ -48,8 +46,7 @@
 
                 <div v-if="field.type === 'number'">
                     <FormLabel :id="str.toId(field.id)" className="custom-form-label" >
-                        {{ renderReq(field.required) }}
-                        {{ renderTitle(field.name) }}
+                        <CustomFieldLabel :field="field" />
                     </FormLabel>
                     <input :ref="field.id" 
                            :class="renderStyle(field.error)" 
@@ -70,13 +67,14 @@
                            :value="field.default" 
                            class="form-check-input" /> 
                     <FormLabel :id="str.toId(field.id)" className="custom-checkbox-label" >
-                        {{ renderReq(field.required) }}
-                        {{ renderTitle(field.name) }}
+                        <CustomFieldLabel :field="field" />
                     </FormLabel>
                 </div>
 
                 <div v-if="field.type === 'radio'" class="custom-form-options-wrap">
-                    <FormLabel :class="renderStyle(field.error)" :id="str.toId(field.id)" className="custom-form-label" >{{ renderTitle(field.name) }}</FormLabel>
+                    <FormLabel :class="renderStyle(field.error)" :id="str.toId(field.id)" className="custom-form-label" >
+                        <CustomFieldLabel :field="field" />
+                    </FormLabel>
                     <div v-for="(option, idx) in field.attrs.options" :key="`radio-${key}-${idx}`" >
                         <input :ref="option.id" 
                                :value="option.value" 
@@ -85,12 +83,14 @@
                                :type="field.type" 
                                v-model="field.value" 
                                class="form-check-input" />
-                        <FormLabel :id="option.id" className="custom-radio-label" >{{ renderTitle(option.name) }}</FormLabel>
+                        <FormLabel :id="option.id" className="custom-radio-label" >{{ str.toTitle(option.name) }}</FormLabel>
                     </div>
                 </div>
 
                 <div v-if="field.type === 'select'">
-                    <FormLabel :class="field.error ? 'custom-from-error' : ''" :id="str.toId(field.id)" className="custom-form-label" >{{ renderTitle(field.name) }}</FormLabel>
+                    <FormLabel :class="field.error ? 'custom-from-error' : ''" :id="str.toId(field.id)" className="custom-form-label" >
+                        {{  renderDetails(field) }}
+                    </FormLabel>
                     <select :ref="field.id" 
                             :id="str.toId(field.id)" 
                             v-model="field.value" 
@@ -117,7 +117,6 @@
 </template>
 
 <style scoped>
-
     .custom-form-wrap{
         background-color: #fff; 
         text-align:left !important;
@@ -129,45 +128,37 @@
     .custom-form-label{
         display: block;
     }
-
     .custom-form-header{
         font-size: 25px;
     }
-
     .custom-radio-label,
     .custom-checkbox-label{
         display: inline-block;
         margin-left: 10px;
         font-size: large;
     }
-
     .custom-form-options-wrap{
         border-radius: 7px;
         padding: 7px;
         margin-top: 10px;
         border: 1px solid #ccc;
     }
-
     .custom-from-actions{
         margin: 10px;
         padding: 10px;
         min-height: 40px;
     }
-
 </style>
 
 <script >
-
 import axios from "axios";
 import FormLabel from "./FormLabel";
+import CustomFieldLabel from './CustomFieldLabel';
 import { StringUtils } from "../../utils/stringUtils";
 import { FormUtils } from "../../utils/formUtils";
 
-
 export default {
-
     name: "CustomFields",
-
     props: {
         enabled: { type: Boolean, default: false },
         endpoint: { type: String, default: "" }, 
@@ -176,15 +167,13 @@ export default {
         display_errors: { type: Boolean, default: true },
         display_submit: { type: Boolean, default: true },
     },
-
     components:{
-        FormLabel
+        FormLabel,
+        CustomFieldLabel
     },
-
     created(){
         this.getData();
     },
-
     data: ()=>{
         return {
             form: null,
@@ -198,6 +187,12 @@ export default {
     },
 
     methods:{
+
+    /**
+     * fetch data from api endpoint 
+     * if no form do not display this component 
+     * @returns void
+     */
       async getData(){
             if (!this.enabled){ return false; }
             try{
@@ -212,16 +207,18 @@ export default {
             }
         },
 
+        /**
+         * loop over the custom form object and display the fields 
+         * @param data custom form field data object 
+         * @returns void
+         */
         renderForm(data){
-
             try{
-                //console.log(this.endpoint);
                 this.$emit('customformexists',  data.isset );
-                
                 if( data.isset ){
                     this.form = data.form;
-                    console.log(this.values);
                     const fields = JSON.parse(this.form.form_fields);
+                    // format the data to attach it to a v-model with a value prop
                     fields.forEach((_field, idx)=>{
                         fields[idx].value = this.getValueFromProps( fields[idx].id );
                         fields[idx].error = false;
@@ -241,10 +238,12 @@ export default {
          * if prop values is set and is an array 
          * search the values array for an id that matchs the field id
          * return the users form value
+         * @param id stirng unique field id 
+         * @return any
          */
         getValueFromProps(id){
             let value = "";
-            if ( this.values &&  Array.isArray(this.values) ){
+            if ( this.values && Array.isArray(this.values) ){
                 let field = this.values.filter(f=>f.id===id);
                 if(field.length > 0 ){
                     value = field[0].value;
@@ -253,24 +252,23 @@ export default {
             return value;
         },
 
-        renderTitle(str){
-            return str.replace(/\w\S*/g,txt=>txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-        },
-
-        renderReq(req){
-            if( this.str.toBool(req) ){
-                return "*";
-            }
-        },
-
+        /**
+         * if error display a red outline around field 
+         * @param string error
+         * @return void
+         */
         renderStyle(err){
            return (err) ? 'custom-from-error' : ''
         },
 
+        /**
+         * add error class to input 
+         * @param msg string
+         * @param idx field index to this.fields index
+         * @return void
+         */
         renderError(msg, idx){
             this.errors.push( msg );
-            // const ele = this.str.toId(this.fields[idx].id);
-            // document.getElementById(ele).focus();
             this.fields[idx].error = true;
         },
 
@@ -319,13 +317,23 @@ export default {
                 this.renderError(`${field.name} must be selected`, idx);
             }
         },
-
+        /**
+         * validate Radio input make sure one value checked if required 
+         * @param field object
+         * @param idx field index to this.fields index
+         * @return void
+         */
         validateRadio(field, idx){
            if( !this.frm.isSet(field.value) ){
                 this.renderError(`${field.name} option must be selected`, idx);
             }
         },
-
+        /**
+         * validate select input make sure one value is selected if required 
+         * @param field object
+         * @param idx field index to this.fields index
+         * @return void
+         */
         validateSelect(field, idx){
             if( !this.frm.isBlank(field.value) ){
                 this.renderError(`${field.name} option must be selected`, idx);

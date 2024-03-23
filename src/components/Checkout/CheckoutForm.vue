@@ -114,12 +114,11 @@
 </div>
 </template>
 
-
 <script>
 import Swal from 'sweetalert2';
 import { mask } from 'vue-the-mask';
 import IntPhoneNumber from '../Forms/IntPhoneNumber';
-import { kensPolicy, standardPolicy } from '../../utils/hardCoded';
+import { kensPolicy, standardPolicy } from '../../data/staticData';
 
 export default {
     name: "CheckoutForm",
@@ -149,12 +148,10 @@ export default {
     },
 
     methods: {
-
         updatePhoneNumber(props){
             this.form.phone_number = props.phone_num;
             this.form.phone_code = props.phone_ext;
         },
-
         openPolicy() {
            const policy = (this.tenantId == 'kens') ? kensPolicy() : standardPolicy();
             Swal.fire({
@@ -164,12 +161,9 @@ export default {
                 width: '80vw',
             });
         },
-
         submit(){
             this.$emit('onsubmit', this.form);
         }
-
     }
 }
-
 </script>

@@ -197,10 +197,10 @@
                                                     :enabled="true"
                                                     :display_errors="false"
                                                     :display_submit="false"
-                                                    :display_height="250"
+                                                    :display_height="275"
                                                     @customformexists="hasCustomFormFields"
                                                     :endpoint="`/package/custom/form/${form.package_id}`" />
-                                                    <hr />
+                                                    
                                             </div>
                                             
 

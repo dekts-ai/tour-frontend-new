@@ -26,7 +26,7 @@
                         <div class="row payment-form-sec">
                             <CheckoutForm  @onsubmit="submit" :tenantId="tenantId" :iframeStatus="iframeStatus" :errors="errors"  />
                             <div class="col-lg-5 order-1 order-md-2">	
-                                <ItemizedList :items="cartItem" :seatErrors="seatErrors" />
+                                <ItemizedList :items="cartItem" :seatErrors="seatErrors" :iframeStatus="iframeStatus" />
                                 <ItemTotalSummary :subtotal="subtotal" :total="total" :fees="fees" :discount="discount" />
                             </div>
                         </div>
@@ -43,7 +43,7 @@ import axios from "axios";
 import Swal from 'sweetalert2';
 import { loadStripe } from '@stripe/stripe-js';
 import { stripeCardStyle, stripeEleStyle } from '../utils/stripeUtils';
-import CountryCodes from '../utils/countryCode';
+import { CountryCodes }  from '../utils/geoUtils';
 import NavBtns from './Nav/NavBtns';
 import CheckoutForm from "./Checkout/CheckoutForm.vue";
 import ItemizedList from "./Checkout/ItemizedList";
@@ -152,9 +152,6 @@ export default {
             }
             if (!this.phone_number) {
                 this.errors.push("Your phone number is required.");
-            }
-            if (!CountryCodes.validatePhoneNumber(this.phone_number)) {
-                this.errors.push("Your phone number is invalid.");
             }
             if (!this.email) {
                 this.errors.push("Your email address is required.");
