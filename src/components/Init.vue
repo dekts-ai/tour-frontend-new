@@ -180,13 +180,30 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <hr>
-                                            <p v-if="errors.length">
-                                                <b>Please correct the following error(s):</b>
-                                                <ul class="following-error">
-                                                    <li v-for="error in errors" :key="error" v-bind:class="{'text-danger': error }" style="font-size:25px">{{ error }}</li>
-                                                </ul>
-                                            </p>
+                                            <hr />
+                                            <div ref="packageErrorDisplay">
+                                                <p v-if="errors.length" >
+                                                    <b>Please correct the following error(s):</b>
+                                                    <ul class="following-error">
+                                                        <li v-for="(error, idx) in errors" :key="`error-${idx}`" v-bind:class="{'text-danger': error }" style="font-size:25px">{{ error }}</li>
+                                                    </ul>
+                                                </p>
+                                            </div>
+
+                                            <div v-if="form.package_id && form.package_id !== 0">
+                                                <CustomFields 
+                                                    ref="CustomFieldsRef"
+                                                    :values="form.custom_fields"
+                                                    :enabled="true"
+                                                    :display_errors="false"
+                                                    :display_submit="false"
+                                                    :display_height="275"
+                                                    @customformexists="hasCustomFormFields"
+                                                    :endpoint="`/package/custom/form/${form.package_id}`" />
+                                                    
+                                            </div>
+                                            
+
                                             <div class="row groupofpeople">
                                                 <div class="col-12">
                                                     <h2>
@@ -249,7 +266,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        
+
                                                         <div class="col-6 booknowbtn text-end">
+                                                          
                                                             <button type="submit">Continue</button>
                                                             <!-- <button @click="addToCart" class="m-1">Add to Cart</button> -->
                                                         </div>
@@ -319,12 +339,15 @@ import Datepicker from 'vuejs3-datepicker';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import { getUTCDateFromTimeZone } from '../utils/dateUtils';
+import CustomFields from '../components/Forms/CustomFields';
+import { error } from "jquery";
 
 export default {
     name: "Init",
     title: "Native American Tours",
     components: {
-        Datepicker
+        Datepicker,
+        CustomFields
     },
     data() {
         return {
@@ -351,6 +374,7 @@ export default {
             begins: null,
             blockedTimes: {},
             errors: [],
+            customFieldExists: false,
             form: {
                 iframeStatusInfo: false,
                 tenant_id: "",
@@ -371,6 +395,7 @@ export default {
                 subtotal: 0,
                 fees: 0,
                 total: 0,
+                addons_total: 0,
                 tour_slot_id: 0,
                 service_commission: 0,
                 tour_promotion_id: 0,
@@ -385,6 +410,7 @@ export default {
                 longitude: null,
                 category: 'Tour',
                 travel_duration: '02:00:00',
+                custom_fields: null,
                 questions: [],
                 answers: [],
             },
@@ -585,13 +611,48 @@ export default {
                 this.processLoader(loader);
             });
         },
-        submit: function () {
-            var loader = this.$loading.show();
+
+        hasCustomFormFields(exists=false){
+            console.log(`sent from custom fields emit signal ${exists}`)
+            this.customFieldExists = exists;
+        },
+
+       onCustomFormFieldsSubmit(customFormData){
+        // no need to do anything if no custom fields
+        if( !this.customFieldExists  ){ return false;}
+
+            if(  customFormData.errors.length > 0  ){
+                this.errors = [...customFormData.errors];
+            }else{
+                this.form.custom_fields = customFormData.fields;
+                this.form.addons_total = this.$refs.CustomFieldsRef.sumTotal(customFormData.fields);
+            }
+            
+       },
+
+        submit: async function () {
 
             this.errors = [];
+            const loader = this.$loading.show();
+            this.form.addons_total = 0;
 
+            //if custom fields exists this will be added to the item object custom_fields prop
+            if( this.customFieldExists  ){ 
+                const customFormData  = await this.$refs.CustomFieldsRef.submitForm(false);
+                this.onCustomFormFieldsSubmit(customFormData);
+            }
+           
             if (!this.form.time_date) {
                 this.errors.push("Please select a start time for your tour");
+            }
+
+            if( this.errors.length > 0 ){
+                // if errors scroll errors into view 
+                this.$refs.packageErrorDisplay.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                            inline: "nearest"
+                });
             }
 
             const tourPackageRateGroups = this.details.tourPackageRateGroups;
@@ -636,7 +697,7 @@ export default {
                 this.form.package_name = this.tourPackageName;
                 this.form.subtotal = subtotalSum;
                 this.form.fees = feesSum;
-                this.form.total = subtotalSum + feesSum;
+                this.form.total = subtotalSum + feesSum + this.form.addons_total;
 
                 this.addToCart(loader);
             } else {
@@ -769,6 +830,12 @@ export default {
             axios.post("/available-seats", checkSlotarr).then((response) => {
                 if (response.data.success == "false") {
                     this.errors.push(response.data.message);
+                    this.$refs.packageErrorDisplay.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                            inline: "nearest"
+                    });
+
                 } else {
                     if (this.comboIds == 0) {
                         this.cartItem = [];
