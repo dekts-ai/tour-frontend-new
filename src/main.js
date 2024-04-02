@@ -30,8 +30,7 @@ app.use(store);
 app.use(VueLoading);
 app.use(VueGoogleMaps, {
     load: {
-      key: process?.env?.VUE_APP_MAP_KEY,
-      version: 'weekly'
+      key: process?.env?.VUE_APP_MAP_KEY
     }
 });
 

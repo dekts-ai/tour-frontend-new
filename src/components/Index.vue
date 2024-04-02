@@ -119,7 +119,7 @@
                                         </div>
                                         <div class="tourselected-totalcost">
                                             <div class="tourselected-group-wrap">
-                                                <div class="tourselected-group-title">Your selected group of people:</div>
+                                                <div class="tourselected-group-title">Guests:</div>
                                                 <div class="tourselected-group-people">
                                                     <div v-for="(pax, key) in item.people_group" :key="key">
                                                         <div class="tourselected-people" v-if="pax > 0">
@@ -145,6 +145,16 @@
                                                     ${{ item?.discount2_value ? Number(item?.discount2_value).toFixed(2) : Number(0).toFixed(2) }}
                                                 </div>
                                             </div>
+
+                                            <div v-if="item?.custom_fields" class="max-height-200">
+                                                <div v-for="( option, k ) in item.custom_fields.filter((f)=>f.priceInfo.enabled)" :key="`custom-field-${k}`" class="tourselected-costcount-subitem"> 
+                                                    <div class="tourselected-costcount-subitem-title">{{ option.name }}</div>
+                                                    <div class="tourselected-costcount-subitem-cost">${{ Number(option.priceInfo.price).toFixed(2) }}</div>
+                                                </div>
+                                            </div>
+                                            
+                                            
+
                                             <div class="tourselected-costcount-subitem">
                                                 <div class="tourselected-costcount-subitem-title">Booking Fees:</div>
                                                 <div class="tourselected-costcount-subitem-cost">${{ Number(item.fees).toFixed(2) }}</div>
@@ -267,11 +277,9 @@ export default {
 
         if (this.packageId > 0 && this.$store.state.mindChange == 0) {
             this.processLoader(loader);
-
             this.$router.push({
                 name: "Init"
             });
-
             return;
         }
 
@@ -279,9 +287,10 @@ export default {
             this.packageId = 0;
             this.affiliateId = 0;
         }
-
-        axios.get("/tour-package/" + this.date + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId + "/" + this.comboIds).then((response) => {
-            this.$store.dispatch('storeTourPackage', response.data)
+        try{
+            let url = `/tour-package/${this.date}/${this.tourOperatorId}/${this.packageId}/${this.affiliateId}/${this.comboIds}`;
+            let response = await axios.get(url);
+            this.$store.dispatch('storeTourPackage', response.data);
             this.tourPackageData = response.data.tourPackageData;
             this.banner = this.tourPackageData[0].HeaderOne;
             if (this.comboIds) {
@@ -293,13 +302,12 @@ export default {
                     }
                 });
             }
-
             this.processLoader(loader);
-        }).catch(error => {
+        }catch(error) {
             this.tourPackageData = [];
             this.banner = "";
             this.processLoader(loader);
-        });
+        };
 
         this.$store.dispatch('storeTabs', this.tabs);
         this.$store.dispatch('storeMindChange', 0);
