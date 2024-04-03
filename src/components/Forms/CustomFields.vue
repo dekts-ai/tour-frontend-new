@@ -8,7 +8,7 @@
     <div v-if="display_form">
 
         <h3 class="custom-form-header">{{ form.form_name }}</h3>
-        <p>{{ form.form_info }}</p>
+        <p>{{ form.description }}</p>
 
         <div v-if="display_errors && errors.length > 0">
             <div class="alert alert-warning">
