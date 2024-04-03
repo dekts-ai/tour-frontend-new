@@ -222,6 +222,7 @@ export default {
                     fields.forEach((_field, idx)=>{
                         fields[idx].value = this.getValueFromProps( fields[idx].id );
                         fields[idx].error = false;
+                        fields[idx].form_id = this.form.id
                         fields[idx].priceInfo.enabled = this.str.toBool(fields[idx].priceInfo.enabled );
                         fields[idx].priceInfo.price = this.str.toFloat(fields[idx].priceInfo.price);
                     });
