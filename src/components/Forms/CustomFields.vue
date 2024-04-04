@@ -89,7 +89,7 @@
 
                 <div v-if="field.type === 'select'">
                     <FormLabel :class="field.error ? 'custom-from-error' : ''" :id="str.toId(field.id)" className="custom-form-label" >
-                        {{  renderDetails(field) }}
+                        <CustomFieldLabel :field="field" />
                     </FormLabel>
                     <select :ref="field.id" 
                             :id="str.toId(field.id)" 
@@ -247,7 +247,7 @@ export default {
             if ( this.values && Array.isArray(this.values) ){
                 let field = this.values.filter(f=>f.id===id);
                 if(field.length > 0 ){
-                    value = field[0].value;
+                    value = this.str.stripTags( field[0].value );
                 }
             }
             return value;
@@ -384,8 +384,15 @@ export default {
             return  ( this.errors.length === 0 ) ? true : false;
         },
 
+       async sanitizeForm(){
+            for(let key in this.fields){
+                this.fields[key].value = this.str.stripTags( this.fields[key].value );
+            }
+       },
+
        async submitForm(emit = true){
             await this.validateForm();
+            await this.sanitizeForm();
             const data = { form: this.form, fields: this.submittedFields(), errors: this.errors}
 
             if( emit ){

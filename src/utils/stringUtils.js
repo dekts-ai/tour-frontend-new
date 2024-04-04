@@ -33,6 +33,28 @@ class StringUtils{
         return s.toString().replace("_", " ").replace("-", " ").replace(/\w\S*/g,txt=>txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
     }
 
+    /**
+     * input( my string <script>alert(1)</script> ) -> ( my string script alert(1) script )
+     * only allow string number or bool to be submitted from the front end. 
+     * @param {*} s string input val
+     * @returns 
+     */
+    static stripTags(s){
+
+        if( typeof(s) === 'string' ){
+            return s.toString().replace(/<[^>]*>?/gm, ' ');
+        }
+
+        if( typeof(s) === 'number' ){
+            return s;
+        }
+
+        if( typeof(s) === 'boolean'){
+            return s;
+        }
+
+    }
+
 
 }
 
