@@ -34,10 +34,12 @@
 </template>
 
 
-<style scoped> @import '../../assets/css/int_phone.css';</style>
+<style scoped> 
+  @import '../../assets/css/int_phone.css';
+</style>
 
 <script>
-import CountryCodes from '../../utils/countryCode';
+import {CountryCodes} from '../../utils/geoUtils';
 import { mask } from 'vue-the-mask';
 
 export default {
