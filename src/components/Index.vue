@@ -283,11 +283,12 @@ export default {
             return;
         }
 
-        if (this.$store.state.mindChange == 1) {
+        if (this.$store.state.mindChange == 1 && this.comboIds) {
             this.packageId = 0;
             this.affiliateId = 0;
         }
-        try{
+
+        try {
             let url = `/tour-package/${this.date}/${this.tourOperatorId}/${this.packageId}/${this.affiliateId}/${this.comboIds}`;
             let response = await axios.get(url);
             this.$store.dispatch('storeTourPackage', response.data);
@@ -303,7 +304,7 @@ export default {
                 });
             }
             this.processLoader(loader);
-        }catch(error) {
+        } catch(error) {
             this.tourPackageData = [];
             this.banner = "";
             this.processLoader(loader);
