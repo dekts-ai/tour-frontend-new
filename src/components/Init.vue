@@ -258,7 +258,7 @@
 
                                                     <div class="row">
                                                         <div class="col-6 text-start">
-                                                            <div v-if="form.questions.length">
+                                                            <div v-if="form.questions && form.questions.length">
                                                                 <h2 class="mb-2">Your Input Matters:</h2>
                                                                 <div class="form-group text-start" v-for="(data, index) in form.questions" :key="index">
                                                                     <label for="questions" class="col-form-label">{{ data.question }} <span class="required-star">*</span></label>
