@@ -392,7 +392,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .tour-packages-item .tour-packages-action-wrap {display: flex; align-items: center;}
 .tour-packages-edit-wrap {padding: 0 30px 15px; display: flex; align-items: center;}
 .tour-packages-couponcode-wrap p { display: block; line-height: 1; margin-top: 5px; text-align: left; font-size: 12px;}
-.tour-packages-couponcode input {font-size: 12px; font-weight: 900; color: #B1B1B1; width: 110px; height: 25px; border-radius: 4px; border: 1px solid rgba(76, 118, 178, 0.50); background: #FFF; box-shadow: 0px -3.40909px 2.72727px 0px rgba(0, 0, 0, 0.12) inset; padding: 2px 10px; line-height: 1px; text-align: right;}
+.tour-packages-couponcode input {font-size: 12px; font-weight: 900; color: #B1B1B1; width: 35%; height: 25px; border-radius: 4px; border: 1px solid rgba(76, 118, 178, 0.50); background: #FFF; box-shadow: 0px -3.40909px 2.72727px 0px rgba(0, 0, 0, 0.12) inset; padding: 0px 10px 2px; line-height: 1; text-align: right;}
 .tour-packages-couponcode .couponcode-apply-btn {font-size: 12px; font-weight: 900; color: #fff;border-radius: 4px; border: 1px solid rgba(76, 118, 178, 0.50); background: #4C76B2; box-shadow: 0px -3.40909px 2.72727px 0px rgba(0, 0, 0, 0.12) inset; min-width: 50px; max-width: 100px; height: 25px;}
 
 .addmore-package-wrap {margin-top: 15px;}
