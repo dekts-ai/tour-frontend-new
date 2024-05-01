@@ -46,6 +46,9 @@
         <div class="title"><strong>Total Cost</strong></div>
         <div class="amount">${{ Number(item.total).toFixed(2) }}</div>
     </div>
+
+    <Discount :item="item" />
+
     <p class="text-start tour-packages-detail ms-4 mt-2 mb-2" v-if="seatErrors?.length">
         <ul><li v-for="(error, index) in seatErrors" :key="index" v-bind:class="{'text-danger': error[item.tour_slot_id]?.success }"><small>{{ error[item.tour_slot_id]?.message }}</small></li></ul>
     </p>
@@ -56,11 +59,14 @@
 
 <script>
 import { defaultDateFormat } from '../../utils/dateUtils';
+import Discount from './Discount.vue';
 
 export default {
     name: "ItemizedList",
     props: ["items", "seatErrors", "iframeStatus"],
-
+    components:{
+        Discount,
+    },
     data:()=>{
         return {
         }

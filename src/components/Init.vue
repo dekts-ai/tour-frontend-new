@@ -257,19 +257,7 @@
                                                     </div>
 
                                                     <div class="row">
-                                                        <div class="col-6 text-start">
-                                                            <div v-if="form.questions && form.questions.length">
-                                                                <h2 class="mb-2">Your Input Matters:</h2>
-                                                                <div class="form-group text-start" v-for="(data, index) in form.questions" :key="index">
-                                                                    <label for="questions" class="col-form-label">{{ data.question }} <span class="required-star">*</span></label>
-                                                                    <input type="text" v-model="form.answers[index]" :id="'answers-'+index" class="form-control" placeholder="Please type your answer ...">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        
-
-                                                        <div class="col-6 booknowbtn text-end">
-                                                          
+                                                        <div class="col-12 booknowbtn text-end">
                                                             <button type="submit">Continue</button>
                                                             <!-- <button @click="addToCart" class="m-1">Add to Cart</button> -->
                                                         </div>
@@ -411,8 +399,9 @@ export default {
                 category: 'Tour',
                 travel_duration: '02:00:00',
                 custom_fields: null,
-                questions: [],
-                answers: [],
+                before_discount_subtotal: 0,
+                before_discount_fees: 0,
+                before_discount_total: 0
             },
             with_rate_groups: 1,
             tabs: 2
@@ -508,7 +497,6 @@ export default {
                     this.form.longitude = response.data.tourPackageData[0].longitude;
                     this.form.category = response.data.tourPackageData[0].category;
                     this.form.travel_duration = response.data.tourPackageData[0].travel_duration;
-                    this.form.questions = response.data.questions;
 
                     // Define Variables
                     var v1 = this.totalavailableseats;
@@ -686,8 +674,22 @@ export default {
                 index++;
             });
 
-            const feesSum = feesGroupArr.reduce((a, b) => Number(a) + Number(b), 0);
-            const subtotalSum = paxSubtotalArr.reduce((a, b) => Number(a) + Number(b), 0);
+            let feesSum = feesGroupArr.reduce((a, b) => Number(a) + Number(b), 0);
+            let subtotalSum = paxSubtotalArr.reduce((a, b) => Number(a) + Number(b), 0);
+
+            this.form.before_discount_subtotal = Number(subtotalSum);
+            this.form.before_discount_fees = Number(feesSum);
+            this.form.before_discount_total = Number(subtotalSum) + Number(feesSum) + this.form.addons_total;
+
+            if (this.form.discount2_percentage > 0) {
+                var discountedAmount = Number(subtotalSum) * Number(this.form.discount2_percentage) / 100;
+                this.form.discount2_value = Number(discountedAmount).toFixed(2);
+                subtotalSum = Number(subtotalSum - discountedAmount).toFixed(2);
+                feesSum = this.roundout(subtotalSum * this.form.service_commission / 100, 2);
+            } else if (this.form.discount2_value > 0) {
+                subtotalSum = Number(subtotalSum - this.form.discount2_value).toFixed(2);
+                feesSum = this.roundout(subtotalSum * this.form.service_commission / 100, 2);
+            }
 
             if (this.errors.length == 0) {
                 this.form.calucation = paxSubtotalArr;
@@ -697,7 +699,13 @@ export default {
                 this.form.package_name = this.tourPackageName;
                 this.form.subtotal = subtotalSum;
                 this.form.fees = feesSum;
-                this.form.total = subtotalSum + feesSum + this.form.addons_total;
+                this.form.total = Number(subtotalSum) + Number(feesSum) + this.form.addons_total;
+
+                if (this.form.total <= 0) {
+                    this.errors.push("Oops! Something went wrong. Please try again later.");
+                    this.processLoader(loader);
+                    return;
+                }
 
                 this.addToCart(loader);
             } else {
