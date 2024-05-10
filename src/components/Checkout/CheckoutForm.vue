@@ -52,7 +52,7 @@
                 </div>
             </div>
         </div>
-        <div class="payment-box mb-2">
+        <div class="payment-box text-start mb-2">
             <div class="payment-text card-label-text-left">
                 <img src="../../assets/images/payment.png"> Payment
             </div>

@@ -488,7 +488,6 @@ export default {
                     this.hotels = response.data.hotels;
                     this.details.tourPackageRateGroups = this.details.tourPackageRateGroups[this.form.package_id];
 
-                    this.form.service_commission = this.$store.state.tourPackage.tourPackageData[0].service_commission_percentage;
                     this.form.things_to_bring = response.data.thingsToBring;
                     this.form.short_description = response.data.tourPackageData[0].short_description;
                     this.form.long_description = response.data.tourPackageData[0].long_description;
@@ -497,6 +496,11 @@ export default {
                     this.form.longitude = response.data.tourPackageData[0].longitude;
                     this.form.category = response.data.tourPackageData[0].category;
                     this.form.travel_duration = response.data.tourPackageData[0].travel_duration;
+                    if (this.form.affiliate_id > 0) {
+                        this.form.service_commission = response.data.tourPackageData[0].affiliate_processing_percentage;
+                    } else {
+                        this.form.service_commission = response.data.tourPackageData[0].service_commission_percentage;
+                    }
 
                     // Define Variables
                     var v1 = this.totalavailableseats;
