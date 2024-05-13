@@ -244,6 +244,7 @@ export default {
                                     self.$store.dispatch('storeBookingIds', self.bookingIds)
                                     var stripeObject = {
                                         booking_ids: response.data.bookingIds,
+                                        affiliate_id: response.data.affiliateId,
                                         payment_intent: response.data.intentId,
                                         payment_intent_client_secret: response.data.clientSecret
                                     };
