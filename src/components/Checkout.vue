@@ -27,7 +27,7 @@
                             <CheckoutForm  @onsubmit="submit" :tenantId="tenantId" :iframeStatus="iframeStatus" :errors="errors"  />
                             <div class="col-lg-5 order-1 order-md-2">	
                                 <ItemizedList :items="cartItem" :seatErrors="seatErrors" :iframeStatus="iframeStatus" />
-                                <ItemTotalSummary :subtotal="subtotal" :total="total" :fees="fees" :discount="discount" />
+                                <ItemTotalSummary :subtotal="subtotal" :total="total" :fees="fees" :addons_total="addons_total" :discount="discount" />
                             </div>
                         </div>
 
@@ -79,6 +79,7 @@ export default {
             subtotal: 0,
             discount: 0,
             fees: 0,
+            addons_total: 0,
             total: 0,
             message: "",
             stripe: "",
@@ -115,6 +116,7 @@ export default {
                 this.subtotal = Number(this.subtotal) + Number(this.cartItem[key].subtotal);
                 this.discount = Number(this.discount) + Number(this.cartItem[key].discount2_value);
                 this.fees = Number(this.fees) + Number(this.cartItem[key].fees);
+                this.addons_total = Number(this.addons_total) + Number(this.cartItem[key].addons_total);
                 this.total = Number(this.total) + Number(this.cartItem[key].total);
                 this.cartItem[key].couponErrors = [];
                 this.cartItem[key].couponSuccess = [];
@@ -225,6 +227,7 @@ export default {
                         subtotal: this.subtotal,
                         discount: this.discount,
                         fees: this.fees,
+                        addons_total: this.addons_total,
                         total: this.total
                     };
 

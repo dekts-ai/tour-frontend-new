@@ -683,7 +683,7 @@ export default {
 
             this.form.before_discount_subtotal = Number(subtotalSum);
             this.form.before_discount_fees = Number(feesSum);
-            this.form.before_discount_total = Number(subtotalSum) + Number(feesSum) + this.form.addons_total;
+            this.form.before_discount_total = Number(subtotalSum) + Number(feesSum);
 
             if (this.form.discount2_percentage > 0) {
                 var discountedAmount = Number(subtotalSum) * Number(this.form.discount2_percentage) / 100;
@@ -703,7 +703,9 @@ export default {
                 this.form.package_name = this.tourPackageName;
                 this.form.subtotal = subtotalSum;
                 this.form.fees = feesSum;
-                this.form.total = Number(subtotalSum) + Number(feesSum) + this.form.addons_total;
+
+                let total = Number(subtotalSum) + Number(feesSum);
+                this.form.total = Number(Number(total).toFixed(2));
 
                 if (this.form.total <= 0) {
                     this.errors.push("Oops! Something went wrong. Please try again later.");

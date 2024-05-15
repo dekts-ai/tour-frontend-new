@@ -145,16 +145,6 @@
                                                     ${{ item?.discount2_value ? Number(item?.discount2_value).toFixed(2) : Number(0).toFixed(2) }}
                                                 </div>
                                             </div>
-
-                                            <div v-if="item?.custom_fields" class="max-height-200">
-                                                <div v-for="( option, k ) in item.custom_fields.filter((f)=>f.priceInfo.enabled)" :key="`custom-field-${k}`" class="tourselected-costcount-subitem"> 
-                                                    <div class="tourselected-costcount-subitem-title">{{ option.name }}</div>
-                                                    <div class="tourselected-costcount-subitem-cost">${{ Number(option.priceInfo.price).toFixed(2) }}</div>
-                                                </div>
-                                            </div>
-                                            
-                                            
-
                                             <div class="tourselected-costcount-subitem">
                                                 <div class="tourselected-costcount-subitem-title">Booking Fees:</div>
                                                 <div class="tourselected-costcount-subitem-cost">${{ Number(item.fees).toFixed(2) }}</div>
@@ -163,7 +153,20 @@
                                                 <div class="tourselected-costcount-total-title">Tour Cost:</div>
                                                 <div class="tourselected-costcount-total-cost">${{ Number(item.total).toFixed(2) }}</div>
                                             </div>
-
+                                            <div v-if="item?.custom_fields">
+                                                <div class="tourselected-costcount-title">Add-ons:</div>
+                                                <div class="max-height-200">
+                                                    <div v-for="( option, k ) in item.custom_fields.filter((f)=>f.priceInfo.enabled)" :key="`custom-field-${k}`" class="tourselected-costcount-subitem"> 
+                                                        <div class="tourselected-costcount-subitem-title">{{ option.name }}</div>
+                                                        <div class="tourselected-costcount-subitem-cost">${{ Number(option.priceInfo.price).toFixed(2) }}</div>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="tourselected-costcount-total">
+                                                    <div class="tourselected-costcount-total-title">Package Total:</div>
+                                                    <div class="tourselected-costcount-total-cost">${{ Number(item.total + item.addons_total).toFixed(2) }}</div>
+                                                </div>
+                                            </div>
                                             <div class="tourselected-edit-wrap">
                                                 <div class="tourselected-action-wrap">
                                                     <div class="tourselected-action-btn">
