@@ -32,7 +32,7 @@
                 <div class="amount">${{ Number(item.fees).toFixed(2) }}</div>
             </div>
             <div class="other-details-wrap d-flex justify-content-between align-items-center">
-                <div class="title"><strong>Total Cost</strong></div>
+                <div class="title"><strong>Tour Cost</strong></div>
                 <div class="amount">${{ Number(item.total).toFixed(2) }}</div>
             </div>
 
@@ -48,6 +48,10 @@
                         <div class="title">{{ option.name }}</div>
                         <div class="amount">${{ Number(option.priceInfo.price).toFixed(2) }} </div>
                     </div>
+                </div>
+                <div class="other-details-wrap d-flex justify-content-between align-items-center lemonchiffon">
+                    <div class="title"><strong>Total Cost</strong></div>
+                    <div class="amount"><strong>${{ Number(item.total + item.addons_total).toFixed(2) }}</strong></div>
                 </div>
             </div>
 

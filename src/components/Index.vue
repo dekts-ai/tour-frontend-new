@@ -161,9 +161,8 @@
                                                         <div class="tourselected-costcount-subitem-cost">${{ Number(option.priceInfo.price).toFixed(2) }}</div>
                                                     </div>
                                                 </div>
-                                                <hr>
-                                                <div class="tourselected-costcount-total">
-                                                    <div class="tourselected-costcount-total-title">Package Total:</div>
+                                                <div class="tourselected-costcount-total lemonchiffon">
+                                                    <div class="tourselected-costcount-total-title">Total Cost:</div>
                                                     <div class="tourselected-costcount-total-cost">${{ Number(item.total + item.addons_total).toFixed(2) }}</div>
                                                 </div>
                                             </div>
