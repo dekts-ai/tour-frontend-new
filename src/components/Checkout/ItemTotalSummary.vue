@@ -21,7 +21,7 @@
         </div>
         <div class="other-details-wrap d-flex justify-content-between align-items-center last">
             <div class="title"><strong>Total Cost</strong></div>
-            <div class="amount"><strong>${{ Number(globalTotal.total + globalTotal.addons_total).toFixed(2) }}</strong></div>
+            <div class="amount"><strong>${{ Number(globalTotal.total).toFixed(2) }}</strong></div>
         </div>
     </div>
 </template>

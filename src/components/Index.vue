@@ -164,7 +164,7 @@
                                                 <div class="tourselected-costcount-subitem-cost">${{ Number(item.fees).toFixed(2) }}</div>
                                             </div>
                                             <div class="tourselected-costcount-total">
-                                                <div class="tourselected-costcount-total-title lemonchiffon">Tour Cost:</div>
+                                                <div class="tourselected-costcount-total-title">Tour Cost:</div>
                                                 <div class="tourselected-costcount-total-cost">${{ Number(item.total).toFixed(2) }}</div>
                                             </div>
                                             <div class="tourselected-edit-wrap">
@@ -249,10 +249,6 @@ export default {
             },
             cartItem: {},
             cartItemLength: 0,
-            subtotal: 0,
-            discount: 0,
-            fees: 0,
-            total: 0,
             tabs: 1,
             checkPackageIds: [],
             firstPackageId: 0,
@@ -403,17 +399,8 @@ export default {
                         }
                     });
 
-                    this.subtotal = 0;
-                    this.discount = 0;
-                    this.fees = 0;
-                    this.total = 0;
                     if (this.cartItemLength) {
                         for (var key in this.cartItem) {
-                            this.subtotal = Number(this.subtotal) + Number(this.cartItem[key].subtotal);
-                            this.discount = Number(this.discount) + Number(this.cartItem[key].discount2_value);
-                            this.fees = Number(this.fees) + Number(this.cartItem[key].fees);
-                            this.total = Number(this.total) + Number(this.cartItem[key].total);
-
                             var pId = parseInt(this.cartItem[key].package_id);
                             this.checkPackageIds.push(pId);
                         }

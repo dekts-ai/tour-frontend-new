@@ -81,6 +81,7 @@ export default {
                 discount: 0,
                 fees: 0,
                 addons_total: 0,
+                addons_fee: 0,
                 total: 0,
             },
             message: "",
@@ -119,6 +120,7 @@ export default {
                 this.globalTotal.discount = Number(this.globalTotal.discount) + Number(this.cartItem[key].discount2_value);
                 this.globalTotal.fees = Number(this.globalTotal.fees) + Number(this.cartItem[key].fees);
                 this.globalTotal.addons_total = Number(this.globalTotal.addons_total) + Number(this.cartItem[key].addons_total);
+                this.globalTotal.addons_fee = Number(this.globalTotal.addons_fee) + Number(this.cartItem[key].addons_fee);
                 this.globalTotal.total = Number(this.globalTotal.total) + Number(this.cartItem[key].total);
                 this.cartItem[key].couponErrors = [];
                 this.cartItem[key].couponSuccess = [];
@@ -230,6 +232,7 @@ export default {
                         discount: this.globalTotal.discount,
                         fees: this.globalTotal.fees,
                         addons_total: this.globalTotal.addons_total,
+                        addons_fee: this.globalTotal.addons_fee,
                         total: this.globalTotal.total
                     };
 
@@ -333,7 +336,6 @@ export default {
 .card-element {
     margin-top: 5px;
 }
-
 .card-label-text-left {
     text-align: left;
 }

@@ -132,7 +132,7 @@
                                                                 :value="name.Time"
                                                                 :disabled=isDisabled(name) />
 
-                                                            <label class="background-change"></label>
+                                                            <span class="background-change"></span>
 
                                                             <label :for="name.Id">{{ name.Time}}</label>
 
@@ -194,6 +194,7 @@
                                                     :display_errors="false"
                                                     :display_submit="false"
                                                     :display_height="275"
+                                                    :service_commission="form.service_commission"
                                                     @customformexists="hasCustomFormFields"
                                                     :endpoint="`/package/custom/form/${form.package_id}`" />
                                                     
@@ -379,6 +380,7 @@ export default {
                 fees: 0,
                 total: 0,
                 addons_total: 0,
+                addons_fee: 0,
                 tour_slot_id: 0,
                 service_commission: 0,
                 tour_promotion_id: 0,
@@ -492,9 +494,9 @@ export default {
                     this.form.category = response.data.tourPackageData[0].category;
                     this.form.travel_duration = response.data.tourPackageData[0].travel_duration;
                     if (this.form.affiliate_id > 0) {
-                        this.form.service_commission = response.data.tourPackageData[0].affiliate_processing_percentage;
+                        this.form.service_commission = Number(response.data.tourPackageData[0].affiliate_processing_percentage);
                     } else {
-                        this.form.service_commission = response.data.tourPackageData[0].service_commission_percentage;
+                        this.form.service_commission = Number(response.data.tourPackageData[0].service_commission_percentage);
                     }
 
                     // Define Variables
@@ -613,6 +615,7 @@ export default {
             }else{
                 this.form.custom_fields = customFormData.fields;
                 this.form.addons_total = this.$refs.CustomFieldsRef.sumTotal(customFormData.fields);
+                this.form.addons_fee = this.$refs.CustomFieldsRef.feeTotal(customFormData.fields);
             }
        },
 
@@ -621,6 +624,7 @@ export default {
             this.errors = [];
             const loader = this.$loading.show();
             this.form.addons_total = 0;
+            this.form.addons_fee = 0;
 
             //if custom fields exists this will be added to the item object custom_fields prop
             if( this.customFieldExists  ){ 
@@ -676,8 +680,8 @@ export default {
             let subtotalSum = paxSubtotalArr.reduce((a, b) => Number(a) + Number(b), 0);
 
             this.form.before_discount_subtotal = Number(subtotalSum);
-            this.form.before_discount_fees = Number(feesSum);
-            this.form.before_discount_total = Number(subtotalSum) + Number(feesSum);
+            this.form.before_discount_fees = Number(feesSum) + Number(this.form.addons_fee);
+            this.form.before_discount_total = Number(subtotalSum) + Number(feesSum) + Number(this.form.addons_total) + Number(this.form.addons_fee);
 
             if (this.form.discount2_percentage > 0) {
                 var discountedAmount = Number(subtotalSum) * Number(this.form.discount2_percentage) / 100;
@@ -696,9 +700,9 @@ export default {
                 this.form.iframeStatusInfo = this.iframeStatus;
                 this.form.package_name = this.tourPackageName;
                 this.form.subtotal = subtotalSum;
-                this.form.fees = feesSum;
+                this.form.fees = Number(feesSum) + Number(this.form.addons_fee);
 
-                let total = Number(subtotalSum) + Number(feesSum);
+                let total = Number(subtotalSum) + Number(feesSum) + Number(this.form.addons_total) + Number(this.form.addons_fee);
                 this.form.total = Number(Number(total).toFixed(2));
 
                 if (this.form.total <= 0) {
