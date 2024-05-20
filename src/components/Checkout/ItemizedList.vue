@@ -47,7 +47,24 @@
         <div class="amount">${{ Number(item.total).toFixed(2) }}</div>
     </div>
 
-    <Discount :item="item" />
+            <Discount :item="item" :cartItem="items" :globalTotalItem="globalTotalItem" />
+
+            <div v-if="item.custom_fields">
+                <div class="ages-wrap d-flex justify-content-between align-items-center">
+                    <div class="title">Add-ons:</div>
+                </div>
+                <div v-for="(option, idx) in item.custom_fields" :key="`custom-option-${idx}`">
+                    <div v-if="option.priceInfo.enabled"
+                        class="other-details-wrap d-flex justify-content-between align-items-center">
+                        <div class="title">{{ option.name }}</div>
+                        <div class="amount">${{ Number(option.priceInfo.price).toFixed(2) }} </div>
+                    </div>
+                </div>
+                <div class="other-details-wrap d-flex justify-content-between align-items-center lemonchiffon">
+                    <div class="title"><strong>Total Cost</strong></div>
+                    <div class="amount"><strong>${{ Number(item.total + item.addons_total).toFixed(2) }}</strong></div>
+                </div>
+            </div>
 
     <p class="text-start tour-packages-detail ms-4 mt-2 mb-2" v-if="seatErrors?.length">
         <ul><li v-for="(error, index) in seatErrors" :key="index" v-bind:class="{'text-danger': error[item.tour_slot_id]?.success }"><small>{{ error[item.tour_slot_id]?.message }}</small></li></ul>
@@ -63,8 +80,8 @@ import Discount from './Discount.vue';
 
 export default {
     name: "ItemizedList",
-    props: ["items", "seatErrors", "iframeStatus"],
-    components:{
+    props: ["items", "globalTotalItem", "seatErrors", "iframeStatus"],
+    components: {
         Discount,
     },
     data:()=>{
