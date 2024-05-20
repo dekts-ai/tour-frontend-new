@@ -18,7 +18,7 @@ import axios from "axios";
 
 export default {
     name: "Discount",
-    props: ["item", "cartItem", "globalTotalItem"],
+    props: ["item", "allItem", "globalTotalItem"],
     data: () => {
         return {
         }
@@ -41,11 +41,11 @@ export default {
             this.globalTotalItem.fees = 0;
             this.globalTotalItem.total = 0;
 
-            for (var key in this.cartItem) {
-                this.globalTotalItem.subtotal = Number(this.globalTotalItem.subtotal) + Number(this.cartItem[key].subtotal);
-                this.globalTotalItem.discount = Number(this.globalTotalItem.discount) + Number(this.cartItem[key].discount2_value);
-                this.globalTotalItem.fees = Number(this.globalTotalItem.fees) + Number(this.cartItem[key].fees);
-                this.globalTotalItem.total = Number(this.globalTotalItem.total) + Number(this.cartItem[key].total);
+            for (var key in this.allItem) {
+                this.globalTotalItem.subtotal = Number(this.globalTotalItem.subtotal) + Number(this.allItem[key].subtotal);
+                this.globalTotalItem.discount = Number(this.globalTotalItem.discount) + Number(this.allItem[key].discount2_value);
+                this.globalTotalItem.fees = Number(this.globalTotalItem.fees) + Number(this.allItem[key].fees);
+                this.globalTotalItem.total = Number(this.globalTotalItem.total) + Number(this.allItem[key].total);
             }
 
             $('#applyCouponButton-' + item.tour_slot_id)
@@ -106,11 +106,11 @@ export default {
                         this.globalTotalItem.fees = 0;
                         this.globalTotalItem.total = 0;
 
-                        for (var key in this.cartItem) {
-                            this.globalTotalItem.subtotal = Number(this.globalTotalItem.subtotal) + Number(this.cartItem[key].subtotal);
-                            this.globalTotalItem.discount = Number(this.globalTotalItem.discount) + Number(this.cartItem[key].discount2_value);
-                            this.globalTotalItem.fees = Number(this.globalTotalItem.fees) + Number(this.cartItem[key].fees);
-                            this.globalTotalItem.total = Number(this.globalTotalItem.total) + Number(this.cartItem[key].total);
+                        for (var key in this.allItem) {
+                            this.globalTotalItem.subtotal = Number(this.globalTotalItem.subtotal) + Number(this.allItem[key].subtotal);
+                            this.globalTotalItem.discount = Number(this.globalTotalItem.discount) + Number(this.allItem[key].discount2_value);
+                            this.globalTotalItem.fees = Number(this.globalTotalItem.fees) + Number(this.allItem[key].fees);
+                            this.globalTotalItem.total = Number(this.globalTotalItem.total) + Number(this.allItem[key].total);
                         }
                     }
 

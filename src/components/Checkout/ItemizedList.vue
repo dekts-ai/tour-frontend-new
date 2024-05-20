@@ -27,17 +27,6 @@
             <div class="title">Subtotal</div>
             <div class="amount">${{ Number(item.fees).toFixed(2) }}</div>	
             </div> -->
-            <div class="other-details-wrap d-flex justify-content-between align-items-center">
-                <div class="title">Booking Fees</div>
-                <div class="amount">${{ Number(item.fees).toFixed(2) }}</div>
-            </div>
-            <div class="other-details-wrap d-flex justify-content-between align-items-center">
-                <div class="title"><strong>Tour Cost</strong></div>
-                <div class="amount">${{ Number(item.total).toFixed(2) }}</div>
-            </div>
-
-            <Discount :item="item" :cartItem="items" :globalTotalItem="globalTotalItem" />
-
             <div v-if="item.custom_fields">
                 <div class="ages-wrap d-flex justify-content-between align-items-center">
                     <div class="title">Add-ons:</div>
@@ -49,11 +38,22 @@
                         <div class="amount">${{ Number(option.priceInfo.price).toFixed(2) }} </div>
                     </div>
                 </div>
-                <div class="other-details-wrap d-flex justify-content-between align-items-center lemonchiffon">
+                <!-- <div class="other-details-wrap d-flex justify-content-between align-items-center lemonchiffon">
                     <div class="title"><strong>Total Cost</strong></div>
                     <div class="amount"><strong>${{ Number(item.total + item.addons_total).toFixed(2) }}</strong></div>
-                </div>
+                </div> -->
+                <hr class="m-1">
             </div>
+            <div class="other-details-wrap d-flex justify-content-between align-items-center">
+                <div class="title">Booking Fees</div>
+                <div class="amount">${{ Number(item.fees).toFixed(2) }}</div>
+            </div>
+            <div class="other-details-wrap d-flex justify-content-between align-items-center lemonchiffon">
+                <div class="title"><strong>Tour Cost</strong></div>
+                <div class="amount">${{ Number(item.total).toFixed(2) }}</div>
+            </div>
+
+            <Discount :item="item" :allItem="items" :globalTotalItem="globalTotalItem" />
 
             <p class="text-start tour-packages-detail ms-4 mt-2 mb-2" v-if="seatErrors?.length">
                 <ul>

@@ -119,7 +119,7 @@
                                         </div>
                                         <div class="tourselected-totalcost">
                                             <div class="tourselected-group-wrap">
-                                                <div class="tourselected-group-title">Guests:</div>
+                                                <div class="tourselected-group-small-title protanopia">Guests:</div>
                                                 <div class="tourselected-group-people">
                                                     <div v-for="(pax, key) in item.people_group" :key="key">
                                                         <div class="tourselected-people" v-if="pax > 0">
@@ -133,7 +133,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="tourselected-costcount-title">Tour cost:</div>
+                                            <div class="tourselected-costcount-small-title protanopia">Tour cost:</div>
                                             <div class="tourselected-costcount-subitem">
                                                 <div class="tourselected-costcount-subitem-title">Subtotal:</div>
                                                 <div class="tourselected-costcount-subitem-cost">${{ Number(item.subtotal).toFixed(2) }}</div>
@@ -145,26 +145,27 @@
                                                     ${{ item?.discount2_value ? Number(item?.discount2_value).toFixed(2) : Number(0).toFixed(2) }}
                                                 </div>
                                             </div>
-                                            <div class="tourselected-costcount-subitem">
-                                                <div class="tourselected-costcount-subitem-title">Booking Fees:</div>
-                                                <div class="tourselected-costcount-subitem-cost">${{ Number(item.fees).toFixed(2) }}</div>
-                                            </div>
-                                            <div class="tourselected-costcount-total">
-                                                <div class="tourselected-costcount-total-title">Tour Cost:</div>
-                                                <div class="tourselected-costcount-total-cost">${{ Number(item.total).toFixed(2) }}</div>
-                                            </div>
-                                            <div v-if="item?.custom_fields">
-                                                <div class="tourselected-costcount-title">Add-ons:</div>
+                                            <div v-if="item?.custom_fields?.length">
+                                                <div class="tourselected-costcount-small-title protanopia">Add-ons:</div>
                                                 <div class="max-height-200">
                                                     <div v-for="( option, k ) in item.custom_fields.filter((f)=>f.priceInfo.enabled)" :key="`custom-field-${k}`" class="tourselected-costcount-subitem"> 
                                                         <div class="tourselected-costcount-subitem-title">{{ option.name }}</div>
                                                         <div class="tourselected-costcount-subitem-cost">${{ Number(option.priceInfo.price).toFixed(2) }}</div>
                                                     </div>
                                                 </div>
-                                                <div class="tourselected-costcount-total lemonchiffon">
+                                                <!-- <div class="tourselected-costcount-total lemonchiffon">
                                                     <div class="tourselected-costcount-total-title">Total Cost:</div>
                                                     <div class="tourselected-costcount-total-cost">${{ Number(item.total + item.addons_total).toFixed(2) }}</div>
-                                                </div>
+                                                </div> -->
+                                                <div class="tourselected-costcount-small-title protanopia"></div>
+                                            </div>
+                                            <div class="tourselected-costcount-subitem">
+                                                <div class="tourselected-costcount-subitem-title">Booking Fees:</div>
+                                                <div class="tourselected-costcount-subitem-cost">${{ Number(item.fees).toFixed(2) }}</div>
+                                            </div>
+                                            <div class="tourselected-costcount-total">
+                                                <div class="tourselected-costcount-total-title lemonchiffon">Tour Cost:</div>
+                                                <div class="tourselected-costcount-total-cost">${{ Number(item.total).toFixed(2) }}</div>
                                             </div>
                                             <div class="tourselected-edit-wrap">
                                                 <div class="tourselected-action-wrap">
