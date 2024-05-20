@@ -619,7 +619,6 @@ export default {
                 this.form.custom_fields = customFormData.fields;
                 this.form.addons_total = this.$refs.CustomFieldsRef.sumTotal(customFormData.fields);
             }
-            
        },
 
         submit: async function () {

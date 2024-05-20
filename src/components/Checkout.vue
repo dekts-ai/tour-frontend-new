@@ -26,8 +26,8 @@
                         <div class="row payment-form-sec">
                             <CheckoutForm  @onsubmit="submit" :tenantId="tenantId" :iframeStatus="iframeStatus" :errors="errors"  />
                             <div class="col-lg-5 order-1 order-md-2">	
-                                <ItemizedList :items="cartItem" :seatErrors="seatErrors" :iframeStatus="iframeStatus" />
-                                <ItemTotalSummary :subtotal="subtotal" :total="total" :fees="fees" :addons_total="addons_total" :discount="discount" />
+                                <ItemizedList :items="cartItem" :globalTotalItem="globalTotal" :seatErrors="seatErrors" :iframeStatus="iframeStatus" />
+                                <ItemTotalSummary :globalTotal="globalTotal" />
                             </div>
                         </div>
 
@@ -76,11 +76,13 @@ export default {
             errors: [],
             seatErrors: [],
             seatErrorsLength: 0,
-            subtotal: 0,
-            discount: 0,
-            fees: 0,
-            addons_total: 0,
-            total: 0,
+            globalTotal: {
+                subtotal: 0,
+                discount: 0,
+                fees: 0,
+                addons_total: 0,
+                total: 0,
+            },
             message: "",
             stripe: "",
             elements: "",
@@ -113,11 +115,11 @@ export default {
         this.cartItemLength = Object.values(this.cartItem).length;
         if (this.cartItemLength) {
             for (var key in this.cartItem) {
-                this.subtotal = Number(this.subtotal) + Number(this.cartItem[key].subtotal);
-                this.discount = Number(this.discount) + Number(this.cartItem[key].discount2_value);
-                this.fees = Number(this.fees) + Number(this.cartItem[key].fees);
-                this.addons_total = Number(this.addons_total) + Number(this.cartItem[key].addons_total);
-                this.total = Number(this.total) + Number(this.cartItem[key].total);
+                this.globalTotal.subtotal = Number(this.globalTotal.subtotal) + Number(this.cartItem[key].subtotal);
+                this.globalTotal.discount = Number(this.globalTotal.discount) + Number(this.cartItem[key].discount2_value);
+                this.globalTotal.fees = Number(this.globalTotal.fees) + Number(this.cartItem[key].fees);
+                this.globalTotal.addons_total = Number(this.globalTotal.addons_total) + Number(this.cartItem[key].addons_total);
+                this.globalTotal.total = Number(this.globalTotal.total) + Number(this.cartItem[key].total);
                 this.cartItem[key].couponErrors = [];
                 this.cartItem[key].couponSuccess = [];
             }
@@ -224,11 +226,11 @@ export default {
                         cardnumber: this.cardnumber,
                         expiration: this.expiration,
                         cvv: this.cvv,
-                        subtotal: this.subtotal,
-                        discount: this.discount,
-                        fees: this.fees,
-                        addons_total: this.addons_total,
-                        total: this.total
+                        subtotal: this.globalTotal.subtotal,
+                        discount: this.globalTotal.discount,
+                        fees: this.globalTotal.fees,
+                        addons_total: this.globalTotal.addons_total,
+                        total: this.globalTotal.total
                     };
 
                     let self = this;

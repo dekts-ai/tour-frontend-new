@@ -18,7 +18,7 @@ import axios from "axios";
 
 export default {
     name: "Discount",
-    props: ["item"],
+    props: ["item", "cartItem", "globalTotalItem"],
     data: () => {
         return {
         }
@@ -36,16 +36,16 @@ export default {
             item.fees = Number(item.before_discount_fees);
             item.total = Number(item.before_discount_total).toFixed(2);
 
-            this.subtotal = 0;
-            this.discount = 0;
-            this.fees = 0;
-            this.total = 0;
+            this.globalTotalItem.subtotal = 0;
+            this.globalTotalItem.discount = 0;
+            this.globalTotalItem.fees = 0;
+            this.globalTotalItem.total = 0;
 
             for (var key in this.cartItem) {
-                this.subtotal = Number(this.subtotal) + Number(this.cartItem[key].subtotal);
-                this.discount = Number(this.discount) + Number(this.cartItem[key].discount2_value);
-                this.fees = Number(this.fees) + Number(this.cartItem[key].fees);
-                this.total = Number(this.total) + Number(this.cartItem[key].total);
+                this.globalTotalItem.subtotal = Number(this.globalTotalItem.subtotal) + Number(this.cartItem[key].subtotal);
+                this.globalTotalItem.discount = Number(this.globalTotalItem.discount) + Number(this.cartItem[key].discount2_value);
+                this.globalTotalItem.fees = Number(this.globalTotalItem.fees) + Number(this.cartItem[key].fees);
+                this.globalTotalItem.total = Number(this.globalTotalItem.total) + Number(this.cartItem[key].total);
             }
 
             $('#applyCouponButton-' + item.tour_slot_id)
@@ -101,16 +101,16 @@ export default {
 
                         item.couponSuccess.push(response.data.message);
 
-                        this.subtotal = 0;
-                        this.discount = 0;
-                        this.fees = 0;
-                        this.total = 0;
+                        this.globalTotalItem.subtotal = 0;
+                        this.globalTotalItem.discount = 0;
+                        this.globalTotalItem.fees = 0;
+                        this.globalTotalItem.total = 0;
 
                         for (var key in this.cartItem) {
-                            this.subtotal = Number(this.subtotal) + Number(item.subtotal);
-                            this.discount = Number(this.discount) + Number(item.discount2_value);
-                            this.fees = Number(this.fees) + Number(item.fees);
-                            this.total = Number(this.total) + Number(item.total);
+                            this.globalTotalItem.subtotal = Number(this.globalTotalItem.subtotal) + Number(item.subtotal);
+                            this.globalTotalItem.discount = Number(this.globalTotalItem.discount) + Number(item.discount2_value);
+                            this.globalTotalItem.fees = Number(this.globalTotalItem.fees) + Number(item.fees);
+                            this.globalTotalItem.total = Number(this.globalTotalItem.total) + Number(item.total);
                         }
                     }
 

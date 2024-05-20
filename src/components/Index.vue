@@ -72,7 +72,7 @@
                                 <div class="row booking-row" v-if="iframeStatus == false">
                                     <div class="col-lg-6 col-md-12">
                                         <div class="booking">
-                                            <h2>Book Online</h2>
+                                            <h2 class="easy-to-find">Book Online</h2>
                                             <div class="confirmation">
                                                 <img src="../assets/images/confirmation.png">
                                                 <p>Get Instant Confirmation</p>

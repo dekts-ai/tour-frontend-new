@@ -36,7 +36,7 @@
                 <div class="amount">${{ Number(item.total).toFixed(2) }}</div>
             </div>
 
-            <Discount :item="item" />
+            <Discount :item="item" :cartItem="items" :globalTotalItem="globalTotalItem" />
 
             <div v-if="item.custom_fields">
                 <div class="ages-wrap d-flex justify-content-between align-items-center">
@@ -71,7 +71,7 @@ import Discount from './Discount.vue';
 
 export default {
     name: "ItemizedList",
-    props: ["items", "seatErrors", "iframeStatus"],
+    props: ["items", "globalTotalItem", "seatErrors", "iframeStatus"],
     components: {
         Discount,
     },

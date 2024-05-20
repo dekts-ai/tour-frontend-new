@@ -5,15 +5,15 @@
         </div>
         <div class="other-details-wrap d-flex justify-content-between align-items-center mt-0">
             <div class="title">Ticket Cost</div>
-            <div class="amount">${{ Number(subtotal).toFixed(2) }}</div>
+            <div class="amount">${{ Number(globalTotal.subtotal).toFixed(2) }}</div>
         </div>
-        <div class="other-details-wrap d-flex justify-content-between align-items-center" v-if="discount > 0">
+        <div class="other-details-wrap d-flex justify-content-between align-items-center" v-if="globalTotal.discount > 0">
             <div class="title">Discount</div>
-            <div class="amount">${{ Number(discount).toFixed(2) }}</div>
+            <div class="amount">${{ Number(globalTotal.discount).toFixed(2) }}</div>
         </div>
         <div class="other-details-wrap d-flex justify-content-between align-items-center">
             <div class="title">Booking Fees</div>
-            <div class="amount">${{ Number(fees).toFixed(2) }}</div>
+            <div class="amount">${{ Number(globalTotal.fees).toFixed(2) }}</div>
         </div>
         <div class="other-details-wrap d-flex justify-content-between align-items-center">
             <div class="title">Add-ons</div>
@@ -21,7 +21,7 @@
         </div>
         <div class="other-details-wrap d-flex justify-content-between align-items-center last">
             <div class="title"><strong>Total Cost</strong></div>
-            <div class="amount"><strong>${{ Number(total + addons_total).toFixed(2) }}</strong></div>
+            <div class="amount"><strong>${{ Number(globalTotal.total).toFixed(2) }}</strong></div>
         </div>
     </div>
 </template>
@@ -29,7 +29,7 @@
 <script>
 export default {
     name: "ItemTotalSummary",
-    props: ["subtotal", "total", "fees", "addons_total", "discount"],
+    props: ["globalTotal"],
     data: () => {
         return {}
     },
