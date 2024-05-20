@@ -107,10 +107,10 @@ export default {
                         this.globalTotalItem.total = 0;
 
                         for (var key in this.cartItem) {
-                            this.globalTotalItem.subtotal = Number(this.globalTotalItem.subtotal) + Number(item.subtotal);
-                            this.globalTotalItem.discount = Number(this.globalTotalItem.discount) + Number(item.discount2_value);
-                            this.globalTotalItem.fees = Number(this.globalTotalItem.fees) + Number(item.fees);
-                            this.globalTotalItem.total = Number(this.globalTotalItem.total) + Number(item.total);
+                            this.globalTotalItem.subtotal = Number(this.globalTotalItem.subtotal) + Number(this.cartItem[key].subtotal);
+                            this.globalTotalItem.discount = Number(this.globalTotalItem.discount) + Number(this.cartItem[key].discount2_value);
+                            this.globalTotalItem.fees = Number(this.globalTotalItem.fees) + Number(this.cartItem[key].fees);
+                            this.globalTotalItem.total = Number(this.globalTotalItem.total) + Number(this.cartItem[key].total);
                         }
                     }
 

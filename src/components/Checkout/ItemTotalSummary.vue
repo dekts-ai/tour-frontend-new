@@ -17,7 +17,7 @@
         </div>
         <div class="other-details-wrap d-flex justify-content-between align-items-center">
             <div class="title">Add-ons</div>
-            <div class="amount">${{ Number(addons_total).toFixed(2) }}</div>
+            <div class="amount">${{ Number(globalTotal.addons_total).toFixed(2) }}</div>
         </div>
         <div class="other-details-wrap d-flex justify-content-between align-items-center last">
             <div class="title"><strong>Total Cost</strong></div>
