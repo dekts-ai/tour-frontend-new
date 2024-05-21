@@ -46,11 +46,11 @@
             </div>
             <div class="other-details-wrap d-flex justify-content-between align-items-center">
                 <div class="title">Booking Fees</div>
-                <div class="amount">${{ Number(item.fees).toFixed(2) }}</div>
+                <div class="amount">${{ Number(Number(item.fees) + Number(item.addons_fee)).toFixed(2) }}</div>
             </div>
             <div class="other-details-wrap d-flex justify-content-between align-items-center lemonchiffon">
                 <div class="title"><strong>Tour Cost</strong></div>
-                <div class="amount">${{ Number(item.total).toFixed(2) }}</div>
+                <div class="amount">${{ Number(Number(item.total) + Number(item.addons_total) + Number(item.addons_fee)).toFixed(2) }}</div>
             </div>
 
             <Discount :item="item" :allItem="items" :globalTotalItem="globalTotalItem" />

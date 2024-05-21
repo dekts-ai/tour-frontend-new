@@ -34,7 +34,7 @@ export default {
             item.couponErrors = [];
             item.subtotal = Number(item.before_discount_subtotal);
             item.fees = Number(item.before_discount_fees);
-            item.total = Number(item.before_discount_total).toFixed(2);
+            item.total = Number(item.before_discount_total);
 
             this.updateCartItem();
 
@@ -75,14 +75,14 @@ export default {
                     } else {
                         item.discount2_percentage = discount2Percentage;
                         item.tour_promotion_id = promocode.id;
-                        item.discount2_value = Number(discountedAmount).toFixed(2);
+                        item.discount2_value = Number(discountedAmount);
 
-                        item.subtotal = Number(subtotal).toFixed(2);
+                        item.subtotal = Number(subtotal);
                         var fees = this.roundout(subtotal * item.service_commission / 100, 2);
-                        item.fees = Number(fees) + Number(item.addons_fee);
+                        item.fees = Number(fees);
 
-                        var total = Number(item.subtotal) + Number(item.fees) + Number(item.addons_total);
-                        item.total = Number(total).toFixed(2);
+                        var total = Number(item.subtotal) + Number(item.fees);
+                        item.total = Number(total);
 
                         $('#applyCouponButton-' + item.tour_slot_id)
                             .text('Applied')

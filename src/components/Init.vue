@@ -680,8 +680,8 @@ export default {
             let feesSum = feesGroupArr.reduce((a, b) => Number(a) + Number(b), 0);
 
             this.form.before_discount_subtotal = Number(subtotalSum);
-            this.form.before_discount_fees = Number(feesSum) + Number(this.form.addons_fee);
-            this.form.before_discount_total = Number(subtotalSum) + Number(feesSum) + Number(this.form.addons_total) + Number(this.form.addons_fee);
+            this.form.before_discount_fees = Number(feesSum);
+            this.form.before_discount_total = this.roundout(Number(subtotalSum) + Number(feesSum));
 
             if (this.form.discount2_percentage > 0) {
                 var discountedAmount = Number(subtotalSum) * Number(this.form.discount2_percentage) / 100;
@@ -699,11 +699,11 @@ export default {
                 this.form.people_group = groupPaxArr;
                 this.form.iframeStatusInfo = this.iframeStatus;
                 this.form.package_name = this.tourPackageName;
-                this.form.subtotal = subtotalSum;
-                this.form.fees = Number(feesSum) + Number(this.form.addons_fee);
+                this.form.subtotal = this.roundout(subtotalSum);
+                this.form.fees = feesSum;
 
-                let total = Number(subtotalSum) + Number(feesSum) + Number(this.form.addons_total) + Number(this.form.addons_fee);
-                this.form.total = Number(Number(total).toFixed(2));
+                let total = Number(subtotalSum) + Number(feesSum);
+                this.form.total = this.roundout(total);
 
                 if (this.form.total <= 0) {
                     this.errors.push("Oops! Something went wrong. Please try again later.");
