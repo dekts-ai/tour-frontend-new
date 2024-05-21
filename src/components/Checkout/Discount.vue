@@ -81,7 +81,7 @@ export default {
                         var fees = this.roundout(subtotal * item.service_commission / 100, 2);
                         item.fees = Number(fees) + Number(item.addons_fee);
 
-                        var total = Number(item.subtotal) + Number(item.fees) + Number(item.addons_total) + Number(item.addons_fee);
+                        var total = Number(item.subtotal) + Number(item.fees) + Number(item.addons_total);
                         item.total = Number(total).toFixed(2);
 
                         $('#applyCouponButton-' + item.tour_slot_id)
