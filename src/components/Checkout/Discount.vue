@@ -36,17 +36,7 @@ export default {
             item.fees = Number(item.before_discount_fees);
             item.total = Number(item.before_discount_total).toFixed(2);
 
-            this.globalTotalItem.subtotal = 0;
-            this.globalTotalItem.discount = 0;
-            this.globalTotalItem.fees = 0;
-            this.globalTotalItem.total = 0;
-
-            for (var key in this.allItem) {
-                this.globalTotalItem.subtotal = Number(this.globalTotalItem.subtotal) + Number(this.allItem[key].subtotal);
-                this.globalTotalItem.discount = Number(this.globalTotalItem.discount) + Number(this.allItem[key].discount2_value);
-                this.globalTotalItem.fees = Number(this.globalTotalItem.fees) + Number(this.allItem[key].fees);
-                this.globalTotalItem.total = Number(this.globalTotalItem.total) + Number(this.allItem[key].total);
-            }
+            this.updateCartItem();
 
             $('#applyCouponButton-' + item.tour_slot_id)
                 .text('Apply')
@@ -88,9 +78,10 @@ export default {
                         item.discount2_value = Number(discountedAmount).toFixed(2);
 
                         item.subtotal = Number(subtotal).toFixed(2);
-                        item.fees = this.roundout(subtotal * item.service_commission / 100, 2);
+                        var fees = this.roundout(subtotal * item.service_commission / 100, 2);
+                        item.fees = Number(fees) + Number(item.addons_fee);
 
-                        var total = Number(item.subtotal) + Number(item.fees);
+                        var total = Number(item.subtotal) + Number(item.fees) + Number(item.addons_total) + Number(item.addons_fee);
                         item.total = Number(total).toFixed(2);
 
                         $('#applyCouponButton-' + item.tour_slot_id)
@@ -101,17 +92,7 @@ export default {
 
                         item.couponSuccess.push(response.data.message);
 
-                        this.globalTotalItem.subtotal = 0;
-                        this.globalTotalItem.discount = 0;
-                        this.globalTotalItem.fees = 0;
-                        this.globalTotalItem.total = 0;
-
-                        for (var key in this.allItem) {
-                            this.globalTotalItem.subtotal = Number(this.globalTotalItem.subtotal) + Number(this.allItem[key].subtotal);
-                            this.globalTotalItem.discount = Number(this.globalTotalItem.discount) + Number(this.allItem[key].discount2_value);
-                            this.globalTotalItem.fees = Number(this.globalTotalItem.fees) + Number(this.allItem[key].fees);
-                            this.globalTotalItem.total = Number(this.globalTotalItem.total) + Number(this.allItem[key].total);
-                        }
+                        this.updateCartItem();
                     }
 
                     this.processLoader(loader);
@@ -129,6 +110,23 @@ export default {
                         console.log('Error', error.message);
                     }
                 });
+            }
+        },
+        updateCartItem() {
+            this.globalTotalItem.subtotal = 0;
+            this.globalTotalItem.discount = 0;
+            this.globalTotalItem.fees = 0;
+            this.globalTotalItem.addons_total = 0;
+            this.globalTotalItem.addons_fee = 0;
+            this.globalTotalItem.total = 0;
+
+            for (var key in this.allItem) {
+                this.globalTotalItem.subtotal = Number(this.globalTotalItem.subtotal) + Number(this.allItem[key].subtotal);
+                this.globalTotalItem.discount = Number(this.globalTotalItem.discount) + Number(this.allItem[key].discount2_value);
+                this.globalTotalItem.fees = Number(this.globalTotalItem.fees) + Number(this.allItem[key].fees);
+                this.globalTotalItem.addons_total = Number(this.globalTotalItem.addons_total) + Number(this.allItem[key].addons_total);
+                this.globalTotalItem.addons_fee = Number(this.globalTotalItem.addons_fee) + Number(this.allItem[key].addons_fee);
+                this.globalTotalItem.total = Number(this.globalTotalItem.total) + Number(this.allItem[key].total);
             }
         },
         processLoader(loader) {
