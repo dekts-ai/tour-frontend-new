@@ -173,7 +173,7 @@
                                             <div v-for="addons in tourBooking.tourBookingAddons" :key="addons.id" class="subtotal-item">
                                                 <div class="subtotal-item-title">{{ addons.name }}:</div>
                                                 <div class="subtotal-item-price">
-                                                  ${{ Number(addons.fee).toFixed(2) }}
+                                                  ${{ Number(addons.price).toFixed(2) }}
                                                 </div>
                                             </div>
                                           </div>
