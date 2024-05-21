@@ -169,13 +169,21 @@
                                               ${{ Number(tourBooking.subtotal - tourBooking.discount2_value).toFixed(2) }}
                                             </div>
                                           </div>
+                                          <div v-if="tourBooking?.tourBookingAddons?.length">
+                                            <div v-for="addons in tourBooking.tourBookingAddons" :key="addons.id" class="subtotal-item">
+                                                <div class="subtotal-item-title">{{ addons.name }}:</div>
+                                                <div class="subtotal-item-price">
+                                                  ${{ Number(addons.fee).toFixed(2) }}
+                                                </div>
+                                            </div>
+                                          </div>
                                           <div class="subtotal-item">
                                             <div class="subtotal-item-title">Booking Fees:</div>
-                                            <div class="subtotal-item-price">${{ Number(tourBooking.service_commission).toFixed(2) }}</div>
+                                            <div class="subtotal-item-price">${{ (Number(tourBooking.service_commission) + Number(tourBooking.addons_fee)).toFixed(2) }}</div>
                                           </div>
                                           <div class="subtotal-item">
                                             <div class="subtotal-item-title">Booking Total:</div>
-                                            <div class="subtotal-item-price">${{ ((Number(tourBooking.subtotal) - Number(tourBooking.discount2_value)) + Number(tourBooking.service_commission)).toFixed(2) }} <span>(inclusive all taxes)</span></div>
+                                            <div class="subtotal-item-price">${{ ((Number(tourBooking.subtotal) - Number(tourBooking.discount2_value)) + Number(tourBooking.service_commission) + Number(tourBooking.addons_total) + Number(tourBooking.addons_fee)).toFixed(2) }} <span>(inclusive all taxes)</span></div>
                                           </div>
                                         </div>
                                       </div>
