@@ -615,7 +615,7 @@ export default {
             }else{
                 this.form.custom_fields = customFormData.fields;
                 this.form.addons_total = this.$refs.CustomFieldsRef.sumTotal(customFormData.fields);
-                this.form.addons_fee = this.$refs.CustomFieldsRef.feeTotal(customFormData.fields);
+                this.form.addons_fee = this.roundout(this.$refs.CustomFieldsRef.feeTotal(customFormData.fields));
             }
        },
 
@@ -676,8 +676,8 @@ export default {
                 index++;
             });
 
-            let feesSum = feesGroupArr.reduce((a, b) => Number(a) + Number(b), 0);
             let subtotalSum = paxSubtotalArr.reduce((a, b) => Number(a) + Number(b), 0);
+            let feesSum = feesGroupArr.reduce((a, b) => Number(a) + Number(b), 0);
 
             this.form.before_discount_subtotal = Number(subtotalSum);
             this.form.before_discount_fees = Number(feesSum) + Number(this.form.addons_fee);
@@ -748,7 +748,7 @@ export default {
 
             return this.errors.length > 0;
         },
-        roundout(amount, places = 0) {
+        roundout(amount, places = 2) {
             if (places < 0) {
                 places = 0;
             }

@@ -319,7 +319,7 @@ export default {
             this.processing = false;
             loader.hide();
         },
-        roundout(amount, places = 0) {
+        roundout(amount, places = 2) {
             if (places < 0) {
                 places = 0;
             }

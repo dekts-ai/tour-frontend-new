@@ -227,7 +227,7 @@ export default {
                         fields[idx].form_id = this.form.id
                         fields[idx].priceInfo.enabled = this.str.toBool(fields[idx].priceInfo.enabled );
                         fields[idx].priceInfo.price = this.str.toFloat(fields[idx].priceInfo.price);
-                        fields[idx].priceInfo.fee = this.str.toFloat(fields[idx].priceInfo.price * this.service_commission / 100);
+                        fields[idx].priceInfo.fee = this.str.toFloat(this.roundout(fields[idx].priceInfo.price * this.service_commission / 100));
                     });
                     this.fields = fields;
                     this.display_form = true;
@@ -429,6 +429,16 @@ export default {
                 }
             }
             return fee;
+        },
+
+        roundout(amount, places = 2) {
+            if (places < 0) {
+                places = 0;
+            }
+
+            let x = Math.pow(10, places);
+            let formul = (amount * x).toFixed(10);
+            return (amount >= 0 ? Math.ceil(formul) : Math.floor(formul)) / x;
         }
     }
 }
