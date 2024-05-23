@@ -186,7 +186,7 @@
                                                 </p>
                                             </div>
 
-                                            <div v-if="form.package_id && form.package_id !== 0">
+                                            <div v-if="form.package_id && form.package_id !== 0 && form.service_commission !== 0">
                                                 <CustomFields 
                                                     ref="CustomFieldsRef"
                                                     :values="form.custom_fields"
@@ -197,7 +197,6 @@
                                                     :service_commission="form.service_commission"
                                                     @customformexists="hasCustomFormFields"
                                                     :endpoint="`/package/custom/form/${form.package_id}`" />
-                                                    
                                             </div>
                                             
 
