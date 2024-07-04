@@ -27,7 +27,7 @@
             <div class="title">Subtotal</div>
             <div class="amount">${{ Number(item.fees).toFixed(2) }}</div>	
             </div> -->
-            <div v-if="item.custom_fields">
+            <div v-if="item?.custom_fields?.length && isPriceInfoEnabled(item?.custom_fields)">
                 <div class="ages-wrap d-flex justify-content-between align-items-center">
                     <div class="title">Add-ons:</div>
                 </div>
@@ -83,6 +83,9 @@ export default {
         dateFormat(date) {
             this.$store.dispatch('storeDate', date)
             return defaultDateFormat(date);
+        },
+        isPriceInfoEnabled(customFields) {
+            return customFields.some(item => item.priceInfo.enabled === true);
         }
     }
 }

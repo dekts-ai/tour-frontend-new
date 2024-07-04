@@ -145,7 +145,7 @@
                                                     ${{ item?.discount2_value ? Number(item?.discount2_value).toFixed(2) : Number(0).toFixed(2) }}
                                                 </div>
                                             </div>
-                                            <div v-if="item?.custom_fields?.length">
+                                            <div v-if="item?.custom_fields?.length && isPriceInfoEnabled(item?.custom_fields)">
                                                 <div class="tourselected-costcount-small-title protanopia">Add-ons:</div>
                                                 <div class="max-height-200">
                                                     <div v-for="( option, k ) in item.custom_fields.filter((f)=>f.priceInfo.enabled)" :key="`custom-field-${k}`" class="tourselected-costcount-subitem"> 
@@ -447,6 +447,9 @@ export default {
                     this.banner = "";
                     this.processLoader(loader);
                 });
+        },
+        isPriceInfoEnabled(customFields) {
+            return customFields.some(item => item.priceInfo.enabled === true);
         }
     }
 };

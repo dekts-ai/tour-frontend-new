@@ -11,7 +11,7 @@
             <div class="title">Discount</div>
             <div class="amount">${{ Number(globalTotal.discount).toFixed(2) }}</div>
         </div>
-        <div class="other-details-wrap d-flex justify-content-between align-items-center">
+        <div v-if="globalTotal.addons_total" class="other-details-wrap d-flex justify-content-between align-items-center">
             <div class="title">Add-ons</div>
             <div class="amount">${{ Number(globalTotal.addons_total).toFixed(2) }}</div>
         </div>

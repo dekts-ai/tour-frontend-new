@@ -339,7 +339,7 @@ export default {
          * @return void
          */
         validateSelect(field, idx){
-            if( !this.frm.isBlank(field.value) ){
+            if( this.frm.isBlank(field.value) ){
                 this.renderError(`${field.name} option must be selected`, idx);
             }
         },
