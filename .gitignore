@@ -27,3 +27,7 @@ api collection/tour-vuejs(updated api).postman_collection.json
 api collection/tour-vuejs.postman_collection.json
 package-lock.json
 .env
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

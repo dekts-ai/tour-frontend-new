@@ -118,10 +118,6 @@
                                                         <h3 class="watermark static-date-range">Exciting News! Our Tour Begins on <br />{{ begins }}.</h3>
                                                         <br>
                                                     </div>
-                                                    <div v-else-if="begins">
-                                                        <h3 class="watermark static-date-range">Exciting News! Our Tour Begins on <br />{{ begins }}.</h3>
-                                                        <br>
-                                                    </div>
                                                     <div class="radio-toolbar" v-if="dateTimeArr.length > 0">
                                                         <div class="time-item" 
                                                             :class="name.bookable_status == 'Open' && name.dd < name.seats ? 'seats-free-label' : 'watermark-label'" 
@@ -136,7 +132,7 @@
                                                                 :value="name.Time"
                                                                 :disabled=isDisabled(name) />
 
-                                                            <label class="background-change"></label>
+                                                            <span class="background-change"></span>
 
                                                             <label :for="name.Id">{{ name.Time}}</label>
 
@@ -190,7 +186,7 @@
                                                 </p>
                                             </div>
 
-                                            <div v-if="form.package_id && form.package_id !== 0">
+                                            <div v-if="form.package_id && form.package_id !== 0 && form.service_commission !== 0">
                                                 <CustomFields 
                                                     ref="CustomFieldsRef"
                                                     :values="form.custom_fields"
@@ -198,9 +194,9 @@
                                                     :display_errors="false"
                                                     :display_submit="false"
                                                     :display_height="275"
+                                                    :service_commission="form.service_commission"
                                                     @customformexists="hasCustomFormFields"
                                                     :endpoint="`/package/custom/form/${form.package_id}`" />
-                                                    
                                             </div>
                                             
 
@@ -328,7 +324,6 @@ import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import { getUTCDateFromTimeZone } from '../utils/dateUtils';
 import CustomFields from '../components/Forms/CustomFields';
-import { error } from "jquery";
 
 export default {
     name: "Init",
@@ -384,6 +379,7 @@ export default {
                 fees: 0,
                 total: 0,
                 addons_total: 0,
+                addons_fee: 0,
                 tour_slot_id: 0,
                 service_commission: 0,
                 tour_promotion_id: 0,
@@ -497,9 +493,9 @@ export default {
                     this.form.category = response.data.tourPackageData[0].category;
                     this.form.travel_duration = response.data.tourPackageData[0].travel_duration;
                     if (this.form.affiliate_id > 0) {
-                        this.form.service_commission = response.data.tourPackageData[0].affiliate_processing_percentage;
+                        this.form.service_commission = Number(response.data.tourPackageData[0].affiliate_processing_percentage);
                     } else {
-                        this.form.service_commission = response.data.tourPackageData[0].service_commission_percentage;
+                        this.form.service_commission = Number(response.data.tourPackageData[0].service_commission_percentage);
                     }
 
                     // Define Variables
@@ -618,8 +614,8 @@ export default {
             }else{
                 this.form.custom_fields = customFormData.fields;
                 this.form.addons_total = this.$refs.CustomFieldsRef.sumTotal(customFormData.fields);
+                this.form.addons_fee = this.roundout(this.$refs.CustomFieldsRef.feeTotal(customFormData.fields));
             }
-            
        },
 
         submit: async function () {
@@ -627,6 +623,7 @@ export default {
             this.errors = [];
             const loader = this.$loading.show();
             this.form.addons_total = 0;
+            this.form.addons_fee = 0;
 
             //if custom fields exists this will be added to the item object custom_fields prop
             if( this.customFieldExists  ){ 
@@ -678,12 +675,12 @@ export default {
                 index++;
             });
 
-            let feesSum = feesGroupArr.reduce((a, b) => Number(a) + Number(b), 0);
             let subtotalSum = paxSubtotalArr.reduce((a, b) => Number(a) + Number(b), 0);
+            let feesSum = feesGroupArr.reduce((a, b) => Number(a) + Number(b), 0);
 
             this.form.before_discount_subtotal = Number(subtotalSum);
             this.form.before_discount_fees = Number(feesSum);
-            this.form.before_discount_total = Number(subtotalSum) + Number(feesSum) + this.form.addons_total;
+            this.form.before_discount_total = this.roundout(Number(subtotalSum) + Number(feesSum));
 
             if (this.form.discount2_percentage > 0) {
                 var discountedAmount = Number(subtotalSum) * Number(this.form.discount2_percentage) / 100;
@@ -701,9 +698,11 @@ export default {
                 this.form.people_group = groupPaxArr;
                 this.form.iframeStatusInfo = this.iframeStatus;
                 this.form.package_name = this.tourPackageName;
-                this.form.subtotal = subtotalSum;
+                this.form.subtotal = this.roundout(subtotalSum);
                 this.form.fees = feesSum;
-                this.form.total = Number(subtotalSum) + Number(feesSum) + this.form.addons_total;
+
+                let total = Number(subtotalSum) + Number(feesSum);
+                this.form.total = this.roundout(total);
 
                 if (this.form.total <= 0) {
                     this.errors.push("Oops! Something went wrong. Please try again later.");
@@ -748,7 +747,7 @@ export default {
 
             return this.errors.length > 0;
         },
-        roundout(amount, places = 0) {
+        roundout(amount, places = 2) {
             if (places < 0) {
                 places = 0;
             }
