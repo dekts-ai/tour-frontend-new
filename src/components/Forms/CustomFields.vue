@@ -166,6 +166,7 @@ export default {
         display_height:{ type: Number, default: 400 }, 
         display_errors: { type: Boolean, default: true },
         display_submit: { type: Boolean, default: true },
+        service_commission: { type: Number, default: 0 },
     },
     components:{
         FormLabel,
@@ -219,12 +220,14 @@ export default {
                     this.form = data.form;
                     const fields = JSON.parse(this.form.form_fields);
                     // format the data to attach it to a v-model with a value prop
+                    console.log(this.service_commission);
                     fields.forEach((_field, idx)=>{
                         fields[idx].value = this.getValueFromProps( fields[idx].id );
                         fields[idx].error = false;
                         fields[idx].form_id = this.form.id
                         fields[idx].priceInfo.enabled = this.str.toBool(fields[idx].priceInfo.enabled );
                         fields[idx].priceInfo.price = this.str.toFloat(fields[idx].priceInfo.price);
+                        fields[idx].priceInfo.fee = this.str.toFloat(this.roundout(fields[idx].priceInfo.price * this.service_commission / 100));
                     });
                     this.fields = fields;
                     this.display_form = true;
@@ -336,7 +339,7 @@ export default {
          * @return void
          */
         validateSelect(field, idx){
-            if( !this.frm.isBlank(field.value) ){
+            if( this.frm.isBlank(field.value) ){
                 this.renderError(`${field.name} option must be selected`, idx);
             }
         },
@@ -415,6 +418,27 @@ export default {
                 }
             }
             return sum;
+        },
+
+        feeTotal(fields) {
+            let fee = 0;
+            for( let key in fields ){
+                let field = fields[key];
+                if( this.str.toBool(field.priceInfo.enabled) ){
+                    fee += this.str.toFloat(field.priceInfo.fee);
+                }
+            }
+            return fee;
+        },
+
+        roundout(amount, places = 2) {
+            if (places < 0) {
+                places = 0;
+            }
+
+            let x = Math.pow(10, places);
+            let formul = (amount * x).toFixed(10);
+            return (amount >= 0 ? Math.ceil(formul) : Math.floor(formul)) / x;
         }
     }
 }
