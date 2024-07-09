@@ -80,6 +80,8 @@ export default {
                 subtotal: 0,
                 discount: 0,
                 fees: 0,
+                addons_total: 0,
+                addons_fee: 0,
                 total: 0,
             },
             message: "",
@@ -117,6 +119,8 @@ export default {
                 this.globalTotal.subtotal = Number(this.globalTotal.subtotal) + Number(this.cartItem[key].subtotal);
                 this.globalTotal.discount = Number(this.globalTotal.discount) + Number(this.cartItem[key].discount2_value);
                 this.globalTotal.fees = Number(this.globalTotal.fees) + Number(this.cartItem[key].fees);
+                this.globalTotal.addons_total = Number(this.globalTotal.addons_total) + Number(this.cartItem[key].addons_total);
+                this.globalTotal.addons_fee = Number(this.globalTotal.addons_fee) + Number(this.cartItem[key].addons_fee);
                 this.globalTotal.total = Number(this.globalTotal.total) + Number(this.cartItem[key].total);
                 this.cartItem[key].couponErrors = [];
                 this.cartItem[key].couponSuccess = [];
@@ -227,6 +231,8 @@ export default {
                         subtotal: this.globalTotal.subtotal,
                         discount: this.globalTotal.discount,
                         fees: this.globalTotal.fees,
+                        addons_total: this.globalTotal.addons_total,
+                        addons_fee: this.globalTotal.addons_fee,
                         total: this.globalTotal.total
                     };
 
@@ -313,7 +319,7 @@ export default {
             this.processing = false;
             loader.hide();
         },
-        roundout(amount, places = 0) {
+        roundout(amount, places = 2) {
             if (places < 0) {
                 places = 0;
             }
@@ -330,7 +336,6 @@ export default {
 .card-element {
     margin-top: 5px;
 }
-
 .card-label-text-left {
     text-align: left;
 }

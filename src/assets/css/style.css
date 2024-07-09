@@ -2373,6 +2373,15 @@ section.iframe-inner-banner.banner-section {
 	z-index: 0;
 }
 
+.starttime-row .select-time .radio-toolbar .time-item span.background-change {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 0;
+}
+
 .watermark {
 	color: #f07777;
 }

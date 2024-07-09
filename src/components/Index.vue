@@ -72,7 +72,7 @@
                                 <div class="row booking-row" v-if="iframeStatus == false">
                                     <div class="col-lg-6 col-md-12">
                                         <div class="booking">
-                                            <h2>Book Online</h2>
+                                            <h2 class="easy-to-find">Book Online</h2>
                                             <div class="confirmation">
                                                 <img src="../assets/images/confirmation.png">
                                                 <p>Get Instant Confirmation</p>
@@ -119,7 +119,7 @@
                                         </div>
                                         <div class="tourselected-totalcost">
                                             <div class="tourselected-group-wrap">
-                                                <div class="tourselected-group-title">Guests:</div>
+                                                <div class="tourselected-group-small-title protanopia">Guests:</div>
                                                 <div class="tourselected-group-people">
                                                     <div v-for="(pax, key) in item.people_group" :key="key">
                                                         <div class="tourselected-people" v-if="pax > 0">
@@ -133,7 +133,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="tourselected-costcount-title">Tour cost:</div>
+                                            <div class="tourselected-costcount-small-title protanopia">Tour cost:</div>
                                             <div class="tourselected-costcount-subitem">
                                                 <div class="tourselected-costcount-subitem-title">Subtotal:</div>
                                                 <div class="tourselected-costcount-subitem-cost">${{ Number(item.subtotal).toFixed(2) }}</div>
@@ -145,25 +145,28 @@
                                                     ${{ item?.discount2_value ? Number(item?.discount2_value).toFixed(2) : Number(0).toFixed(2) }}
                                                 </div>
                                             </div>
-
-                                            <div v-if="item?.custom_fields" class="max-height-200">
-                                                <div v-for="( option, k ) in item.custom_fields.filter((f)=>f.priceInfo.enabled)" :key="`custom-field-${k}`" class="tourselected-costcount-subitem"> 
-                                                    <div class="tourselected-costcount-subitem-title">{{ option.name }}</div>
-                                                    <div class="tourselected-costcount-subitem-cost">${{ Number(option.priceInfo.price).toFixed(2) }}</div>
+                                            <div v-if="item?.custom_fields?.length && isPriceInfoEnabled(item?.custom_fields)">
+                                                <div class="tourselected-costcount-small-title protanopia">Add-ons:</div>
+                                                <div class="max-height-200">
+                                                    <div v-for="( option, k ) in item.custom_fields.filter((f)=>f.priceInfo.enabled)" :key="`custom-field-${k}`" class="tourselected-costcount-subitem"> 
+                                                        <div class="tourselected-costcount-subitem-title">{{ option.name }}</div>
+                                                        <div class="tourselected-costcount-subitem-cost">${{ Number(option.priceInfo.price).toFixed(2) }}</div>
+                                                    </div>
                                                 </div>
+                                                <!-- <div class="tourselected-costcount-total lemonchiffon">
+                                                    <div class="tourselected-costcount-total-title">Total Cost:</div>
+                                                    <div class="tourselected-costcount-total-cost">${{ Number(item.total + item.addons_total).toFixed(2) }}</div>
+                                                </div> -->
+                                                <div class="tourselected-costcount-small-title protanopia"></div>
                                             </div>
-                                            
-                                            
-
                                             <div class="tourselected-costcount-subitem">
                                                 <div class="tourselected-costcount-subitem-title">Booking Fees:</div>
-                                                <div class="tourselected-costcount-subitem-cost">${{ Number(item.fees).toFixed(2) }}</div>
+                                                <div class="tourselected-costcount-subitem-cost">${{ (Number(item.fees) + Number(item.addons_fee)).toFixed(2) }}</div>
                                             </div>
                                             <div class="tourselected-costcount-total">
                                                 <div class="tourselected-costcount-total-title">Tour Cost:</div>
-                                                <div class="tourselected-costcount-total-cost">${{ Number(item.total).toFixed(2) }}</div>
+                                                <div class="tourselected-costcount-total-cost">${{ (Number(item.total) + Number(item.addons_fee) + Number(item.addons_total)).toFixed(2) }}</div>
                                             </div>
-
                                             <div class="tourselected-edit-wrap">
                                                 <div class="tourselected-action-wrap">
                                                     <div class="tourselected-action-btn">
@@ -246,10 +249,6 @@ export default {
             },
             cartItem: {},
             cartItemLength: 0,
-            subtotal: 0,
-            discount: 0,
-            fees: 0,
-            total: 0,
             tabs: 1,
             checkPackageIds: [],
             firstPackageId: 0,
@@ -400,17 +399,8 @@ export default {
                         }
                     });
 
-                    this.subtotal = 0;
-                    this.discount = 0;
-                    this.fees = 0;
-                    this.total = 0;
                     if (this.cartItemLength) {
                         for (var key in this.cartItem) {
-                            this.subtotal = Number(this.subtotal) + Number(this.cartItem[key].subtotal);
-                            this.discount = Number(this.discount) + Number(this.cartItem[key].discount2_value);
-                            this.fees = Number(this.fees) + Number(this.cartItem[key].fees);
-                            this.total = Number(this.total) + Number(this.cartItem[key].total);
-
                             var pId = parseInt(this.cartItem[key].package_id);
                             this.checkPackageIds.push(pId);
                         }
@@ -457,6 +447,9 @@ export default {
                     this.banner = "";
                     this.processLoader(loader);
                 });
+        },
+        isPriceInfoEnabled(customFields) {
+            return customFields.some(item => item.priceInfo.enabled === true);
         }
     }
 };
