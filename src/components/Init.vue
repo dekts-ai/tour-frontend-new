@@ -425,6 +425,7 @@ export default {
                 before_discount_subtotal: 0,
                 before_discount_fees: 0,
                 before_discount_total: 0,
+                selectedRateId: null,
                 selectedSize: null,
                 selectedRate: 0,
                 selectedTax: 0
@@ -450,6 +451,7 @@ export default {
             this.form.tour_slot_id = 0;
             this.form.time_date = null;
             this.form.slot_time = null;
+            this.form.selectedRateId = null;
             this.form.selectedSize = null;
             this.form.selectedRate = 0;
             this.form.selectedTax = 0;
@@ -536,6 +538,7 @@ export default {
                     if (this.is_group_rate_enabled) {
                         this.selectgrouppeoples = [];
 
+                        this.form.selectedRateId = this.form.selectedRateId !== null ? this.form.selectedRateId : this.details.tourPackageRateGroups[0].id;
                         this.form.selectedSize = this.form.selectedSize !== null ? this.form.selectedSize : this.details.tourPackageRateGroups[0].size;
                         this.form.selectedRate = this.form.selectedRate > 0 ? this.form.selectedRate : this.details.tourPackageRateGroups[0].rate;
                         this.form.selectedTax = this.form.selectedTax > 0 ? this.form.selectedTax : this.details.tourPackageRateGroups[0].tax;
@@ -646,6 +649,7 @@ export default {
         handleGroupRateDiscountChange(event) {
             const selectedIndex = this.details.tourPackageRateGroups.findIndex(size => size.size === this.form.selectedSize);
             const selectedGroup = this.details.tourPackageRateGroups[selectedIndex];
+            this.form.selectedRateId = selectedGroup?.id;
             this.form.selectedRate = selectedGroup?.rate;
             this.form.selectedTax = selectedGroup?.tax;
         },
