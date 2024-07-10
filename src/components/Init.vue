@@ -209,7 +209,7 @@
                                                         <table class="table">
                                                             <thead>
                                                                 <tr>
-                                                                    <th scope="col">{{ form.category == 'Hotel Night' ? 'Name' : 'Age' }}</th>
+                                                                    <th scope="col">{{ (form.category == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
                                                                     <th scope="col">Fees and Taxes</th>
                                                                     <th scope="col">
                                                                         {{ form.category == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
@@ -217,7 +217,8 @@
                                                                     <th scope="col">Price</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody v-for="(tour, p) in details.tourPackageRateGroups"
+                                                            <!-- START : FOR NORMAL RATE DISCOUNT -->
+                                                            <tbody v-if="is_group_rate_enabled === 0" v-for="(tour, p) in details.tourPackageRateGroups"
                                                                 :key="tour.id">
                                                                 <tr>
                                                                     <td class="age" data-label="Age">
@@ -249,6 +250,32 @@
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
+                                                            <!-- END : FOR NORMAL RATE DISCOUNT -->
+
+                                                            <!-- START : FOR GROUP RATE DISCOUNT -->
+                                                            <tbody v-else>
+                                                                <tr>
+                                                                    <td class="age" data-label="Age">
+                                                                        <img src="../assets/images/aduct.png" />
+                                                                        {{ "Guest's" }}
+                                                                    </td>
+                                                                    <td class="taxes" data-label="Fees and Taxes">
+                                                                        <p>Navajo Nation Tax: ${{ form.selectedTax }}</p>
+                                                                    </td>
+                                                                    <td class="group"
+                                                                        data-label="Select Group Of People">
+                                                                        <select
+                                                                            class="form-select people-group1" v-model="form.selectedSize" @change="handleGroupRateDiscountChange">
+                                                                            <option v-for="(item, q) in details.tourPackageRateGroups"
+                                                                                :value="item.size" :key="item.size">${{ item.rate }} - {{ item.size }}</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td class="price" data-label="Price">
+                                                                        <span class="tag">${{ Number(parseFloat(form.selectedRate) + parseFloat(form.selectedTax)).toFixed(2) }}</span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <!-- END : FOR GROUP RATE DISCOUNT -->
                                                         </table>
                                                     </div>
 
@@ -397,8 +424,12 @@ export default {
                 custom_fields: null,
                 before_discount_subtotal: 0,
                 before_discount_fees: 0,
-                before_discount_total: 0
+                before_discount_total: 0,
+                selectedSize: null,
+                selectedRate: 0,
+                selectedTax: 0
             },
+            is_group_rate_enabled: 0,
             with_rate_groups: 1,
             tabs: 2
         };
@@ -419,6 +450,9 @@ export default {
             this.form.tour_slot_id = 0;
             this.form.time_date = null;
             this.form.slot_time = null;
+            this.form.selectedSize = null;
+            this.form.selectedRate = 0;
+            this.form.selectedTax = 0;
         }
 
         if (this.$store.state.date) {
@@ -498,22 +532,31 @@ export default {
                         this.form.service_commission = Number(response.data.tourPackageData[0].service_commission_percentage);
                     }
 
-                    // Define Variables
-                    var v1 = this.totalavailableseats;
+                    this.is_group_rate_enabled = response.data.tourPackageData[0].is_group_rate_enabled;
+                    if (this.is_group_rate_enabled) {
+                        this.selectgrouppeoples = [];
 
-                    // Append Dropdown Value for tourPackageRateGroups
-                    this.details.tourPackageRateGroups?.forEach((element, i) => {
-                        $("#people_group" + element.id)
-                            .find("option")
-                            .remove()
-                            .end();
+                        this.form.selectedSize = this.form.selectedSize !== null ? this.form.selectedSize : this.details.tourPackageRateGroups[0].size;
+                        this.form.selectedRate = this.form.selectedRate > 0 ? this.form.selectedRate : this.details.tourPackageRateGroups[0].rate;
+                        this.form.selectedTax = this.form.selectedTax > 0 ? this.form.selectedTax : this.details.tourPackageRateGroups[0].tax;
+                    } else {
+                        // Define Variables
+                        var v1 = this.totalavailableseats;
 
-                        for (let j = 0; j <= v1; j++) {
-                            $("#people_group" + element.id).append(
-                                '<option value=' + j + '>' + j + '</option>'
-                            );
-                        }
-                    });
+                        // Append Dropdown Value for tourPackageRateGroups
+                        this.details.tourPackageRateGroups?.forEach((element, i) => {
+                            $("#people_group" + element.id)
+                                .find("option")
+                                .remove()
+                                .end();
+
+                            for (let j = 0; j <= v1; j++) {
+                                $("#people_group" + element.id).append(
+                                    '<option value=' + j + '>' + j + '</option>'
+                                );
+                            }
+                        });
+                    }
 
                     if (this.comboIds != 0 && this.cartItemLength) {
                         this.blockedTimes = {};
@@ -600,47 +643,55 @@ export default {
             });
         },
 
-        hasCustomFormFields(exists=false){
+        handleGroupRateDiscountChange(event) {
+            const selectedIndex = this.details.tourPackageRateGroups.findIndex(size => size.size === this.form.selectedSize);
+            const selectedGroup = this.details.tourPackageRateGroups[selectedIndex];
+            this.form.selectedRate = selectedGroup?.rate;
+            this.form.selectedTax = selectedGroup?.tax;
+        },
+
+        hasCustomFormFields(exists = false) {
             console.log(`sent from custom fields emit signal ${exists}`)
             this.customFieldExists = exists;
         },
 
-       onCustomFormFieldsSubmit(customFormData){
-        // no need to do anything if no custom fields
-        if( !this.customFieldExists  ){ return false;}
+        onCustomFormFieldsSubmit(customFormData) {
+            // no need to do anything if no custom fields
+            if ( !this.customFieldExists  ) {
+                return false;
+            }
 
-            if(  customFormData.errors.length > 0  ){
+            if (  customFormData.errors.length > 0  ) {
                 this.errors = [...customFormData.errors];
-            }else{
+            } else {
                 this.form.custom_fields = customFormData.fields;
                 this.form.addons_total = this.$refs.CustomFieldsRef.sumTotal(customFormData.fields);
                 this.form.addons_fee = this.roundout(this.$refs.CustomFieldsRef.feeTotal(customFormData.fields));
             }
-       },
+        },
 
         submit: async function () {
-
             this.errors = [];
             const loader = this.$loading.show();
             this.form.addons_total = 0;
             this.form.addons_fee = 0;
 
             //if custom fields exists this will be added to the item object custom_fields prop
-            if( this.customFieldExists  ){ 
+            if (this.customFieldExists) { 
                 const customFormData  = await this.$refs.CustomFieldsRef.submitForm(false);
                 this.onCustomFormFieldsSubmit(customFormData);
             }
-           
+
             if (!this.form.time_date) {
                 this.errors.push("Please select a start time for your tour");
             }
 
-            if( this.errors.length > 0 ){
+            if (this.errors.length > 0) {
                 // if errors scroll errors into view 
                 this.$refs.packageErrorDisplay.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start",
-                            inline: "nearest"
+                    behavior: "smooth",
+                    block: "start",
+                    inline: "nearest"
                 });
             }
 
@@ -657,23 +708,36 @@ export default {
             let groupPaxArr = [];
             let paxSubtotalArr = [];
 
-            let index = 0;
+            if (this.is_group_rate_enabled) {
+                const selectedIndex = this.details.tourPackageRateGroups.findIndex(size => size.size === this.form.selectedSize);
+                const selectedGroup = this.details.tourPackageRateGroups[selectedIndex];
 
-            tourPackageRateGroups?.forEach(number => {
-                let rateGroupField = 'people_group' + number.id;
-                const rateGroup = document.querySelector("select[name=" + rateGroupField + "]").value;
-                groupPaxArr.push(rateGroup);
+                groupPaxArr.push(this.form.selectedSize);
+                paxSubtotalArr.push(Number(parseFloat(this.form.selectedRate) + parseFloat(this.form.selectedTax)).toFixed(2));
 
-                const rate = Number(tourPackageRateGroups[index].rate) + Number(tourPackageRateGroups[index].permit_fee) + Number(tourPackageRateGroups[index].tax);
-                paxSubtotalArr.push(rateGroup > 0 ? rateGroup * rate.toFixed(2) : 0);
+                const fees = this.roundout((Number(parseFloat(this.form.selectedRate) + parseFloat(this.form.selectedTax)) * Number(this.form.service_commission)) / 100, 2);
+                feesGroupArr.push(fees.toFixed(2));
 
-                const fees = this.roundout((Number(rate) * Number(this.form.service_commission)) / 100, 2);
-                feesGroupArr.push(rateGroup > 0 ? rateGroup * fees.toFixed(2) : 0);
+                rateGroupArr.push(selectedGroup.rate_for);
+            } else {
+                let index = 0;
 
-                rateGroupArr.push(tourPackageRateGroups[index].rate_for);
+                tourPackageRateGroups?.forEach(number => {
+                    let rateGroupField = 'people_group' + number.id;
+                    const rateGroup = document.querySelector("select[name=" + rateGroupField + "]").value;
+                    groupPaxArr.push(rateGroup);
 
-                index++;
-            });
+                    const rate = Number(tourPackageRateGroups[index].rate) + Number(tourPackageRateGroups[index].permit_fee) + Number(tourPackageRateGroups[index].tax);
+                    paxSubtotalArr.push(rateGroup > 0 ? rateGroup * rate.toFixed(2) : 0);
+
+                    const fees = this.roundout((Number(rate) * Number(this.form.service_commission)) / 100, 2);
+                    feesGroupArr.push(rateGroup > 0 ? rateGroup * fees.toFixed(2) : 0);
+
+                    rateGroupArr.push(tourPackageRateGroups[index].rate_for);
+
+                    index++;
+                });
+            }
 
             let subtotalSum = paxSubtotalArr.reduce((a, b) => Number(a) + Number(b), 0);
             let feesSum = feesGroupArr.reduce((a, b) => Number(a) + Number(b), 0);
@@ -719,31 +783,33 @@ export default {
             let groupPaxArr = [];
             let errors = [];
 
-            tourPackageRateGroups?.forEach(number => {
-                let rateGroupField = 'people_group' + number.id;
-                const rateGroup = document.querySelector("select[name=" + rateGroupField + "]").value;
-                groupPaxArr.push(rateGroup);
-            });
-
-            const rateGroupsum = groupPaxArr.reduce((a, b) => Number(a) + Number(b), 0);
-            if (rateGroupsum == 0) {
-                errors.push("Please select your group of people for the tour");
-            } else {
+            if (this.is_group_rate_enabled === 0) {
                 tourPackageRateGroups?.forEach(number => {
                     let rateGroupField = 'people_group' + number.id;
                     const rateGroup = document.querySelector("select[name=" + rateGroupField + "]").value;
-
-                    if (number.min_pax_allowed > rateGroup) {
-                        errors.push("Please select a minimum of " + number.min_pax_allowed + " " + number.rate_for + " people to process your booking");
-                    }
-
-                    if (number.max_pax_allowed != null && number.max_pax_allowed != 0 && number.max_pax_allowed < rateGroup) {
-                        errors.push("Please select a maximum of " + number.max_pax_allowed + " " + number.rate_for + " people to process your booking");
-                    }
+                    groupPaxArr.push(rateGroup);
                 });
-            }
 
-            this.errors.push(...errors);
+                const rateGroupsum = groupPaxArr.reduce((a, b) => Number(a) + Number(b), 0);
+                if (rateGroupsum == 0) {
+                    errors.push("Please select your group of people for the tour");
+                } else {
+                    tourPackageRateGroups?.forEach(number => {
+                        let rateGroupField = 'people_group' + number.id;
+                        const rateGroup = document.querySelector("select[name=" + rateGroupField + "]").value;
+
+                        if (number.min_pax_allowed > rateGroup) {
+                            errors.push("Please select a minimum of " + number.min_pax_allowed + " " + number.rate_for + " people to process your booking");
+                        }
+
+                        if (number.max_pax_allowed != null && number.max_pax_allowed != 0 && number.max_pax_allowed < rateGroup) {
+                            errors.push("Please select a maximum of " + number.max_pax_allowed + " " + number.rate_for + " people to process your booking");
+                        }
+                    });
+                }
+
+                this.errors.push(...errors);
+            }
 
             return this.errors.length > 0;
         },
