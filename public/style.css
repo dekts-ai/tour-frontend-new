@@ -148,7 +148,7 @@ ul {list-style: none; }
 .starttime-row .groupofpeople .booknowbtn button:after {content: "\f105"; position: absolute; right: 20px; font-family: 'FontAwesome'; font-weight: 100; font-size: 40px; top: -3px; }
 .starttime-row .groupofpeople .table tbody tr td.age { min-width: 270px !important; }
 .starttime-row .groupofpeople .table tbody tr td.age.pay { min-width: 250px !important; }
-.starttime-row .groupofpeople .table tbody tr td.taxes { min-width: 517px !important; }
+.starttime-row .groupofpeople .table tbody tr td.taxes { min-width: 500px !important; }
 .starttime-row .groupofpeople .table tbody tr td.group { min-width: 130px !important; }
 .starttime-row .groupofpeople .table tbody tr td.price { min-width: 130px !important; }
 .starttime-row .groupofpeople .table tbody tr td.final { min-width: 150px !important; }
