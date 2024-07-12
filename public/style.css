@@ -132,7 +132,7 @@ ul {list-style: none; }
 .starttime-row .groupofpeople .table tbody tr td.age img {margin-right: 7px; position: relative; top: -2px; }
 .starttime-row .groupofpeople .table tbody tr td.group {background: #edf4ff; position: relative; background-clip: padding-box; min-width: 130px;}
 .starttime-row .groupofpeople .table tbody tr td.price {background: #edf4ff; position: relative; background-clip: padding-box; min-width: 130px;}
-.starttime-row .groupofpeople .table tbody tr td.group .form-select {border: 0; padding: 0; width: 41px; margin: auto; font-size: 28px; font-weight: 600; cursor: pointer; color: #0090ff; background: #edf4ff url(../images/dd-arrow.png) no-repeat center right 10px; }
+.starttime-row .groupofpeople .table tbody tr td.group .form-select {border: 0; padding: 0; width: 100%; text-align: center; margin: auto; font-size: 28px; font-weight: 600; cursor: pointer; color: #0090ff; background: #edf4ff url(../images/dd-arrow.png) no-repeat center right 10px; }
 .starttime-row .groupofpeople .table tbody tr td.group img {position: absolute; right: 12px; top: 25px; cursor: pointer; }
 .starttime-row .groupofpeople .table tbody tr td.group .form-select:focus {box-shadow: none !important; }
 .starttime-row .groupofpeople .table tbody tr td.price .tag {border: 1px solid rgba(74,189,93,0.5); background: #f2f9f3; border-radius: 3px; font-size: 16px; color: #008009; font-weight: 500; padding: 5px 15px; }
