@@ -220,7 +220,6 @@ export default {
                     this.form = data.form;
                     const fields = JSON.parse(this.form.form_fields);
                     // format the data to attach it to a v-model with a value prop
-                    console.log(this.service_commission);
                     fields.forEach((_field, idx)=>{
                         fields[idx].value = this.getValueFromProps( fields[idx].id );
                         fields[idx].error = false;
