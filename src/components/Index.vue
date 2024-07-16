@@ -348,7 +348,15 @@ export default {
         },
         handleTab(tab, destination) {
             if (tab === 2 || Object.keys(this.cartItem).length) {
-                if (tab === 2) {
+                if (tab === 5 && this.comboIds.length && this.cartItemLength === 1) {
+                    Swal.fire({
+                        toast: true,
+                        html: `To proceed, please ensure you have selected at least two packages.`,
+                        icon: 'info',
+                    });
+
+                    return false;
+                } else if (tab === 2) {
                     this.$store.dispatch('storeFormData', null);
                 }
                 this.$store.dispatch('storeMindChange', 1);
