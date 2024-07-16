@@ -153,6 +153,9 @@ export default {
             this.processing = true;
             var loader = this.$loading.show();
             this.errors = [];
+            if (this.comboIds.length && this.cartItemLength === 1) {
+                this.errors.push("To proceed, please ensure you have selected at least two packages.");
+            }
             if (!this.name) {
                 this.errors.push("Your name is required.");
             }
