@@ -108,7 +108,7 @@
                                                         @selected="selectedDate">
                                                     </datepicker>
                                                 </div>
-                                                <div class="col-12 col-lg-8 mt-4 mt-lg-0">
+                                                <div  v-if="form.package_has_slots" class="col-12 col-lg-8 mt-4 mt-lg-0">
                                                     <h2>Select a start time for your tour:</h2>
                                                     <div v-if="staticDateRange(form.date, form.tenant_id)">
                                                         <h3 class="watermark static-date-range">Canyon is closed for repairs. Please select another day.</h3>
@@ -198,7 +198,6 @@
                                                     @customformexists="hasCustomFormFields"
                                                     :endpoint="`/package/custom/form/${form.package_id}`" />
                                             </div>
-                                            
 
                                             <div class="row groupofpeople">
                                                 <div class="col-12">
@@ -428,7 +427,9 @@ export default {
                 selectedRateId: null,
                 selectedSize: null,
                 selectedRate: 0,
-                selectedTax: 0
+                selectedTax: 0,
+                package_has_slots: 1,
+                package_has_customer: 1,
             },
             is_group_rate_enabled: 0,
             with_rate_groups: 1,
@@ -455,6 +456,8 @@ export default {
             this.form.selectedSize = null;
             this.form.selectedRate = 0;
             this.form.selectedTax = 0;
+            this.form.package_has_slots = 1;
+            this.form.package_has_customer = 1;
         }
 
         if (this.$store.state.date) {
@@ -534,6 +537,9 @@ export default {
                         this.form.service_commission = Number(response.data.tourPackageData[0].service_commission_percentage);
                     }
 
+                    this.form.package_has_slots = response.data.tourPackageData[0].package_has_slots;
+                    this.form.package_has_customer = response.data.tourPackageData[0].package_has_customer;
+
                     this.is_group_rate_enabled = response.data.tourPackageData[0].is_group_rate_enabled;
                     if (this.is_group_rate_enabled) {
                         this.selectgrouppeoples = [];
@@ -585,6 +591,10 @@ export default {
                                 }
                             }
                         }
+                    }
+
+                    if (this.form.package_has_slots === 0) {
+                        this.selectedSlot(this.dateTimeArr[0]?.Id, this.dateTimeArr[0]?.Time, this.dateTimeArr[0]?.slot_time);
                     }
 
                     this.processLoader(loader);

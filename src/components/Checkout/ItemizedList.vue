@@ -5,7 +5,7 @@
         <div class="total-cost-wrap" v-for="item in items" :key="item.tour_slot_id">
             <div class="title-wrap">
                 <div class="title">{{ item.package_name }}</div>
-                <div class="time">{{ dateFormat(item.date) }} @ {{ item.time_date }}</div>
+                <div class="time">{{ dateFormat(item.date) }} <span v-if="item.package_has_slots">@ {{ item.time_date }}</span></div>
             </div>
             <div v-for="(pax, key) in item.people_group" :key="key">
                 <div v-if="pax > 0" class="ages-wrap d-flex justify-content-between align-items-center">

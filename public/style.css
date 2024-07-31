@@ -943,6 +943,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.payment-form-sec .form-field-title {font-size: 20px;margin-bottom: 10px;}
 	.payment-form-sec .form-field-wrp {padding: 0 !important; border: none !important;}
 	.payment-form-sec .payment-text {font-size: 20px;margin-bottom: 10px;margin-top: 20px;}
+	.payment-form-sec .payment-text-no-customer {font-size: 20px;margin-bottom: 10px;margin-top: 0px;}
 	.payment-form-sec .card-detail-wrp {padding: 15px 5px 15px 20px; }
 	.payment-form-sec input[type="submit"] {height: 34px; width: calc(100% - 10px) !important; max-width: unset !important;}
 	.total-cost-wrap .title-wrap {padding: 12px;}
