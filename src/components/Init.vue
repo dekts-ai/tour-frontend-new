@@ -576,7 +576,7 @@ export default {
                         for (let packageId in this.blockedTimes) {
                             if (this.blockedTimes.hasOwnProperty(packageId)) {
                                 let packageData = this.blockedTimes[packageId];
-                                if (packageData.date == date) {
+                                if (packageData.date == date && packageData.package_has_slots) {
                                     this.dateTimeArr = this.dateTimeArr.filter(element => {
                                         // Convert element.slot_time to Date object for comparison
                                         let slotTime = new Date(`2000-01-01T${element.slot_time}`);
@@ -971,6 +971,7 @@ export default {
             var packageId = cartItem.package_id;
             var date = cartItem.date;
             var time = cartItem.slot_time;
+            var packageHasSlots = cartItem.package_has_slots;
             var offset = this.form.travel_duration;
 
             const timeFormat = 'HH:mm:ss';
@@ -983,7 +984,8 @@ export default {
             } else {
                 this.blockedTimes[packageId] = {
                     date: format(date, 'yyyy-MM-dd'),
-                    time: [timeBefore, timeAfter]
+                    time: [timeBefore, timeAfter],
+                    package_has_slots: packageHasSlots
                 };
             }
         },
