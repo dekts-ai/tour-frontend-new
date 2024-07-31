@@ -276,8 +276,13 @@ export default {
 
         if (this.packageId > 0 && this.$store.state.mindChange == 0) {
             this.processLoader(loader);
+
+            var componentName = 'Init';
+            if (this.tenantId) {
+                componentName = 'Gcw';
+            }
             this.$router.push({
-                name: "Init"
+                name: componentName
             });
             return;
         }
@@ -332,7 +337,13 @@ export default {
             this.$store.dispatch('storePackageId', pid);
             this.$store.dispatch('storeFormData', null);
 
-            this.$router.push({ name: 'Init' });
+            var componentName = 'Init';
+            if (this.tenantId) {
+                componentName = 'Gcw';
+            }
+            this.$router.push({
+                name: componentName
+            });
         },
         showPackageSelectionInfo() {
             Swal.fire({
@@ -347,6 +358,10 @@ export default {
             }
         },
         handleTab(tab, destination) {
+            if (tab === 2 && this.tenantId === 'gcw') {
+                destination = 'gcw';
+            }
+
             if (tab === 2 || Object.keys(this.cartItem).length) {
                 if (tab === 5 && this.comboIds.length && this.cartItemLength === 1) {
                     Swal.fire({
@@ -378,8 +393,12 @@ export default {
             this.$store.dispatch('storePackageId', formData.package_id)
             this.$store.dispatch('storeDate', formData.date)
 
+            var componentName = 'Init';
+            if (this.tenantId) {
+                componentName = 'Gcw';
+            }
             this.$router.push({
-                name: 'Init',
+                name: componentName
             });
         },
         removeFromCart(formData) {

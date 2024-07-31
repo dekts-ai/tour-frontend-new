@@ -233,6 +233,7 @@ export default {
     return {
       id: {},
       idLength: 0,
+      tenantId: 'dixies',
       tourBooking: [],
       iframeStatus: false,
       details: [],
@@ -247,6 +248,7 @@ export default {
   },
   created() {
     this.$store.dispatch('storeCartItem', {});
+    this.tenantId = this.$store.state.tenantId;
     this.iframeStatus = this.$store.state.iframeStatus;
     this.customer = this.$store.state.customer;
     this.id = this.$store.state.bookingIds;
@@ -278,8 +280,13 @@ export default {
         this.$store.dispatch('storePackageId', routeData.package_id)
         this.$store.dispatch('storeAffiliateId', routeData.customer_id)
 
+        var componentName = 'Init';
+        if (this.tenantId) {
+          componentName = 'Gcw';
+        }
+
         this.$router.push({
-          name: 'Init',
+          name: componentName,
           query: {
             iframe: this.iframeStatus,
             tid: routeData.tenant_id,
@@ -291,8 +298,13 @@ export default {
       } else if (this.iframeStatus && routeData && routeData?.tenant_id) {
         this.$store.dispatch('storePackageId', routeData.package_id)
 
+        var componentName = 'Init';
+        if (this.tenantId) {
+          componentName = 'Gcw';
+        }
+
         this.$router.push({
-          name: 'Init',
+          name: componentName,
           query: {
             iframe: this.iframeStatus,
             tid: routeData.tenant_id,

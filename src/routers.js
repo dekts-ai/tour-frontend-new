@@ -1,5 +1,6 @@
 import Index from'./components/Index.vue';
 import Init from'./components/Init.vue';
+import Gcw from './components/Gcw.vue';
 import Checkout from './components/Checkout.vue';
 import Thankyou from './components/Thankyou.vue';
 import MyTrip from './components/MyTrip.vue';
@@ -20,6 +21,11 @@ const routes = [
         name: 'Init',
         component: Init,
         path: '/initialize'
+    },
+    {
+        name: 'Gcw',
+        component: Gcw,
+        path: '/gcw'
     },
     {
         name: 'MyTrip',

@@ -190,6 +190,10 @@ export default {
             }
         },
         handleTab(tab, destination) {
+            if (tab === 2 && this.tenantId === 'gcw') {
+                destination = 'gcw';
+            }
+
             if (tab === 2) {
                 this.$store.dispatch('storeFormData', null);
             }

@@ -167,8 +167,12 @@ export default {
             this.$store.dispatch('storePackageId', formData.package_id)
             this.$store.dispatch('storeDate', formData.date)
 
+            var componentName = 'Init';
+            if (this.tenantId) {
+                componentName = 'Gcw';
+            }
             this.$router.push({
-                name: 'Init',
+                name: componentName
             });
         },
         generateTimeSlots() {
@@ -260,6 +264,10 @@ export default {
             }
         },
         handleTab(tab, destination) {
+            if (tab === 2 && this.tenantId === 'gcw') {
+                destination = 'gcw';
+            }
+
             if (tab === 2) {
                 this.$store.dispatch('storeFormData', null);
             }
