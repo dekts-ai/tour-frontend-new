@@ -280,13 +280,8 @@ export default {
         this.$store.dispatch('storePackageId', routeData.package_id)
         this.$store.dispatch('storeAffiliateId', routeData.customer_id)
 
-        var componentName = 'Init';
-        if (this.tenantId) {
-          componentName = 'Gcw';
-        }
-
         this.$router.push({
-          name: componentName,
+          name: "Init",
           query: {
             iframe: this.iframeStatus,
             tid: routeData.tenant_id,
@@ -298,13 +293,8 @@ export default {
       } else if (this.iframeStatus && routeData && routeData?.tenant_id) {
         this.$store.dispatch('storePackageId', routeData.package_id)
 
-        var componentName = 'Init';
-        if (this.tenantId) {
-          componentName = 'Gcw';
-        }
-
         this.$router.push({
-          name: componentName,
+          name: "Init",
           query: {
             iframe: this.iframeStatus,
             tid: routeData.tenant_id,
