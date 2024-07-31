@@ -78,18 +78,18 @@
                                                     <div class="timeline">
                                                         <ul>
                                                             <li v-for="item in value" :class="{ 'booking': item.booking, 'no-booking': !item.booking }">
-                                                                <div class="left_content">
+                                                                <div v-if="item.data.package_has_slots" class="left_content">
                                                                     <h3>{{ item.slot_time }}</h3>
                                                                 </div>
                                                                 <div v-if="item.booking" class="right_content">
                                                                     <div class="d-lg-flex justify-content-between align-items-center">
                                                                         <p class="mb-lg-0 mb-2">{{ item.data.package_name }}</p>
-                                                                        <p>{{ item.data.duration }} {{ item.data.category }}</p>
+                                                                        <p><span v-if="item.data.package_has_slots">{{ item.data.duration }}</span> {{ item.data.category }}</p>
                                                                     </div>
                                                                     <div class="d-md-flex mt-2">
                                                                         <img :src="item.data.package_image" width="100" height="100" alt="">
                                                                         <div class="content-box">
-                                                                            <p class="mb-2">{{ dateFormat(item.data.date) }} @ {{ item.data.time_date }}</p>
+                                                                            <p class="mb-2">{{ dateFormat(item.data.date) }} <span v-if="item.data.package_has_slots">@ {{ item.data.time_date }}</span></p>
                                                                             <p class="mb-2" v-for="(pax, key) in item.data.people_group" :key="key">
                                                                                 <span v-if="pax > 0">{{ pax }} {{ item.data.rate_group[key] }}</span>
                                                                             </p>
