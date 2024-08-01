@@ -429,7 +429,6 @@ export default {
                 selectedRate: 0,
                 selectedTax: 0,
                 package_has_slots: 1,
-                package_has_customer: 1,
             },
             is_group_rate_enabled: 0,
             with_rate_groups: 1,
@@ -457,7 +456,6 @@ export default {
             this.form.selectedRate = 0;
             this.form.selectedTax = 0;
             this.form.package_has_slots = 1;
-            this.form.package_has_customer = 1;
         }
 
         if (this.$store.state.date) {
@@ -538,7 +536,6 @@ export default {
                     }
 
                     this.form.package_has_slots = response.data.tourPackageData[0].package_has_slots;
-                    this.form.package_has_customer = response.data.tourPackageData[0].package_has_customer;
 
                     this.is_group_rate_enabled = response.data.tourPackageData[0].is_group_rate_enabled;
                     if (this.is_group_rate_enabled) {

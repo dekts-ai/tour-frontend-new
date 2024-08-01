@@ -58,12 +58,12 @@
                     <div class="invoice">
                       <div class="row top-row">
                         <div class="col-12 content2 mb-2">
-                          <h2>Hello <span v-if="tourBooking.package_has_customer">{{ customer.name }}</span>,</h2>
+                          <h2>Hello <span>{{ customer.name }}</span>,</h2>
                           <p>
                             Thank you for your booking.
                           </p>
                         </div>
-                        <div v-if="tourBooking.package_has_customer" class="col-12 content-detail-wrap">
+                        <div class="col-12 content-detail-wrap">
                           <div class="invoice-details">
                             <h2>Your Contact Details:</h2>
                             <div class="row">
@@ -93,7 +93,7 @@
                           </div>
                         </div>
 
-                        <div v-if="tourBooking.package_has_customer" class="booking-summery-title mt-3 mb-3">Your Booking Summary:</div>
+                        <div class="booking-summery-title mt-3 mb-3">Your Booking Summary:</div>
 
                         <div class="booking-summery">
                           <div class="booking-summery-package-wrap">

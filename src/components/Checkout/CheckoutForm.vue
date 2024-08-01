@@ -3,7 +3,7 @@
 <div class="col-lg-7 mt-lg-0 mt-md-5 mt-4 order-2 order-md-1">
     <div class="contact-wrap">
         <div class="form-field-title" v-if="iframeStatus == false">Contact:</div>
-        <div v-if="packageHasCustomer" class="form-field-wrp contact-form-field mb-2">
+        <div class="form-field-wrp contact-form-field mb-2">
             <div class="form-group">
                 <label for="fullname" class="col-form-label">Full Name <span class="required-star">*</span></label>
                 <div class="field-icon-wrp"> <i class="fa fa-user" aria-hidden="true"></i> </div>
@@ -53,7 +53,7 @@
             </div>
         </div>
         <div class="payment-box text-start mb-2">
-            <div :class="packageHasCustomer ? 'payment-text' : 'payment-text-no-customer'" class="card-label-text-left">
+            <div class="payment-text card-label-text-left">
                 <img src="../../assets/images/payment.png"> Payment
             </div>
             <div class="secured-encryption card-label-text-left">
@@ -122,7 +122,7 @@ import { kensPolicy, standardPolicy } from '../../data/staticData';
 
 export default {
     name: "CheckoutForm",
-    props: ["tenantId", "iframeStatus", "packageHasCustomer", "errors"],
+    props: ["tenantId", "iframeStatus", "errors"],
     components:{
         IntPhoneNumber,
     },

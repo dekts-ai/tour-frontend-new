@@ -24,7 +24,7 @@
                         </div>
 
                         <div class="row payment-form-sec">
-                            <CheckoutForm  @onsubmit="submit" :tenantId="tenantId" :iframeStatus="iframeStatus" :packageHasCustomer="package_has_customer" :errors="errors"  />
+                            <CheckoutForm  @onsubmit="submit" :tenantId="tenantId" :iframeStatus="iframeStatus" :errors="errors"  />
                             <div class="col-lg-5 order-1 order-md-2">	
                                 <ItemizedList :items="cartItem" :globalTotalItem="globalTotal" :seatErrors="seatErrors" :iframeStatus="iframeStatus" />
                                 <ItemTotalSummary :globalTotal="globalTotal" />
@@ -101,7 +101,6 @@ export default {
             nameoncard: null,
             expiration: null,
             cvv: null,
-            package_has_customer: 0,
         };
     },
     async mounted() {
@@ -125,10 +124,6 @@ export default {
                 this.globalTotal.total = Number(this.globalTotal.total) + Number(this.cartItem[key].total);
                 this.cartItem[key].couponErrors = [];
                 this.cartItem[key].couponSuccess = [];
-
-                if (this.cartItem[key].package_has_customer && this.package_has_customer == 0) {
-                    this.package_has_customer = this.cartItem[key].package_has_customer;
-                }
             }
         }
         this.$store.dispatch('storeTabs', this.tabs);
@@ -161,32 +156,16 @@ export default {
                 this.errors.push("To proceed, please ensure you have selected at least two packages.");
             }
             if (!this.name) {
-                if (this.package_has_customer) {
-                    this.errors.push("Your name is required.");
-                } else {
-                    this.name = 'Default';
-                }
+                this.errors.push("Your name is required.");
             }
             if (!this.phone_number) {
-                if (this.package_has_customer) {
-                    this.errors.push("Your phone number is required.");
-                } else {
-                    this.phone_number = '+918320354276';
-                }
+                this.errors.push("Your phone number is required.");
             }
             if (!this.email) {
-                if (this.package_has_customer) {
-                    this.errors.push("Your email address is required.");
-                } else {
-                    this.email = 'super@gcw.com';
-                }
+                this.errors.push("Your email address is required.");
             }
             if (!this.cancellations_policy) {
-                if (this.package_has_customer) {
-                    this.errors.push("Please read and accept the terms and conditions.");
-                } else {
-                    this.cancellations_policy = 1;
-                }
+                this.errors.push("Please read and accept the terms and conditions.");
             }
             if (!this.cardnumber || !this.expiration || !this.cvv) {
                 this.errors.push("Please enter your card information.");
