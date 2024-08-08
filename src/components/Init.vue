@@ -971,19 +971,21 @@ export default {
             var packageHasSlots = cartItem.package_has_slots;
             var offset = this.form.travel_duration;
 
-            const timeFormat = 'HH:mm:ss';
-            const [offsetHours, offsetMinutes] = offset.split(':').map(Number);
-            const timeBefore = this.calculateTime(time, -offsetHours, -offsetMinutes, timeFormat);
-            const timeAfter = this.calculateTime(time, offsetHours, offsetMinutes, timeFormat);
+            if (offset !== '00:00:00') {
+                const timeFormat = 'HH:mm:ss';
+                const [offsetHours, offsetMinutes] = offset.split(':').map(Number);
+                const timeBefore = this.calculateTime(time, -offsetHours, -offsetMinutes, timeFormat);
+                const timeAfter = this.calculateTime(time, offsetHours, offsetMinutes, timeFormat);
 
-            if (this.blockedTimes[this.form.package_id] || this.form.package_id == packageId) {
-                // this.blockedTimes.splice(this.form.package_id, 1);
-            } else {
-                this.blockedTimes[packageId] = {
-                    date: format(date, 'yyyy-MM-dd'),
-                    time: [timeBefore, timeAfter],
-                    package_has_slots: packageHasSlots
-                };
+                if (this.blockedTimes[this.form.package_id] || this.form.package_id == packageId) {
+                    // this.blockedTimes.splice(this.form.package_id, 1);
+                } else {
+                    this.blockedTimes[packageId] = {
+                        date: format(date, 'yyyy-MM-dd'),
+                        time: [timeBefore, timeAfter],
+                        package_has_slots: packageHasSlots
+                    };
+                }
             }
         },
         calculateTime(timeValue, hoursToAdd, minutesToAdd, format) {

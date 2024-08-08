@@ -118,7 +118,7 @@
 import Swal from 'sweetalert2';
 import { mask } from 'vue-the-mask';
 import IntPhoneNumber from '../Forms/IntPhoneNumber';
-import { kensPolicy, standardPolicy } from '../../data/staticData';
+import { apmPolicy, kensPolicy, standardPolicy } from '../../data/staticData';
 
 export default {
     name: "CheckoutForm",
@@ -153,13 +153,22 @@ export default {
             this.form.phone_code = props.phone_ext;
         },
         openPolicy() {
-           const policy = (this.tenantId == 'kens') ? kensPolicy() : standardPolicy();
+            const policy = this.getPolicy();
             Swal.fire({
                 toast: true,
                 title: "Terms and conditions",
                 html: policy,
                 width: '80vw',
             });
+        },
+        getPolicy() {
+            if (this.tenantId == 'kens') {
+                return kensPolicy();
+            } else if (this.tenantId == 'apm') {
+                return apmPolicy();
+            } else {
+                return standardPolicy();
+            }
         },
         submit(){
             this.$emit('onsubmit', this.form);
