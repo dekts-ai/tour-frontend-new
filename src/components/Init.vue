@@ -202,16 +202,16 @@
                                             <div class="row groupofpeople">
                                                 <div class="col-12">
                                                     <h2>
-                                                        {{ form.category == 'Hotel Night' ? 'Select your room for the night stay:' : 'Select your group of people for the tour:' }}
+                                                        {{ form.type == 'Hotel Night' ? 'Select your room for the night stay:' : 'Select your group of people for the tour:' }}
                                                     </h2>
                                                     <div class="scroll-table">
                                                         <table class="table">
                                                             <thead>
                                                                 <tr>
-                                                                    <th scope="col">{{ (form.category == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
+                                                                    <th scope="col">{{ (form.type == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
                                                                     <th scope="col">Fees and Taxes</th>
                                                                     <th scope="col">
-                                                                        {{ form.category == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
+                                                                        {{ form.type == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
                                                                     </th>
                                                                     <th scope="col">Price</th>
                                                                 </tr>
@@ -418,7 +418,7 @@ export default {
                 slot_time: null,
                 latitude: null,
                 longitude: null,
-                category: 'Tour',
+                type: 'Tour',
                 travel_duration: '02:00:00',
                 custom_fields: null,
                 before_discount_subtotal: 0,
@@ -527,7 +527,7 @@ export default {
                     this.form.duration = response.data.tourPackageData[0].duration;
                     this.form.latitude = response.data.tourPackageData[0].latitude;
                     this.form.longitude = response.data.tourPackageData[0].longitude;
-                    this.form.category = response.data.tourPackageData[0].category;
+                    this.form.type = response.data.tourPackageData[0].type;
                     this.form.travel_duration = response.data.tourPackageData[0].travel_duration;
                     if (this.form.affiliate_id > 0) {
                         this.form.service_commission = Number(response.data.tourPackageData[0].affiliate_processing_percentage);

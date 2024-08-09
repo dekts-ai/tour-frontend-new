@@ -102,7 +102,7 @@
                                                     <div class="tourselected-title-wrap">
                                                         <div class="d-flex align-items-start justify-content-between">
                                                             <div class="tourselected-title">{{ item.package_name }}</div>
-                                                            <div class="tourselected-title"><span style="color: #004085;">{{ item.duration }} {{ item.category }}</span></div>
+                                                            <div class="tourselected-title"><span style="color: #004085;">{{ item.duration }} {{ item.type }}</span></div>
                                                         </div>
 
                                                         <div class="tourselected-title-top">{{ dateFormat(item.date) }} <span v-if="item.package_has_slots">@ {{ item.time_date }}</span></div> 
@@ -191,7 +191,7 @@
                                                         <div class="tourselected-image"><img :src="tourPackage.FrontendPackageImage" :alt="tourPackage.package_name"></div>
                                                         <div class="tourselected-title-wrap">
                                                             <div class="tourselected-title">{{ tourPackage.package_name }}</div>
-                                                            <div class="tourselected-title-top">{{ tourPackage.duration }} {{ tourPackage.category }}</div>
+                                                            <div class="tourselected-title-top">{{ tourPackage.duration }} {{ tourPackage.type }}</div>
 
                                                             <div class="what-bring-wrap">
                                                                 <p>{{ tourPackage.short_description }}</p>

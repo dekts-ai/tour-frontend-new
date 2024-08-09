@@ -84,7 +84,7 @@
                                                                 <div v-if="item.booking" class="right_content">
                                                                     <div class="d-lg-flex justify-content-between align-items-center">
                                                                         <p class="mb-lg-0 mb-2">{{ item.data.package_name }}</p>
-                                                                        <p><span v-if="item.data.package_has_slots">{{ item.data.duration }}</span> {{ item.data.category }}</p>
+                                                                        <p><span v-if="item.data.package_has_slots">{{ item.data.duration }}</span> {{ item.data.type }}</p>
                                                                     </div>
                                                                     <div class="d-md-flex mt-2">
                                                                         <img :src="item.data.package_image" width="100" height="100" alt="">
