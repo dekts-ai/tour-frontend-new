@@ -108,7 +108,8 @@
                                                         @selected="selectedDate">
                                                     </datepicker>
                                                 </div>
-                                                <div  v-if="form.package_has_slots" class="col-12 col-lg-8 mt-4 mt-lg-0">
+
+                                                <div v-if="form.package_has_slots" class="col-12 col-lg-8 mt-4 mt-lg-0">
                                                     <h2>Select a start time for your tour:</h2>
                                                     <div v-if="staticDateRange(form.date, form.tenant_id)">
                                                         <h3 class="watermark static-date-range">Canyon is closed for repairs. Please select another day.</h3>
@@ -175,8 +176,89 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <div v-else class="col-12 col-lg-8 groupofpeople">
+                                                    <h2>
+                                                        {{ form.type == 'Hotel Night' ? 'Select your room for the night stay:' : 'Select your group of people for the tour:' }}
+                                                    </h2>
+                                                    <div class="scroll-table">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">{{ (form.type == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
+                                                                    <th scope="col">Fees and Taxes</th>
+                                                                    <th scope="col">
+                                                                        {{ form.type == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
+                                                                    </th>
+                                                                    <th scope="col">Price</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <!-- START : FOR NORMAL RATE DISCOUNT -->
+                                                            <tbody v-if="is_group_rate_enabled === 0" v-for="(tour, p) in details.tourPackageRateGroups"
+                                                                :key="tour.id">
+                                                                <tr>
+                                                                    <td data-label="Age">
+                                                                        <img src="../assets/images/aduct.png" />
+                                                                        {{ tour.rate_for }}
+                                                                    </td>
+                                                                    <td data-label="Fees and Taxes">
+                                                                        <p v-if="tour.description" style="white-space: pre-line;">
+                                                                            {{ tour.description }}
+                                                                        </p>
+                                                                        <p v-else>
+                                                                            Navajo Nation: Permit Fee ${{ tour.permit_fee
+                                                                            }} & Tax ${{ tour.tax}}
+                                                                        </p>
+                                                                    </td>
+                                                                    <td class="group"
+                                                                        data-label="Select Group Of People">
+                                                                        <select
+                                                                            class="form-select people-group1"
+                                                                            :name="'people_group' + tour.id "
+                                                                            :id="'people_group'+tour.id">
+                                                                            <option v-for="(item, q) in selectgrouppeoples"
+                                                                                :value="item.value" :key="item.value" :selected="q == this.form.people_group[p]">{{
+                                                                                item.number }}</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td class="price" data-label="Price">
+                                                                        <span class="tag">${{ tour.rate }}</span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <!-- END : FOR NORMAL RATE DISCOUNT -->
+
+                                                            <!-- START : FOR GROUP RATE DISCOUNT -->
+                                                            <tbody v-else>
+                                                                <tr>
+                                                                    <td class="age" data-label="Age">
+                                                                        <img src="../assets/images/aduct.png" />
+                                                                        {{ "Guest's" }}
+                                                                    </td>
+                                                                    <td class="taxes" data-label="Fees and Taxes">
+                                                                        <p>Navajo Nation Tax: ${{ form.selectedTax }}</p>
+                                                                    </td>
+                                                                    <td class="group"
+                                                                        data-label="Select Group Of People">
+                                                                        <select
+                                                                            class="form-select people-group1" v-model="form.selectedSize" @change="handleGroupRateDiscountChange">
+                                                                            <option v-for="(item, q) in details.tourPackageRateGroups"
+                                                                                :value="item.size" :key="item.size">${{ item.rate }} - {{ item.size }}</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td class="price" data-label="Price">
+                                                                        <span class="tag">${{ Number(parseFloat(form.selectedRate) + parseFloat(form.selectedTax)).toFixed(2) }}</span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <!-- END : FOR GROUP RATE DISCOUNT -->
+                                                        </table>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <hr />
+
+                                            <hr v-if="form.package_has_slots" />
+
                                             <div ref="packageErrorDisplay">
                                                 <p v-if="errors.length" >
                                                     <b>Please correct the following error(s):</b>
@@ -199,7 +281,7 @@
                                                     :endpoint="`/package/custom/form/${form.package_id}`" />
                                             </div>
 
-                                            <div class="row groupofpeople">
+                                            <div v-if="form.package_has_slots" class="row groupofpeople">
                                                 <div class="col-12">
                                                     <h2>
                                                         {{ form.type == 'Hotel Night' ? 'Select your room for the night stay:' : 'Select your group of people for the tour:' }}
@@ -284,6 +366,13 @@
                                                             <!-- <button @click="addToCart" class="m-1">Add to Cart</button> -->
                                                         </div>
                                                     </div>
+                                                </div>
+                                            </div>
+
+                                            <div v-else class="row groupofpeople">
+                                                <div class="col-12 booknowbtn text-end">
+                                                    <button type="submit">Continue</button>
+                                                    <!-- <button @click="addToCart" class="m-1">Add to Cart</button> -->
                                                 </div>
                                             </div>
                                         </div>
