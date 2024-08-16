@@ -257,6 +257,8 @@
                                                 </div>
                                             </div>
 
+                                            <hr />
+
                                             <div ref="packageErrorDisplay">
                                                 <p v-if="errors.length" >
                                                     <b>Please correct the following error(s):</b>
@@ -267,8 +269,6 @@
                                             </div>
 
                                             <div v-if="form.package_id && form.package_id !== 0 && form.service_commission !== 0">
-                                                <hr v-if="customFieldExists" />
-
                                                 <CustomFields 
                                                     ref="CustomFieldsRef"
                                                     :values="form.custom_fields"
@@ -370,7 +370,6 @@
                                             </div>
 
                                             <div v-else class="row groupofpeople">
-                                                <hr class="mt-4" />
                                                 <div class="col-12 booknowbtn text-end">
                                                     <button type="submit">Continue</button>
                                                     <!-- <button @click="addToCart" class="m-1">Add to Cart</button> -->
