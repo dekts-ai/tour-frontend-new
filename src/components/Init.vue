@@ -178,11 +178,8 @@
                                                 </div>
 
                                                 <div v-else class="col-12 col-lg-8 groupofpeople">
-                                                    <h2>
-                                                        {{ form.type == 'Hotel Night' ? 'Select your room for the night stay:' : 'Select your group of people for the tour:' }}
-                                                    </h2>
                                                     <div class="scroll-table">
-                                                        <table class="table">
+                                                        <table class="table mt-2">
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">{{ (form.type == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
@@ -212,8 +209,11 @@
                                                                     </td>
                                                                     <td class="group"
                                                                         data-label="Select Group Of People">
+                                                                        <input type="button" @click="decrement(tour.id)" value="-" class="plus-minus-btn" />
+                                                                        <input type="text" :name="'people_group_' + tour.id" :id="'people-group-'+tour.id" :value="form.counter" readonly class="plus-minus-input">
+                                                                        <input type="button" @click="increment(tour.id)" value="+" class="plus-minus-btn" />
                                                                         <select
-                                                                            class="form-select people-group1"
+                                                                            class="form-select people-group1 hidden"
                                                                             :name="'people_group' + tour.id "
                                                                             :id="'people_group'+tour.id">
                                                                             <option v-for="(item, q) in selectgrouppeoples"
@@ -518,6 +518,9 @@ export default {
                 selectedRate: 0,
                 selectedTax: 0,
                 package_has_slots: 1,
+                counter: 0, // initial value
+                min: 0, // minimum value
+                max: 0 // maximum value
             },
             is_group_rate_enabled: 0,
             with_rate_groups: 1,
@@ -579,6 +582,7 @@ export default {
                     }
 
                     this.totalavailableseats = response.data.TotalAvailableSeats;
+                    this.form.max = this.totalavailableseats;
                     this.selectgrouppeoples = [];
                     var seats = this.totalavailableseats;
                     seats = seats + 1;
@@ -1088,7 +1092,19 @@ export default {
                 minute: '2-digit',
                 second: '2-digit'
             });
-        }
+        },
+        increment(rateId) {
+            if (this.form.counter < this.form.max) {
+                this.form.counter++;
+                document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counter;
+            }
+        },
+        decrement(rateId) {
+            if (this.form.counter > this.form.min) {
+                this.form.counter--;
+                document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counter;
+            }
+        },
     }
 };
 </script>
