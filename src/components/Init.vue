@@ -369,7 +369,7 @@
                                                 </div>
                                             </div>
 
-                                            <div v-else class="row groupofpeople">
+                                            <div v-else class="row groupofpeople mt-2">
                                                 <div class="col-12 booknowbtn text-end">
                                                     <button type="submit">Continue</button>
                                                     <!-- <button @click="addToCart" class="m-1">Add to Cart</button> -->
