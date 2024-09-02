@@ -271,7 +271,7 @@
                                                     :endpoint="`/package/custom/form/${form.package_id}`" />
                                             </div>
 
-                                            <div v-if="form.package_has_slots" class="row groupofpeople">
+                                            <div v-if="reveal && form.package_has_slots" class="row groupofpeople">
                                                 <div class="col-12">
                                                     <h2>
                                                         {{ form.type == 'Hotel Night' ? 'Select your room for the night stay:' : 'Select your group of people for the tour:' }}
