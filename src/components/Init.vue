@@ -109,7 +109,7 @@
                                                     </datepicker>
                                                 </div>
 
-                                                <div v-if="form.package_has_slots" class="col-12 col-lg-8 mt-4 mt-lg-0">
+                                                <div v-if="reveal && form.package_has_slots" class="col-12 col-lg-8 mt-4 mt-lg-0">
                                                     <h2>Select a start time for your tour:</h2>
                                                     <div v-if="staticDateRange(form.date, form.tenant_id)">
                                                         <h3 class="watermark static-date-range">Canyon is closed for repairs. Please select another day.</h3>
@@ -183,7 +183,6 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">{{ (form.type == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
-                                                                    <th scope="col">Fees and Taxes</th>
                                                                     <th scope="col">
                                                                         {{ form.type == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
                                                                     </th>
@@ -197,15 +196,6 @@
                                                                     <td data-label="Age">
                                                                         <img src="../assets/images/aduct.png" />
                                                                         {{ tour.rate_for }}
-                                                                    </td>
-                                                                    <td data-label="Fees and Taxes">
-                                                                        <p v-if="tour.description" style="white-space: pre-line;">
-                                                                            {{ tour.description }}
-                                                                        </p>
-                                                                        <p v-else>
-                                                                            Navajo Nation: Permit Fee ${{ tour.permit_fee
-                                                                            }} & Tax ${{ tour.tax}}
-                                                                        </p>
                                                                     </td>
                                                                     <td class="group"
                                                                         data-label="Select Group Of People">
@@ -451,6 +441,7 @@ export default {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
+            reveal: false,
             packageOrder: [],
             comboIds: 0,
             tourPackageName: "",
@@ -687,6 +678,7 @@ export default {
                         this.selectedSlot(this.dateTimeArr[0]?.Id, this.dateTimeArr[0]?.Time, this.dateTimeArr[0]?.slot_time);
                     }
 
+                    this.reveal = true;
                     this.processLoader(loader);
                 }).catch(() => {
                     this.processLoader(loader);
@@ -726,6 +718,7 @@ export default {
                 }
 
                 this.totalavailableseats = response.data.TotalAvailableSeats;
+                this.form.max = this.totalavailableseats;
                 this.selectgrouppeoples = [];
                 var seats = this.totalavailableseats;
                 seats = seats + 1;
