@@ -190,7 +190,7 @@
                                                                 </tr>
                                                             </thead>
                                                             <!-- START : FOR NORMAL RATE DISCOUNT -->
-                                                            <tbody v-if="is_group_rate_enabled === 0" v-for="(tour, p) in details.tourPackageRateGroups"
+                                                            <tbody v-if="reveal && is_group_rate_enabled === 0" v-for="(tour, p) in details.tourPackageRateGroups"
                                                                 :key="tour.id">
                                                                 <tr>
                                                                     <td data-label="Age">
