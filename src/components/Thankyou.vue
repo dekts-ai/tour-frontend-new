@@ -136,7 +136,7 @@
                                               <tr>
                                                 <th scope="col"> Total Booked <br>People ({{ tourBooking.tourists }}) </th>
                                                 <th scope="col">Price <span v-if="tourBooking.is_group_rate_enabled == 0">(Per Person)</span></th>
-                                                <th scope="col">Fees and Taxes</th>
+                                                <th scope="col" v-if="tourBooking.package_has_slots">Fees and Taxes</th>
                                                 <th scope="col">Cost</th>
                                               </tr>
                                             </thead>
@@ -144,7 +144,7 @@
                                               <tr>
                                                 <td>{{ item.tourists }}</td>
                                                 <td>${{ item.rate }}</td>
-                                                <td>{{ item.fees }}</td>
+                                                <td v-if="tourBooking.package_has_slots">{{ item.fees }}</td>
                                                 <td>${{ item.total }}</td>
                                               </tr>
                                             </tbody>
