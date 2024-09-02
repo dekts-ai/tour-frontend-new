@@ -108,7 +108,8 @@
                                                         @selected="selectedDate">
                                                     </datepicker>
                                                 </div>
-                                                <div class="col-12 col-lg-8 mt-4 mt-lg-0">
+
+                                                <div v-if="reveal && form.package_has_slots" class="col-12 col-lg-8 mt-4 mt-lg-0">
                                                     <h2>Select a start time for your tour:</h2>
                                                     <div v-if="staticDateRange(form.date, form.tenant_id)">
                                                         <h3 class="watermark static-date-range">Canyon is closed for repairs. Please select another day.</h3>
@@ -175,8 +176,79 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <div v-else class="col-12 col-lg-8 groupofpeople">
+                                                    <div class="scroll-table">
+                                                        <table class="table mt-2">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">{{ (form.type == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
+                                                                    <th scope="col">
+                                                                        {{ form.type == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
+                                                                    </th>
+                                                                    <th scope="col">Price</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <!-- START : FOR NORMAL RATE DISCOUNT -->
+                                                            <tbody v-if="is_group_rate_enabled === 0" v-for="(tour, p) in details.tourPackageRateGroups"
+                                                                :key="tour.id">
+                                                                <tr>
+                                                                    <td data-label="Age">
+                                                                        <img src="../assets/images/aduct.png" />
+                                                                        {{ tour.rate_for }}
+                                                                    </td>
+                                                                    <td class="group"
+                                                                        data-label="Select Group Of People">
+                                                                        <input type="button" @click="decrement(tour.id)" value="-" class="plus-minus-btn" />
+                                                                        <input type="text" :name="'people_group_' + tour.id" :id="'people-group-'+tour.id" :value="form.counter" readonly class="plus-minus-input">
+                                                                        <input type="button" @click="increment(tour.id)" value="+" class="plus-minus-btn" />
+                                                                        <select
+                                                                            class="form-select people-group1 hidden"
+                                                                            :name="'people_group' + tour.id "
+                                                                            :id="'people_group'+tour.id">
+                                                                            <option v-for="(item, q) in selectgrouppeoples"
+                                                                                :value="item.value" :key="item.value" :selected="q == this.form.people_group[p]">{{
+                                                                                item.number }}</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td class="price" data-label="Price">
+                                                                        <span class="tag">${{ tour.rate }}</span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <!-- END : FOR NORMAL RATE DISCOUNT -->
+
+                                                            <!-- START : FOR GROUP RATE DISCOUNT -->
+                                                            <tbody v-else>
+                                                                <tr>
+                                                                    <td class="age" data-label="Age">
+                                                                        <img src="../assets/images/aduct.png" />
+                                                                        {{ "Guest's" }}
+                                                                    </td>
+                                                                    <td class="taxes" data-label="Fees and Taxes">
+                                                                        <p>Navajo Nation Tax: ${{ form.selectedTax }}</p>
+                                                                    </td>
+                                                                    <td class="group"
+                                                                        data-label="Select Group Of People">
+                                                                        <select
+                                                                            class="form-select people-group1" v-model="form.selectedSize" @change="handleGroupRateDiscountChange">
+                                                                            <option v-for="(item, q) in details.tourPackageRateGroups"
+                                                                                :value="item.size" :key="item.size">${{ item.rate }} - {{ item.size }}</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td class="price" data-label="Price">
+                                                                        <span class="tag">${{ Number(parseFloat(form.selectedRate) + parseFloat(form.selectedTax)).toFixed(2) }}</span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <!-- END : FOR GROUP RATE DISCOUNT -->
+                                                        </table>
+                                                    </div>
+                                                </div>
                                             </div>
+
                                             <hr />
+
                                             <div ref="packageErrorDisplay">
                                                 <p v-if="errors.length" >
                                                     <b>Please correct the following error(s):</b>
@@ -198,21 +270,20 @@
                                                     @customformexists="hasCustomFormFields"
                                                     :endpoint="`/package/custom/form/${form.package_id}`" />
                                             </div>
-                                            
 
-                                            <div class="row groupofpeople">
+                                            <div v-if="form.package_has_slots" class="row groupofpeople">
                                                 <div class="col-12">
                                                     <h2>
-                                                        {{ form.category == 'Hotel Night' ? 'Select your room for the night stay:' : 'Select your group of people for the tour:' }}
+                                                        {{ form.type == 'Hotel Night' ? 'Select your room for the night stay:' : 'Select your group of people for the tour:' }}
                                                     </h2>
                                                     <div class="scroll-table">
                                                         <table class="table">
                                                             <thead>
                                                                 <tr>
-                                                                    <th scope="col">{{ (form.category == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
+                                                                    <th scope="col">{{ (form.type == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
                                                                     <th scope="col">Fees and Taxes</th>
                                                                     <th scope="col">
-                                                                        {{ form.category == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
+                                                                        {{ form.type == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
                                                                     </th>
                                                                     <th scope="col">Price</th>
                                                                 </tr>
@@ -285,6 +356,13 @@
                                                             <!-- <button @click="addToCart" class="m-1">Add to Cart</button> -->
                                                         </div>
                                                     </div>
+                                                </div>
+                                            </div>
+
+                                            <div v-else class="row groupofpeople mt-2">
+                                                <div class="col-12 booknowbtn text-end">
+                                                    <button type="submit">Continue</button>
+                                                    <!-- <button @click="addToCart" class="m-1">Add to Cart</button> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -363,6 +441,7 @@ export default {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
+            reveal: false,
             packageOrder: [],
             comboIds: 0,
             tourPackageName: "",
@@ -419,7 +498,7 @@ export default {
                 slot_time: null,
                 latitude: null,
                 longitude: null,
-                category: 'Tour',
+                type: 'Tour',
                 travel_duration: '02:00:00',
                 custom_fields: null,
                 before_discount_subtotal: 0,
@@ -428,7 +507,11 @@ export default {
                 selectedRateId: null,
                 selectedSize: null,
                 selectedRate: 0,
-                selectedTax: 0
+                selectedTax: 0,
+                package_has_slots: 1,
+                counter: 0, // initial value
+                min: 0, // minimum value
+                max: 0 // maximum value
             },
             is_group_rate_enabled: 0,
             with_rate_groups: 1,
@@ -455,6 +538,7 @@ export default {
             this.form.selectedSize = null;
             this.form.selectedRate = 0;
             this.form.selectedTax = 0;
+            this.form.package_has_slots = 1;
         }
 
         if (this.$store.state.date) {
@@ -489,6 +573,7 @@ export default {
                     }
 
                     this.totalavailableseats = response.data.TotalAvailableSeats;
+                    this.form.max = this.totalavailableseats;
                     this.selectgrouppeoples = [];
                     var seats = this.totalavailableseats;
                     seats = seats + 1;
@@ -526,13 +611,15 @@ export default {
                     this.form.duration = response.data.tourPackageData[0].duration;
                     this.form.latitude = response.data.tourPackageData[0].latitude;
                     this.form.longitude = response.data.tourPackageData[0].longitude;
-                    this.form.category = response.data.tourPackageData[0].category;
+                    this.form.type = response.data.tourPackageData[0].type;
                     this.form.travel_duration = response.data.tourPackageData[0].travel_duration;
                     if (this.form.affiliate_id > 0) {
                         this.form.service_commission = Number(response.data.tourPackageData[0].affiliate_processing_percentage);
                     } else {
                         this.form.service_commission = Number(response.data.tourPackageData[0].service_commission_percentage);
                     }
+
+                    this.form.package_has_slots = response.data.tourPackageData[0].package_has_slots;
 
                     this.is_group_rate_enabled = response.data.tourPackageData[0].is_group_rate_enabled;
                     if (this.is_group_rate_enabled) {
@@ -570,7 +657,7 @@ export default {
                         for (let packageId in this.blockedTimes) {
                             if (this.blockedTimes.hasOwnProperty(packageId)) {
                                 let packageData = this.blockedTimes[packageId];
-                                if (packageData.date == date) {
+                                if (packageData.date == date && packageData.package_has_slots) {
                                     this.dateTimeArr = this.dateTimeArr.filter(element => {
                                         // Convert element.slot_time to Date object for comparison
                                         let slotTime = new Date(`2000-01-01T${element.slot_time}`);
@@ -587,6 +674,11 @@ export default {
                         }
                     }
 
+                    if (this.form.package_has_slots === 0) {
+                        this.selectedSlot(this.dateTimeArr[0]?.Id, this.dateTimeArr[0]?.Time, this.dateTimeArr[0]?.slot_time);
+                    }
+
+                    this.reveal = true;
                     this.processLoader(loader);
                 }).catch(() => {
                     this.processLoader(loader);
@@ -626,6 +718,7 @@ export default {
                 }
 
                 this.totalavailableseats = response.data.TotalAvailableSeats;
+                this.form.max = this.totalavailableseats;
                 this.selectgrouppeoples = [];
                 var seats = this.totalavailableseats;
                 seats = seats + 1;
@@ -961,6 +1054,7 @@ export default {
             var packageId = cartItem.package_id;
             var date = cartItem.date;
             var time = cartItem.slot_time;
+            var packageHasSlots = cartItem.package_has_slots;
             var offset = this.form.travel_duration;
 
             if (offset !== '00:00:00') {
@@ -974,7 +1068,8 @@ export default {
                 } else {
                     this.blockedTimes[packageId] = {
                         date: format(date, 'yyyy-MM-dd'),
-                        time: [timeBefore, timeAfter]
+                        time: [timeBefore, timeAfter],
+                        package_has_slots: packageHasSlots
                     };
                 }
             }
@@ -990,7 +1085,19 @@ export default {
                 minute: '2-digit',
                 second: '2-digit'
             });
-        }
+        },
+        increment(rateId) {
+            if (this.form.counter < this.form.max) {
+                this.form.counter++;
+                document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counter;
+            }
+        },
+        decrement(rateId) {
+            if (this.form.counter > this.form.min) {
+                this.form.counter--;
+                document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counter;
+            }
+        },
     }
 };
 </script>

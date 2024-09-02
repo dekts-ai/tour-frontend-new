@@ -100,7 +100,7 @@ export default {
             cardnumber: null,
             nameoncard: null,
             expiration: null,
-            cvv: null
+            cvv: null,
         };
     },
     async mounted() {
@@ -130,7 +130,6 @@ export default {
         this.$store.dispatch('storeMindChange', 0);
     },
     methods: {
-
         createAndMountFormElements() {
             this.elements = this.stripe.elements(stripeEleStyle);
             this.cardElement = this.elements.create("card", stripeCardStyle);

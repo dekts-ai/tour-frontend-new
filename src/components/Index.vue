@@ -102,10 +102,10 @@
                                                     <div class="tourselected-title-wrap">
                                                         <div class="d-flex align-items-start justify-content-between">
                                                             <div class="tourselected-title">{{ item.package_name }}</div>
-                                                            <div class="tourselected-title"><span style="color: #004085;">{{ item.duration }} {{ item.category }}</span></div>
+                                                            <div class="tourselected-title"><span style="color: #004085;">{{ item.duration }} {{ item.type }}</span></div>
                                                         </div>
 
-                                                        <div class="tourselected-title-top">{{ dateFormat(item.date) }} @ {{ item.time_date }}</div> 
+                                                        <div class="tourselected-title-top">{{ dateFormat(item.date) }} <span v-if="item.package_has_slots">@ {{ item.time_date }}</span></div> 
                                                         <div class="tourselected-title-top">{{ item.short_description }}</div>
                                                         <div class="what-bring-wrap-added" v-if="item?.things_to_bring?.length">
                                                             <div class="what-bring-title">What to bring</div>
@@ -191,7 +191,7 @@
                                                         <div class="tourselected-image"><img :src="tourPackage.FrontendPackageImage" :alt="tourPackage.package_name"></div>
                                                         <div class="tourselected-title-wrap">
                                                             <div class="tourselected-title">{{ tourPackage.package_name }}</div>
-                                                            <div class="tourselected-title-top">{{ tourPackage.duration }} {{ tourPackage.category }}</div>
+                                                            <div class="tourselected-title-top">{{ tourPackage.duration }} {{ tourPackage.type }}</div>
 
                                                             <div class="what-bring-wrap">
                                                                 <p>{{ tourPackage.short_description }}</p>
@@ -276,6 +276,7 @@ export default {
 
         if (this.packageId > 0 && this.$store.state.mindChange == 0) {
             this.processLoader(loader);
+
             this.$router.push({
                 name: "Init"
             });
@@ -332,7 +333,9 @@ export default {
             this.$store.dispatch('storePackageId', pid);
             this.$store.dispatch('storeFormData', null);
 
-            this.$router.push({ name: 'Init' });
+            this.$router.push({
+                name: "Init"
+            });
         },
         showPackageSelectionInfo() {
             Swal.fire({
@@ -379,7 +382,7 @@ export default {
             this.$store.dispatch('storeDate', formData.date)
 
             this.$router.push({
-                name: 'Init',
+                name: "Init"
             });
         },
         removeFromCart(formData) {
