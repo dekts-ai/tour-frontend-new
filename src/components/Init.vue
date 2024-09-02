@@ -177,7 +177,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div v-else class="col-12 col-lg-8 groupofpeople">
+                                                <div v-else-if="reveal" class="col-12 col-lg-8 groupofpeople">
                                                     <div class="scroll-table">
                                                         <table class="table mt-2">
                                                             <thead>
@@ -190,7 +190,7 @@
                                                                 </tr>
                                                             </thead>
                                                             <!-- START : FOR NORMAL RATE DISCOUNT -->
-                                                            <tbody v-if="reveal && is_group_rate_enabled === 0" v-for="(tour, p) in details.tourPackageRateGroups"
+                                                            <tbody v-if="is_group_rate_enabled === 0" v-for="(tour, p) in details.tourPackageRateGroups"
                                                                 :key="tour.id">
                                                                 <tr>
                                                                     <td data-label="Age">
