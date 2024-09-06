@@ -267,7 +267,7 @@
                                                                         <select
                                                                             class="form-select people-group1" v-model="form.selectedSize" @change="handleGroupRateDiscountChange">
                                                                             <option v-for="(item, q) in details.tourPackageRateGroups"
-                                                                                :value="item.size" :key="item.size">${{ item.rate }} - {{ item.size }}</option>
+                                                                                :value="item.size" :key="item.size">{{ item.size }} - ${{ item.rate }}</option>
                                                                         </select>
                                                                     </td>
                                                                     <td class="price" data-label="Price">
