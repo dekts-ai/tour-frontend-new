@@ -177,7 +177,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div v-else class="col-12 col-lg-8 groupofpeople">
+                                                <div v-else-if="reveal" class="col-12 col-lg-8 groupofpeople">
                                                     <div class="scroll-table">
                                                         <table class="table mt-2">
                                                             <thead>
@@ -200,7 +200,7 @@
                                                                     <td class="group"
                                                                         data-label="Select Group Of People">
                                                                         <input type="button" @click="decrement(tour.id)" value="-" class="plus-minus-btn" />
-                                                                        <input type="text" :name="'people_group_' + tour.id" :id="'people-group-'+tour.id" :value="form.counter" readonly class="plus-minus-input">
+                                                                        <input type="text" :name="'people_group_' + tour.id" :id="'people-group-'+tour.id" :value="form.counters[tour.id] ?? 0" readonly class="plus-minus-input">
                                                                         <input type="button" @click="increment(tour.id)" value="+" class="plus-minus-btn" />
                                                                         <select
                                                                             class="form-select people-group1 hidden"
@@ -271,7 +271,7 @@
                                                     :endpoint="`/package/custom/form/${form.package_id}`" />
                                             </div>
 
-                                            <div v-if="form.package_has_slots" class="row groupofpeople">
+                                            <div v-if="reveal && form.package_has_slots" class="row groupofpeople">
                                                 <div class="col-12">
                                                     <h2>
                                                         {{ form.type == 'Hotel Night' ? 'Select your room for the night stay:' : 'Select your group of people for the tour:' }}
@@ -509,10 +509,10 @@ export default {
                 selectedRate: 0,
                 selectedTax: 0,
                 package_has_slots: 1,
-                counter: 0, // initial value
-                min: 0, // minimum value
-                max: 0 // maximum value
+                counters: {}
             },
+            minSeats: 0,
+            maxSeats: 0,
             is_group_rate_enabled: 0,
             with_rate_groups: 1,
             tabs: 2
@@ -573,7 +573,7 @@ export default {
                     }
 
                     this.totalavailableseats = response.data.TotalAvailableSeats;
-                    this.form.max = this.totalavailableseats;
+                    this.maxSeats = this.totalavailableseats;
                     this.selectgrouppeoples = [];
                     var seats = this.totalavailableseats;
                     seats = seats + 1;
@@ -698,6 +698,7 @@ export default {
 
             var loader = this.$loading.show();
             this.form.date = date;
+            this.form.counters = {};
             this.dateTimeArr = [];
             this.errors = [];
 
@@ -718,7 +719,7 @@ export default {
                 }
 
                 this.totalavailableseats = response.data.TotalAvailableSeats;
-                this.form.max = this.totalavailableseats;
+                this.maxSeats = this.totalavailableseats;
                 this.selectgrouppeoples = [];
                 var seats = this.totalavailableseats;
                 seats = seats + 1;
@@ -1087,17 +1088,26 @@ export default {
             });
         },
         increment(rateId) {
-            if (this.form.counter < this.form.max) {
-                this.form.counter++;
-                document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counter;
+            if (!this.form.counters[rateId]) {
+                this.form.counters[rateId] = this.minSeats;
+            }
+
+            if (this.form.counters[rateId] < this.maxSeats) {
+                this.form.counters[rateId]++;
+                document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counters[rateId];
             }
         },
         decrement(rateId) {
-            if (this.form.counter > this.form.min) {
-                this.form.counter--;
-                document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counter;
+            if (!this.form.counters[rateId]) {
+                this.form.counters[rateId] = this.minSeats;
             }
-        },
+
+            if (this.form.counters[rateId] > this.minSeats) {
+                this.form.counters[rateId]--;
+                document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counters[rateId];
+            }
+        }
+
     }
 };
 </script>
