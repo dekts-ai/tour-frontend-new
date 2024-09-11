@@ -698,6 +698,7 @@ export default {
 
             var loader = this.$loading.show();
             this.form.date = date;
+            this.form.counters = {};
             this.dateTimeArr = [];
             this.errors = [];
 
