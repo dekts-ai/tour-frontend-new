@@ -2589,6 +2589,16 @@ section.iframe-inner-banner.banner-section {
 	display: block !important;
 }
 
+button.btn-quantity {
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+    border: 1px solid #fff;
+    border-radius: 50px;
+    color: #0070FF;
+    padding-bottom: 3px;
+}
+
 .plus-minus-btn {
 	width: 40px;
     height: 40px;

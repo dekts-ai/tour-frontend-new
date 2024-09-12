@@ -177,7 +177,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div v-else-if="reveal" class="col-12 col-lg-8 groupofpeople">
+                                                <div v-else-if="reveal && is_group_rate_enabled" class="col-12 col-lg-8 groupofpeople">
                                                     <div class="scroll-table">
                                                         <table class="table mt-2">
                                                             <thead>
@@ -189,37 +189,9 @@
                                                                     <th scope="col">Price</th>
                                                                 </tr>
                                                             </thead>
-                                                            <!-- START : FOR NORMAL RATE DISCOUNT -->
-                                                            <tbody v-if="is_group_rate_enabled === 0" v-for="(tour, p) in details.tourPackageRateGroups"
-                                                                :key="tour.id">
-                                                                <tr>
-                                                                    <td data-label="Age">
-                                                                        <img src="../assets/images/aduct.png" />
-                                                                        {{ tour.rate_for }}
-                                                                    </td>
-                                                                    <td class="group"
-                                                                        data-label="Select Group Of People">
-                                                                        <input type="button" @click="decrement(tour.id)" value="-" class="plus-minus-btn" />
-                                                                        <input type="text" :name="'people_group_' + tour.id" :id="'people-group-'+tour.id" :value="form.counters[tour.id] ?? 0" readonly class="plus-minus-input">
-                                                                        <input type="button" @click="increment(tour.id)" value="+" class="plus-minus-btn" />
-                                                                        <select
-                                                                            class="form-select people-group1 hidden"
-                                                                            :name="'people_group' + tour.id "
-                                                                            :id="'people_group'+tour.id">
-                                                                            <option v-for="(item, q) in selectgrouppeoples"
-                                                                                :value="item.value" :key="item.value" :selected="q == this.form.people_group[p]">{{
-                                                                                item.number }}</option>
-                                                                        </select>
-                                                                    </td>
-                                                                    <td class="price" data-label="Price">
-                                                                        <span class="tag">${{ tour.rate }}</span>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                            <!-- END : FOR NORMAL RATE DISCOUNT -->
 
                                                             <!-- START : FOR GROUP RATE DISCOUNT -->
-                                                            <tbody v-else>
+                                                            <tbody>
                                                                 <tr>
                                                                     <td class="age" data-label="Age">
                                                                         <img src="../assets/images/aduct.png" />
@@ -243,6 +215,38 @@
                                                             </tbody>
                                                             <!-- END : FOR GROUP RATE DISCOUNT -->
                                                         </table>
+                                                    </div>
+                                                </div>
+
+                                                <div v-else-if="reveal && is_group_rate_enabled === 0" class="col-12 col-lg-8 mt-2">
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-6" v-for="(tour, p) in details.tourPackageRateGroups" :key="tour.id">
+                                                            <div class="select-member-wrap" style="border: 1px solid #898989;border-radius: 3px; margin-bottom: 15px;">
+                                                                <div class="d-sm-flex w-100">
+                                                                    <div class="quantity-wrap d-flex align-items-center justify-content-center" style="background-color: #0071C2;padding: 18px 20px;">
+                                                                        <button type="button" class="btn-quantity minus" aria-label="Decrease" @click="decrement(tour.id)">−</button>
+                                                                        <input type="input" class="input-box" :name="'people_group_' + tour.id" :id="'people-group-'+tour.id" :value="form.counters[tour.id] ?? 0" readonly style="background-color: transparent; border: none; box-shadow: none; outline: none; text-align: center; width: 40px; font-size: 18px; font-weight: 700; color: #fff; margin-top: -3px;">
+                                                                        <button type="button" class="btn-quantity plus" aria-label="Increase" @click="increment(tour.id)">+</button>
+
+                                                                        <select
+                                                                            class="form-select people-group1 hidden"
+                                                                            :name="'people_group' + tour.id "
+                                                                            :id="'people_group'+tour.id">
+                                                                            <option v-for="(item, q) in selectgrouppeoples"
+                                                                                :value="item.value" :key="item.value" :selected="q == this.form.people_group[p]">{{
+                                                                                item.number }}</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="d-flex align-items-center justify-content-between" style="width: 100%; padding: 10px 20px;">
+                                                                        <div class="member-type" style="width: 100%; text-align: left;">
+                                                                            <div class="member-type-name" style="font-size: 14px; font-weight: 700; color: #2C3E50; line-height: 1.3;">{{ tour.rate_for }}</div>
+                                                                            <div class="member-type-age" style="font-size: 15px; font-weight: 700; color: #666666; line-height: 1.35;">{{ tour.description }}</div>
+                                                                        </div>
+                                                                        <div class="member-price" style="border: 1px solid rgba(74, 189, 93, .5); background: #f2f9f3; border-radius: 3px; font-size: 16px; color: #419547; font-weight: 700; padding: 5px 15px;">${{ tour.rate }}</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
