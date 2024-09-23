@@ -976,8 +976,8 @@ export default {
             }
 
             date = new Date(date);
-            let firstDate = new Date('01 06 2024');
-            let secondDate = new Date('01 13 2024');
+            let firstDate = new Date('01 06 2025');
+            let secondDate = new Date('01 13 2025');
             return date >= firstDate && date < secondDate && this.form.package_id == 1;
         },
         navigateToTab(tab, destination) {
@@ -1010,11 +1010,10 @@ export default {
                 if (response.data.success == "false") {
                     this.errors.push(response.data.message);
                     this.$refs.packageErrorDisplay.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start",
-                            inline: "nearest"
+                        behavior: "smooth",
+                        block: "start",
+                        inline: "nearest"
                     });
-
                 } else {
                     if (this.comboIds == 0) {
                         this.cartItem = [];
