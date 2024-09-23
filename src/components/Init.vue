@@ -144,7 +144,7 @@
                                                             </text>
                                                         </div>
                                                     </div>
-                                                    <div class="radio-toolbar" v-else-if="!begins && !staticDateRange(form.date) && dateTimeArr.length == 0">
+                                                    <div class="radio-toolbar" v-else-if="!begins && !staticDateRange(form.date, form.tenant_id) && dateTimeArr.length == 0">
                                                         <h3 class="watermark static-date-range">Apologies, No slots available on your chosen date.</h3>
                                                     </div>
                                                     <div class="row hotel-list-item-wrap">
