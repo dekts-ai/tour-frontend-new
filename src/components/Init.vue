@@ -183,6 +183,7 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">{{ (form.type == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
+                                                                    <th scope="col">Fees and Taxes</th>
                                                                     <th scope="col">
                                                                         {{ form.type == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
                                                                     </th>
@@ -193,11 +194,11 @@
                                                             <!-- START : FOR GROUP RATE DISCOUNT -->
                                                             <tbody>
                                                                 <tr>
-                                                                    <td class="age" data-label="Age">
+                                                                    <td class="age-ws" data-label="Age">
                                                                         <img src="../assets/images/aduct.png" />
                                                                         {{ "Guest's" }}
                                                                     </td>
-                                                                    <td class="taxes" data-label="Fees and Taxes">
+                                                                    <td class="taxes-ws" data-label="Fees and Taxes">
                                                                         <p>Navajo Nation Tax: ${{ form.selectedTax }}</p>
                                                                     </td>
                                                                     <td class="group"
@@ -205,7 +206,7 @@
                                                                         <select
                                                                             class="form-select people-group1" v-model="form.selectedSize" @change="handleGroupRateDiscountChange">
                                                                             <option v-for="(item, q) in details.tourPackageRateGroups"
-                                                                                :value="item.size" :key="item.size">${{ item.rate }} - {{ item.size }}</option>
+                                                                                :value="item.size" :key="item.size">{{ item.size }} - ${{ item.rate }}</option>
                                                                         </select>
                                                                     </td>
                                                                     <td class="price" data-label="Price">
