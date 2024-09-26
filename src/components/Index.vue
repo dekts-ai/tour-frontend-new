@@ -446,21 +446,26 @@ export default {
 
             var date = format(date, 'yyyy-MM-dd');
 
-            let url = `/tour-package/${date}/${this.tourOperatorId}/${this.packageId}/${this.affiliateId}/${this.comboIds}`;
-            let response = await axios.get(url);
-            this.$store.dispatch('storeTourPackage', response.data);
-            this.tourPackageData = response.data.tourPackageData;
-            this.banner = this.tourPackageData[0].HeaderOne;
-            if (this.comboIds) {
-                const strCids = this.comboIds.split(",");
-                this.firstPackageId = parseInt(strCids[0]);
-                this.tourPackageData.forEach(element => {
-                    if (element.package_id == this.firstPackageId) {
-                        this.firstPackageName = element.package_name;
+            axios.get("/tour-package/" + date + "/" + this.tourOperatorId + "/" + this.packageId + "/" + this.affiliateId + "/" + this.comboIds)
+                .then((response) => {
+                    this.$store.dispatch('storeTourPackage', response.data)
+                    this.tourPackageData = response.data.tourPackageData;
+                    this.banner = this.tourPackageData[0].HeaderOne;
+                    if (this.comboIds) {
+                        const strCids = this.comboIds.split(",");
+                        this.firstPackageId = parseInt(strCids[0]);
+                        this.tourPackageData.forEach(element => {
+                            if (element.package_id == this.firstPackageId) {
+                                this.firstPackageName = element.package_name;
+                            }
+                        });
                     }
+                    this.processLoader(loader);
+                }).catch(error => {
+                    this.tourPackageData = [];
+                    this.banner = "";
+                    this.processLoader(loader);
                 });
-            }
-            this.processLoader(loader);
         },
         isPriceInfoEnabled(customFields) {
             return customFields.some(item => item.priceInfo.enabled === true);
