@@ -221,7 +221,7 @@
 
                                                 <div v-else-if="reveal && is_group_rate_enabled === 0" class="col-12 col-lg-8 mt-2">
                                                     <div class="row">
-                                                        <div class="col-12 col-md-6" v-for="(tour, p) in details.tourPackageRateGroups" :key="tour.id">
+                                                        <div class="col-12 col-md-4" v-for="(tour, p) in details.tourPackageRateGroups" :key="tour.id">
                                                             <div class="select-member-wrap" style="border: 1px solid #898989;border-radius: 3px; margin-bottom: 15px;">
                                                                 <div class="d-sm-flex w-100">
                                                                     <div class="quantity-wrap d-flex align-items-center justify-content-center" style="background-color: #0071C2;padding: 18px 20px;">
@@ -239,10 +239,10 @@
                                                                         </select>
                                                                     </div>
                                                                     <div class="d-flex align-items-center justify-content-between" style="width: 100%; padding: 10px 20px;">
-                                                                        <div class="member-type" style="width: 100%; text-align: left;">
+                                                                        <!-- <div class="member-type" style="width: 100%; text-align: left;">
                                                                             <div class="member-type-name" style="font-size: 14px; font-weight: 700; color: #2C3E50; line-height: 1.3;">{{ tour.rate_for }}</div>
                                                                             <div class="member-type-age" style="font-size: 15px; font-weight: 700; color: #666666; line-height: 1.35;">{{ tour.description }}</div>
-                                                                        </div>
+                                                                        </div> -->
                                                                         <div class="member-price" style="border: 1px solid rgba(74, 189, 93, .5); background: #f2f9f3; border-radius: 3px; font-size: 16px; color: #419547; font-weight: 700; padding: 5px 15px;">${{ tour.rate }}</div>
                                                                     </div>
                                                                 </div>
