@@ -108,7 +108,8 @@
                                                         @selected="selectedDate">
                                                     </datepicker>
                                                 </div>
-                                                <div class="col-12 col-lg-8 mt-4 mt-lg-0">
+
+                                                <div v-if="reveal && form.package_has_slots" class="col-12 col-lg-8 mt-4 mt-lg-0">
                                                     <h2>Select a start time for your tour:</h2>
                                                     <div v-if="staticDateRange(form.date, form.tenant_id)">
                                                         <h3 class="watermark static-date-range">Canyon is closed for repairs. Please select another day.</h3>
@@ -143,7 +144,7 @@
                                                             </text>
                                                         </div>
                                                     </div>
-                                                    <div class="radio-toolbar" v-else-if="!begins && !staticDateRange(form.date) && dateTimeArr.length == 0">
+                                                    <div class="radio-toolbar" v-else-if="!begins && !staticDateRange(form.date, form.tenant_id) && dateTimeArr.length == 0">
                                                         <h3 class="watermark static-date-range">Apologies, No slots available on your chosen date.</h3>
                                                     </div>
                                                     <div class="row hotel-list-item-wrap">
@@ -175,8 +176,84 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <div v-else-if="reveal && is_group_rate_enabled" class="col-12 col-lg-8 groupofpeople">
+                                                    <div class="scroll-table">
+                                                        <table class="table mt-2">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">{{ (form.type == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
+                                                                    <th scope="col">Fees and Taxes</th>
+                                                                    <th scope="col">
+                                                                        {{ form.type == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
+                                                                    </th>
+                                                                    <th scope="col">Price</th>
+                                                                </tr>
+                                                            </thead>
+
+                                                            <!-- START : FOR GROUP RATE DISCOUNT -->
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="age-ws" data-label="Age">
+                                                                        <img src="../assets/images/aduct.png" />
+                                                                        {{ "Guest's" }}
+                                                                    </td>
+                                                                    <td class="taxes-ws" data-label="Fees and Taxes">
+                                                                        <p>Navajo Nation Tax: ${{ form.selectedTax }}</p>
+                                                                    </td>
+                                                                    <td class="group"
+                                                                        data-label="Select Group Of People">
+                                                                        <select
+                                                                            class="form-select people-group1" v-model="form.selectedSize" @change="handleGroupRateDiscountChange">
+                                                                            <option v-for="(item, q) in details.tourPackageRateGroups"
+                                                                                :value="item.size" :key="item.size">{{ item.size }} - ${{ item.rate }}</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td class="price" data-label="Price">
+                                                                        <span class="tag">${{ Number(parseFloat(form.selectedRate) + parseFloat(form.selectedTax)).toFixed(2) }}</span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <!-- END : FOR GROUP RATE DISCOUNT -->
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                                <div v-else-if="reveal && is_group_rate_enabled === 0" class="col-12 col-lg-8 mt-2">
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-6" v-for="(tour, p) in details.tourPackageRateGroups" :key="tour.id">
+                                                            <div class="select-member-wrap" style="border: 1px solid #898989;border-radius: 3px; margin-bottom: 15px;">
+                                                                <div class="d-sm-flex w-100">
+                                                                    <div class="quantity-wrap d-flex align-items-center justify-content-center" style="background-color: #0071C2;padding: 18px 20px;">
+                                                                        <button type="button" class="btn-quantity minus" aria-label="Decrease" @click="decrement(tour.id)">−</button>
+                                                                        <input type="input" class="input-box" :name="'people_group_' + tour.id" :id="'people-group-'+tour.id" :value="form.counters[tour.id] ?? 0" readonly style="background-color: transparent; border: none; box-shadow: none; outline: none; text-align: center; width: 40px; font-size: 18px; font-weight: 700; color: #fff; margin-top: -3px;">
+                                                                        <button type="button" class="btn-quantity plus" aria-label="Increase" @click="increment(tour.id)">+</button>
+
+                                                                        <select
+                                                                            class="form-select people-group1 hidden"
+                                                                            :name="'people_group' + tour.id "
+                                                                            :id="'people_group'+tour.id">
+                                                                            <option v-for="(item, q) in selectgrouppeoples"
+                                                                                :value="item.value" :key="item.value" :selected="q == this.form.people_group[p]">{{
+                                                                                item.number }}</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="d-flex align-items-center justify-content-between" style="width: 100%; padding: 10px 20px;">
+                                                                        <div class="member-type" style="width: 100%; text-align: left;">
+                                                                            <div class="member-type-name" style="font-size: 14px; font-weight: 700; color: #2C3E50; line-height: 1.3;">{{ tour.rate_for }}</div>
+                                                                            <div class="member-type-age" style="font-size: 15px; font-weight: 700; color: #666666; line-height: 1.35;">{{ tour.description }}</div>
+                                                                        </div>
+                                                                        <div class="member-price" style="border: 1px solid rgba(74, 189, 93, .5); background: #f2f9f3; border-radius: 3px; font-size: 16px; color: #419547; font-weight: 700; padding: 5px 15px;">${{ tour.rate }}</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
+
                                             <hr />
+
                                             <div ref="packageErrorDisplay">
                                                 <p v-if="errors.length" >
                                                     <b>Please correct the following error(s):</b>
@@ -198,21 +275,20 @@
                                                     @customformexists="hasCustomFormFields"
                                                     :endpoint="`/package/custom/form/${form.package_id}`" />
                                             </div>
-                                            
 
-                                            <div class="row groupofpeople">
+                                            <div v-if="reveal && form.package_has_slots" class="row groupofpeople">
                                                 <div class="col-12">
                                                     <h2>
-                                                        {{ form.category == 'Hotel Night' ? 'Select your room for the night stay:' : 'Select your group of people for the tour:' }}
+                                                        {{ form.type == 'Hotel Night' ? 'Select your room for the night stay:' : 'Select your group of people for the tour:' }}
                                                     </h2>
                                                     <div class="scroll-table">
                                                         <table class="table">
                                                             <thead>
                                                                 <tr>
-                                                                    <th scope="col">{{ (form.category == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
+                                                                    <th scope="col">{{ (form.type == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
                                                                     <th scope="col">Fees and Taxes</th>
                                                                     <th scope="col">
-                                                                        {{ form.category == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
+                                                                        {{ form.type == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
                                                                     </th>
                                                                     <th scope="col">Price</th>
                                                                 </tr>
@@ -285,6 +361,13 @@
                                                             <!-- <button @click="addToCart" class="m-1">Add to Cart</button> -->
                                                         </div>
                                                     </div>
+                                                </div>
+                                            </div>
+
+                                            <div v-else class="row groupofpeople mt-2">
+                                                <div class="col-12 booknowbtn text-end">
+                                                    <button type="submit">Continue</button>
+                                                    <!-- <button @click="addToCart" class="m-1">Add to Cart</button> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -363,6 +446,7 @@ export default {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
+            reveal: false,
             packageOrder: [],
             comboIds: 0,
             tourPackageName: "",
@@ -419,7 +503,7 @@ export default {
                 slot_time: null,
                 latitude: null,
                 longitude: null,
-                category: 'Tour',
+                type: 'Tour',
                 travel_duration: '02:00:00',
                 custom_fields: null,
                 before_discount_subtotal: 0,
@@ -428,8 +512,12 @@ export default {
                 selectedRateId: null,
                 selectedSize: null,
                 selectedRate: 0,
-                selectedTax: 0
+                selectedTax: 0,
+                package_has_slots: 1,
+                counters: {}
             },
+            minSeats: 0,
+            maxSeats: 0,
             is_group_rate_enabled: 0,
             with_rate_groups: 1,
             tabs: 2
@@ -455,6 +543,7 @@ export default {
             this.form.selectedSize = null;
             this.form.selectedRate = 0;
             this.form.selectedTax = 0;
+            this.form.package_has_slots = 1;
         }
 
         if (this.$store.state.date) {
@@ -489,6 +578,7 @@ export default {
                     }
 
                     this.totalavailableseats = response.data.TotalAvailableSeats;
+                    this.maxSeats = this.totalavailableseats;
                     this.selectgrouppeoples = [];
                     var seats = this.totalavailableseats;
                     seats = seats + 1;
@@ -526,13 +616,15 @@ export default {
                     this.form.duration = response.data.tourPackageData[0].duration;
                     this.form.latitude = response.data.tourPackageData[0].latitude;
                     this.form.longitude = response.data.tourPackageData[0].longitude;
-                    this.form.category = response.data.tourPackageData[0].category;
+                    this.form.type = response.data.tourPackageData[0].type;
                     this.form.travel_duration = response.data.tourPackageData[0].travel_duration;
                     if (this.form.affiliate_id > 0) {
                         this.form.service_commission = Number(response.data.tourPackageData[0].affiliate_processing_percentage);
                     } else {
                         this.form.service_commission = Number(response.data.tourPackageData[0].service_commission_percentage);
                     }
+
+                    this.form.package_has_slots = response.data.tourPackageData[0].package_has_slots;
 
                     this.is_group_rate_enabled = response.data.tourPackageData[0].is_group_rate_enabled;
                     if (this.is_group_rate_enabled) {
@@ -570,7 +662,7 @@ export default {
                         for (let packageId in this.blockedTimes) {
                             if (this.blockedTimes.hasOwnProperty(packageId)) {
                                 let packageData = this.blockedTimes[packageId];
-                                if (packageData.date == date) {
+                                if (packageData.date == date && packageData.package_has_slots) {
                                     this.dateTimeArr = this.dateTimeArr.filter(element => {
                                         // Convert element.slot_time to Date object for comparison
                                         let slotTime = new Date(`2000-01-01T${element.slot_time}`);
@@ -587,6 +679,11 @@ export default {
                         }
                     }
 
+                    if (this.form.package_has_slots === 0) {
+                        this.selectedSlot(this.dateTimeArr[0]?.Id, this.dateTimeArr[0]?.Time, this.dateTimeArr[0]?.slot_time);
+                    }
+
+                    this.reveal = true;
                     this.processLoader(loader);
                 }).catch(() => {
                     this.processLoader(loader);
@@ -606,6 +703,7 @@ export default {
 
             var loader = this.$loading.show();
             this.form.date = date;
+            this.form.counters = {};
             this.dateTimeArr = [];
             this.errors = [];
 
@@ -626,6 +724,7 @@ export default {
                 }
 
                 this.totalavailableseats = response.data.TotalAvailableSeats;
+                this.maxSeats = this.totalavailableseats;
                 this.selectgrouppeoples = [];
                 var seats = this.totalavailableseats;
                 seats = seats + 1;
@@ -878,8 +977,8 @@ export default {
             }
 
             date = new Date(date);
-            let firstDate = new Date('01 06 2024');
-            let secondDate = new Date('01 13 2024');
+            let firstDate = new Date('01 06 2025');
+            let secondDate = new Date('01 13 2025');
             return date >= firstDate && date < secondDate && this.form.package_id == 1;
         },
         navigateToTab(tab, destination) {
@@ -912,11 +1011,10 @@ export default {
                 if (response.data.success == "false") {
                     this.errors.push(response.data.message);
                     this.$refs.packageErrorDisplay.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start",
-                            inline: "nearest"
+                        behavior: "smooth",
+                        block: "start",
+                        inline: "nearest"
                     });
-
                 } else {
                     if (this.comboIds == 0) {
                         this.cartItem = [];
@@ -961,6 +1059,7 @@ export default {
             var packageId = cartItem.package_id;
             var date = cartItem.date;
             var time = cartItem.slot_time;
+            var packageHasSlots = cartItem.package_has_slots;
             var offset = this.form.travel_duration;
 
             if (offset !== '00:00:00') {
@@ -974,7 +1073,8 @@ export default {
                 } else {
                     this.blockedTimes[packageId] = {
                         date: format(date, 'yyyy-MM-dd'),
-                        time: [timeBefore, timeAfter]
+                        time: [timeBefore, timeAfter],
+                        package_has_slots: packageHasSlots
                     };
                 }
             }
@@ -990,7 +1090,28 @@ export default {
                 minute: '2-digit',
                 second: '2-digit'
             });
+        },
+        increment(rateId) {
+            if (!this.form.counters[rateId]) {
+                this.form.counters[rateId] = this.minSeats;
+            }
+
+            if (this.form.counters[rateId] < this.maxSeats) {
+                this.form.counters[rateId]++;
+                document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counters[rateId];
+            }
+        },
+        decrement(rateId) {
+            if (!this.form.counters[rateId]) {
+                this.form.counters[rateId] = this.minSeats;
+            }
+
+            if (this.form.counters[rateId] > this.minSeats) {
+                this.form.counters[rateId]--;
+                document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counters[rateId];
+            }
         }
+
     }
 };
 </script>

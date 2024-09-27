@@ -100,9 +100,9 @@
                                             <div class="details-box mb-3 mb-lg-0">
                                                 <div class="title-wrap d-flex justify-content-between align-items-center">
                                                     <div class="tour-title">{{ item.package_name }}</div>
-                                                    <div class="tour-time">{{ item.duration }} {{ item.category }}</div>
+                                                    <div class="tour-time"><span v-if="item.package_has_slots">{{ item.duration }}</span> {{ item.type }}</div>
                                                 </div>
-                                                <p class="date-time">{{ dateFormat(item.date) }} @ {{ item.time_date }}</p>
+                                                <p class="date-time">{{ dateFormat(item.date) }} <span v-if="item.package_has_slots">@ {{ item.time_date }}</span></p>
                                                 <p class="details-text">{{ item.long_description }}</p>
                                             </div>
                                             <div class="tourselected-image">

@@ -58,7 +58,7 @@
                     <div class="invoice">
                       <div class="row top-row">
                         <div class="col-12 content2 mb-2">
-                          <h2>Hello {{ customer.name }},</h2>
+                          <h2>Hello <span>{{ customer.name }}</span>,</h2>
                           <p>
                             Thank you for your booking.
                           </p>
@@ -114,7 +114,7 @@
                                           <p>{{ tourBooking.date }}</p>
                                         </div>
                                       </div>
-                                      <div class="col-md-6">
+                                      <div v-if="tourBooking.package_has_slots" class="col-md-6">
                                         <div class="details-box">
                                           <h3 class="bookingtime">Booking Time:</h3>
                                           <p>{{ tourBooking.time }}</p>
@@ -136,7 +136,7 @@
                                               <tr>
                                                 <th scope="col"> Total Booked <br>People ({{ tourBooking.tourists }}) </th>
                                                 <th scope="col">Price <span v-if="tourBooking.is_group_rate_enabled == 0">(Per Person)</span></th>
-                                                <th scope="col">Fees and Taxes</th>
+                                                <th scope="col" v-if="tourBooking.package_has_slots">Fees and Taxes</th>
                                                 <th scope="col">Cost</th>
                                               </tr>
                                             </thead>
@@ -144,7 +144,7 @@
                                               <tr>
                                                 <td>{{ item.tourists }}</td>
                                                 <td>${{ item.rate }}</td>
-                                                <td>{{ item.fees }}</td>
+                                                <td v-if="tourBooking.package_has_slots">{{ item.fees }}</td>
                                                 <td>${{ item.total }}</td>
                                               </tr>
                                             </tbody>
@@ -233,6 +233,7 @@ export default {
     return {
       id: {},
       idLength: 0,
+      tenantId: 'dixies',
       tourBooking: [],
       iframeStatus: false,
       details: [],
@@ -247,6 +248,7 @@ export default {
   },
   created() {
     this.$store.dispatch('storeCartItem', {});
+    this.tenantId = this.$store.state.tenantId;
     this.iframeStatus = this.$store.state.iframeStatus;
     this.customer = this.$store.state.customer;
     this.id = this.$store.state.bookingIds;
@@ -279,7 +281,7 @@ export default {
         this.$store.dispatch('storeAffiliateId', routeData.customer_id)
 
         this.$router.push({
-          name: 'Init',
+          name: "Init",
           query: {
             iframe: this.iframeStatus,
             tid: routeData.tenant_id,
@@ -292,7 +294,7 @@ export default {
         this.$store.dispatch('storePackageId', routeData.package_id)
 
         this.$router.push({
-          name: 'Init',
+          name: "Init",
           query: {
             iframe: this.iframeStatus,
             tid: routeData.tenant_id,
