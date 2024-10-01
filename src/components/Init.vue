@@ -147,34 +147,8 @@
                                                     <div class="radio-toolbar" v-else-if="!begins && !staticDateRange(form.date, form.tenant_id) && dateTimeArr.length == 0">
                                                         <h3 class="watermark static-date-range">Apologies, No slots available on your chosen date.</h3>
                                                     </div>
-                                                    <div class="row hotel-list-item-wrap">
-                                                        <div v-if="hotels.length" class="p-1 pb-2 desired-pickup-location">
-                                                            Please select your desired pickup location:
-                                                        </div>
-                                                        <div class="col-12 col-md-6"
-                                                            v-for="hotel in hotels"
-                                                            :key="hotel.id">
 
-                                                            <div class="hotel-list-item"
-                                                                @click="selectedHotel(hotel.id)"
-                                                                @mouseover="flip(hotel.id)"
-                                                                @mouseout="unflip(hotel.id)"
-                                                                :class="{ 'flip': hotel.id === flippedHotelId, 'checked': hotel.id === form.hotel_id }">
-
-                                                                <div class="front">
-                                                                    <label :for="'hotel-list-item' + hotel.id "></label>
-                                                                    <div class="hotel-list-item-img"><img :src="hotel.image" :alt="hotel.name"></div>
-                                                                    <input :id="'hotel-list-item' + hotel.id " type="radio" name="hotel_id">
-                                                                    <div class="hotel-list-item-title">{{ hotel.name }}</div>
-                                                                </div>
-
-                                                                <div class="back">
-                                                                    <label :for="'hotel-list-item' + hotel.id "></label>
-                                                                    <div class="hotel-list-item-address">{{ hotel.address }}</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <Pickup :hotels="hotels" :form="form" />
                                                 </div>
 
                                                 <div v-else-if="reveal && is_group_rate_enabled" class="col-12 col-lg-8 groupofpeople">
@@ -217,6 +191,8 @@
                                                             <!-- END : FOR GROUP RATE DISCOUNT -->
                                                         </table>
                                                     </div>
+
+                                                    <Pickup :hotels="hotels" :form="form" />
                                                 </div>
 
                                                 <div v-else-if="reveal && is_group_rate_enabled === 0" class="col-12 col-lg-8 mt-2">
@@ -249,6 +225,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
+
+                                                    <Pickup :hotels="hotels" :form="form" />
                                                 </div>
                                             </div>
 
@@ -434,13 +412,15 @@ import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import { getUTCDateFromTimeZone } from '../utils/dateUtils';
 import CustomFields from '../components/Forms/CustomFields';
+import Pickup from "./Hotel/Pickup";
 
 export default {
     name: "Init",
     title: "Native American Tours",
     components: {
         Datepicker,
-        CustomFields
+        CustomFields,
+        Pickup
     },
     data() {
         return {
@@ -454,7 +434,6 @@ export default {
             selectgrouppeoples: [],
             details: [],
             hotels: [],
-            flippedHotelId: null,
             cartItem: [],
             cartItemLength: 0,
             slotId: 0,
@@ -950,25 +929,6 @@ export default {
             this.form.tour_slot_id = id;
             this.form.time_date = timeDate;
             this.form.slot_time = slotTime;
-        },
-        selectedHotel: function (hotelId) {
-            this.$store.dispatch('storeHotelId', hotelId)
-            this.form.hotel_id = hotelId;
-            if (this.hotels.length) {
-                this.hotels.forEach(hotel => {
-                    if (hotel.id == this.form.hotel_id) {
-                        this.form.hotel_name = hotel.name;
-                        this.form.hotel_image = hotel.image;
-                        this.form.hotel_address = hotel.address;
-                    }
-                });
-            }
-        },
-        flip(hotelId) {
-            this.flippedHotelId = hotelId;
-        },
-        unflip(hotelId) {
-            this.flippedHotelId = null;
         },
         staticDateRange: function (date, tenant) {
             const tenants = ["kens", "dixies"];
