@@ -157,7 +157,7 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">{{ (form.type == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
-                                                                    <th scope="col">Fees and Taxes</th>
+                                                                    <th v-if="form.tax_applicable" scope="col">Fees and Taxes</th>
                                                                     <th scope="col">
                                                                         {{ form.type == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
                                                                     </th>
@@ -172,7 +172,7 @@
                                                                         <img src="../assets/images/aduct.png" />
                                                                         {{ "Guest's" }}
                                                                     </td>
-                                                                    <td class="taxes-ws" data-label="Fees and Taxes">
+                                                                    <td v-if="form.tax_applicable" class="taxes-ws" data-label="Fees and Taxes">
                                                                         <p>Navajo Nation Tax: ${{ form.selectedTax }}</p>
                                                                     </td>
                                                                     <td class="group"
@@ -264,7 +264,7 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">{{ (form.type == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
-                                                                    <th scope="col">Fees and Taxes</th>
+                                                                    <th v-if="form.tax_applicable" scope="col">Fees and Taxes</th>
                                                                     <th scope="col">
                                                                         {{ form.type == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
                                                                     </th>
@@ -279,7 +279,7 @@
                                                                         <img src="../assets/images/aduct.png" />
                                                                         {{ tour.rate_for }}
                                                                     </td>
-                                                                    <td class="taxes" data-label="Fees and Taxes">
+                                                                    <td v-if="form.tax_applicable" class="taxes" data-label="Fees and Taxes">
                                                                         <p v-if="tour.description" style="white-space: pre-line;">
                                                                             {{ tour.description }}
                                                                         </p>
@@ -313,7 +313,7 @@
                                                                         <img src="../assets/images/aduct.png" />
                                                                         {{ "Guest's" }}
                                                                     </td>
-                                                                    <td class="taxes" data-label="Fees and Taxes">
+                                                                    <td v-if="form.tax_applicable" class="taxes" data-label="Fees and Taxes">
                                                                         <p>Navajo Nation Tax: ${{ form.selectedTax }}</p>
                                                                     </td>
                                                                     <td class="group"
@@ -493,6 +493,7 @@ export default {
                 selectedRate: 0,
                 selectedTax: 0,
                 package_has_slots: 1,
+                tax_applicable: 1,
                 counters: {}
             },
             minSeats: 0,
@@ -523,6 +524,7 @@ export default {
             this.form.selectedRate = 0;
             this.form.selectedTax = 0;
             this.form.package_has_slots = 1;
+            this.form.tax_applicable = 1;
         }
 
         if (this.$store.state.date) {
@@ -604,6 +606,7 @@ export default {
                     }
 
                     this.form.package_has_slots = response.data.tourPackageData[0].package_has_slots;
+                    this.form.tax_applicable = response.data.tourPackageData[0].tax_applicable;
 
                     this.is_group_rate_enabled = response.data.tourPackageData[0].is_group_rate_enabled;
                     if (this.is_group_rate_enabled) {
