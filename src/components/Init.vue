@@ -119,7 +119,7 @@
                                                         <h3 class="watermark static-date-range">Exciting News! Our Tour Begins on <br />{{ begins }}.</h3>
                                                         <br>
                                                     </div>
-                                                    <div class="radio-toolbar" v-if="dateTimeArr.length > 0">
+                                                    <div class="radio-toolbar" v-if="dateTimeArr.length > 0 && !staticDateRange(form.date, form.tenant_id)">
                                                         <div class="time-item" 
                                                             :class="name.bookable_status == 'Open' && name.dd < name.seats ? 'seats-free-label' : 'watermark-label'" 
                                                             v-for="name in dateTimeArr"
@@ -571,7 +571,11 @@ export default {
                         });
                     }
 
-                    this.updateRateGroups(date, 0, loader);
+                    if (!this.staticDateRange(this.form.date, this.form.tenant_id)) {
+                        this.updateRateGroups(date, 0, loader);
+                    } else {
+                        this.processLoader(loader);
+                    }
                 }).catch(error => {
                     this.details.tourPackageRateGroups = [];
                     this.begins = error?.response?.data?.data?.begins;
@@ -719,7 +723,11 @@ export default {
                     });
                 }
 
-                this.updateRateGroups(date, 1, loader);
+                if (!this.staticDateRange(this.form.date, this.form.tenant_id)) {
+                    this.updateRateGroups(date, 1, loader);
+                } else {
+                    this.processLoader(loader);
+                }
             }).catch(error => {
                 this.details.tourPackageRateGroups = [];
                 this.begins = error?.response?.data?.data?.begins;
@@ -935,14 +943,21 @@ export default {
         },
         staticDateRange: function (date, tenant) {
             const tenants = ["kens", "dixies"];
-            if( tenants.indexOf(tenant) === -1 ){
+            if ( tenants.indexOf(tenant) === -1 ) {
                 return false
             }
 
+            let packageIds = [1];
+            if (tenant == "kens") {
+                packageIds = [1, 2, 6];
+            } else if (tenant == "others") {
+                // add closed package ids
+            }
+
             date = new Date(date);
-            let firstDate = new Date('01 06 2025');
-            let secondDate = new Date('01 13 2025');
-            return date >= firstDate && date < secondDate && this.form.package_id == 1;
+            let firstDate = new Date('01 13 2025');
+            let secondDate = new Date('01 28 2025');
+            return date >= firstDate && date < secondDate && packageIds.includes(parseInt(this.form.package_id));
         },
         navigateToTab(tab, destination) {
             if (tab === 1 || tab === 3 || tab === 4 || tab === 5) {

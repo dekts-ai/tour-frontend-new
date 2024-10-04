@@ -132,7 +132,7 @@ export default {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
             banner: "",
-            tenantId: "dixies",
+            tenantId: "kens",
             tourOperatorId: 1,
             cartItem: {},
             cartItemLength: 0,
