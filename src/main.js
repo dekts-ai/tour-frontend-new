@@ -9,11 +9,11 @@ import VueGoogleMaps from '@fawmi/vue-google-maps'
 
 // axios.defaults.baseURL = process.env.VUE_APP_API_URL;
 
-let tenant = "dixies";
+let tenant = "kens";
 let uri = window.location.search.substring(1);
 if (uri != '') {
     let params = new URLSearchParams(uri);
-    tenant = params.get("tid") !== null ? params.get("tid") : "dixies";
+    tenant = params.get("tid") !== null ? params.get("tid") : "kens";
 }
 
 const url = process.env.VUE_APP_API_URL;
