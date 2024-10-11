@@ -1099,6 +1099,9 @@ export default {
                 toast: true,
                 html: `For booking this slot, please call: <strong><a href="tel:${this.form.phone_number}">${this.form.phone_number}</a></strong>`,
                 icon: 'info',
+                allowOutsideClick: true,
+                showConfirmButton: false,
+                timer: 5000,
             });
         },
     }
