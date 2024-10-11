@@ -121,23 +121,24 @@
                                                     </div>
                                                     <div class="radio-toolbar" v-if="dateTimeArr.length > 0 && !staticDateRange(form.date, form.tenant_id)">
                                                         <div class="time-item" 
-                                                            :class="name.bookable_status == 'Open' && name.dd < name.seats ? 'seats-free-label' : 'watermark-label'" 
+                                                            :class="name.bookable_status == 'Open' && name.dd < name.seats ? 'seats-free-label' : name.bookable_status == 'Only by Phone' ? 'phone-label' : 'watermark-label'" 
                                                             v-for="name in dateTimeArr"
                                                             :key="name.Id" 
-                                                            @click="selectedSlot(name.Id, name.Time, name.slot_time)"
+                                                            @click="name.bookable_status == 'Only by Phone' ? openPhonePopup(name) : selectedSlot(name.Id, name.Time, name.slot_time)"
                                                             :style="name.Id == form.tour_slot_id ? 'background-color: #e9f7eb; border-color: #37d150;' : ''">
 
                                                             <label class="time-item-lable" :for="name.Id"></label>
 
                                                             <input type="radio" :id="name.Id" name="time_date"
                                                                 :value="name.Time"
-                                                                :disabled=isDisabled(name) />
+                                                                :disabled="isDisabled(name)" />
 
                                                             <span class="background-change"></span>
 
-                                                            <label :for="name.Id">{{ name.Time}}</label>
+                                                            <label :for="name.Id">{{ name.Time }}</label>
 
                                                             <text v-if="name.bookable_status == 'Open' && name.dd < name.seats" class="seats-free">{{ name.seats - name.dd }} AVAILABLE</text>
+                                                            <text v-else-if="name.bookable_status == 'Only by Phone'" class="phone-call">CALL TO BOOK</text>
                                                             <text v-else class="watermark">
                                                                 <span v-if="staticDateRange(form.date, form.tenant_id)">CLOSED</span>
                                                                 <span v-else>SOLD OUT</span>
@@ -494,6 +495,7 @@ export default {
                 selectedTax: 0,
                 package_has_slots: 1,
                 tax_applicable: 1,
+                phone_number: '',
                 counters: {}
             },
             minSeats: 0,
@@ -590,6 +592,8 @@ export default {
             axios.get("/tour-package/" + date + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + comboIds + "/" + this.with_rate_groups)
                 .then((response) => {
                     this.$store.dispatch('storeTourPackage', response.data)
+                    console.log(response.data.tourPackageData[0]);
+                    
                     this.tourPackageName = response.data.tourPackageData[0].package_name;
                     this.details = this.$store.state.tourPackage;
                     this.hotels = response.data.hotels;
@@ -603,6 +607,7 @@ export default {
                     this.form.longitude = response.data.tourPackageData[0].longitude;
                     this.form.type = response.data.tourPackageData[0].type;
                     this.form.travel_duration = response.data.tourPackageData[0].travel_duration;
+                    this.form.phone_number = response.data.tourPackageData[0].phone_number;
                     if (this.form.affiliate_id > 0) {
                         this.form.service_commission = Number(response.data.tourPackageData[0].affiliate_processing_percentage);
                     } else {
@@ -1088,8 +1093,14 @@ export default {
                 this.form.counters[rateId]--;
                 document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counters[rateId];
             }
-        }
-
+        },
+        openPhonePopup() {
+            Swal.fire({
+                toast: true,
+                html: `For booking this slot, please call: <strong>${this.form.phone_number}</strong>`,
+                icon: 'info',
+            });
+        },
     }
 };
 </script>
