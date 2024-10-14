@@ -937,8 +937,8 @@ export default {
             }
 
             date = new Date(date);
-            let firstDate = new Date('01 06 2025');
-            let secondDate = new Date('01 13 2025');
+            let firstDate = new Date('01 13 2025');
+            let secondDate = new Date('01 28 2025');
             return date >= firstDate && date < secondDate && this.form.package_id == 1;
         },
         navigateToTab(tab, destination) {
