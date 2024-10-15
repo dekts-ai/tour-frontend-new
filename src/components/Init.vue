@@ -121,7 +121,7 @@
                                                     </div>
                                                     <div class="radio-toolbar" v-if="dateTimeArr.length > 0 && !staticDateRange(form.date, form.tenant_id)">
                                                         <div class="time-item" 
-                                                            :class="name.bookable_status == 'Open' && name.dd < name.seats ? 'seats-free-label' : name.bookable_status == 'Only by Phone' ? 'phone-label' : 'watermark-label'" 
+                                                            :class="(name.bookable_status == 'Open' || (name.bookable_status == 'Only by Phone' && callToBookDuration(form.block_ctb_duration, name) == false)) && name.dd < name.seats ? 'seats-free-label' : (name.bookable_status == 'Only by Phone' && callToBookDuration(form.block_ctb_duration, name)) ? 'phone-label' : 'watermark-label'" 
                                                             v-for="name in dateTimeArr"
                                                             :key="name.Id" 
                                                             @click="name.bookable_status == 'Only by Phone' && callToBookDuration(form.block_ctb_duration, name) ? openPhonePopup(name) : selectedSlot(name.Id, name.Time, name.slot_time)"
@@ -465,6 +465,7 @@ export default {
                 hotel_name: 0,
                 hotel_image: 0,
                 hotel_address: 0,
+                timezone: 'US/Arizona',
                 date: getUTCDateFromTimeZone(),
                 time_date: null,
                 people_group: [],
@@ -959,10 +960,8 @@ export default {
             this.form.slot_time = slotTime;
         },
         callToBookDuration: function (bookDuration, timeSlot) {
-            // Get current date-time
-            let now = new Date();
             // Add the given duration in hours to the current time
-            let expiryTime = new Date(now.getTime() + bookDuration * 60 * 60 * 1000);
+            let expiryTime = new Date(new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' })).getTime() + bookDuration * 60 * 60 * 1000);
             // Get the slot times and accordingly display the call to book data
             let slotTime = new Date(`${timeSlot.date}T${timeSlot.slot_time}`);
 
