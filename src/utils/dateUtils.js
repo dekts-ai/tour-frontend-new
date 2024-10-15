@@ -9,7 +9,6 @@ export const getUTCDateFromTimeZone = (tz='US/Arizona') => {
     return new Date(utc_date);
 }
 
-
 export const defaultDateFormat = (date) => {
     var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
     return date.toLocaleDateString("en-US", options)
