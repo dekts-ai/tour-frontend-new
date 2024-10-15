@@ -143,7 +143,7 @@
                                                             <text v-else-if="name.bookable_status == 'Only by Phone'" class="phone-call">
                                                                 <span>CALL TO BOOK</span>
                                                             </text>
-                                                            <text v-else class="watermark">
+                                                            <text v-else-if="form.show_seat_availability" class="watermark">
                                                                 <span v-if="staticDateRange(form.date, form.tenant_id)">CLOSED</span>
                                                                 <span v-else>SOLD OUT</span>
                                                             </text>
