@@ -137,8 +137,12 @@
 
                                                             <label :for="name.Id">{{ name.Time }}</label>
 
-                                                            <text v-if="name.bookable_status == 'Open' && name.dd < name.seats" class="seats-free">{{ name.seats - name.dd }} AVAILABLE</text>
-                                                            <text v-else-if="name.bookable_status == 'Only by Phone'" class="phone-call">CALL TO BOOK</text>
+                                                            <text v-if="name.bookable_status == 'Open' && name.dd < name.seats" class="seats-free">
+                                                                <span v-if="form.show_seat_availability">{{ name.seats - name.dd }} AVAILABLE</span>
+                                                            </text>
+                                                            <text v-else-if="name.bookable_status == 'Only by Phone'" class="phone-call">
+                                                                <span>CALL TO BOOK</span>
+                                                            </text>
                                                             <text v-else class="watermark">
                                                                 <span v-if="staticDateRange(form.date, form.tenant_id)">CLOSED</span>
                                                                 <span v-else>SOLD OUT</span>
@@ -495,6 +499,7 @@ export default {
                 selectedTax: 0,
                 package_has_slots: 1,
                 tax_applicable: 1,
+                show_seat_availability: 1,
                 phone_number: '',
                 counters: {}
             },
@@ -527,6 +532,7 @@ export default {
             this.form.selectedTax = 0;
             this.form.package_has_slots = 1;
             this.form.tax_applicable = 1;
+            this.form.show_seat_availability = 1;
         }
 
         if (this.$store.state.date) {
@@ -616,6 +622,7 @@ export default {
 
                     this.form.package_has_slots = response.data.tourPackageData[0].package_has_slots;
                     this.form.tax_applicable = response.data.tourPackageData[0].tax_applicable;
+                    this.form.show_seat_availability = response.data.tourPackageData[0].show_seat_availability;
 
                     this.is_group_rate_enabled = response.data.tourPackageData[0].is_group_rate_enabled;
                     if (this.is_group_rate_enabled) {
