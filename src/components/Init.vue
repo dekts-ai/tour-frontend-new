@@ -124,7 +124,7 @@
                                                             :class="name.bookable_status == 'Open' && name.dd < name.seats ? 'seats-free-label' : name.bookable_status == 'Only by Phone' ? 'phone-label' : 'watermark-label'" 
                                                             v-for="name in dateTimeArr"
                                                             :key="name.Id" 
-                                                            @click="name.bookable_status == 'Only by Phone' ? openPhonePopup(name) : selectedSlot(name.Id, name.Time, name.slot_time)"
+                                                            @click="name.bookable_status == 'Only by Phone' && callToBookDuration(form.block_ctb_duration, name) ? openPhonePopup(name) : selectedSlot(name.Id, name.Time, name.slot_time)"
                                                             :style="name.Id == form.tour_slot_id ? 'background-color: #e9f7eb; border-color: #37d150;' : ''">
 
                                                             <label class="time-item-lable" :for="name.Id"></label>
@@ -137,10 +137,10 @@
 
                                                             <label :for="name.Id">{{ name.Time }}</label>
 
-                                                            <text v-if="name.bookable_status == 'Open' && name.dd < name.seats" class="seats-free">
+                                                            <text v-if="(name.bookable_status == 'Open' || (name.bookable_status == 'Only by Phone' && callToBookDuration(form.block_ctb_duration, name) == false)) && name.dd < name.seats" class="seats-free">
                                                                 <span v-if="form.show_seat_availability">{{ name.seats - name.dd }} AVAILABLE</span>
                                                             </text>
-                                                            <text v-else-if="name.bookable_status == 'Only by Phone'" class="phone-call">
+                                                            <text v-else-if="name.bookable_status == 'Only by Phone' && callToBookDuration(form.block_ctb_duration, name)" class="phone-call">
                                                                 <span>CALL TO BOOK</span>
                                                             </text>
                                                             <text v-else-if="form.show_seat_availability" class="watermark">
@@ -500,6 +500,8 @@ export default {
                 package_has_slots: 1,
                 tax_applicable: 1,
                 show_seat_availability: 1,
+                block_ctb_duration: 0,
+                ctb_description: '',
                 phone_number: '',
                 counters: {}
             },
@@ -533,6 +535,8 @@ export default {
             this.form.package_has_slots = 1;
             this.form.tax_applicable = 1;
             this.form.show_seat_availability = 1;
+            this.form.block_ctb_duration = 0;
+            this.form.ctb_description = '';
         }
 
         if (this.$store.state.date) {
@@ -598,7 +602,6 @@ export default {
             axios.get("/tour-package/" + date + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + comboIds + "/" + this.with_rate_groups)
                 .then((response) => {
                     this.$store.dispatch('storeTourPackage', response.data)
-                    console.log(response.data.tourPackageData[0]);
                     
                     this.tourPackageName = response.data.tourPackageData[0].package_name;
                     this.details = this.$store.state.tourPackage;
@@ -623,6 +626,8 @@ export default {
                     this.form.package_has_slots = response.data.tourPackageData[0].package_has_slots;
                     this.form.tax_applicable = response.data.tourPackageData[0].tax_applicable;
                     this.form.show_seat_availability = response.data.tourPackageData[0].show_seat_availability;
+                    this.form.block_ctb_duration = response.data.tourPackageData[0].block_ctb_duration;
+                    this.form.ctb_description = response.data.tourPackageData[0].ctb_description;
 
                     this.is_group_rate_enabled = response.data.tourPackageData[0].is_group_rate_enabled;
                     if (this.is_group_rate_enabled) {
@@ -953,6 +958,20 @@ export default {
             this.form.time_date = timeDate;
             this.form.slot_time = slotTime;
         },
+        callToBookDuration: function (bookDuration, timeSlot) {
+            // Get current date-time
+            let now = new Date();
+            // Add the given duration in hours to the current time
+            let expiryTime = new Date(now.getTime() + bookDuration * 60 * 60 * 1000);
+            // Get the slot times and accordingly display the call to book data
+            let slotTime = new Date(`${timeSlot.date}T${timeSlot.slot_time}`);
+
+            if (slotTime < expiryTime) {
+                return true;
+            }
+
+            return false;
+        },
         staticDateRange: function (date, tenant) {
             const tenants = ["kens", "dixies"];
             if ( tenants.indexOf(tenant) === -1 ) {
@@ -1103,8 +1122,8 @@ export default {
         },
         openPhonePopup() {
             Swal.fire({
-                toast: true,
-                html: `For booking this slot, please call: <strong><a href="tel:${this.form.phone_number}">${this.form.phone_number}</a></strong>`,
+                toast: false,
+                html: this.form.ctb_description,
                 icon: 'info',
                 allowOutsideClick: true,
                 showConfirmButton: false,
