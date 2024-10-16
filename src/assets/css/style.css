@@ -2397,6 +2397,10 @@ section.iframe-inner-banner.banner-section {
 	pointer-events: none;
 }
 
+.phone-label {
+	color: #0d6efd;
+}
+
 /*end 01-06-2022*/
 
 .hotel-list-item-wrap {

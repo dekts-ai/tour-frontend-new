@@ -237,7 +237,7 @@ export default {
             iframeStatus: false,
             tourPackageData: [],
             banner: "",
-            tenantId: "dixies",
+            tenantId: "kens",
             tourOperatorId: 1,
             packageId: 0,
             affiliateId: 0,

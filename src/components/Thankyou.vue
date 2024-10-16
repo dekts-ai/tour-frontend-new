@@ -233,7 +233,7 @@ export default {
     return {
       id: {},
       idLength: 0,
-      tenantId: 'dixies',
+      tenantId: 'kens',
       tourBooking: [],
       iframeStatus: false,
       details: [],

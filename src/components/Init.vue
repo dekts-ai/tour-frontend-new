@@ -121,24 +121,29 @@
                                                     </div>
                                                     <div class="radio-toolbar" v-if="dateTimeArr.length > 0 && !staticDateRange(form.date, form.tenant_id)">
                                                         <div class="time-item" 
-                                                            :class="name.bookable_status == 'Open' && name.dd < name.seats ? 'seats-free-label' : 'watermark-label'" 
+                                                            :class="callToBookValidation(name, false) ? 'seats-free-label' : callToBookValidation(name, true) ? 'phone-label' : 'watermark-label'" 
                                                             v-for="name in dateTimeArr"
                                                             :key="name.Id" 
-                                                            @click="selectedSlot(name.Id, name.Time, name.slot_time)"
+                                                            @click="callToBookValidation(name, true) ? openPhonePopup(name) : selectedSlot(name.Id, name.Time, name.slot_time)"
                                                             :style="name.Id == form.tour_slot_id ? 'background-color: #e9f7eb; border-color: #37d150;' : ''">
 
                                                             <label class="time-item-lable" :for="name.Id"></label>
 
                                                             <input type="radio" :id="name.Id" name="time_date"
                                                                 :value="name.Time"
-                                                                :disabled=isDisabled(name) />
+                                                                :disabled="isDisabled(name)" />
 
                                                             <span class="background-change"></span>
 
-                                                            <label :for="name.Id">{{ name.Time}}</label>
+                                                            <label :for="name.Id">{{ name.Time }}</label>
 
-                                                            <text v-if="name.bookable_status == 'Open' && name.dd < name.seats" class="seats-free">{{ name.seats - name.dd }} AVAILABLE</text>
-                                                            <text v-else class="watermark">
+                                                            <text v-if="callToBookValidation(name, false)" class="seats-free">
+                                                                <span v-if="form.show_seat_availability">{{ name.seats - name.dd }} AVAILABLE</span>
+                                                            </text>
+                                                            <text v-else-if="callToBookValidation(name, true)" class="phone-call">
+                                                                <span>CALL TO BOOK</span>
+                                                            </text>
+                                                            <text v-else-if="form.show_seat_availability" class="watermark">
                                                                 <span v-if="staticDateRange(form.date, form.tenant_id)">CLOSED</span>
                                                                 <span v-else>SOLD OUT</span>
                                                             </text>
@@ -157,7 +162,7 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">{{ (form.type == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
-                                                                    <th scope="col">Fees and Taxes</th>
+                                                                    <th v-if="form.tax_applicable" scope="col">Fees and Taxes</th>
                                                                     <th scope="col">
                                                                         {{ form.type == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
                                                                     </th>
@@ -172,7 +177,7 @@
                                                                         <img src="../assets/images/aduct.png" />
                                                                         {{ "Guest's" }}
                                                                     </td>
-                                                                    <td class="taxes-ws" data-label="Fees and Taxes">
+                                                                    <td v-if="form.tax_applicable" class="taxes-ws" data-label="Fees and Taxes">
                                                                         <p>Navajo Nation Tax: ${{ form.selectedTax }}</p>
                                                                     </td>
                                                                     <td class="group"
@@ -264,7 +269,7 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">{{ (form.type == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
-                                                                    <th scope="col">Fees and Taxes</th>
+                                                                    <th v-if="form.tax_applicable" scope="col">Fees and Taxes</th>
                                                                     <th scope="col">
                                                                         {{ form.type == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
                                                                     </th>
@@ -279,7 +284,7 @@
                                                                         <img src="../assets/images/aduct.png" />
                                                                         {{ tour.rate_for }}
                                                                     </td>
-                                                                    <td class="taxes" data-label="Fees and Taxes">
+                                                                    <td v-if="form.tax_applicable" class="taxes" data-label="Fees and Taxes">
                                                                         <p v-if="tour.description" style="white-space: pre-line;">
                                                                             {{ tour.description }}
                                                                         </p>
@@ -313,7 +318,7 @@
                                                                         <img src="../assets/images/aduct.png" />
                                                                         {{ "Guest's" }}
                                                                     </td>
-                                                                    <td class="taxes" data-label="Fees and Taxes">
+                                                                    <td v-if="form.tax_applicable" class="taxes" data-label="Fees and Taxes">
                                                                         <p>Navajo Nation Tax: ${{ form.selectedTax }}</p>
                                                                     </td>
                                                                     <td class="group"
@@ -460,6 +465,7 @@ export default {
                 hotel_name: 0,
                 hotel_image: 0,
                 hotel_address: 0,
+                timezone: 'US/Arizona',
                 date: getUTCDateFromTimeZone(),
                 time_date: null,
                 people_group: [],
@@ -493,6 +499,12 @@ export default {
                 selectedRate: 0,
                 selectedTax: 0,
                 package_has_slots: 1,
+                tax_applicable: 1,
+                show_seat_availability: 1,
+                block_ctb_duration: 0,
+                ctb_description: '',
+                call_to_book: false,
+                phone_number: '',
                 counters: {}
             },
             minSeats: 0,
@@ -523,6 +535,11 @@ export default {
             this.form.selectedRate = 0;
             this.form.selectedTax = 0;
             this.form.package_has_slots = 1;
+            this.form.tax_applicable = 1;
+            this.form.show_seat_availability = 1;
+            this.form.block_ctb_duration = 0;
+            this.form.ctb_description = '';
+            this.form.call_to_book = false;
         }
 
         if (this.$store.state.date) {
@@ -588,6 +605,7 @@ export default {
             axios.get("/tour-package/" + date + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + comboIds + "/" + this.with_rate_groups)
                 .then((response) => {
                     this.$store.dispatch('storeTourPackage', response.data)
+                    
                     this.tourPackageName = response.data.tourPackageData[0].package_name;
                     this.details = this.$store.state.tourPackage;
                     this.hotels = response.data.hotels;
@@ -601,6 +619,7 @@ export default {
                     this.form.longitude = response.data.tourPackageData[0].longitude;
                     this.form.type = response.data.tourPackageData[0].type;
                     this.form.travel_duration = response.data.tourPackageData[0].travel_duration;
+                    this.form.phone_number = response.data.tourPackageData[0].phone_number;
                     if (this.form.affiliate_id > 0) {
                         this.form.service_commission = Number(response.data.tourPackageData[0].affiliate_processing_percentage);
                     } else {
@@ -608,6 +627,11 @@ export default {
                     }
 
                     this.form.package_has_slots = response.data.tourPackageData[0].package_has_slots;
+                    this.form.tax_applicable = response.data.tourPackageData[0].tax_applicable;
+                    this.form.show_seat_availability = response.data.tourPackageData[0].show_seat_availability;
+                    this.form.block_ctb_duration = response.data.tourPackageData[0].block_ctb_duration;
+                    this.form.ctb_description = response.data.tourPackageData[0].ctb_description;
+                    this.form.call_to_book = response.data.callToBook;
 
                     this.is_group_rate_enabled = response.data.tourPackageData[0].is_group_rate_enabled;
                     if (this.is_group_rate_enabled) {
@@ -938,6 +962,25 @@ export default {
             this.form.time_date = timeDate;
             this.form.slot_time = slotTime;
         },
+        callToBookDuration: function (bookDuration, timeSlot) {
+            if (this.form.call_to_book == false) {
+                return false;
+            }
+
+            // Add the given duration in hours to the current time
+            let expiryTime = new Date(new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' })).getTime() + bookDuration * 60 * 60 * 1000);
+            // Get the slot times and accordingly display the call to book data
+            let slotTime = new Date(`${timeSlot.date}T${timeSlot.slot_time}`);
+
+            if (slotTime < expiryTime) {
+                return true;
+            }
+
+            return false;
+        },
+        callToBookValidation: function (timeSlot, bool) {            
+            return timeSlot.bookable_status == 'Open' && timeSlot.dd < timeSlot.seats && this.callToBookDuration(this.form.block_ctb_duration, timeSlot) == bool;
+        },
         staticDateRange: function (date, tenant) {
             const tenants = ["kens", "dixies"];
             if ( tenants.indexOf(tenant) === -1 ) {
@@ -1085,8 +1128,17 @@ export default {
                 this.form.counters[rateId]--;
                 document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counters[rateId];
             }
-        }
-
+        },
+        openPhonePopup() {
+            Swal.fire({
+                toast: false,
+                html: this.form.ctb_description,
+                icon: 'info',
+                allowOutsideClick: true,
+                showConfirmButton: false,
+                timer: 5000,
+            });
+        },
     }
 };
 </script>

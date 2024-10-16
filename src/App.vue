@@ -22,7 +22,7 @@ export default {
       baseUrl: process.env.VUE_APP_BASE_URL,
       iframeStatus: false,
       TourOperatorLogo: null,
-      tenantId: 'dixies',
+      tenantId: 'kens',
       tourOperatorId: 1,
       packageId: 0,
       affiliateId: 0,
@@ -35,7 +35,7 @@ export default {
     if (uri != '') {
       let params = new URLSearchParams(uri);
       this.iframeStatus = params.get("iframe") !== null ? params.get("iframe") : false;
-      this.tenantId = params.get("tid") !== null ? params.get("tid") : 'dixies';
+      this.tenantId = params.get("tid") !== null ? params.get("tid") : 'kens';
       this.tourOperatorId = params.get("oid") !== null ? params.get("oid") : 1;
       this.packageId = params.get("pid") !== null ? params.get("pid") : 0;
       this.affiliateId = params.get("aid") !== null ? params.get("aid") : 0;
