@@ -43,7 +43,7 @@
                     </label>
                 </div>
             </div>
-            <div class="form-group mb-0">
+            <div v-if="tenantId == 'kens' || tenantId == 'dixies'" class="form-group mb-0">
                 <div class="form-check text-start">
                     <input class="form-check-input" type="checkbox" v-model="form.getemailupdates" id="getemailupdates">
                     <label class="form-check-label ms-2" for="getemailupdates">
