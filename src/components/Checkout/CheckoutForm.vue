@@ -12,16 +12,11 @@
             <div class="form-group">
                 <div class="phone-wrap">
                     <label for="phonenumber" class="col-form-label">Phone Number <span class="required-star">*</span> </label>
-                    <!-- <div class="field-icon-wrp"> <i class="fa fa-phone" aria-hidden="true"></i> </div> -->
-                    <!-- <input type="text" v-model="phone_number" id="phonenumber" name="phone_number" class="form-control" placeholder="Your Contact Number"> -->
-
-                <IntPhoneNumber :current_phone_number="form.phone_number" 
-                                :current_phone_code="form.phone_code"
-                                @onphoneupdate="updatePhoneNumber" /> 
-
-                <input type="hidden" id="phonenumber" name="phone_number" v-model="form.phone_number"  />
-                <input type="hidden" id="phonecode" name="phone_code" v-model="form.phone_code"  />
-
+                    <IntPhoneNumber :current_phone_number="form.phone_number" 
+                        :current_phone_code="form.phone_code"
+                        @onphoneupdate="updatePhoneNumber" /> 
+                    <input type="hidden" id="phonenumber" name="phone_number" v-model="form.phone_number" />
+                    <input type="hidden" id="phonecode" name="phone_code" v-model="form.phone_code" />
                 </div>
             </div>
             <div class="form-group">
@@ -43,11 +38,11 @@
                     </label>
                 </div>
             </div>
-            <div v-if="tenantId == 'kens' || tenantId == 'dixies'" class="form-group mb-0">
+            <div class="form-group mb-0">
                 <div class="form-check text-start">
                     <input class="form-check-input" type="checkbox" v-model="form.getemailupdates" id="getemailupdates">
                     <label class="form-check-label ms-2" for="getemailupdates">
-                        Get future email updates from Lower Antelope Canyon Hiking Tour.
+                        Get future email updates from {{ company_name }}.
                     </label>
                 </div>
             </div>
@@ -123,7 +118,7 @@ import { apmPolicy, kensPolicy, standardPolicy } from '../../data/staticData';
 export default {
     name: "CheckoutForm",
     props: ["tenantId", "iframeStatus", "errors"],
-    components:{
+    components: {
         IntPhoneNumber,
     },
     directives: {
@@ -131,22 +126,22 @@ export default {
     },
     data() {
         return {
- 
-           form: {  name: null,
-                    phone_number: null,
-                    phone_code: "+1",
-                    email: null,
-                    getemailupdates: 0,
-                    cancellations_policy: 0,
-                    comment: null,
-                    cardnumber: null,
-                    nameoncard: null,
-                    expiration: null,
-                    cvv: null
-            }
+            form: {
+                name: null,
+                phone_number: null,
+                phone_code: "+1",
+                email: null,
+                getemailupdates: 0,
+                cancellations_policy: 0,
+                comment: null,
+                cardnumber: null,
+                nameoncard: null,
+                expiration: null,
+                cvv: null
+            },
+            company_name: this.$store.state.tourPackage?.tourPackageData[0]?.company_name
         }
     },
-
     methods: {
         updatePhoneNumber(props){
             this.form.phone_number = props.phone_num;
@@ -170,7 +165,7 @@ export default {
                 return standardPolicy();
             }
         },
-        submit(){
+        submit() {
             this.$emit('onsubmit', this.form);
         }
     }
