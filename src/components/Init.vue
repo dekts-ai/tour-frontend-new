@@ -111,7 +111,7 @@
                                                     </datepicker>
                                                 </div>
 
-                                                <div class="col-12 col-lg-8 mt-4 mt-lg-0">
+                                                <div class="col-12 col-lg-8 mt-4 mt-lg-1">
                                                     <div class="accordion booking-accordion-wrap" id="accordionExample">
                                                         <div v-if="tourPackageName" class="accordion-item">
                                                             <div class="accordion-header" id="headingOne">
