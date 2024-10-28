@@ -702,6 +702,11 @@ export default {
                     this.dateTimeArr = slotTimes;
                 }
 
+                // Make all slots visible on first time
+                this.dateTimeArr.forEach(element => {
+                    element.visible = true;
+                });
+
                 this.totalavailableseats = response.data.TotalAvailableSeats;
                 this.maxSeats = this.totalavailableseats;
                 this.selectgrouppeoples = [];
