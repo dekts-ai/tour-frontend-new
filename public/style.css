@@ -669,6 +669,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .vuejs3-datepicker__calendar-actionarea {padding: 23px 18px; font-size: 0; max-width: 410px;}
 .vuejs3-datepicker__calendar {border: 1px solid #DADADA; box-shadow: none; border-radius: 0; width: auto;}
 .vuejs3-datepicker__calendar .day {width: calc(14.28% - 3px); height: 40px; background: #f5f5f5; border: 1px solid #DCDCDC; border-radius: 3px; color: #000; font-size: 12px; font-weight: 400; margin-right: 3px; margin-bottom: 3px;}
+.vuejs3-datepicker__calendar span.cell.day.disabled {color: darkgray;}
 .vuejs3-datepicker .vuejs3-datepicker__calendar .day-header {width: calc(14.28% - 3px); height: 40px; color: #000; font-size: 12px; font-weight: 700; margin-right: 3px; margin-bottom: 3px;}
 
 @media only screen and (max-width: 575px) {
