@@ -649,6 +649,10 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .booking-accordion-wrap.accordion .people-btn .btn-people-count {width: 37px; height: 45px; font-size: 26px; border: 1px solid #CACACA; box-shadow: none; background-color: #0071C2; color: #fff; font-weight: 700; line-height: 1; vertical-align: top; padding: 0;margin: 0; display: flex; align-items: baseline; justify-content: center; line-height: 37px;}
 .booking-accordion-wrap.accordion .people-btn .btn-people-count:first-child {border-radius: 5px 0 0 5px;}
 .booking-accordion-wrap.accordion .people-btn .btn-people-count:nth-child(2) {border-radius: 0 5px 5px 0;}
+.booking-accordion-wrap.accordion .group-rate-discount {width: 100%; max-width: 300px; padding: 10px 15px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; background-color: #fff; appearance: none; -webkit-appearance: none; -moz-appearance: none; cursor: pointer; transition: border-color 0.3s ease, box-shadow 0.3s ease;}
+.booking-accordion-wrap.accordion .group-rate-discount:focus { border-color: #007bff; box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); outline: none; }
+.booking-accordion-wrap.accordion .group-rate-discount::after { content: "▼"; position: absolute; right: 15px; pointer-events: none; }
+.booking-accordion-wrap.accordion .group-rate-discount option { padding: 10px; font-size: 16px; }
 
 .starttime-row .select-time .booking-accordion-wrap .radio-toolbar .time-item {padding: 8px 13px; min-width: 135px; margin-right: 13px; margin-bottom: 15px;}
 .starttime-row .select-time .booking-accordion-wrap .radio-toolbar .time-item label {font-size: 15px !important;}

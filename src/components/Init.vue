@@ -123,72 +123,49 @@
                                                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                                                 <div class="accordion-body clearfix pb-1">
 
-                                                                    <div v-if="reveal && is_group_rate_enabled" class="groupofpeople">
-                                                                        <div class="scroll-table">
-                                                                            <table class="table mt-2">
-                                                                                <thead>
-                                                                                    <tr>
-                                                                                        <th scope="col">{{ (form.type == 'Hotel Night' || is_group_rate_enabled === 1) ? 'Name' : 'Age' }}</th>
-                                                                                        <th v-if="form.tax_applicable" scope="col">Fees and Taxes</th>
-                                                                                        <th scope="col">
-                                                                                            {{ form.type == 'Hotel Night' ? 'Select Room' : 'Select Group Of People' }}
-                                                                                        </th>
-                                                                                        <th scope="col">Price</th>
-                                                                                    </tr>
-                                                                                </thead>
-
-                                                                                <!-- START : FOR GROUP RATE DISCOUNT -->
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td class="age-ws" data-label="Age">
-                                                                                            <img src="../assets/images/aduct.png" />
-                                                                                            {{ "Guest's" }}
-                                                                                        </td>
-                                                                                        <td v-if="form.tax_applicable" class="taxes-ws" data-label="Fees and Taxes">
-                                                                                            <p>Navajo Nation Tax: ${{ form.selectedTax }}</p>
-                                                                                        </td>
-                                                                                        <td class="group"
-                                                                                            data-label="Select Group Of People">
-                                                                                            <select
-                                                                                                class="form-select people-group1" v-model="form.selectedSize" @change="handleGroupRateDiscountChange">
-                                                                                                <option v-for="(item, q) in details.tourPackageRateGroups"
-                                                                                                    :value="item.size" :key="item.size">{{ item.size }} - ${{ item.rate }}</option>
-                                                                                            </select>
-                                                                                        </td>
-                                                                                        <td class="price" data-label="Price">
-                                                                                            <span class="tag">${{ Number(parseFloat(form.selectedRate) + parseFloat(form.selectedTax)).toFixed(2) }}</span>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                                <!-- END : FOR GROUP RATE DISCOUNT -->
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div v-else class="package-wrap" v-for="(tour, p) in details.tourPackageRateGroups" :key="tour.id">
+                                                                    <div v-if="reveal && is_group_rate_enabled" class="package-wrap">
                                                                         <div class="package-name">
-                                                                            <div class="title">{{ tour.rate_for }}</div>
-                                                                            <div class="price">${{ tour.rate }}</div>
+                                                                            <div class="title">{{ "Guest's" }}</div>
+                                                                            <div class="price">Navajo Nation Tax: ${{ form.selectedTax }}</div>
+                                                                            <!-- <div class="price">${{ Number(parseFloat(form.selectedRate) + parseFloat(form.selectedTax)).toFixed(2) }}</div> -->
                                                                         </div>
                                                                         <div class="people-count">
                                                                             <div class="people">
-                                                                                <label>People</label>
-                                                                                <input type="text" :name="'people_group_' + tour.id" :id="'people-group-'+tour.id" :value="form.counters[tour.id] ?? 0" readonly>
-                                                                            </div>
-                                                                            <div class="people-btn">
-                                                                                <button type="button" class="btn-people-count" @click="increment(tour.id)">+</button>
-                                                                                <button type="button" class="btn-people-count" @click="decrement(tour.id)">-</button>
+                                                                                <select
+                                                                                    class="form-select group-rate-discount" v-model="form.selectedSize" @change="handleGroupRateDiscountChange">
+                                                                                    <option v-for="(item, q) in details.tourPackageRateGroups"
+                                                                                        :value="item.size" :key="item.size">{{ item.size }} - ${{ item.rate }}</option>
+                                                                                </select>
                                                                             </div>
                                                                         </div>
+                                                                    </div>
 
-                                                                        <select
-                                                                            class="form-select people-group1 hidden"
-                                                                            :name="'people_group' + tour.id "
-                                                                            :id="'people_group'+tour.id">
-                                                                            <option v-for="(item, q) in selectgrouppeoples"
-                                                                                :value="item.value" :key="item.value" :selected="q == this.form.people_group[p]">{{
-                                                                                item.number }}</option>
-                                                                        </select>
+                                                                    <div v-else>
+                                                                        <div class="package-wrap" v-for="(tour, p) in details.tourPackageRateGroups" :key="tour.id">
+                                                                            <div class="package-name">
+                                                                                <div class="title">{{ tour.rate_for }}</div>
+                                                                                <div class="price">${{ tour.rate }}</div>
+                                                                            </div>
+                                                                            <div class="people-count">
+                                                                                <div class="people">
+                                                                                    <label>People</label>
+                                                                                    <input type="text" :name="'people_group_' + tour.id" :id="'people-group-'+tour.id" :value="form.counters[tour.id] ?? 0" readonly>
+                                                                                </div>
+                                                                                <div class="people-btn">
+                                                                                    <button type="button" class="btn-people-count" @click="increment(tour.id)">+</button>
+                                                                                    <button type="button" class="btn-people-count" @click="decrement(tour.id)">-</button>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <select
+                                                                                class="form-select people-group1 hidden"
+                                                                                :name="'people_group' + tour.id "
+                                                                                :id="'people_group'+tour.id">
+                                                                                <option v-for="(item, q) in selectgrouppeoples"
+                                                                                    :value="item.value" :key="item.value" :selected="q == this.form.people_group[p]">{{
+                                                                                    item.number }}</option>
+                                                                            </select>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -613,6 +590,7 @@ export default {
                         this.form.selectedSize = this.form.selectedSize !== null ? this.form.selectedSize : this.details.tourPackageRateGroups[0].size;
                         this.form.selectedRate = this.form.selectedRate > 0 ? this.form.selectedRate : this.details.tourPackageRateGroups[0].rate;
                         this.form.selectedTax = this.form.selectedTax > 0 ? this.form.selectedTax : this.details.tourPackageRateGroups[0].tax;
+                        this.form.total_people_selected = this.form.selectedSize;
                     } else {
                         // Define Variables
                         var v1 = this.totalavailableseats;
@@ -740,6 +718,10 @@ export default {
             this.form.selectedRate = selectedGroup?.rate;
             this.form.selectedTax = selectedGroup?.tax;
             this.form.total_people_selected = this.form.selectedSize;
+
+            if (this.form.package_has_slots) {
+                this.filterSlotsBasedOnSeats();
+            }
         },
 
         hasCustomFormFields(exists = false) {
@@ -1120,7 +1102,9 @@ export default {
             this.form.time_date = null;
             this.form.slot_time = null;
 
-            this.form.total_people_selected = Object.values(this.form.counters).reduce((total, num) => total + num, 0);
+            if (this.is_group_rate_enabled === 0) {
+                this.form.total_people_selected = Object.values(this.form.counters).reduce((total, num) => total + num, 0);
+            }
 
             this.dateTimeArr.forEach(element => {
                 if (this.form.total_people_selected <= (element.seats - element.dd)) {
