@@ -111,10 +111,22 @@
                                                     </datepicker>
                                                 </div>
 
+                                                <div v-if="staticDateRange(form.date, form.tenant_id)" class="col-12 col-lg-8 mt-4 mt-lg-1">
+                                                    <h3 class="watermark static-date-range">Canyon is closed for repairs. Please select another day.</h3>
+                                                </div>
+
+                                                <div v-else-if="begins" class="col-12 col-lg-8 mt-4 mt-lg-1">
+                                                    <h3 class="watermark static-date-range">Exciting News! Our Tour Begins on <br />{{ begins }}.</h3>
+                                                </div>
+
+                                                <div v-else-if="slotNotFound && dateTimeArr.length == 0" class="col-12 col-lg-8 mt-4 mt-lg-1">
+                                                    <h3 class="watermark static-date-range">Apologies, No slots available on your chosen date.</h3>
+                                                </div>
+
                                                 <div class="col-12 col-lg-8 mt-4 mt-lg-1">
                                                     <div class="accordion booking-accordion-wrap" id="accordionExample">
 
-                                                        <div class="accordion-item" v-if="reveal && form.package_has_slots">
+                                                        <div v-if="reveal && form.package_has_slots && !begins && !staticDateRange(form.date, form.tenant_id) && dateTimeArr.length > 0" class="accordion-item">
                                                             <div class="accordion-header" id="headingTwo">
                                                                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                                                                     Select Your Tour Time:  <span>{{ form.time_date }}</span>
@@ -122,17 +134,8 @@
                                                             </div>
                                                             <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                                                                 <div class="accordion-body select-time-wrp">
-                                                                    <div v-if="staticDateRange(form.date, form.tenant_id)">
-                                                                        <h3 class="watermark static-date-range">Canyon is closed for repairs. Please select another day.</h3>
-                                                                        <br>
-                                                                    </div>
 
-                                                                    <div v-else-if="begins">
-                                                                        <h3 class="watermark static-date-range">Exciting News! Our Tour Begins on <br />{{ begins }}.</h3>
-                                                                        <br>
-                                                                    </div>
-
-                                                                    <div class="radio-toolbar" v-else-if="dateTimeArr.length > 0 && !staticDateRange(form.date, form.tenant_id)">
+                                                                    <div class="radio-toolbar">
                                                                         <div style="display: contents;" v-for="name in dateTimeArr">
                                                                             <div class="time-item" 
                                                                                 :class="callToBookValidation(name, false) ? 'seats-free-label' : callToBookValidation(name, true) ? 'phone-label' : 'watermark-label'" 
@@ -166,25 +169,21 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-
-                                                                    <div class="radio-toolbar" v-else-if="!begins && !staticDateRange(form.date, form.tenant_id) && dateTimeArr.length == 0">
-                                                                        <h3 class="watermark static-date-range">Apologies, No slots available on your chosen date.</h3>
-                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
 
-                                                        <div v-if="tourPackageName" class="accordion-item">
+                                                        <div v-if="reveal && tourPackageName" class="accordion-item">
                                                             <div class="accordion-header" id="headingOne">
-                                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                                                    {{ tourPackageName }}:  <span>{{ form.total_people_selected }} People</span>
+                                                                <button :class="form.package_has_slots == 0 ? 'accordion-button' : 'accordion-button collapsed'" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" :aria-expanded="form.package_has_slots == 0 ? true : false" aria-controls="collapseOne">
+                                                                    {{ tourPackageName }}: <span>{{ form.total_people_selected }} People</span>
                                                                 </button>
                                                             </div>
 
-                                                            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                            <div id="collapseOne" :class="form.package_has_slots == 0 ? 'accordion-collapse collapse show' : 'accordion-collapse collapse'" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                                                 <div class="accordion-body clearfix pb-1">
 
-                                                                    <div v-if="reveal && is_group_rate_enabled" class="package-wrap">
+                                                                    <div v-if="is_group_rate_enabled" class="package-wrap">
                                                                         <div class="package-name">
                                                                             <div class="title">{{ "Guest's" }}</div>
                                                                             <div class="price">Navajo Nation Tax: ${{ form.selectedTax }}</div>
@@ -232,7 +231,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="accordion-item" v-if="tourPackageName && form.custom_fields && form.package_id && form.package_id !== 0 && form.service_commission !== 0">
+                                                        <div v-if="reveal && tourPackageName && form.custom_fields && form.package_id && form.package_id !== 0 && form.service_commission !== 0" class="accordion-item">
                                                             <div class="accordion-header" id="headingThree">
                                                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                                                                     Additional Options: 
@@ -258,7 +257,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="accordion-item" v-if="hotels.length">
+                                                        <div v-if="reveal && hotels.length" class="accordion-item">
                                                             <div class="accordion-header" id="headingFour">
                                                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
                                                                     Select Pickup Hotel: 
@@ -386,6 +385,7 @@ export default {
             cartItem: [],
             cartItemLength: 0,
             slotId: 0,
+            slotNotFound: false,
             disabledDates: {
                 to: this.getStartDate(),
                 from: this.getEndDate()
@@ -475,6 +475,7 @@ export default {
             this.form.tour_slot_id = 0;
             this.form.time_date = null;
             this.form.slot_time = null;
+            this.form.people_group = [];
             this.form.selectedRateId = null;
             this.form.selectedSize = null;
             this.form.selectedRate = 0;
@@ -536,12 +537,15 @@ export default {
                         });
                     }
 
+                    this.slotNotFound = this.dateTimeArr.length > 0 ? false : true;                    
+
                     if (!this.staticDateRange(this.form.date, this.form.tenant_id)) {
                         this.updateRateGroups(date, 0, loader);
                     } else {
                         this.processLoader(loader);
                     }
                 }).catch(error => {
+                    this.slotNotFound = true;
                     this.details.tourPackageRateGroups = [];
                     this.begins = error?.response?.data?.data?.begins;
                     this.processLoader(loader);
@@ -555,7 +559,7 @@ export default {
             axios.get("/tour-package/" + date + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + comboIds + "/" + this.with_rate_groups)
                 .then((response) => {
                     this.$store.dispatch('storeTourPackage', response.data)
-                    
+
                     this.tourPackageName = response.data.tourPackageData[0].package_name;
                     this.details = this.$store.state.tourPackage;
                     this.hotels = response.data.hotels;
@@ -637,7 +641,7 @@ export default {
                         }
                     }
 
-                    if (this.form.package_has_slots === 0) {
+                    if (this.form.package_has_slots == 0) {
                         this.selectedSlot(this.dateTimeArr[0]?.Id, this.dateTimeArr[0]?.Time, this.dateTimeArr[0]?.slot_time);
                     }
 
@@ -651,6 +655,7 @@ export default {
                 this.form.tour_slot_id = 0;
                 this.form.time_date = null;
                 this.form.slot_time = null;
+                this.form.people_group = [];
             }
 
             this.$store.dispatch('storeTabs', this.tabs);
@@ -660,6 +665,7 @@ export default {
             console.log('selectedDate');
 
             var loader = this.$loading.show();
+            this.reveal = false;
             this.form.date = date;
             this.form.counters = {};
             this.form.total_people_selected = 0;
@@ -701,12 +707,15 @@ export default {
                     });
                 }
 
-                if (!this.staticDateRange(this.form.date, this.form.tenant_id)) {
+                this.slotNotFound = this.dateTimeArr.length > 0 ? false : true;
+
+                if (!this.begins && !this.staticDateRange(this.form.date, this.form.tenant_id)) {
                     this.updateRateGroups(date, 1, loader);
                 } else {
                     this.processLoader(loader);
                 }
             }).catch(error => {
+                this.slotNotFound = true;
                 this.details.tourPackageRateGroups = [];
                 this.begins = error?.response?.data?.data?.begins;
                 this.processLoader(loader);
@@ -955,7 +964,16 @@ export default {
             date = new Date(date);
             let firstDate = new Date('01 13 2025');
             let secondDate = new Date('01 28 2025');
-            return date >= firstDate && date < secondDate && packageIds.includes(parseInt(this.form.package_id));
+            let status = date >= firstDate && date < secondDate && packageIds.includes(parseInt(this.form.package_id));
+
+            if (status || this.begins) {
+                this.form.tour_slot_id = 0;
+                this.form.time_date = null;
+                this.form.slot_time = null;
+                this.form.people_group = [];
+            }
+
+            return status;
         },
         navigateToTab(tab, destination) {
             if (tab === 1 || tab === 3 || tab === 4 || tab === 5) {
