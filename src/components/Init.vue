@@ -113,71 +113,14 @@
 
                                                 <div class="col-12 col-lg-8 mt-4 mt-lg-1">
                                                     <div class="accordion booking-accordion-wrap" id="accordionExample">
-                                                        <div v-if="tourPackageName" class="accordion-item">
-                                                            <div class="accordion-header" id="headingOne">
-                                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                                    {{ tourPackageName }}:  <span>{{ form.total_people_selected }} People</span>
-                                                                </button>
-                                                            </div>
-
-                                                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                                                <div class="accordion-body clearfix pb-1">
-
-                                                                    <div v-if="reveal && is_group_rate_enabled" class="package-wrap">
-                                                                        <div class="package-name">
-                                                                            <div class="title">{{ "Guest's" }}</div>
-                                                                            <div class="price">Navajo Nation Tax: ${{ form.selectedTax }}</div>
-                                                                            <!-- <div class="price">${{ Number(parseFloat(form.selectedRate) + parseFloat(form.selectedTax)).toFixed(2) }}</div> -->
-                                                                        </div>
-                                                                        <div class="people-count">
-                                                                            <div class="people">
-                                                                                <select
-                                                                                    class="form-select group-rate-discount" v-model="form.selectedSize" @change="handleGroupRateDiscountChange">
-                                                                                    <option v-for="(item, q) in details.tourPackageRateGroups"
-                                                                                        :value="item.size" :key="item.size">{{ item.size }} - ${{ item.rate }}</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div v-else>
-                                                                        <div class="package-wrap" v-for="(tour, p) in details.tourPackageRateGroups" :key="tour.id">
-                                                                            <div class="package-name">
-                                                                                <div class="title">{{ tour.rate_for }}</div>
-                                                                                <div class="price">${{ tour.rate }}</div>
-                                                                            </div>
-                                                                            <div class="people-count">
-                                                                                <div class="people">
-                                                                                    <label>People</label>
-                                                                                    <input type="text" :name="'people_group_' + tour.id" :id="'people-group-'+tour.id" :value="form.counters[tour.id] ?? 0" readonly>
-                                                                                </div>
-                                                                                <div class="people-btn">
-                                                                                    <button type="button" class="btn-people-count" @click="increment(tour.id)">+</button>
-                                                                                    <button type="button" class="btn-people-count" @click="decrement(tour.id)">-</button>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <select
-                                                                                class="form-select people-group1 hidden"
-                                                                                :name="'people_group' + tour.id "
-                                                                                :id="'people_group'+tour.id">
-                                                                                <option v-for="(item, q) in selectgrouppeoples"
-                                                                                    :value="item.value" :key="item.value" :selected="q == this.form.people_group[p]">{{
-                                                                                    item.number }}</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
 
                                                         <div class="accordion-item" v-if="reveal && form.package_has_slots">
                                                             <div class="accordion-header" id="headingTwo">
-                                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                                                                     Select Your Tour Time:  <span>{{ form.time_date }}</span>
                                                                 </button>
                                                             </div>
-                                                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                                            <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                                                                 <div class="accordion-body select-time-wrp">
                                                                     <div v-if="staticDateRange(form.date, form.tenant_id)">
                                                                         <h3 class="watermark static-date-range">Canyon is closed for repairs. Please select another day.</h3>
@@ -226,6 +169,64 @@
 
                                                                     <div class="radio-toolbar" v-else-if="!begins && !staticDateRange(form.date, form.tenant_id) && dateTimeArr.length == 0">
                                                                         <h3 class="watermark static-date-range">Apologies, No slots available on your chosen date.</h3>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div v-if="tourPackageName" class="accordion-item">
+                                                            <div class="accordion-header" id="headingOne">
+                                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                                                    {{ tourPackageName }}:  <span>{{ form.total_people_selected }} People</span>
+                                                                </button>
+                                                            </div>
+
+                                                            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                                <div class="accordion-body clearfix pb-1">
+
+                                                                    <div v-if="reveal && is_group_rate_enabled" class="package-wrap">
+                                                                        <div class="package-name">
+                                                                            <div class="title">{{ "Guest's" }}</div>
+                                                                            <div class="price">Navajo Nation Tax: ${{ form.selectedTax }}</div>
+                                                                            <!-- <div class="price">${{ Number(parseFloat(form.selectedRate) + parseFloat(form.selectedTax)).toFixed(2) }}</div> -->
+                                                                        </div>
+                                                                        <div class="people-count">
+                                                                            <div class="people">
+                                                                                <select
+                                                                                    class="form-select group-rate-discount" v-model="form.selectedSize" @change="handleGroupRateDiscountChange">
+                                                                                    <option v-for="(item, q) in details.tourPackageRateGroups"
+                                                                                        :value="item.size" :key="item.size">{{ item.size }} - ${{ item.rate }}</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div v-else>
+                                                                        <div class="package-wrap" v-for="(tour, p) in details.tourPackageRateGroups" :key="tour.id">
+                                                                            <div class="package-name">
+                                                                                <div class="title">{{ tour.rate_for }}</div>
+                                                                                <div class="price">${{ tour.rate }}</div>
+                                                                            </div>
+                                                                            <div class="people-count">
+                                                                                <div class="people">
+                                                                                    <label>People</label>
+                                                                                    <input type="text" :name="'people_group_' + tour.id" :id="'people-group-'+tour.id" :value="form.counters[tour.id] ?? 0" readonly>
+                                                                                </div>
+                                                                                <div class="people-btn">
+                                                                                    <button type="button" class="btn-people-count" @click="increment(tour.id)">+</button>
+                                                                                    <button type="button" class="btn-people-count" @click="decrement(tour.id)">-</button>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <select
+                                                                                class="form-select people-group1 hidden"
+                                                                                :name="'people_group' + tour.id "
+                                                                                :id="'people_group'+tour.id">
+                                                                                <option v-for="(item, q) in selectgrouppeoples"
+                                                                                    :value="item.value" :key="item.value" :selected="q == this.form.people_group[p]">{{
+                                                                                    item.number }}</option>
+                                                                            </select>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -661,6 +662,7 @@ export default {
             var loader = this.$loading.show();
             this.form.date = date;
             this.form.counters = {};
+            this.form.total_people_selected = 0;
             this.dateTimeArr = [];
             this.errors = [];
 
@@ -710,7 +712,6 @@ export default {
                 this.processLoader(loader);
             });
         },
-
         handleGroupRateDiscountChange(event) {
             const selectedIndex = this.details.tourPackageRateGroups.findIndex(size => size.size === this.form.selectedSize);
             const selectedGroup = this.details.tourPackageRateGroups[selectedIndex];
@@ -719,16 +720,14 @@ export default {
             this.form.selectedTax = selectedGroup?.tax;
             this.form.total_people_selected = this.form.selectedSize;
 
-            if (this.form.package_has_slots) {
-                this.filterSlotsBasedOnSeats();
-            }
+            // if (this.form.package_has_slots) {
+            //     this.filterSlotsBasedOnSeats();
+            // }
         },
-
         hasCustomFormFields(exists = false) {
             console.log(`sent from custom fields emit signal ${exists}`)
             this.customFieldExists = exists;
         },
-
         onCustomFormFieldsSubmit(customFormData) {
             // no need to do anything if no custom fields
             if ( !this.customFieldExists  ) {
@@ -743,7 +742,6 @@ export default {
                 this.form.addons_fee = this.roundout(this.$refs.CustomFieldsRef.feeTotal(customFormData.fields));
             }
         },
-
         submit: async function () {
             this.errors = [];
             const loader = this.$loading.show();
@@ -1079,9 +1077,12 @@ export default {
                 document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counters[rateId];
             }
 
-            if (this.form.package_has_slots) {
-                this.filterSlotsBasedOnSeats();
+            if (this.is_group_rate_enabled === 0) {
+                this.form.total_people_selected = Object.values(this.form.counters).reduce((total, num) => total + num, 0);
             }
+            // if (this.form.package_has_slots) {
+            //     this.filterSlotsBasedOnSeats();
+            // }
         },
         decrement(rateId) {
             if (!this.form.counters[rateId]) {
@@ -1093,9 +1094,12 @@ export default {
                 document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counters[rateId];
             }
 
-            if (this.form.package_has_slots) {
-                this.filterSlotsBasedOnSeats();
+            if (this.is_group_rate_enabled === 0) {
+                this.form.total_people_selected = Object.values(this.form.counters).reduce((total, num) => total + num, 0);
             }
+            // if (this.form.package_has_slots) {
+            //     this.filterSlotsBasedOnSeats();
+            // }
         },
         filterSlotsBasedOnSeats() {
             this.form.tour_slot_id = 0;
