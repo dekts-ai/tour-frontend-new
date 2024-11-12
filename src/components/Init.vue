@@ -148,7 +148,8 @@
 
                                                                                 <input type="radio" :id="name.Id" name="time_date"
                                                                                     :value="name.Time"
-                                                                                    :disabled="isDisabled(name)" />
+                                                                                    :disabled="isDisabled(name)"
+                                                                                    @click.stop />
 
                                                                                 <span class="background-change"></span>
 
@@ -386,6 +387,7 @@ export default {
             cartItemLength: 0,
             slotId: 0,
             slotNotFound: false,
+            customRateFound: false,
             disabledDates: {
                 to: this.getStartDate(),
                 from: this.getEndDate()
@@ -522,6 +524,9 @@ export default {
                     // Make all slots visible on first time
                     this.dateTimeArr.forEach(element => {
                         element.visible = true;
+                        if (element.custom_rate != 0 && this.customRateFound == false) {
+                            this.customRateFound = true;
+                        }
                     });
 
                     this.totalavailableseats = response.data.TotalAvailableSeats;
@@ -537,11 +542,17 @@ export default {
                         });
                     }
 
-                    this.slotNotFound = this.dateTimeArr.length > 0 ? false : true;                    
+                    this.slotNotFound = this.dateTimeArr.length > 0 ? false : true;
 
-                    if (!this.staticDateRange(this.form.date, this.form.tenant_id)) {
+                    if (!this.staticDateRange(this.form.date, this.form.tenant_id) && this.customRateFound == false) {
+                        this.updateRateGroups(date, 0, loader);
+                    } else if (this.form.tour_slot_id != 0) {
                         this.updateRateGroups(date, 0, loader);
                     } else {
+                        if (this.customRateFound == true) {
+                            this.reveal = true;
+                            this.tourPackageName = "";
+                        }
                         this.processLoader(loader);
                     }
                 }).catch(error => {
@@ -556,7 +567,7 @@ export default {
 
             var comboIds = 0; // Need only selected package data and it's rate groups
 
-            axios.get("/tour-package/" + date + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + comboIds + "/" + this.with_rate_groups)
+            axios.get("/tour-package/" + date + "/" + this.form.tour_operator_id + "/" + this.form.package_id + "/" + this.form.affiliate_id + "/" + comboIds + "/" + this.with_rate_groups + "/" + this.form.tour_slot_id)
                 .then((response) => {
                     this.$store.dispatch('storeTourPackage', response.data)
 
@@ -666,6 +677,11 @@ export default {
 
             var loader = this.$loading.show();
             this.reveal = false;
+            this.customRateFound = false;
+            this.form.tour_slot_id = 0;
+            this.form.time_date = null;
+            this.form.slot_time = null;
+            this.form.people_group = [];
             this.form.date = date;
             this.form.counters = {};
             this.form.total_people_selected = 0;
@@ -676,7 +692,7 @@ export default {
 
             axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id).then((response) => {
                 this.begins = response.data.begins;
-                var slotTimes = response.data.Time
+                var slotTimes = response.data.Time;
 
                 if (response.data.closedSlotVisibility === false) {
                     let filteredSlotTimes = slotTimes.filter(element => {
@@ -691,6 +707,9 @@ export default {
                 // Make all slots visible on first time
                 this.dateTimeArr.forEach(element => {
                     element.visible = true;
+                    if (element.custom_rate != 0 && this.customRateFound == false) {
+                        this.customRateFound = true;
+                    }
                 });
 
                 this.totalavailableseats = response.data.TotalAvailableSeats;
@@ -709,9 +728,13 @@ export default {
 
                 this.slotNotFound = this.dateTimeArr.length > 0 ? false : true;
 
-                if (!this.begins && !this.staticDateRange(this.form.date, this.form.tenant_id)) {
+                if (!this.begins && !this.staticDateRange(this.form.date, this.form.tenant_id) && this.customRateFound == false) {
                     this.updateRateGroups(date, 1, loader);
                 } else {
+                    if (this.customRateFound == true) {
+                        this.reveal = true;
+                        this.tourPackageName = "";
+                    }
                     this.processLoader(loader);
                 }
             }).catch(error => {
@@ -924,10 +947,24 @@ export default {
         selectedSlot: function (id, timeDate, slotTime) {
             console.log('selectedSlot');
 
-            this.$store.dispatch('storeSlotId', id)
+            this.$store.dispatch('storeSlotId', id);
             this.form.tour_slot_id = id;
             this.form.time_date = timeDate;
             this.form.slot_time = slotTime;
+
+            if (this.customRateFound) {
+                var loader = this.$loading.show();
+
+                this.tourPackageName = "";
+                this.details = [];
+                this.form.counters = {};
+                this.form.people_group = [];
+                this.form.total_people_selected = 0;
+
+                let date = format(this.form.date, 'yyyy-MM-dd');
+
+                this.updateRateGroups(date, 0, loader);
+            }
         },
         callToBookDuration: function (bookDuration, timeSlot) {
             if (this.form.call_to_book == false) {
@@ -951,7 +988,7 @@ export default {
         staticDateRange: function (date, tenant) {
             const tenants = ["kens", "dixies"];
             if ( tenants.indexOf(tenant) === -1 ) {
-                return false
+                return false;
             }
 
             let packageIds = [1];
