@@ -232,30 +232,17 @@
                                                             </div>
                                                         </div>
 
-                                                        <div v-if="reveal && tourPackageName && form.custom_fields && form.package_id && form.package_id !== 0 && form.service_commission !== 0" class="accordion-item">
-                                                            <div class="accordion-header" id="headingThree">
-                                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                                                    Additional Options: 
-                                                                </button>
-                                                            </div>
-                                                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                                                                <div class="accordion-body">
-                                                                    <div class="row">
-                                                                        <div class="col-12 custom-form-wrap">
-                                                                            <CustomFields 
-                                                                                ref="CustomFieldsRef"
-                                                                                :values="form.custom_fields"
-                                                                                :enabled="true"
-                                                                                :display_errors="false"
-                                                                                :display_submit="false"
-                                                                                :display_height="275"
-                                                                                :service_commission="form.service_commission"
-                                                                                @customformexists="hasCustomFormFields"
-                                                                                :endpoint="`/package/custom/form/${form.package_id}`" />
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                        <div v-if="reveal && tourPackageName && form.package_id && form.package_id !== 0 && form.service_commission !== 0">
+                                                            <CustomFields 
+                                                                ref="CustomFieldsRef"
+                                                                :values="form.custom_fields"
+                                                                :enabled="true"
+                                                                :display_errors="false"
+                                                                :display_submit="false"
+                                                                :display_height="275"
+                                                                :service_commission="form.service_commission"
+                                                                @customformexists="hasCustomFormFields"
+                                                                :endpoint="`/package/custom/form/${form.package_id}`" />
                                                         </div>
 
                                                         <div v-if="reveal && hotels.length" class="accordion-item">
