@@ -1264,6 +1264,9 @@ export default {
             this.form.paxDetails[rateId].splice(index, 1); // Remove specific pax form
             this.form.counters[rateId]--; // Decrement the counter
 
+            // Update the select dropdown value
+            document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counters[rateId];
+
             // Recalculate total people selected if group rate is not enabled
             if (this.is_group_rate_enabled === 0) {
                 this.form.total_people_selected = Object.values(this.form.counters).reduce((total, num) => total + num, 0);
