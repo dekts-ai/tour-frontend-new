@@ -234,7 +234,7 @@
                                                                                 <div v-for="(pax, index) in form.paxDetails[tour.id] || []" :key="index" class="col-12 col-md-6 col-lg-4">
                                                                                     <div class="pax-form">
                                                                                         <div class="pax-header">
-                                                                                            <span>People {{ index + 1 }}</span>
+                                                                                            <span>Attendee {{ index + 1 }}</span>
                                                                                             <button type="button" class="remove-pax" @click="removePax(tour.id, index)">✖</button>
                                                                                         </div>
                                                                                         <div class="pax-body">
