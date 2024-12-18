@@ -987,7 +987,7 @@ export default {
 
             date = new Date(date);
             let firstDate = new Date('01 13 2025');
-            let secondDate = new Date('01 28 2025');
+            let secondDate = new Date('01 27 2025');
             let status = date >= firstDate && date < secondDate && packageIds.includes(parseInt(this.form.package_id));
 
             if (status || this.begins) {

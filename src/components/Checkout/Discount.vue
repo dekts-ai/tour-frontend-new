@@ -57,7 +57,7 @@ export default {
                 this.processLoader(loader);
             } else {
                 let self = this;
-                axios.get("/apply-coupon/" + item.package_id + "/" + item.code).then((response) => {
+                axios.get("/apply-coupon/" + item.package_id + "/" + item.tour_slot_id + "/" + item.code).then((response) => {
                     var promocode = response.data.data;
                     var subtotal = item.subtotal;
                     var discount2Percentage = 0;
