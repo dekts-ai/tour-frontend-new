@@ -118,12 +118,12 @@
 import Swal from 'sweetalert2';
 import { mask } from 'vue-the-mask';
 import IntPhoneNumber from '../Forms/IntPhoneNumber';
-import { apmPolicy, kensPolicy, standardPolicy } from '../../data/staticData';
+import { ahbbPolicy, apmPolicy, kensPolicy, standardPolicy } from '../../data/staticData';
 
 export default {
     name: "CheckoutForm",
     props: ["tenantId", "iframeStatus", "errors"],
-    components:{
+    components: {
         IntPhoneNumber,
     },
     directives: {
@@ -131,24 +131,23 @@ export default {
     },
     data() {
         return {
- 
-           form: {  name: null,
-                    phone_number: null,
-                    phone_code: "+1",
-                    email: null,
-                    getemailupdates: 0,
-                    cancellations_policy: 0,
-                    comment: null,
-                    cardnumber: null,
-                    nameoncard: null,
-                    expiration: null,
-                    cvv: null
+            form: {
+                name: null,
+                phone_number: null,
+                phone_code: "+1",
+                email: null,
+                getemailupdates: 0,
+                cancellations_policy: 0,
+                comment: null,
+                cardnumber: null,
+                nameoncard: null,
+                expiration: null,
+                cvv: null
             }
         }
     },
-
     methods: {
-        updatePhoneNumber(props){
+        updatePhoneNumber(props) {
             this.form.phone_number = props.phone_num;
             this.form.phone_code = props.phone_ext;
         },
@@ -166,11 +165,13 @@ export default {
                 return kensPolicy();
             } else if (this.tenantId == 'apm') {
                 return apmPolicy();
+            } else if (this.tenantId == 'ahbb') {
+                return ahbbPolicy();
             } else {
                 return standardPolicy();
             }
         },
-        submit(){
+        submit() {
             this.$emit('onsubmit', this.form);
         }
     }
