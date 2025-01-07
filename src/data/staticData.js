@@ -96,3 +96,18 @@ export const apmPolicy = () => {
     </div>
 </div>`
 }
+
+export const ahbbPolicy = () => {
+    return `<div class="form-group col-12">
+    <div class="policy-item-wrp">
+        <h6 class="card-label-text-left mb-2">
+            <i>Refund policy</i>
+        </h6>
+        <ul>
+            <li class="ms-2">
+                All tickets purchased for this tour are considered final sale and are non-refundable under any circumstances, including changes in weather, personal reasons, or schedule conflicts. This includes any applicable permit fees and taxes. You must acknowledge these terms and conditions prior to booking.
+            </li>
+        </ul>
+    </div>
+</div>`
+}
