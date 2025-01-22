@@ -3012,6 +3012,57 @@ button.btn-quantity {
 	margin-bottom: 3px;
 }
 
+.pax-form {
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    position: relative;
+}
+
+.pax-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.remove-pax {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #e74c3c;
+}
+
+.package-wrap .pax-body .form-group {
+    margin-bottom: 10px;
+	position: relative;
+}
+
+.package-wrap .pax-body .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+	left: 5px;
+	transform: translate(0, -50%);
+}
+
+.package-wrap .pax-body .form-group label sup {
+	color: red;
+}
+
+.package-wrap .pax-body .form-group input,
+.package-wrap .pax-body .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
 @media only screen and (max-width: 575px) {
 	.booking-accordion-wrap.accordion .accordion-item .accordion-button::after {
 		left: 12px;

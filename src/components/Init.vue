@@ -202,30 +202,89 @@
                                                                     </div>
 
                                                                     <div v-else>
-                                                                        <div class="package-wrap" v-for="(tour, p) in details.tourPackageRateGroups" :key="tour.id">
-                                                                            <div class="package-name">
-                                                                                <div class="title">{{ tour.rate_for }}</div>
-                                                                                <div class="price">${{ tour.rate }}</div>
-                                                                            </div>
-                                                                            <div class="people-count">
-                                                                                <div class="people">
-                                                                                    <label>People</label>
-                                                                                    <input type="text" :name="'people_group_' + tour.id" :id="'people-group-'+tour.id" :value="form.counters[tour.id] ?? 0" readonly>
+                                                                        <div class="package-wrap d-block" v-for="(tour, p) in details.tourPackageRateGroups" :key="tour.id">
+                                                                            <div class="d-flex justify-content-between w-100">
+                                                                                <div class="package-name">
+                                                                                    <div class="title">{{ tour.rate_for }}</div>
+                                                                                    <div class="price">${{ tour.rate }}</div>
                                                                                 </div>
-                                                                                <div class="people-btn">
-                                                                                    <button type="button" class="btn-people-count" @click="increment(tour.id)">+</button>
-                                                                                    <button type="button" class="btn-people-count" @click="decrement(tour.id)">-</button>
+                                                                                <div class="people-count">
+                                                                                    <div class="people">
+                                                                                        <label>People</label>
+                                                                                        <input type="text" :name="'people_group_' + tour.id" :id="'people-group-'+tour.id" :value="form.counters[tour.id] ?? 0" readonly>
+                                                                                    </div>
+                                                                                    <div class="people-btn">
+                                                                                        <button type="button" class="btn-people-count" @click="increment(tour.id)">+</button>
+                                                                                        <button type="button" class="btn-people-count" @click="decrement(tour.id)">-</button>
+                                                                                    </div>
                                                                                 </div>
+
+                                                                                <select
+                                                                                    class="form-select people-group1 hidden"
+                                                                                    :name="'people_group' + tour.id "
+                                                                                    :id="'people_group'+tour.id">
+                                                                                    <option v-for="(item, q) in selectgrouppeoples"
+                                                                                        :value="item.value" :key="item.value" :selected="q == this.form.people_group[p]">{{
+                                                                                        item.number }}</option>
+                                                                                </select>
                                                                             </div>
 
-                                                                            <select
-                                                                                class="form-select people-group1 hidden"
-                                                                                :name="'people_group' + tour.id "
-                                                                                :id="'people_group'+tour.id">
-                                                                                <option v-for="(item, q) in selectgrouppeoples"
-                                                                                    :value="item.value" :key="item.value" :selected="q == this.form.people_group[p]">{{
-                                                                                    item.number }}</option>
-                                                                            </select>
+                                                                            <!-- Pax Forms -->
+                                                                            <div v-if="has_contacts" class="row">
+                                                                                <div v-for="(pax, index) in form.paxDetails[tour.id] || []" :key="index" class="col-12 col-md-6 col-lg-4">
+                                                                                    <div class="pax-form">
+                                                                                        <div class="pax-header">
+                                                                                            <span>Attendee {{ index + 1 }}</span>
+                                                                                            <button type="button" class="remove-pax" @click="removePax(tour.id, index)">✖</button>
+                                                                                        </div>
+                                                                                        <div class="pax-body">
+                                                                                            <div class="form-group">
+                                                                                                <label for="name">Name <sup>*</sup></label>
+                                                                                                <input
+                                                                                                    type="text"
+                                                                                                    :id="'name-'+tour.id+'-'+index"
+                                                                                                    v-model="pax.name"
+                                                                                                    @input="updatePaxDetail(tour.id, index, 'name', pax.name)"
+                                                                                                    placeholder="Enter name"
+                                                                                                />
+                                                                                            </div>
+                                                                                            <div class="form-group">
+                                                                                                <label for="age">Age <sup>*</sup></label>
+                                                                                                <input
+                                                                                                    type="number"
+                                                                                                    :id="'age-'+tour.id+'-'+index"
+                                                                                                    v-model="pax.age"
+                                                                                                    @input="updatePaxDetail(tour.id, index, 'age', pax.age)"
+                                                                                                    placeholder="Enter age"
+                                                                                                    min="0"
+                                                                                                    step="1"
+                                                                                                />
+                                                                                            </div>
+                                                                                            <div class="form-group">
+                                                                                                <label for="weight">Weight <sup>*</sup></label>
+                                                                                                <input
+                                                                                                    type="number"
+                                                                                                    :id="'weight-'+tour.id+'-'+index"
+                                                                                                    v-model="pax.weight"
+                                                                                                    @input="updatePaxDetail(tour.id, index, 'weight', pax.weight)"
+                                                                                                    placeholder="Enter weight"
+                                                                                                    min="0"
+                                                                                                    step="0.01"
+                                                                                                />
+                                                                                            </div>
+                                                                                            <div class="form-group">
+                                                                                                <label for="note">Note</label>
+                                                                                                <textarea
+                                                                                                    :id="'note-'+tour.id+'-'+index"
+                                                                                                    v-model="pax.note"
+                                                                                                    @input="updatePaxDetail(tour.id, index, 'note', pax.note)" 
+                                                                                                    placeholder="Enter note"
+                                                                                                ></textarea>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -439,12 +498,14 @@ export default {
                 ctb_description: '',
                 call_to_book: false,
                 phone_number: '',
-                counters: {}
+                counters: {},
+                paxDetails: {} // To store pax details for each tour
             },
             minSeats: 0,
             maxSeats: 0,
             is_group_rate_enabled: 0,
             with_rate_groups: 1,
+            has_contacts: 0,
             tabs: 2
         };
     },
@@ -562,6 +623,7 @@ export default {
                     this.details = this.$store.state.tourPackage;
                     this.hotels = response.data.hotels;
                     this.details.tourPackageRateGroups = this.details.tourPackageRateGroups[this.form.package_id];
+                    this.has_contacts = response.data.tourPackageData[0]?.has_contacts || 0;
 
                     this.form.things_to_bring = response.data.thingsToBring;
                     this.form.short_description = response.data.tourPackageData[0].short_description;
@@ -672,6 +734,7 @@ export default {
             this.form.date = date;
             this.form.counters = {};
             this.form.total_people_selected = 0;
+            this.form.paxDetails = {};
             this.dateTimeArr = [];
             this.errors = [];
 
@@ -766,6 +829,37 @@ export default {
             const loader = this.$loading.show();
             this.form.addons_total = 0;
             this.form.addons_fee = 0;
+
+            if (this.has_contacts) {
+                let validationPassed = true;
+
+                // Loop through each tour to validate its pax details
+                this.details.tourPackageRateGroups.forEach((tour) => {
+                    let missingFields = false;
+
+                    // Ensure paxDetails[tour.id] exists and is an array
+                    if (!Array.isArray(this.form.paxDetails[tour.id])) {
+                        console.warn(`No paxDetails found for tour ID ${tour.id}. Initializing as an empty array.`);
+                        this.form.paxDetails[tour.id] = []; // Direct assignment in Vue 3
+                    }
+
+                    // Validate pax details
+                    this.form.paxDetails[tour.id].forEach((pax) => {
+                        if (!pax.name || !pax.age || !pax.weight) {
+                            missingFields = true;
+                        }
+                    });
+
+                    // If validation fails, open the accordion for that tour
+                    if (missingFields) {
+                        validationPassed = false;
+                    }
+                });
+
+                if (!validationPassed) {
+                    this.errors.push('Please fill in all attendees fields.');
+                }
+            }
 
             //if custom fields exists this will be added to the item object custom_fields prop
             if (this.customFieldExists) { 
@@ -947,6 +1041,7 @@ export default {
                 this.form.counters = {};
                 this.form.people_group = [];
                 this.form.total_people_selected = 0;
+                this.form.paxDetails = {};
 
                 let date = format(this.form.date, 'yyyy-MM-dd');
 
@@ -1112,11 +1207,17 @@ export default {
         increment(rateId) {
             if (!this.form.counters[rateId]) {
                 this.form.counters[rateId] = this.minSeats;
+                if (this.has_contacts) {
+                    this.form.paxDetails[rateId] = []; // Initialize pax details array
+                }
             }
 
             if (this.form.counters[rateId] < this.maxSeats) {
                 this.form.counters[rateId]++;
                 document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counters[rateId];
+                if (this.has_contacts) {
+                    this.form.paxDetails[rateId].push({ name: '', age: '', weight: '', note: '' }); // Add new pax form
+                }
             }
 
             if (this.is_group_rate_enabled === 0) {
@@ -1127,21 +1228,49 @@ export default {
             // }
         },
         decrement(rateId) {
+            // Initialize counters if not already set
             if (!this.form.counters[rateId]) {
                 this.form.counters[rateId] = this.minSeats;
             }
 
+            // Check if the counter is above the minimum seats
             if (this.form.counters[rateId] > this.minSeats) {
                 this.form.counters[rateId]--;
+
+                // Update the select dropdown value
                 document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counters[rateId];
+
+                // Remove the last form for this rateId
+                if (this.has_contacts && this.form.paxDetails[rateId] && this.form.paxDetails[rateId].length > 0) {
+                    this.form.paxDetails[rateId].pop(); // Remove the last pax form
+                }
             }
 
+            // Recalculate total people selected if group rate is not enabled
             if (this.is_group_rate_enabled === 0) {
                 this.form.total_people_selected = Object.values(this.form.counters).reduce((total, num) => total + num, 0);
             }
             // if (this.form.package_has_slots) {
             //     this.filterSlotsBasedOnSeats();
             // }
+        },
+        updatePaxDetail(rateId, index, field, value) {
+            // Update the specific field for the given pax
+            if (this.form.paxDetails[rateId] && this.form.paxDetails[rateId][index]) {
+                this.form.paxDetails[rateId][index][field] = value;
+            }
+        },
+        removePax(rateId, index) {
+            this.form.paxDetails[rateId].splice(index, 1); // Remove specific pax form
+            this.form.counters[rateId]--; // Decrement the counter
+
+            // Update the select dropdown value
+            document.querySelector("select[name=people_group" + rateId + "]").value = this.form.counters[rateId];
+
+            // Recalculate total people selected if group rate is not enabled
+            if (this.is_group_rate_enabled === 0) {
+                this.form.total_people_selected = Object.values(this.form.counters).reduce((total, num) => total + num, 0);
+            }
         },
         filterSlotsBasedOnSeats() {
             this.form.tour_slot_id = 0;
