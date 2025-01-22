@@ -113,7 +113,7 @@
 import Swal from 'sweetalert2';
 import { mask } from 'vue-the-mask';
 import IntPhoneNumber from '../Forms/IntPhoneNumber';
-import { apmPolicy, kensPolicy, standardPolicy } from '../../data/staticData';
+import { eggshellPolicy, ahbbPolicy, apmPolicy, kensPolicy, standardPolicy } from '../../data/staticData';
 
 export default {
     name: "CheckoutForm",
@@ -143,7 +143,7 @@ export default {
         }
     },
     methods: {
-        updatePhoneNumber(props){
+        updatePhoneNumber(props) {
             this.form.phone_number = props.phone_num;
             this.form.phone_code = props.phone_ext;
         },
@@ -161,6 +161,10 @@ export default {
                 return kensPolicy();
             } else if (this.tenantId == 'apm') {
                 return apmPolicy();
+            } else if (this.tenantId == 'ahbb') {
+                return ahbbPolicy();
+            } else if (this.tenantId == 'eggshell') {
+                return eggshellPolicy();
             } else {
                 return standardPolicy();
             }
