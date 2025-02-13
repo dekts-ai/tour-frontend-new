@@ -499,7 +499,8 @@ export default {
                 call_to_book: false,
                 phone_number: '',
                 counters: {},
-                paxDetails: {} // To store pax details for each tour
+                paxDetails: {}, // To store pax details for each tour
+                paymentIntentId: null,
             },
             minSeats: 0,
             maxSeats: 0,

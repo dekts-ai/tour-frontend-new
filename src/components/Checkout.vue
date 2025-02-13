@@ -24,7 +24,7 @@
                         </div>
 
                         <div class="row payment-form-sec">
-                            <CheckoutForm  @onsubmit="submit" :tenantId="tenantId" :iframeStatus="iframeStatus" :errors="errors"  />
+                            <CheckoutForm  @onsubmit="submit" :items="cartItem" :tenantId="tenantId" :iframeStatus="iframeStatus" :errors="errors" />
                             <div class="col-lg-5 order-1 order-md-2">	
                                 <ItemizedList :items="cartItem" :globalTotalItem="globalTotal" :seatErrors="seatErrors" :iframeStatus="iframeStatus" />
                                 <ItemTotalSummary :globalTotal="globalTotal" />
@@ -97,10 +97,7 @@ export default {
             getemailupdates: 0,
             cancellations_policy: 0,
             comment: null,
-            cardnumber: null,
-            nameoncard: null,
-            expiration: null,
-            cvv: null,
+            paymentIntentId: null,
         };
     },
     async mounted() {
@@ -155,31 +152,10 @@ export default {
             if (this.comboIds.length && this.cartItemLength === 1) {
                 this.errors.push("To proceed, please ensure you have selected at least two packages.");
             }
-            if (!this.name) {
-                this.errors.push("Your name is required.");
-            }
-            if (!this.phone_number) {
-                this.errors.push("Your phone number is required.");
-            }
-            if (!this.email) {
-                this.errors.push("Your email address is required.");
-            }
-            if (!this.cancellations_policy) {
-                this.errors.push("Please read and accept the terms and conditions.");
-            }
-            if (!this.cardnumber || !this.expiration || !this.cvv) {
+            if (!this.paymentIntentId) {
                 this.errors.push("Please enter your card information.");
             }
-            if (this.cartItemLength &&
-                this.name &&
-                this.phone_number &&
-                this.email &&
-                this.cancellations_policy &&
-                this.cardnumber &&
-                this.expiration &&
-                this.cvv &&
-                this.errors.length === 0
-            ) {
+            if (this.errors.length === 0) {
                 this.seatErrors = [];
                 axios.post("/bulk-check-available-seats", {
                     'items': this.cartItem,
@@ -227,9 +203,7 @@ export default {
                         comment: this.comment,
                         getemailupdates: this.getemailupdates,
                         cancellations_policy: this.cancellations_policy,
-                        cardnumber: this.cardnumber,
-                        expiration: this.expiration,
-                        cvv: this.cvv,
+                        payment_intent_id: this.paymentIntentId,
                         subtotal: this.globalTotal.subtotal,
                         discount: this.globalTotal.discount,
                         fees: this.globalTotal.fees,
@@ -296,6 +270,8 @@ export default {
                     });
                 });
             } else {
+            console.log(111);
+            
                 this.processLoader(loader);
             }
         },
