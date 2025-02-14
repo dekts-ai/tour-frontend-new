@@ -269,9 +269,7 @@ export default {
                         }
                     });
                 });
-            } else {
-            console.log(111);
-            
+            } else {            
                 this.processLoader(loader);
             }
         },
