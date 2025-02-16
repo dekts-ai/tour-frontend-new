@@ -56,7 +56,8 @@
             </div>
             <div class="card-detail-main">
                 <div class="card-detail-wrp card-form-field">
-                    <div id="link-authentication-element"></div>
+                    <!-- <div id="express-checkout"></div> -->
+                    <!-- <div id="link-authentication-element"></div> -->
                     <div id="payment-element"></div>
                     <p class="text-start mb-3 pe-3" v-if="localErrors.length">
                         <b>Please correct the following error(s):</b>
@@ -119,12 +120,10 @@ export default {
         }
     },
     async mounted() {
-        // Ensure previous loader is destroyed before showing a new one
         if (this.loaderInstance) {
             this.loaderInstance.hide();
         }
 
-        // Show the new loader
         this.loaderInstance = this.$loading.show();
 
         try {
@@ -134,9 +133,7 @@ export default {
             const intentResponse = await fetch(`https://${this.tenantId}.${apiBaseUrl}/create-payment-intent`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    items: this.items
-                }),
+                body: JSON.stringify({ items: this.items }),
             });
 
             const { clientSecret, error: backendError } = await intentResponse.json();
@@ -148,8 +145,17 @@ export default {
 
             this.elements = this.stripe.elements({ clientSecret });
 
+            // Create Express Checkout (Apple Pay, Google Pay, and Link)
+            // const expressCheckoutElement = this.elements.create("expressCheckout", {
+            //     defaultValues: {
+            //         email: this.form.email, // Pre-fill user email if available
+            //     },
+            //     layout: "auto", // Automatically adjust layout
+            // });
+
+            // Create standard payment elements
             const paymentElement = this.elements.create("payment");
-            const linkAuthenticationElement = this.elements.create("linkAuthentication");
+            // const linkAuthenticationElement = this.elements.create("linkAuthentication");
 
             // Ensure elements mount before hiding loader
             await new Promise((resolve, reject) => {
@@ -157,24 +163,26 @@ export default {
 
                 const checkMounted = () => {
                     mountedCount++;
-                    if (mountedCount === 2) resolve(); // Both elements mounted
+                    if (mountedCount === 1) resolve(); // Both elements mounted
                 };
+
+                // expressCheckoutElement.mount("#express-checkout");
+                // expressCheckoutElement.on("ready", checkMounted); // Stripe's ready event
 
                 paymentElement.mount("#payment-element");
                 paymentElement.on("ready", checkMounted); // Stripe's ready event
 
-                linkAuthenticationElement.mount("#link-authentication-element");
-                linkAuthenticationElement.on("ready", checkMounted); // Stripe's ready event
+                // linkAuthenticationElement.mount("#link-authentication-element");
+                // linkAuthenticationElement.on("ready", checkMounted); // Stripe's ready event
 
                 // Timeout to prevent indefinite loading
                 setTimeout(() => reject(new Error("Element mounting timed out")), 5000);
             });
-
         } catch (error) {
             console.error("Error initializing Stripe elements:", error);
             this.localErrors.push("An error occurred while setting up the payment form.");
         } finally {
-            this.processLoader(); // Hide loader only after everything is loaded or an error occurs
+            this.processLoader();
         }
     },
     methods: {
