@@ -144,7 +144,7 @@ export default {
             }
 
             const appearance = {
-                theme: 'flat', // Change to 'stripe', 'night', 'flat', or 'none'
+                theme: 'stripe', // Change to 'stripe', 'night', 'flat', or 'none'
             };
 
             const options = {
@@ -152,14 +152,14 @@ export default {
                     type: 'accordion', // Change to 'accordion', 'tabs', 'inline', or 'auto'
                     defaultCollapsed: false,
                     radios: false,
-                    spacedAccordionItems: false,
+                    spacedAccordionItems: true,
                 },
                 defaultValues: {
                     billingDetails: {
                         country: 'US', // Set a default country to prevent dropdown
                     },
                 },
-                paymentMethodOrder: ['apple_pay', 'google_pay', 'card'], // Prioritize payment methods
+                paymentMethodOrder: ['card', 'apple_pay', 'google_pay'], // Prioritize payment methods
             };
 
             this.elements = this.stripe.elements({ clientSecret, appearance });
