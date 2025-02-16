@@ -115,14 +115,20 @@ export default {
             cartItem: [],
             cartItemLength: 0,
             localErrors: [...(this.errors || [])],
+            loaderInstance: null,
         }
     },
     async mounted() {
-        var loader = this.$loading.show();
+        // Ensure previous loader is destroyed before showing a new one
+        if (this.loaderInstance) {
+            this.loaderInstance.hide();
+        }
+
+        // Show the new loader
+        this.loaderInstance = this.$loading.show();
 
         try {
             this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);
-
             const apiBaseUrl = process.env.VUE_APP_API_URL;
 
             const intentResponse = await fetch(`https://${this.tenantId}.${apiBaseUrl}/create-payment-intent`, {
@@ -137,45 +143,72 @@ export default {
 
             if (backendError) {
                 this.localErrors.push(backendError.message);
-            } else {
-                this.elements = this.stripe.elements({ clientSecret });
-
-                const paymentElement = this.elements.create("payment");
-                const linkAuthenticationElement = this.elements.create("linkAuthentication");
-
-                await Promise.all([
-                    new Promise(resolve => paymentElement.mount("#payment-element", resolve)),
-                    new Promise(resolve => linkAuthenticationElement.mount("#link-authentication-element", resolve))
-                ]);
+                throw new Error(backendError.message);
             }
+
+            this.elements = this.stripe.elements({ clientSecret });
+
+            const paymentElement = this.elements.create("payment");
+            const linkAuthenticationElement = this.elements.create("linkAuthentication");
+
+            // Ensure elements mount before hiding loader
+            await new Promise((resolve, reject) => {
+                let mountedCount = 0;
+
+                const checkMounted = () => {
+                    mountedCount++;
+                    if (mountedCount === 2) resolve(); // Both elements mounted
+                };
+
+                paymentElement.mount("#payment-element");
+                paymentElement.on("ready", checkMounted); // Stripe's ready event
+
+                linkAuthenticationElement.mount("#link-authentication-element");
+                linkAuthenticationElement.on("ready", checkMounted); // Stripe's ready event
+
+                // Timeout to prevent indefinite loading
+                setTimeout(() => reject(new Error("Element mounting timed out")), 5000);
+            });
+
         } catch (error) {
             console.error("Error initializing Stripe elements:", error);
             this.localErrors.push("An error occurred while setting up the payment form.");
         } finally {
-            this.processLoader(loader); // Hide loader after everything is loaded
+            this.processLoader(); // Hide loader only after everything is loaded or an error occurs
         }
     },
     methods: {
         async handleSubmit() {
             this.localErrors = [];
 
-            // Validate form fields
-            const requiredFields = {
-                name: "Your name is required.",
-                phone_number: "Your phone number is required.",
-                email: "Your email address is required.",
-                cancellations_policy: "Please read and accept the terms and conditions."
-            };
+            // Ensure previous loader is destroyed before showing a new one
+            if (this.loaderInstance) {
+                this.loaderInstance.hide();
+            }
 
-            Object.keys(requiredFields).forEach((field) => {
-                if (!this.form[field]) {
-                    this.localErrors.push(requiredFields[field]);
-                }
-            });
-
-            if (this.localErrors.length) return; // Stop execution if there are errors
+            // Show the new loader
+            this.loaderInstance = this.$loading.show();
 
             try {
+                // Validate form fields
+                const requiredFields = {
+                    name: "Your name is required.",
+                    phone_number: "Your phone number is required.",
+                    email: "Your email address is required.",
+                    cancellations_policy: "Please read and accept the terms and conditions."
+                };
+
+                Object.keys(requiredFields).forEach((field) => {
+                    if (!this.form[field]) {
+                        this.localErrors.push(requiredFields[field]);
+                    }
+                });
+
+                if (this.localErrors.length) {
+                    this.processLoader(); // Hide loader if validation fails
+                    return;
+                }
+
                 this.comboIds = this.$store.state.comboIds;
                 this.cartItem = this.$store.state.cartItem;
                 this.cartItemLength = Object.values(this.cartItem).length;
@@ -194,7 +227,7 @@ export default {
                 if (tempSeatErrors.length) {
                     tempSeatErrors = tempSeatErrors.filter((value, index, array) => 
                         array.indexOf(value) === index
-                    )
+                    );
 
                     Swal.fire({
                         toast: true,
@@ -226,10 +259,9 @@ export default {
             } catch (apiError) {
                 console.error("API Error:", apiError);
                 this.localErrors.push("Failed to complete booking.");
+            } finally {
+                this.processLoader(); // Hide the loader after completion (success or failure)
             }
-        },
-        processLoader(loader) {
-            loader.hide();
         },
         updatePhoneNumber(props) {
             this.form.phone_number = props.phone_num;
@@ -257,6 +289,12 @@ export default {
                 return standardPolicy();
             }
         },
+        processLoader() {
+            if (this.loaderInstance) {
+                this.loaderInstance.hide();
+                this.loaderInstance = null; // Reset after hiding
+            }
+        }
     }
 }
 </script>

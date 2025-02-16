@@ -422,6 +422,7 @@ export default {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: false,
             reveal: false,
+            loaderInstance: null,
             packageOrder: [],
             comboIds: 0,
             tourPackageName: "",
@@ -551,7 +552,12 @@ export default {
         configure() {
             console.log('configure');
 
-            var loader = this.$loading.show();
+            // Ensure previous loader is destroyed before showing a new one
+            if (this.loaderInstance) {
+                this.loaderInstance.hide();
+            }
+
+            this.loaderInstance = this.$loading.show();
             var date = format(this.form.date, 'yyyy-MM-dd');
 
             axios.get("/tour-slot/" + date + '/' + this.form.package_id + '/' + this.form.affiliate_id)
@@ -594,24 +600,24 @@ export default {
                     this.slotNotFound = this.dateTimeArr.length > 0 ? false : true;
 
                     if (!this.staticDateRange(this.form.date, this.form.tenant_id) && this.customRateFound == false) {
-                        this.updateRateGroups(date, 0, loader);
+                        this.updateRateGroups(date, 0);
                     } else if (this.form.tour_slot_id != 0) {
-                        this.updateRateGroups(date, 0, loader);
+                        this.updateRateGroups(date, 0);
                     } else {
                         if (this.customRateFound == true) {
                             this.reveal = true;
                             this.tourPackageName = "";
                         }
-                        this.processLoader(loader);
+                        this.processLoader();
                     }
                 }).catch(error => {
                     this.slotNotFound = true;
                     this.details.tourPackageRateGroups = [];
                     this.begins = error?.response?.data?.data?.begins;
-                    this.processLoader(loader);
+                    this.processLoader();
                 });
         },
-        updateRateGroups(date, calendar = 0, loader) {
+        updateRateGroups(date, calendar = 0) {
             console.log('updateRateGroups');
 
             var comboIds = 0; // Need only selected package data and it's rate groups
@@ -707,9 +713,9 @@ export default {
                     }
 
                     this.reveal = true;
-                    this.processLoader(loader);
+                    this.processLoader();
                 }).catch(() => {
-                    this.processLoader(loader);
+                    this.processLoader();
                 });
 
             if (calendar) {
@@ -725,7 +731,12 @@ export default {
         selectedDate(date) {
             console.log('selectedDate');
 
-            var loader = this.$loading.show();
+            // Ensure previous loader is destroyed before showing a new one
+            if (this.loaderInstance) {
+                this.loaderInstance.hide();
+            }
+
+            this.loaderInstance = this.$loading.show();
             this.reveal = false;
             this.customRateFound = false;
             this.form.tour_slot_id = 0;
@@ -780,19 +791,19 @@ export default {
                 this.slotNotFound = this.dateTimeArr.length > 0 ? false : true;
 
                 if (!this.begins && !this.staticDateRange(this.form.date, this.form.tenant_id) && this.customRateFound == false) {
-                    this.updateRateGroups(date, 1, loader);
+                    this.updateRateGroups(date, 1);
                 } else {
                     if (this.customRateFound == true) {
                         this.reveal = true;
                         this.tourPackageName = "";
                     }
-                    this.processLoader(loader);
+                    this.processLoader();
                 }
             }).catch(error => {
                 this.slotNotFound = true;
                 this.details.tourPackageRateGroups = [];
                 this.begins = error?.response?.data?.data?.begins;
-                this.processLoader(loader);
+                this.processLoader();
             });
         },
         handleGroupRateDiscountChange(event) {
@@ -827,7 +838,12 @@ export default {
         },
         submit: async function () {
             this.errors = [];
-            const loader = this.$loading.show();
+            // Ensure previous loader is destroyed before showing a new one
+            if (this.loaderInstance) {
+                this.loaderInstance.hide();
+            }
+
+            this.loaderInstance = this.$loading.show();
             this.form.addons_total = 0;
             this.form.addons_fee = 0;
 
@@ -885,7 +901,7 @@ export default {
 
             let minMaxScenarioCheck = this.validateMinMaxScenario(tourPackageRateGroups);
             if (minMaxScenarioCheck) {
-                this.processLoader(loader);
+                this.processLoader();
                 return;
             }
 
@@ -956,13 +972,13 @@ export default {
 
                 if (this.form.total <= 0) {
                     this.errors.push("Oops! Something went wrong. Please try again later.");
-                    this.processLoader(loader);
+                    this.processLoader();
                     return;
                 }
 
-                this.addToCart(loader);
+                this.addToCart();
             } else {
-                this.processLoader(loader);
+                this.processLoader();
             }
         },
         validateMinMaxScenario(tourPackageRateGroups) {
@@ -1008,8 +1024,11 @@ export default {
             let formul = (amount * x).toFixed(10);
             return (amount >= 0 ? Math.ceil(formul) : Math.floor(formul)) / x;
         },
-        processLoader(loader) {
-            loader.hide();
+        processLoader() {
+            if (this.loaderInstance) {
+                this.loaderInstance.hide();
+                this.loaderInstance = null; // Reset after hiding
+            }
         },
         getStartDate() {
             // See this issues with datepicker 
@@ -1035,7 +1054,12 @@ export default {
             this.form.slot_time = slotTime;
 
             if (this.customRateFound) {
-                var loader = this.$loading.show();
+                // Ensure previous loader is destroyed before showing a new one
+                if (this.loaderInstance) {
+                    this.loaderInstance.hide();
+                }
+
+                this.loaderInstance = this.$loading.show();
 
                 this.tourPackageName = "";
                 this.details = [];
@@ -1046,7 +1070,7 @@ export default {
 
                 let date = format(this.form.date, 'yyyy-MM-dd');
 
-                this.updateRateGroups(date, 0, loader);
+                this.updateRateGroups(date, 0);
             }
         },
         callToBookDuration: function (bookDuration, timeSlot) {
@@ -1112,7 +1136,7 @@ export default {
                 });
             }
         },
-        addToCart(loader) {
+        addToCart() {
             let checkSlotarr = {
                 'tour_slot_id': this.form.tour_slot_id,
                 'package_id': this.form.package_id,
@@ -1162,7 +1186,7 @@ export default {
                     }
                 }
 
-                this.processLoader(loader);
+                this.processLoader();
             });
 
             this.form.package_image = this.details?.tourPackageData?.length > 0 ? this.details.tourPackageData[0].FrontendPackageImage : "";
