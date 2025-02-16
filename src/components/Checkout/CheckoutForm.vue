@@ -149,10 +149,10 @@ export default {
 
             const options = {
                 layout: {
-                    type: 'accordion', // Change to 'accordion', 'tabs', 'inline', or 'auto'
+                    type: 'auto', // Change to 'accordion', 'tabs', 'inline', or 'auto'
                     defaultCollapsed: false,
                     radios: false,
-                    spacedAccordionItems: true,
+                    spacedAccordionItems: false,
                 },
                 defaultValues: {
                     billingDetails: {
