@@ -120,31 +120,40 @@ export default {
     async mounted() {
         var loader = this.$loading.show();
 
-        this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);
+        try {
+            this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);
 
-        const apiBaseUrl = process.env.VUE_APP_API_URL
+            const apiBaseUrl = process.env.VUE_APP_API_URL;
 
-        const intentResponse = await fetch(`https://${this.tenantId}.${apiBaseUrl}/create-payment-intent`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                items: this.items
-            }),
-        });
+            const intentResponse = await fetch(`https://${this.tenantId}.${apiBaseUrl}/create-payment-intent`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    items: this.items
+                }),
+            });
 
-        const { clientSecret, error: backendError } = await intentResponse.json();
+            const { clientSecret, error: backendError } = await intentResponse.json();
 
-        if (backendError) {
-            this.localErrors.push(backendError.message);
-        } else {
-            this.elements = this.stripe.elements({ clientSecret });
-            const paymentElement = this.elements.create("payment");
-            paymentElement.mount("#payment-element");
-            const linkAuthenticationElement = this.elements.create("linkAuthentication");
-            linkAuthenticationElement.mount("#link-authentication-element");
+            if (backendError) {
+                this.localErrors.push(backendError.message);
+            } else {
+                this.elements = this.stripe.elements({ clientSecret });
+
+                const paymentElement = this.elements.create("payment");
+                const linkAuthenticationElement = this.elements.create("linkAuthentication");
+
+                await Promise.all([
+                    new Promise(resolve => paymentElement.mount("#payment-element", resolve)),
+                    new Promise(resolve => linkAuthenticationElement.mount("#link-authentication-element", resolve))
+                ]);
+            }
+        } catch (error) {
+            console.error("Error initializing Stripe elements:", error);
+            this.localErrors.push("An error occurred while setting up the payment form.");
+        } finally {
+            this.processLoader(loader); // Hide loader after everything is loaded
         }
-
-        this.processLoader(loader);
     },
     methods: {
         async handleSubmit() {
