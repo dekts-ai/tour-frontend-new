@@ -80,6 +80,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import Swal from 'sweetalert2';
 import { mask } from 'vue-the-mask';
 import IntPhoneNumber from '../Forms/IntPhoneNumber';
@@ -110,6 +111,9 @@ export default {
             company_name: this.$store.state.tourPackage?.tourPackageData[0]?.company_name,
             stripe: null,
             elements: null,
+            comboIds: 0,
+            cartItem: [],
+            cartItemLength: 0,
             localErrors: [...(this.errors || [])],
         }
     },
@@ -146,40 +150,73 @@ export default {
         async handleSubmit() {
             this.localErrors = [];
 
-            if (!this.form.name) {
-                this.localErrors.push("Your name is required.");
-            }
-            if (!this.form.phone_number) {
-                this.localErrors.push("Your phone number is required.");
-            }
-            if (!this.form.email) {
-                this.localErrors.push("Your email address is required.");
-            }
-            if (!this.form.cancellations_policy) {
-                this.localErrors.push("Please read and accept the terms and conditions.");
-            }
+            // Validate form fields
+            const requiredFields = {
+                name: "Your name is required.",
+                phone_number: "Your phone number is required.",
+                email: "Your email address is required.",
+                cancellations_policy: "Please read and accept the terms and conditions."
+            };
 
-            if (this.localErrors.length === 0) {
+            Object.keys(requiredFields).forEach((field) => {
+                if (!this.form[field]) {
+                    this.localErrors.push(requiredFields[field]);
+                }
+            });
+
+            if (this.localErrors.length) return; // Stop execution if there are errors
+
+            try {
+                this.comboIds = this.$store.state.comboIds;
+                this.cartItem = this.$store.state.cartItem;
+                this.cartItemLength = Object.values(this.cartItem).length;
+
+                const response = await axios.post("/bulk-check-available-seats", { items: this.cartItem });
+
+                // Create a local variable to store seat errors
+                let tempSeatErrors = [];
+
+                for (var key in this.cartItem) {
+                    if (response.data[key]?.success == "false") {
+                        tempSeatErrors.push(response.data);
+                    }
+                }
+
+                if (tempSeatErrors.length) {
+                    tempSeatErrors = tempSeatErrors.filter((value, index, array) => 
+                        array.indexOf(value) === index
+                    )
+
+                    Swal.fire({
+                        toast: true,
+                        title: "Errors!",
+                        html: this.comboIds === 0 || this.cartItemLength === 1
+                            ? response.data[key].message || "An error occurred."
+                            : "Please look over the tour cost section for any errors!",
+                        icon: "error"
+                    });
+
+                    // Emit updated seat errors to the parent component
+                    this.$emit("updateSeatErrors", tempSeatErrors);
+                    return;
+                }
+
+                // Confirm payment with Stripe
                 const { paymentIntent, error } = await this.stripe.confirmPayment({
                     elements: this.elements,
-                    confirmParams: {}, // No redirection
-                    redirect: "if_required", // Prevents automatic redirection
+                    confirmParams: {},
+                    redirect: "if_required",
                 });
 
                 if (error) {
                     this.localErrors.push(error.message);
                 } else {
-                    try {
-                        this.form.paymentIntentId = paymentIntent.id;
-                        console.log("Form Data:", this.form);
-
-                        // Emit event directly
-                        this.$emit("onsubmit", this.form);
-                    } catch (apiError) {
-                        console.log("API Error:", apiError);
-                        this.localErrors.push("Failed to complete booking.");
-                    }
+                    this.form.paymentIntentId = paymentIntent.id;
+                    this.$emit("onsubmit", this.form);
                 }
+            } catch (apiError) {
+                console.error("API Error:", apiError);
+                this.localErrors.push("Failed to complete booking.");
             }
         },
         processLoader(loader) {
