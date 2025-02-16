@@ -143,7 +143,26 @@ export default {
                 throw new Error(backendError.message);
             }
 
-            this.elements = this.stripe.elements({ clientSecret });
+            const appearance = {
+                theme: 'flat', // Change to 'stripe', 'night', 'flat', or 'none'
+            };
+
+            const options = {
+                layout: {
+                    type: 'accordion', // Change to 'accordion', 'tabs', 'inline', or 'auto'
+                    defaultCollapsed: false,
+                    radios: false,
+                    spacedAccordionItems: false,
+                },
+                defaultValues: {
+                    billingDetails: {
+                        country: 'US', // Set a default country to prevent dropdown
+                    },
+                },
+                paymentMethodOrder: ['apple_pay', 'google_pay', 'card'], // Prioritize payment methods
+            };
+
+            this.elements = this.stripe.elements({ clientSecret, appearance });
 
             // Create Express Checkout (Apple Pay, Google Pay, and Link)
             // const expressCheckoutElement = this.elements.create("expressCheckout", {
@@ -154,7 +173,7 @@ export default {
             // });
 
             // Create standard payment elements
-            const paymentElement = this.elements.create("payment");
+            const paymentElement = this.elements.create("payment", options);
             // const linkAuthenticationElement = this.elements.create("linkAuthentication");
 
             // Ensure elements mount before hiding loader
