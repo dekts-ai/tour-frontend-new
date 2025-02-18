@@ -194,7 +194,7 @@ export default {
                 // linkAuthenticationElement.on("ready", checkMounted); // Stripe's ready event
 
                 // Timeout to prevent indefinite loading
-                setTimeout(() => reject(new Error("Element mounting timed out")), 5000);
+                setTimeout(() => reject(new Error("Element mounting timed out")), 15000);
             });
         } catch (error) {
             console.error("Error initializing Stripe elements:", error);
