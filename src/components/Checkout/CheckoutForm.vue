@@ -150,16 +150,8 @@ export default {
             const options = {
                 layout: {
                     type: 'auto', // Change to 'accordion', 'tabs', 'inline', or 'auto'
-                    defaultCollapsed: false,
-                    radios: false,
-                    spacedAccordionItems: false,
                 },
-                defaultValues: {
-                    billingDetails: {
-                        country: 'US', // Set a default country to prevent dropdown
-                    },
-                },
-                paymentMethodOrder: ['card', 'apple_pay', 'google_pay'], // Prioritize payment methods
+                paymentMethodOrder: ['apple_pay', 'google_pay', 'card'], // Prioritize payment methods
             };
 
             this.elements = this.stripe.elements({ clientSecret, appearance });
