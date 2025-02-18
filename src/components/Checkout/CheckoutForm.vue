@@ -152,6 +152,13 @@ export default {
                     type: 'auto', // Change to 'accordion', 'tabs', 'inline', or 'auto'
                 },
                 paymentMethodOrder: ['apple_pay', 'google_pay', 'card'], // Prioritize payment methods
+                defaultValues: {
+                    billingDetails: {
+                        address: {
+                            country: 'US', // Set default country to United States
+                        },
+                    },
+                },
             };
 
             this.elements = this.stripe.elements({ clientSecret, appearance });
