@@ -152,6 +152,11 @@ export default {
                     type: 'auto', // Change to 'accordion', 'tabs', 'inline', or 'auto'
                 },
                 paymentMethodOrder: ['apple_pay', 'google_pay', 'card'], // Prioritize payment methods
+                business: { name: 'Native American Tours' },
+                wallets: { 
+                    applePay: 'auto',
+                    googlePay:'auto'
+                },
                 defaultValues: {
                     billingDetails: {
                         address: {
@@ -269,10 +274,15 @@ export default {
                     return;
                 }
 
+                // Define the return URL (redirects back to your app)
+                const returnUrl = `${window.location.origin}/payment-success`;
+
                 // Confirm payment with Stripe
                 const { paymentIntent, error } = await this.stripe.confirmPayment({
                     elements: this.elements,
-                    confirmParams: {},
+                    confirmParams: {
+                        return_url: returnUrl,  // This will redirect the user after payment
+                    },
                     redirect: "if_required",
                 });
 
