@@ -157,13 +157,9 @@ export default {
                     applePay: 'auto',
                     googlePay:'auto'
                 },
-                defaultValues: {
-                    billingDetails: {
-                        address: {
-                            country: 'US', // Set default country to United States
-                        },
-                    },
-                },
+                fields: {
+                    billingDetails: 'never'
+                }
             };
 
             this.elements = this.stripe.elements({ clientSecret, appearance });
@@ -282,6 +278,21 @@ export default {
                     elements: this.elements,
                     confirmParams: {
                         return_url: returnUrl,  // This will redirect the user after payment
+                        payment_method_data: {
+                            billing_details: {
+                                name: this.form.name,
+                                email: this.form.email,
+                                phone: this.form.phone_number,
+                                address: {
+                                    country: 'US',
+                                    postal_code: 'never',
+                                    state: 'never',
+                                    city: 'never',
+                                    line1: 'never',
+                                    line2: 'never',
+                                }
+                            }
+                        },
                     },
                     redirect: "if_required",
                 });
