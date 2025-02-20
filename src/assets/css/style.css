@@ -1824,7 +1824,7 @@ ul {
 }
 
 .payment-form-sec .card-detail-wrp {
-	padding: 15px 5px 25px 30px;
+	padding: 15px;
 }
 
 .payment-form-sec .card-detail-wrp .form-group {
@@ -1867,7 +1867,6 @@ ul {
 	box-shadow: -3px -4px 5px 0px rgba(0, 0, 0, 0.12) inset;
 	border-radius: 5px;
 	padding: 5px 37px;
-	width: calc(100% - 24px);
 }
 
 .payment-form-sec .card-detail-wrp input:focus,
@@ -3297,7 +3296,7 @@ button.btn-quantity {
 	}
 
 	.payment-form-sec .card-detail-wrp {
-		padding: 15px 5px 15px 15px;
+		padding: 15px;
 	}
 
 	.payment-form-sec .makeaayment-wrap {

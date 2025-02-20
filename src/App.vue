@@ -34,7 +34,7 @@ export default {
     let uri = window.location.search.substring(1);
     if (uri != '') {
       let params = new URLSearchParams(uri);
-      this.iframeStatus = params.get("iframe") !== null ? params.get("iframe") : false;
+      this.iframeStatus = params.get("iframe") !== null ? params.get("iframe") : true;
       this.tenantId = params.get("tid") !== null ? params.get("tid") : 'kens';
       this.tourOperatorId = params.get("oid") !== null ? params.get("oid") : 1;
       this.packageId = params.get("pid") !== null ? params.get("pid") : 0;

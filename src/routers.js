@@ -6,7 +6,7 @@ import MyTrip from './components/MyTrip.vue';
 import Maps from './components/Maps.vue';
 // placeholder for gpay|applepay
 //import PaymentForm from './components/Checkout/PaymentForm';
-//import PaymentSuccess from './components/Checkout/PaymentSuccess';
+import PaymentSuccess from './components/Checkout/PaymentSuccess';
 
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -35,6 +35,11 @@ const routes = [
         name: 'Checkout',
         component: Checkout,
         path: '/checkout'
+    },
+    {
+        name: 'PaymentSuccess',
+        component: PaymentSuccess,
+        path: '/payment-success',
     },
     {
         name:'Thankyou',
