@@ -157,9 +157,20 @@ export default {
                     applePay: 'auto',
                     googlePay:'auto'
                 },
-                fields: {
-                    billingDetails: 'never'
-                }
+                defaultValues: {
+                    billingDetails: {
+                        address: {
+                            country: 'US', // Set default country to United States
+                        },
+                    },
+                },
+                // fields: {
+                //     billingDetails: {
+                //         address: {
+                //             postalCode: 'never'
+                //         },
+                //     },
+                // }
             };
 
             this.elements = this.stripe.elements({ clientSecret, appearance });
@@ -283,14 +294,9 @@ export default {
                                 name: this.form.name,
                                 email: this.form.email,
                                 phone: this.form.phone_number,
-                                address: {
-                                    country: 'US',
-                                    postal_code: 'never',
-                                    state: 'never',
-                                    city: 'never',
-                                    line1: 'never',
-                                    line2: 'never',
-                                }
+                                // address: {
+                                //     postal_code: 'never'
+                                // },
                             }
                         },
                     },
