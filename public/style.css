@@ -244,13 +244,13 @@ ul {list-style: none; }
 .payment-form-sec .accommodate-your-request {font-size: 16px; font-weight: 600; line-height: 1.2; color: #aeaeae; margin-top: 8px;}
 .payment-form-sec .secured-encryption {font-size: 13px; font-weight: 600; line-height: 1; color: #fff; background-color: #419547; padding: 9px 30px;}
 .payment-form-sec .card-detail-main {background-color: #e3e3e3; border-radius: 0 0 5px 5px;}
-.payment-form-sec .card-detail-wrp {padding: 15px 5px 25px 30px;}
+.payment-form-sec .card-detail-wrp {padding: 15px;}
 .payment-form-sec .card-detail-wrp .form-group {position: relative; margin-bottom: 12px;}
 .payment-form-sec .card-detail-wrp label {font-size: 14.53px; font-weight: 500; line-height: 1; color: #121212; margin-bottom: 2px; padding: 0;}
 .payment-form-sec .card-detail-wrp .field-icon-wrp {position: absolute; z-index: 1; top: calc(50% + 10px); left: 15px; transform: translateY(-50%);}
 .payment-form-sec .field-icon-wrp .fa {font-size: 13px; font-weight: 400; line-height: 13px; color: #a3a3a3;}
 .payment-form-sec .card-detail-wrp input, 
-.payment-form-sec .card-detail-wrp select {font-size: 14px; font-weight: 400; line-height: 1; color: #464646; height: 40px; border: 1px solid #d5d5d5;  box-shadow: -3px -4px 5px 0px rgba(0, 0, 0, 0.12) inset; border-radius: 5px; padding: 5px 37px;  width: calc(100% - 24px);}
+.payment-form-sec .card-detail-wrp select {font-size: 14px; font-weight: 400; line-height: 1; color: #464646; height: 40px; border: 1px solid #d5d5d5;  box-shadow: -3px -4px 5px 0px rgba(0, 0, 0, 0.12) inset; border-radius: 5px; padding: 5px 37px;}
 .payment-form-sec .card-detail-wrp input:focus, 
 .payment-form-sec .card-detail-wrp select:focus {border-color: #28a5ff; box-shadow: 0px 0px 12px 0px rgba(91, 186, 255, 0.3), -3px -4px 5px 0px rgba(0, 0, 0, 0.12) inset; }
 .payment-form-sec .card-detail-wrp select {padding: 5px 7px;}
@@ -501,13 +501,13 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .payment-form-sec .secured-encryption {font-size:14px; font-weight:600; line-height:1; color:#fff; background-color:#419547; padding:10px 30px; display: flex; align-items: center; margin-bottom: 10px; }
 .payment-form-sec .secured-encryption img {margin-right: 7px; }
 .payment-form-sec .card-detail-main {background-color:#e3e3e3; border-radius:0 0 5px 5px }
-.payment-form-sec .card-detail-wrp {padding:15px 5px 25px 30px }
+.payment-form-sec .card-detail-wrp {padding:15px; }
 .payment-form-sec .card-detail-wrp .form-group {position:relative; margin-bottom:12px }
 .payment-form-sec .card-detail-wrp label {font-size:14.53px; font-weight:500; line-height:1; color:#121212; margin-bottom:2px; padding:0 }
 .payment-form-sec .card-detail-wrp .field-icon-wrp {position:absolute; z-index:1; top:calc(50% + 10px); left:15px; transform:translateY(-50%) }
 .payment-form-sec .field-icon-wrp .fa {font-size:14px; font-weight:400; line-height:14px; color:#a3a3a3 }
 .payment-form-sec .card-detail-wrp input,
-.payment-form-sec .card-detail-wrp select {font-size:14px; font-weight:400; line-height:1; color:#464646; height:40px; border:1px solid #d5d5d5; box-shadow:inset -3px -4px 5px 0 rgba(0,0,0,.12); border-radius:5px; padding:5px 37px; width:calc(100% - 24px) }
+.payment-form-sec .card-detail-wrp select {font-size:14px; font-weight:400; line-height:1; color:#464646; height:40px; border:1px solid #d5d5d5; box-shadow:inset -3px -4px 5px 0 rgba(0,0,0,.12); border-radius:5px; padding:5px 37px; }
 .payment-form-sec .card-detail-wrp input:focus, .payment-form-sec .card-detail-wrp select:focus {border-color:#28a5ff; box-shadow:0 0 12px 0 rgba(91,186,255,.3),inset -3px -4px 5px 0 rgba(0,0,0,.12) }
 .payment-form-sec .card-detail-wrp select {padding:5px 7px }
 .payment-form-sec .card-detail-wrp .form-group .form-group .field-icon-wrp {left:25px }
@@ -523,7 +523,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .payment-form-sec .booking-you-text {font-size:12px; font-weight:300; line-height:1.2; color:#333; margin-top:10px; text-align:center }
 .payment-form-sec .booking-you-text a {color:#618bda }
 .payment-form-sec .booking-you-text a:hover {color:#333 }
-.payment-form-sec input[type="submit"] {font-size: 16px; font-weight: 700; line-height: 1; color: #333; background: #ffde84; background: linear-gradient(90deg,#ffde84,#eed07e); box-shadow: 4px 4px 5px 0 rgba(0,0,0,.05),inset -3px -4px 12px 0 rgba(0,0,0,.12); height: 40px; text-align: center; width: 100%; max-width: 555px; margin: 0 auto; border: none; border-radius: 5px; }
+.payment-form-sec input[type="submit"] {font-size: 16px; font-weight: 700; line-height: 1; color: #333; background: #ffde84; background: linear-gradient(90deg,#ffde84,#eed07e); box-shadow: 4px 4px 5px 0 rgba(0,0,0,.05),inset -3px -4px 12px 0 rgba(0,0,0,.12); height: 40px; text-align: center; width: 100%; margin: 0 auto; border: none; border-radius: 5px; }
 .payment-form-sec input[type="submit"]:hover {background: #0373c3; color: #fff; }
 .total-cost-wrap  {border-radius: 5px; border: 1px solid rgba(213, 213, 213, 0.50); background: #FFF; margin-bottom: 10px;}
 .total-cost-wrap .title-wrap {border-bottom: 1px solid rgba(213, 213, 213, 0.50); padding: 15px 25px;}
@@ -680,7 +680,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.booking-accordion-wrap.accordion .accordion-item .accordion-button::after {left: 12px; width: 16px; height: 16px; background-size: 16px;}
 	.booking-accordion-wrap.accordion .accordion-item .accordion-button {font-size: 17px; padding: 10px 10px 10px 35px; height: 50px;}
 	.booking-accordion-wrap.accordion .accordion-item .accordion-body {padding: 5px 10px 10px 10px;}
-	.booking-accordion-wrap.accordion .people input {width: 100%; height: 35px; font-size: 20px;}
+	.booking-accordion-wrap.accordion .people input {height: 35px; font-size: 20px;}
 	.booking-accordion-wrap.accordion .package-wrap {display: block; margin-right: 0; padding: 10px; border: 1px solid #dadada; background-color: #f3f3f3; width: 100%;}
 	.booking-accordion-wrap.accordion .package-wrap label {left: 35px; background-color: #f3f3f3;}
 	.booking-accordion-wrap.accordion .package-wrap .package-name {margin-right: 0; margin-bottom: 15px;}
@@ -798,7 +798,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.payment-form-sec .additional-notes-text {font-size: 14px;}
 	.payment-form-sec .accommodate-your-request {font-size: 14px;}
 	.payment-form-sec .secured-encryption {padding: 9px 15px;}
-	.payment-form-sec .card-detail-wrp {padding: 15px 5px 15px 15px;}
+	.payment-form-sec .card-detail-wrp {padding: 15px;}
 	.payment-form-sec .makeaayment-wrap {padding: 12px 30px 12px 25px;}
 	.payment-form-sec .makeaayment-wrap input[type="submit"] {height: 50px;}
 	/***** Payment Page End *****/
@@ -1002,7 +1002,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.payment-form-sec .form-field-title {font-size: 20px;margin-bottom: 10px;}
 	.payment-form-sec .form-field-wrp {padding: 0 !important; border: none !important;}
 	.payment-form-sec .payment-text {font-size: 20px;margin-bottom: 10px;margin-top: 20px;}
-	.payment-form-sec .card-detail-wrp {padding: 15px 5px 15px 20px; }
+	.payment-form-sec .card-detail-wrp {padding: 15px; }
 	.payment-form-sec input[type="submit"] {height: 34px; width: calc(100% - 10px) !important; max-width: unset !important;}
 	.total-cost-wrap .title-wrap {padding: 12px;}
 	.total-cost-wrap .title-wrap .title {font-size: 14px;}
