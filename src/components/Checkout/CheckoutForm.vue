@@ -56,7 +56,7 @@
             </div>
             <div class="card-detail-main">
                 <div class="card-detail-wrp card-form-field">
-                    <!-- <div id="express-checkout"></div> -->
+                    <div id="payment-request-button"></div>
                     <!-- <div id="link-authentication-element"></div> -->
                     <div id="payment-element"></div>
                     <p class="text-start mb-3 pe-3" v-if="localErrors.length">
@@ -90,7 +90,7 @@ import { loadStripe } from '@stripe/stripe-js';
 
 export default {
     name: "CheckoutForm",
-    props: ["items", "tenantId", "iframeStatus", "errors"],
+    props: ["items", "paymentTotal", "tenantId", "iframeStatus", "errors"],
     components: {
         IntPhoneNumber,
     },
@@ -124,12 +124,19 @@ export default {
             this.loaderInstance.hide();
         }
 
+        // ✅ Show loader before initializing Stripe
         this.loaderInstance = this.$loading.show();
 
         try {
+            // ✅ Load Stripe instance
             this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);
+            if (!this.stripe) {
+                throw new Error("Stripe failed to initialize.");
+            }
+
             const apiBaseUrl = process.env.VUE_APP_API_URL;
 
+            // ✅ Fetch Payment Intent from the server
             const intentResponse = await fetch(`https://${this.tenantId}.${apiBaseUrl}/create-payment-intent`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -137,81 +144,86 @@ export default {
             });
 
             const { clientSecret, error: backendError } = await intentResponse.json();
-
             if (backendError) {
-                this.localErrors.push(backendError.message);
                 throw new Error(backendError.message);
             }
 
+            // ✅ Define appearance
             const appearance = {
                 theme: 'stripe', // Change to 'stripe', 'night', 'flat', or 'none'
             };
 
-            const options = {
-                layout: {
-                    type: 'auto', // Change to 'accordion', 'tabs', 'inline', or 'auto'
-                },
-                paymentMethodOrder: ['apple_pay', 'google_pay', 'card'], // Prioritize payment methods
-                business: { name: 'Native American Tours' },
-                wallets: { 
-                    applePay: 'auto',
-                    googlePay:'auto'
-                },
-                defaultValues: {
-                    billingDetails: {
-                        address: {
-                            country: 'US', // Set default country to United States
-                        },
-                    },
-                },
-                // fields: {
-                //     billingDetails: {
-                //         address: {
-                //             postalCode: 'never'
-                //         },
-                //     },
-                // }
-            };
+            // ✅ Define options
+            // const options = {
+            //     layout: {
+            //         type: 'auto', // Change to 'accordion', 'tabs', 'inline', or 'auto'
+            //     },
+            //     paymentMethodOrder: ['apple_pay', 'google_pay', 'card'], // Prioritize payment methods
+            //     business: { name: 'Native American Tours' },
+            //     wallets: { 
+            //         applePay: 'auto',
+            //         googlePay:'auto'
+            //     },
+            //     defaultValues: {
+            //         billingDetails: {
+            //             address: {
+            //                 country: 'US', // Set default country to United States
+            //             },
+            //         },
+            //     },
+            // };
 
+            // ✅ Initialize Elements
             this.elements = this.stripe.elements({ clientSecret, appearance });
 
-            // Create Express Checkout (Apple Pay, Google Pay, and Link)
-            // const expressCheckoutElement = this.elements.create("expressCheckout", {
-            //     defaultValues: {
-            //         email: this.form.email, // Pre-fill user email if available
-            //     },
-            //     layout: "auto", // Automatically adjust layout
-            // });
+            // ✅ Setup Payment Request API (Google Pay & Apple Pay)
+            const paymentRequest = this.stripe.paymentRequest({
+                country: "US",
+                currency: "usd",
+                total: {
+                    label: "Native American Tours",
+                    amount: this.calculateTotalAmount(),
+                },
+                requestPayerName: true,
+                requestPayerEmail: true,
+            });
 
-            // Create standard payment elements
-            const paymentElement = this.elements.create("payment", options);
-            // const linkAuthenticationElement = this.elements.create("linkAuthentication");
+            // ✅ Check if Payment Request is available
+            const canMakePayment = await paymentRequest.canMakePayment();
+            if (canMakePayment) {
+                const paymentRequestButton = this.elements.create("paymentRequestButton", {
+                    paymentRequest,
+                    style: {
+                        paymentRequestButton: {
+                            type: "default",
+                            theme: "light",
+                            height: "40px",
+                        },
+                    },
+                });
 
-            // Ensure elements mount before hiding loader
-            await new Promise((resolve, reject) => {
-                let mountedCount = 0;
+                // ✅ Mount the button and wait until it's rendered before proceeding
+                await new Promise((resolve) => {
+                    paymentRequestButton.mount("#payment-request-button");
+                    paymentRequestButton.on("ready", resolve);
+                });
+            } else {
+                console.warn("Payment Request (Google Pay / Apple Pay) is not available.");
+            }
 
-                const checkMounted = () => {
-                    mountedCount++;
-                    if (mountedCount === 1) resolve(); // Both elements mounted
-                };
+            // ✅ Setup Standard Payment Element (For Cards)
+            const paymentElement = this.elements.create("payment");
 
-                // expressCheckoutElement.mount("#express-checkout");
-                // expressCheckoutElement.on("ready", checkMounted); // Stripe's ready event
-
+            // ✅ Mount and wait for it to render before hiding loader
+            await new Promise((resolve) => {
                 paymentElement.mount("#payment-element");
-                paymentElement.on("ready", checkMounted); // Stripe's ready event
-
-                // linkAuthenticationElement.mount("#link-authentication-element");
-                // linkAuthenticationElement.on("ready", checkMounted); // Stripe's ready event
-
-                // Timeout to prevent indefinite loading
-                setTimeout(() => reject(new Error("Element mounting timed out")), 15000);
+                paymentElement.on("ready", resolve);
             });
         } catch (error) {
             console.error("Error initializing Stripe elements:", error);
-            this.localErrors.push("An error occurred while setting up the payment form.");
+            this.localErrors.push(error.message);
         } finally {
+            // ✅ Hide loader once everything is ready
             this.processLoader();
         }
     },
@@ -315,6 +327,14 @@ export default {
             } finally {
                 this.processLoader(); // Hide the loader after completion (success or failure)
             }
+        },
+        calculateTotalAmount() {
+            return parseFloat(
+                ((Number(this.paymentTotal.total) +
+                    Number(this.paymentTotal.addons_total) +
+                    Number(this.paymentTotal.addons_fee)
+                ).toFixed(2)) * 100 // Convert to cents
+            );
         },
         updatePhoneNumber(props) {
             this.form.phone_number = props.phone_num;

@@ -24,7 +24,7 @@
                         </div>
 
                         <div class="row payment-form-sec">
-                            <CheckoutForm  @onsubmit="submit" :items="cartItem" :tenantId="tenantId" :iframeStatus="iframeStatus" :errors="errors" @updateSeatErrors="handleSeatErrorsUpdate" />
+                            <CheckoutForm  @onsubmit="submit" :items="cartItem" :paymentTotal="globalTotal" :tenantId="tenantId" :iframeStatus="iframeStatus" :errors="errors" @updateSeatErrors="handleSeatErrorsUpdate" />
                             <div class="col-lg-5 order-1 order-md-2">	
                                 <ItemizedList :items="cartItem" :globalTotalItem="globalTotal" :seatErrors="seatErrors" :iframeStatus="iframeStatus" />
                                 <ItemTotalSummary :globalTotal="globalTotal" />
