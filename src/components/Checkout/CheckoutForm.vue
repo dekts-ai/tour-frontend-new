@@ -58,7 +58,7 @@
                 <div class="card-detail-wrp card-form-field">
                     <div id="payment-request-button"></div>
                     <!-- <div id="link-authentication-element"></div> -->
-                    <div id="payment-element"></div>
+                    <div id="payment-element" class="mt-2"></div>
                     <p class="text-start mb-3 pe-3" v-if="localErrors.length">
                         <b>Please correct the following error(s):</b>
                         <ul class="following-error">
@@ -112,6 +112,7 @@ export default {
             company_name: this.$store.state.tourPackage?.tourPackageData[0]?.company_name,
             stripe: null,
             elements: null,
+            paymentRequest: null,  // Store payment request instance
             comboIds: 0,
             cartItem: [],
             cartItemLength: 0,
@@ -144,40 +145,13 @@ export default {
             });
 
             const { clientSecret, error: backendError } = await intentResponse.json();
-            if (backendError) {
-                throw new Error(backendError.message);
-            }
+            if (backendError) throw new Error(backendError.message);
 
-            // ✅ Define appearance
-            const appearance = {
-                theme: 'stripe', // Change to 'stripe', 'night', 'flat', or 'none'
-            };
-
-            // ✅ Define options
-            // const options = {
-            //     layout: {
-            //         type: 'auto', // Change to 'accordion', 'tabs', 'inline', or 'auto'
-            //     },
-            //     paymentMethodOrder: ['apple_pay', 'google_pay', 'card'], // Prioritize payment methods
-            //     business: { name: 'Native American Tours' },
-            //     wallets: { 
-            //         applePay: 'auto',
-            //         googlePay:'auto'
-            //     },
-            //     defaultValues: {
-            //         billingDetails: {
-            //             address: {
-            //                 country: 'US', // Set default country to United States
-            //             },
-            //         },
-            //     },
-            // };
-
-            // ✅ Initialize Elements
+            const appearance = { theme: 'stripe' };
             this.elements = this.stripe.elements({ clientSecret, appearance });
 
             // ✅ Setup Payment Request API (Google Pay & Apple Pay)
-            const paymentRequest = this.stripe.paymentRequest({
+            this.paymentRequest = this.stripe.paymentRequest({
                 country: "US",
                 currency: "usd",
                 total: {
@@ -188,11 +162,37 @@ export default {
                 requestPayerEmail: true,
             });
 
+            // ✅ Listen for payment method event
+            this.paymentRequest.on("paymentmethod", async (event) => {
+                try {
+                    const { paymentIntent, error } = await this.stripe.confirmPayment({
+                        elements: this.elements,
+                        confirmParams: {
+                            payment_method: event.paymentMethod.id,
+                            return_url: `${window.location.origin}/payment-success`,
+                        },
+                        redirect: "if_required",
+                    });
+
+                    if (error) {
+                        event.complete("fail");
+                        this.localErrors.push(error.message);
+                    } else {
+                        event.complete("success");
+                        this.form.paymentIntentId = paymentIntent.id;
+                        this.$emit("onsubmit", this.form);
+                    }
+                } catch (error) {
+                    console.error("Payment Request Error:", error);
+                    event.complete("fail");
+                }
+            });
+
             // ✅ Check if Payment Request is available
-            const canMakePayment = await paymentRequest.canMakePayment();
+            const canMakePayment = await this.paymentRequest.canMakePayment();
             if (canMakePayment) {
                 const paymentRequestButton = this.elements.create("paymentRequestButton", {
-                    paymentRequest,
+                    paymentRequest: this.paymentRequest,
                     style: {
                         paymentRequestButton: {
                             type: "default",
@@ -245,7 +245,7 @@ export default {
                     name: "Your name is required.",
                     phone_number: "Your phone number is required.",
                     email: "Your email address is required.",
-                    cancellations_policy: "Please read and accept the terms and conditions."
+                    cancellations_policy: "Please accept the terms and conditions."
                 };
 
                 Object.keys(requiredFields).forEach((field) => {
@@ -269,7 +269,7 @@ export default {
                 let tempSeatErrors = [];
 
                 for (var key in this.cartItem) {
-                    if (response.data[key]?.success == "false") {
+                    if (response.data[key]?.success === "false") {
                         tempSeatErrors.push(response.data);
                     }
                 }
@@ -283,7 +283,7 @@ export default {
                         toast: true,
                         title: "Errors!",
                         html: this.comboIds === 0 || this.cartItemLength === 1
-                            ? response.data[key].message || "An error occurred."
+                            ? response.data[key]?.message || "An error occurred."
                             : "Please look over the tour cost section for any errors!",
                         icon: "error"
                     });
