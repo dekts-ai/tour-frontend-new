@@ -57,6 +57,12 @@
             <div class="card-detail-main">
                 <div class="card-detail-wrp card-form-field">
                     <!-- <div id="express-checkout"></div> -->
+                    <GooglePay
+                        totalPrice="100.00"
+                        @loaded="loaded"
+                        @loadedError="loadedError"
+                        @paymentError="paymentError"
+                        @paymentSuccess="paymentSuccess" />
                     <!-- <div id="link-authentication-element"></div> -->
                     <div id="payment-element"></div>
                     <p class="text-start mb-3 pe-3" v-if="localErrors.length">
@@ -84,15 +90,17 @@
 import axios from "axios";
 import Swal from 'sweetalert2';
 import { mask } from 'vue-the-mask';
-import IntPhoneNumber from '../Forms/IntPhoneNumber';
+import IntPhoneNumber from '../Forms/IntPhoneNumber.vue';
 import { eggshellPolicy, ahbbPolicy, apmPolicy, kensPolicy, standardPolicy } from '../../data/staticData';
 import { loadStripe } from '@stripe/stripe-js';
+import GooglePay from '../Checkout/GooglePay.vue';
 
 export default {
     name: "CheckoutForm",
     props: ["items", "tenantId", "iframeStatus", "errors"],
     components: {
         IntPhoneNumber,
+        GooglePay
     },
     directives: {
         mask
@@ -347,7 +355,19 @@ export default {
                 this.loaderInstance.hide();
                 this.loaderInstance = null; // Reset after hiding
             }
-        }
+        },
+        loaded(data) {
+            console.log('loaded: ', data);
+        },
+        loadedError(data) {
+            console.log('loadedError: ', data);
+        },
+        paymentError(data) {
+            console.log('paymentError: ', data);
+        },
+        paymentSuccess(data) {
+            console.log('paymentSuccess: ', data);
+        },
     }
 }
 </script>
