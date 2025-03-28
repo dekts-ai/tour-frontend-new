@@ -26,7 +26,7 @@
                         <div class="row payment-form-sec">
                             <CheckoutForm  @onsubmit="submit" :items="cartItem" :tenantId="tenantId" :iframeStatus="iframeStatus" :errors="errors" @updateSeatErrors="handleSeatErrorsUpdate" />
                             <div class="col-lg-5 order-1 order-md-2">	
-                                <ItemizedList :items="cartItem" :globalTotalItem="globalTotal" :seatErrors="seatErrors" :iframeStatus="iframeStatus" />
+                                <ItemizedList :items="cartItem" :globalTotalItem="globalTotal" :seatErrors="seatErrors" :iframeStatus="iframeStatus" @update-items="updateItems" />
                                 <ItemTotalSummary :globalTotal="globalTotal" />
                             </div>
                         </div>
@@ -129,6 +129,9 @@ export default {
         createAndMountFormElements() {
             this.elements = this.stripe.elements(stripeEleStyle);
             this.cardElement = this.elements.create("card", stripeCardStyle);
+        },
+        updateItems(updatedItems) {
+            this.cartItem = updatedItems;
         },
         submit(props) {
            //map props to current data from checkoutForm component
