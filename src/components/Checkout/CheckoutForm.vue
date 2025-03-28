@@ -57,12 +57,12 @@
             <div class="card-detail-main">
                 <div class="card-detail-wrp card-form-field">
                     <!-- <div id="express-checkout"></div> -->
-                    <GooglePay
+                    <!-- <GooglePay
                         totalPrice="100.00"
                         @loaded="loaded"
                         @loadedError="loadedError"
                         @paymentError="paymentError"
-                        @paymentSuccess="paymentSuccess" />
+                        @paymentSuccess="paymentSuccess" /> -->
                     <!-- <div id="link-authentication-element"></div> -->
                     <div id="payment-element"></div>
                     <p class="text-start mb-3 pe-3" v-if="localErrors.length">
@@ -93,14 +93,14 @@ import { mask } from 'vue-the-mask';
 import IntPhoneNumber from '../Forms/IntPhoneNumber.vue';
 import { eggshellPolicy, ahbbPolicy, apmPolicy, kensPolicy, standardPolicy } from '../../data/staticData';
 import { loadStripe } from '@stripe/stripe-js';
-import GooglePay from '../Checkout/GooglePay.vue';
+// import GooglePay from '../Checkout/GooglePay.vue';
 
 export default {
     name: "CheckoutForm",
     props: ["items", "tenantId", "iframeStatus", "errors"],
     components: {
         IntPhoneNumber,
-        GooglePay
+        // GooglePay
     },
     directives: {
         mask
@@ -128,102 +128,121 @@ export default {
         }
     },
     async mounted() {
-        if (this.loaderInstance) {
-            this.loaderInstance.hide();
-        }
+        this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);
+        this.createPaymentIntent();
+    },
+    watch: {
+        items: {
+            deep: true,
+            handler(newItems) {
+                newItems = Object.values(newItems) || [];
 
-        this.loaderInstance = this.$loading.show();
+                const hasChanged = newItems.some((newItem, index) => 
+                    newItem.discount2_value > 0 // Check if discount applied
+                );
 
-        try {
-            this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);
-            const apiBaseUrl = process.env.VUE_APP_API_URL;
-
-            const intentResponse = await fetch(`https://${this.tenantId}.${apiBaseUrl}/create-payment-intent`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ items: this.items }),
-            });
-
-            const { clientSecret, error: backendError } = await intentResponse.json();
-
-            if (backendError) {
-                this.localErrors.push(backendError.message);
-                throw new Error(backendError.message);
+                if (hasChanged) {
+                    this.createPaymentIntent();
+                }
             }
-
-            const appearance = {
-                theme: 'stripe', // Change to 'stripe', 'night', 'flat', or 'none'
-            };
-
-            const options = {
-                layout: {
-                    type: 'auto', // Change to 'accordion', 'tabs', 'inline', or 'auto'
-                },
-                paymentMethodOrder: ['apple_pay', 'google_pay', 'card'], // Prioritize payment methods
-                business: { name: 'Native American Tours' },
-                wallets: { 
-                    applePay: 'auto',
-                    googlePay:'auto'
-                },
-                defaultValues: {
-                    billingDetails: {
-                        address: {
-                            country: 'US', // Set default country to United States
-                        },
-                    },
-                },
-                // fields: {
-                //     billingDetails: {
-                //         address: {
-                //             postalCode: 'never'
-                //         },
-                //     },
-                // }
-            };
-
-            this.elements = this.stripe.elements({ clientSecret, appearance });
-
-            // Create Express Checkout (Apple Pay, Google Pay, and Link)
-            // const expressCheckoutElement = this.elements.create("expressCheckout", {
-            //     defaultValues: {
-            //         email: this.form.email, // Pre-fill user email if available
-            //     },
-            //     layout: "auto", // Automatically adjust layout
-            // });
-
-            // Create standard payment elements
-            const paymentElement = this.elements.create("payment", options);
-            // const linkAuthenticationElement = this.elements.create("linkAuthentication");
-
-            // Ensure elements mount before hiding loader
-            await new Promise((resolve, reject) => {
-                let mountedCount = 0;
-
-                const checkMounted = () => {
-                    mountedCount++;
-                    if (mountedCount === 1) resolve(); // Both elements mounted
-                };
-
-                // expressCheckoutElement.mount("#express-checkout");
-                // expressCheckoutElement.on("ready", checkMounted); // Stripe's ready event
-
-                paymentElement.mount("#payment-element");
-                paymentElement.on("ready", checkMounted); // Stripe's ready event
-
-                // linkAuthenticationElement.mount("#link-authentication-element");
-                // linkAuthenticationElement.on("ready", checkMounted); // Stripe's ready event
-
-                // Timeout to prevent indefinite loading
-                setTimeout(() => reject(new Error("Element mounting timed out")), 15000);
-            });
-        } catch (error) {
-            console.error("Error initializing Stripe elements:", error);
-            this.localErrors.push("An error occurred while setting up the payment form.");
-        } finally {
-            this.processLoader();
         }
     },
     methods: {
+        async createPaymentIntent() {
+            if (this.loaderInstance) {
+                this.loaderInstance.hide();
+            }
+
+            this.loaderInstance = this.$loading.show();
+
+            try {
+                const apiBaseUrl = process.env.VUE_APP_API_URL;
+                
+                const intentResponse = await fetch(`https://${this.tenantId}.${apiBaseUrl}/create-payment-intent`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ items: this.items }),
+                });
+
+                const { clientSecret, error: backendError } = await intentResponse.json();
+
+                if (backendError) {
+                    this.localErrors.push(backendError.message);
+                    throw new Error(backendError.message);
+                }
+
+                const appearance = {
+                    theme: 'stripe', // Change to 'stripe', 'night', 'flat', or 'none'
+                };
+
+                const options = {
+                    layout: {
+                        type: 'auto', // Change to 'accordion', 'tabs', 'inline', or 'auto'
+                    },
+                    paymentMethodOrder: ['apple_pay', 'google_pay', 'card'], // Prioritize payment methods
+                    business: { name: 'Native American Tours' },
+                    wallets: { 
+                        applePay: 'auto',
+                        googlePay:'auto'
+                    },
+                    defaultValues: {
+                        billingDetails: {
+                            address: {
+                                country: 'US', // Set default country to United States
+                            },
+                        },
+                    },
+                    // fields: {
+                    //     billingDetails: {
+                    //         address: {
+                    //             postalCode: 'never'
+                    //         },
+                    //     },
+                    // }
+                };
+
+                this.elements = this.stripe.elements({ clientSecret, appearance });
+
+                // Create Express Checkout (Apple Pay, Google Pay, and Link)
+                // const expressCheckoutElement = this.elements.create("expressCheckout", {
+                //     defaultValues: {
+                //         email: this.form.email, // Pre-fill user email if available
+                //     },
+                //     layout: "auto", // Automatically adjust layout
+                // });
+
+                // Create standard payment elements
+                const paymentElement = this.elements.create("payment", options);
+                // const linkAuthenticationElement = this.elements.create("linkAuthentication");
+
+                // Ensure elements mount before hiding loader
+                await new Promise((resolve, reject) => {
+                    let mountedCount = 0;
+
+                    const checkMounted = () => {
+                        mountedCount++;
+                        if (mountedCount === 1) resolve(); // Both elements mounted
+                    };
+
+                    // expressCheckoutElement.mount("#express-checkout");
+                    // expressCheckoutElement.on("ready", checkMounted); // Stripe's ready event
+
+                    paymentElement.mount("#payment-element");
+                    paymentElement.on("ready", checkMounted); // Stripe's ready event
+
+                    // linkAuthenticationElement.mount("#link-authentication-element");
+                    // linkAuthenticationElement.on("ready", checkMounted); // Stripe's ready event
+
+                    // Timeout to prevent indefinite loading
+                    setTimeout(() => reject(new Error("Element mounting timed out")), 15000);
+                });
+            } catch (error) {
+                console.error("Error initializing Stripe elements:", error);
+                this.localErrors.push("An error occurred while setting up the payment form.");
+            } finally {
+                this.processLoader();
+            }
+        },
         async handleSubmit() {
             this.localErrors = [];
 

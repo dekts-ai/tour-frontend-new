@@ -15,6 +15,7 @@
 
 <script>
 import axios from "axios";
+import cloneDeep from "lodash/cloneDeep";
 
 export default {
     name: "Discount",
@@ -94,6 +95,10 @@ export default {
 
                         this.updateCartItem();
                     }
+
+                    // Emit new total to `ItemizedList.vue`
+                    const updatedItems = cloneDeep(this.allItem);
+                    this.$emit("update-items", updatedItems);
 
                     this.processLoader(loader);
                 }).catch(function (error) {
