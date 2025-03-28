@@ -53,7 +53,7 @@
                 <div class="amount">${{ Number(Number(item.total) + Number(item.addons_total) + Number(item.addons_fee)).toFixed(2) }}</div>
             </div>
 
-            <Discount :item="item" :allItem="items" :globalTotalItem="globalTotalItem" />
+            <Discount :item="item" :allItem="items" :globalTotalItem="globalTotalItem" @update-items="handleItemsUpdate" />
 
             <p class="text-start tour-packages-detail ms-4 mt-2 mb-2" v-if="seatErrors?.length">
                 <ul>
@@ -86,6 +86,10 @@ export default {
         },
         isPriceInfoEnabled(customFields) {
             return customFields.some(item => item.priceInfo.enabled === true);
+        },
+        handleItemsUpdate(updatedItems) {
+            // Emit the updated items list to `Checkout.vue`
+            this.$emit("update-items", updatedItems);
         }
     }
 }
