@@ -123,19 +123,20 @@ export default {
         this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);
         this.createPaymentIntent();
     },
+    computed: {
+        itemTotal() {
+            return Object.values(this.items).map(item => item.total);
+        }
+    },
     watch: {
-        items: {
-            deep: true,
-            handler(newItems) {
-                newItems = Object.values(newItems) || [];
-                const hasChanged = newItems.some((newItem, index) => 
-                    newItem.discount2_value > 0 // Check if discount applied
-                );
-                if (hasChanged) {
-                    this.createPaymentIntent();
-                }
+        itemTotal(newValues, oldValues) {
+            if (!oldValues) return; // Avoid running on component mount
+
+            const hasChanged = newValues.some((value, index) => value !== oldValues[index]);
+            if (hasChanged) {
+                this.createPaymentIntent();
             }
-        },
+        }
     },
     methods: {
         async createPaymentIntent() {
