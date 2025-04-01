@@ -43,11 +43,11 @@ import axios from "axios";
 import { loadStripe } from '@stripe/stripe-js';
 import { stripeCardStyle, stripeEleStyle } from '../utils/stripeUtils';
 import { CountryCodes }  from '../utils/geoUtils';
-import NavBtns from './Nav/NavBtns';
+import NavBtns from './Nav/NavBtns.vue';
 import CheckoutForm from "./Checkout/CheckoutForm.vue";
-import ItemizedList from "./Checkout/ItemizedList";
-import ItemTotalSummary from "./Checkout/ItemTotalSummary";
-import BookWithConfidence from "./Checkout/BookWithConfidence";
+import ItemizedList from "./Checkout/ItemizedList.vue";
+import ItemTotalSummary from "./Checkout/ItemTotalSummary.vue";
+import BookWithConfidence from "./Checkout/BookWithConfidence.vue";
 
 export default {
     name: "Checkout",

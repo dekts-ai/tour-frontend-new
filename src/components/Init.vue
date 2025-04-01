@@ -406,8 +406,8 @@ import Datepicker from 'vuejs3-datepicker';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import { getUTCDateFromTimeZone } from '../utils/dateUtils';
-import CustomFields from '../components/Forms/CustomFields';
-import Pickup from "./Hotel/Pickup";
+import CustomFields from './Forms/CustomFields.vue';
+import Pickup from "./Hotel/Pickup.vue";
 
 export default {
     name: "Init",
@@ -824,11 +824,11 @@ export default {
         },
         onCustomFormFieldsSubmit(customFormData) {
             // no need to do anything if no custom fields
-            if ( !this.customFieldExists  ) {
+            if (!this.customFieldExists) {
                 return false;
             }
 
-            if (  customFormData.errors.length > 0  ) {
+            if (customFormData.errors.length > 0) {
                 this.errors = [...customFormData.errors];
             } else {
                 this.form.custom_fields = customFormData.fields;

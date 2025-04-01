@@ -1,153 +1,170 @@
 <template>
     <div class="other-details-wrap">
-        <div class="tour-packages-couponcode d-flex justify-content-end align-items-center">
-            <input type="text" name="couponcode" placeholder="Promo Code" v-model="item.code" :id="'couponCode-' + item.tour_slot_id" @keyup="addCouponCode(item)">
-            <button class="couponcode-apply-btn ms-1" :class="item?.tour_promotion_id ? 'btn-success' : 'btn-primary'" :disabled="item?.tour_promotion_id ? true : false" :id="'applyCouponButton-' + item.tour_slot_id" @click="applyCoupon(item)">{{ item?.tour_promotion_id ? 'Applied' : 'Apply' }}</button>
+        <div class="tour-packages-couponcode d-flex justify-content-end align-items-center gap-2">
+            <input type="text" :id="`couponCode-${item.tour_slot_id}`" v-model="couponCode" placeholder="Promo Code"
+                class="form-control" @keyup="resetCoupon">
+            <button :id="`applyCouponButton-${item.tour_slot_id}`"
+                :class="['couponcode-apply-btn ms-1', hasCouponApplied ? 'btn-success' : 'btn-primary']" :disabled="hasCouponApplied"
+                @click="applyCoupon">
+                {{ hasCouponApplied ? 'Applied' : 'Apply' }}
+            </button>
         </div>
-        <p v-if="item?.couponSuccess?.length" v-for="success in item?.couponSuccess" :key="success" v-bind:class="{'text-success text-end': success }">
-            {{ success }}
+        <p v-for="(message, index) in successMessages" :key="`success-${index}`" class="text-success text-end mb-0">
+            {{ message }}
         </p>
-        <p v-if="item?.couponErrors?.length" v-for="error in item?.couponErrors" :key="error" v-bind:class="{'text-danger text-end': error }">
+        <p v-for="(error, index) in errorMessages" :key="`error-${index}`" class="text-danger text-end mb-0">
             {{ error }}
         </p>
     </div>
 </template>
 
 <script>
-import axios from "axios";
-import cloneDeep from "lodash/cloneDeep";
+import axios from 'axios';
+import cloneDeep from 'lodash/cloneDeep';
 
 export default {
-    name: "Discount",
-    props: ["item", "allItem", "globalTotalItem"],
-    data: () => {
+    name: 'Discount',
+    props: {
+        item: { type: Object, required: true },
+        allItem: { type: Object, required: true },
+        globalTotalItem: { type: Object, required: true }
+    },
+    data() {
         return {
+            couponCode: this.item.code || '',
+            successMessages: [],
+            errorMessages: [],
+            processing: false
+        };
+    },
+    computed: {
+        hasCouponApplied() {
+            return !!this.item.tour_promotion_id;
         }
     },
     methods: {
-        addCouponCode(item) {
-            console.log('addCouponCode');
-
-            item.tour_promotion_id = "";
-            item.discount2_value = 0;
-            item.discount2_percentage = 0;
-            item.couponSuccess = [];
-            item.couponErrors = [];
-            item.subtotal = Number(item.before_discount_subtotal);
-            item.fees = Number(item.before_discount_fees);
-            item.total = Number(item.before_discount_total);
-
-            this.updateCartItem();
-
-            $('#applyCouponButton-' + item.tour_slot_id)
-                .text('Apply')
-                .removeClass('btn-success')
-                .addClass('btn-primary')
-                .attr('disabled', false);
+        resetCoupon() {
+            this.successMessages = [];
+            this.errorMessages = [];
+            Object.assign(this.item, {
+                tour_promotion_id: '',
+                discount2_value: 0,
+                discount2_percentage: 0,
+                subtotal: Number(this.item.before_discount_subtotal),
+                fees: Number(this.item.before_discount_fees),
+                total: Number(this.item.before_discount_total)
+            });
+            this.updateCart();
         },
-        applyCoupon(item) {
-            console.log('applyCoupon');
+
+        async applyCoupon() {
+            if (this.processing) return;
+
             this.processing = true;
-            var loader = this.$loading.show();
-            item.code = document.querySelector("#couponCode-" + item.tour_slot_id).value;
+            const loader = this.$loading.show();
 
-            item.couponSuccess = [];
-            item.couponErrors = [];
-            if (!item.code) {
-                item.couponErrors.push("To receive a discount, please enter the promo code.");
-                this.processLoader(loader);
+            this.successMessages = [];
+            this.errorMessages = [];
+
+            if (!this.couponCode.trim()) {
+                this.errorMessages.push('Please enter a promo code to receive a discount.');
+                this.hideLoader(loader);
+                return;
+            }
+
+            try {
+                const response = await axios.get(`/apply-coupon/${this.item.package_id}/${this.item.tour_slot_id}/${this.couponCode}`);
+                const promocode = response.data.data;
+
+                const { subtotal, discount } = this.calculateDiscount(promocode, this.item.subtotal);
+
+                if (subtotal <= 0) {
+                    this.errorMessages.push('Your coupon code is not valid.');
+                } else {
+                    this.applyDiscount(promocode, subtotal, discount, response.data.message);
+                    this.updateCart();
+                    this.$emit('update-items', cloneDeep(this.allItem));
+                }
+            } catch (error) {
+                this.handleError(error);
+            } finally {
+                this.hideLoader(loader);
+            }
+        },
+
+        calculateDiscount(promocode, subtotal) {
+            let discount = 0;
+            let newSubtotal = Number(subtotal);
+
+            if (promocode.discount_value_type === 'Percent') {
+                const discountPercentage = Number(promocode.discount_value);
+                discount = (newSubtotal * discountPercentage) / 100;
+                newSubtotal -= discount;
             } else {
-                let self = this;
-                axios.get("/apply-coupon/" + item.package_id + "/" + item.tour_slot_id + "/" + item.code).then((response) => {
-                    var promocode = response.data.data;
-                    var subtotal = item.subtotal;
-                    var discount2Percentage = 0;
-                    if (promocode.discount_value_type == "Percent") {
-                        discount2Percentage = Number(promocode.discount_value);
-                        var discountedAmount = subtotal * discount2Percentage / 100;
-                        subtotal = Number(subtotal - discountedAmount).toFixed(2);
-                    } else {
-                        var discountedAmount = Number(promocode.discount_value).toFixed(2);
-                        subtotal = Number(subtotal - discountedAmount).toFixed(2);
-                    }
+                discount = Number(promocode.discount_value);
+                newSubtotal -= discount;
+            }
 
-                    if (subtotal <= 0) {
-                        item.couponErrors.push("Your coupon code is not valid.");
-                    } else {
-                        item.discount2_percentage = discount2Percentage;
-                        item.tour_promotion_id = promocode.id;
-                        item.discount2_value = Number(discountedAmount);
+            return { subtotal: Number(newSubtotal.toFixed(2)), discount: Number(discount.toFixed(2)) };
+        },
 
-                        item.subtotal = Number(subtotal);
-                        var fees = this.roundout(subtotal * item.service_commission / 100, 2);
-                        item.fees = Number(fees);
+        applyDiscount(promocode, subtotal, discount, successMessage) {
+            Object.assign(this.item, {
+                tour_promotion_id: promocode.id,
+                discount2_value: discount,
+                discount2_percentage: promocode.discount_value_type === 'Percent' ? Number(promocode.discount_value) : 0,
+                subtotal,
+                fees: Number(this.roundout(subtotal * this.item.service_commission / 100, 2)),
+                total: Number(subtotal + this.roundout(subtotal * this.item.service_commission / 100, 2))
+            });
+            this.successMessages.push(successMessage);
+        },
 
-                        var total = Number(item.subtotal) + Number(item.fees);
-                        item.total = Number(total);
+        updateCart() {
+            const totals = Object.values(this.allItem).reduce((acc, item) => {
+                acc.subtotal += Number(item.subtotal);
+                acc.discount += Number(item.discount2_value);
+                acc.fees += Number(item.fees);
+                acc.addons_total += Number(item.addons_total);
+                acc.addons_fee += Number(item.addons_fee);
+                acc.total += Number(item.total);
+                return acc;
+            }, {
+                subtotal: 0,
+                discount: 0,
+                fees: 0,
+                addons_total: 0,
+                addons_fee: 0,
+                total: 0
+            });
 
-                        $('#applyCouponButton-' + item.tour_slot_id)
-                            .text('Applied')
-                            .removeClass('btn-primary')
-                            .addClass('btn-success')
-                            .attr('disabled', true);
+            Object.assign(this.globalTotalItem, totals);
+        },
 
-                        item.couponSuccess.push(response.data.message);
-
-                        this.updateCartItem();
-                    }
-
-                    // Emit new total to `ItemizedList.vue`
-                    const updatedItems = cloneDeep(this.allItem);
-                    this.$emit("update-items", updatedItems);
-
-                    this.processLoader(loader);
-                }).catch(function (error) {
-                    item.code = "";
-                    item.tour_promotion_id = "";
-                    item.discount2_value = 0;
-                    item.discount2_percentage = 0;
-                    self.processLoader(loader);
-                    if (error.response) {
-                        item.couponErrors.push(error.response.data.message);
-                    } else if (error.request) {
-                        console.log(error.request);
-                    } else {
-                        console.log('Error', error.message);
-                    }
-                });
+        handleError(error) {
+            this.couponCode = '';
+            Object.assign(this.item, {
+                tour_promotion_id: '',
+                discount2_value: 0,
+                discount2_percentage: 0
+            });
+            if (error.response) {
+                this.errorMessages.push(error.response.data.message);
+            } else {
+                console.error('Error:', error.message);
             }
         },
-        updateCartItem() {
-            this.globalTotalItem.subtotal = 0;
-            this.globalTotalItem.discount = 0;
-            this.globalTotalItem.fees = 0;
-            this.globalTotalItem.addons_total = 0;
-            this.globalTotalItem.addons_fee = 0;
-            this.globalTotalItem.total = 0;
 
-            for (var key in this.allItem) {
-                this.globalTotalItem.subtotal = Number(this.globalTotalItem.subtotal) + Number(this.allItem[key].subtotal);
-                this.globalTotalItem.discount = Number(this.globalTotalItem.discount) + Number(this.allItem[key].discount2_value);
-                this.globalTotalItem.fees = Number(this.globalTotalItem.fees) + Number(this.allItem[key].fees);
-                this.globalTotalItem.addons_total = Number(this.globalTotalItem.addons_total) + Number(this.allItem[key].addons_total);
-                this.globalTotalItem.addons_fee = Number(this.globalTotalItem.addons_fee) + Number(this.allItem[key].addons_fee);
-                this.globalTotalItem.total = Number(this.globalTotalItem.total) + Number(this.allItem[key].total);
-            }
-        },
-        processLoader(loader) {
-            // reset the state
+        hideLoader(loader) {
             this.processing = false;
             loader.hide();
         },
-        roundout(amount, places = 2) {
-            if (places < 0) {
-                places = 0;
-            }
 
-            let x = Math.pow(10, places);
-            let formul = (amount * x).toFixed(10);
-            return (amount >= 0 ? Math.ceil(formul) : Math.floor(formul)) / x;
+        roundout(amount, places = 2) {
+            const factor = Math.pow(10, places);
+            const rounded = amount >= 0 ? Math.ceil(amount * factor) : Math.floor(amount * factor);
+            return rounded / factor;
         }
     }
-}
+};
 </script>
