@@ -35,16 +35,16 @@ export const kensPolicy = () => {
     return `<div class="form-group col-12">
         <div class="policy-item-wrp">
             <h6 class="card-label-text-left mb-2">
-                <i>Cancellation policy</i>
+                <i>Check-in policy</i>
             </h6>
             <ul>
                 <li class="ms-2">
-                    Please check-in 30 minutes prior from your confirmed tour time. General tours line up 10 minutes before departure. All Groups who have NOT checked-in and received their tour ticket 10 minutes prior to the scheduled departure of the tour, forfeit their reservation and those spaces will be filled with walk-ins. NO REFUNDS will be given in this situation.
+                    Check-in is 30 minutes prior to your confirmed tour time. Tours line up 10 minutes prior to departure time. All groups who have NOT checked in and are waiting in line for tour departure 10 minutes prior to the scheduled departure of the tour forfeit their reservation and those spaces will be filled with walk-ins. NO REFUNDS will be given in this situation.
                 </li>
             </ul>
             <br>
             <h6 class="card-label-text-left mb-2">
-                <i>Refund policy</i>
+                <i>Cancellation/Refund policy</i>
             </h6>
             <ul>
                 <li class="ms-2">
