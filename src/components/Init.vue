@@ -177,7 +177,7 @@
                                                         <div v-if="reveal && tourPackageName" class="accordion-item">
                                                             <div class="accordion-header" id="headingOne">
                                                                 <button :class="form.package_has_slots == 0 ? 'accordion-button' : 'accordion-button collapsed'" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" :aria-expanded="form.package_has_slots == 0 ? true : false" aria-controls="collapseOne">
-                                                                    {{ tourPackageName }}: <span>{{ form.total_people_selected }} People</span>
+                                                                    {{ tourPackageName }}: <span>{{ form.total_people_selected }} {{ form?.type === 'Watercraft' ? 'Kayak' : 'People' }}</span>
                                                                 </button>
                                                             </div>
 
@@ -210,7 +210,7 @@
                                                                                 </div>
                                                                                 <div class="people-count">
                                                                                     <div class="people">
-                                                                                        <label>People</label>
+                                                                                        <label>{{ form?.type === 'Watercraft' ? 'Kayak' : 'People' }}</label>
                                                                                         <input type="text" :name="'people_group_' + tour.id" :id="'people-group-'+tour.id" :value="form.counters[tour.id] ?? 0" readonly>
                                                                                     </div>
                                                                                     <div class="people-btn">
