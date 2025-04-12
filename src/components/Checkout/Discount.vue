@@ -1,11 +1,11 @@
 <template>
     <div class="other-details-wrap">
         <div class="tour-packages-couponcode d-flex justify-content-end align-items-center gap-2">
-            <input type="text" :id="`couponCode-${item.tour_slot_id}`" v-model="couponCode" placeholder="Promo Code"
+            <input :id="couponInputId" v-model.trim="couponCode" type="text" placeholder="Promo Code"
                 class="form-control" @keyup="resetCoupon">
-            <button :id="`applyCouponButton-${item.tour_slot_id}`"
-                :class="['couponcode-apply-btn ms-1', hasCouponApplied ? 'btn-success' : 'btn-primary']" :disabled="hasCouponApplied"
-                @click="applyCoupon">
+            <button :id="applyButtonId"
+                :class="['couponcode-apply-btn ms-1', hasCouponApplied ? 'btn-success' : 'btn-primary']"
+                :disabled="hasCouponApplied || processing" @click="applyCoupon">
                 {{ hasCouponApplied ? 'Applied' : 'Apply' }}
             </button>
         </div>
@@ -40,6 +40,12 @@ export default {
     computed: {
         hasCouponApplied() {
             return !!this.item.tour_promotion_id;
+        },
+        couponInputId() {
+            return `couponCode-${this.item.tour_slot_id}`;
+        },
+        applyButtonId() {
+            return `applyCouponButton-${this.item.tour_slot_id}`;
         }
     },
     methods: {
@@ -58,30 +64,29 @@ export default {
         },
 
         async applyCoupon() {
-            if (this.processing) return;
+            if (this.processing || !this.couponCode) return;
 
             this.processing = true;
             const loader = this.$loading.show();
+            this.clearMessages();
 
-            this.successMessages = [];
-            this.errorMessages = [];
-
-            if (!this.couponCode.trim()) {
+            if (!this.couponCode) {
                 this.errorMessages.push('Please enter a promo code to receive a discount.');
                 this.hideLoader(loader);
                 return;
             }
 
             try {
-                const response = await axios.get(`/apply-coupon/${this.item.package_id}/${this.item.tour_slot_id}/${this.couponCode}`);
-                const promocode = response.data.data;
-
+                const { data } = await axios.get(
+                    `/apply-coupon/${this.item.package_id}/${this.item.tour_slot_id}/${this.couponCode}`
+                );
+                const promocode = data.data;
                 const { subtotal, discount } = this.calculateDiscount(promocode, this.item.subtotal);
 
                 if (subtotal <= 0) {
                     this.errorMessages.push('Your coupon code is not valid.');
                 } else {
-                    this.applyDiscount(promocode, subtotal, discount, response.data.message);
+                    this.applyDiscount(promocode, subtotal, discount, data.message);
                     this.updateCart();
                     this.$emit('update-items', cloneDeep(this.allItem));
                 }
@@ -93,43 +98,41 @@ export default {
         },
 
         calculateDiscount(promocode, subtotal) {
-            let discount = 0;
-            let newSubtotal = Number(subtotal);
+            const isPercent = promocode.discount_value_type === 'Percent';
+            const discountValue = Number(promocode.discount_value);
+            let discount = isPercent
+                ? (subtotal * discountValue) / 100
+                : discountValue;
+            const newSubtotal = subtotal - discount;
 
-            if (promocode.discount_value_type === 'Percent') {
-                const discountPercentage = Number(promocode.discount_value);
-                discount = (newSubtotal * discountPercentage) / 100;
-                newSubtotal -= discount;
-            } else {
-                discount = Number(promocode.discount_value);
-                newSubtotal -= discount;
-            }
-
-            return { subtotal: Number(newSubtotal.toFixed(2)), discount: Number(discount.toFixed(2)) };
+            return {
+                subtotal: Number(newSubtotal.toFixed(2)),
+                discount: Number(discount.toFixed(2))
+            };
         },
 
         applyDiscount(promocode, subtotal, discount, successMessage) {
+            const fees = this.roundout(subtotal * this.item.service_commission / 100, 2);
             Object.assign(this.item, {
                 tour_promotion_id: promocode.id,
                 discount2_value: discount,
                 discount2_percentage: promocode.discount_value_type === 'Percent' ? Number(promocode.discount_value) : 0,
                 subtotal,
-                fees: Number(this.roundout(subtotal * this.item.service_commission / 100, 2)),
-                total: Number(subtotal + this.roundout(subtotal * this.item.service_commission / 100, 2))
+                fees: Number(fees),
+                total: Number(subtotal + fees)
             });
             this.successMessages.push(successMessage);
         },
 
         updateCart() {
-            const totals = Object.values(this.allItem).reduce((acc, item) => {
-                acc.subtotal += Number(item.subtotal);
-                acc.discount += Number(item.discount2_value);
-                acc.fees += Number(item.fees);
-                acc.addons_total += Number(item.addons_total);
-                acc.addons_fee += Number(item.addons_fee);
-                acc.total += Number(item.total);
-                return acc;
-            }, {
+            const totals = Object.values(this.allItem).reduce((acc, item) => ({
+                subtotal: acc.subtotal + Number(item.subtotal),
+                discount: acc.discount + Number(item.discount2_value),
+                fees: acc.fees + Number(item.fees),
+                addons_total: acc.addons_total + Number(item.addons_total),
+                addons_fee: acc.addons_fee + Number(item.addons_fee),
+                total: acc.total + Number(item.total)
+            }), {
                 subtotal: 0,
                 discount: 0,
                 fees: 0,
@@ -148,11 +151,14 @@ export default {
                 discount2_value: 0,
                 discount2_percentage: 0
             });
-            if (error.response) {
-                this.errorMessages.push(error.response.data.message);
-            } else {
-                console.error('Error:', error.message);
-            }
+            this.errorMessages.push(
+                error.response?.data?.message || 'An error occurred'
+            );
+        },
+
+        clearMessages() {
+            this.successMessages = [];
+            this.errorMessages = [];
         },
 
         hideLoader(loader) {
@@ -161,9 +167,8 @@ export default {
         },
 
         roundout(amount, places = 2) {
-            const factor = Math.pow(10, places);
-            const rounded = amount >= 0 ? Math.ceil(amount * factor) : Math.floor(amount * factor);
-            return rounded / factor;
+            const factor = 10 ** places;
+            return Math.round(amount * factor) / factor;
         }
     }
 };
