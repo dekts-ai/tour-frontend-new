@@ -325,12 +325,15 @@
                                             </div>
 
                                             <div ref="packageErrorDisplay">
-                                                <p v-if="errors.length" >
+                                                <p v-if="errors.length">
                                                     <b>Please correct the following error(s):</b>
-                                                    <ul class="following-error">
-                                                        <li v-for="(error, idx) in errors" :key="`error-${idx}`" v-bind:class="{'text-danger': error }" style="font-size:25px">{{ error }}</li>
-                                                    </ul>
                                                 </p>
+                                                <ul class="following-error">
+                                                    <li v-for="(error, idx) in errors" :key="`error-${idx}`"
+                                                        v-bind:class="{'text-danger': error }" style="font-size:25px">
+                                                        {{ error }}
+                                                    </li>
+                                                </ul>
                                             </div>
 
                                             <div class="starttime-row">
