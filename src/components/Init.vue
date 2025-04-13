@@ -695,7 +695,7 @@ export default {
                 this.slotNotFound = true;
                 this.details.tourPackageRateGroups = {};
                 this.begins = error?.response?.data?.data?.begins || null;
-                this.errors.push('Failed to load tour slots.');
+                // this.errors.push('Failed to load tour slots.');
             } finally {
                 this.processLoader(false);
             }
