@@ -1,7 +1,6 @@
 <template>
-    <section :class="[(iframeStatus == false) ? 'noiframe-inner-banner' : 'iframe-inner-banner', '']"
-        v-for="TourPkgDetails in details.TourPkgDetails" :key="TourPkgDetails.pkg_rate_id" class="banner-section"
-        v-bind:style="{ 'background-image': 'url(' + TourPkgDetails.HeaderOne + ')' }">
+    <section :class="{ 'noiframe-inner-banner': !iframeStatus, 'iframe-inner-banner': iframeStatus }"
+        class="banner-section" :style="{ backgroundImage: `url(${bannerImage})` }">
         <div class="container">
             <div class="row">
                 <div class="col-12"></div>
@@ -9,28 +8,30 @@
         </div>
     </section>
 
-	<section class="tabs-section" v-if="iframeStatus">
-        <NavBtns @navigatetotab="navigateToTab" :comboIds="comboIds" :tabs="tabs" />
-	</section>
+    <section v-if="iframeStatus" class="tabs-section">
+        <NavBtns @navigatetotab="navigateToTab" :combo-ids="comboIds" :tabs="tabs" />
+    </section>
 
     <section class="inner-content-section">
-        <div :class="[(iframeStatus == false) ? 'container' : 'no-container', '']">
+        <div :class="{ container: !iframeStatus, 'no-container': iframeStatus }">
             <div class="background-color-sec row">
-                <div :class="[iframeStatus ? 'row payment-row iframe-row' : 'row payment-row', '']">
+                <div :class="{ 'row payment-row': true, 'iframe-row': iframeStatus }">
                     <div class="col-12">
-
-                        <div class="row booking-row" v-if="iframeStatus == false">
+                        <div v-if="!iframeStatus" class="row booking-row">
                             <BookWithConfidence @navigatetotab="navigateToTab" />
                         </div>
 
                         <div class="row payment-form-sec">
-                            <CheckoutForm  @onsubmit="submit" :items="cartItem" :tenantId="tenantId" :iframeStatus="iframeStatus" :errors="errors" @updateSeatErrors="handleSeatErrorsUpdate" />
-                            <div class="col-lg-5 order-1 order-md-2">	
-                                <ItemizedList :items="cartItem" :globalTotalItem="globalTotal" :seatErrors="seatErrors" :iframeStatus="iframeStatus" @update-items="updateItems" />
-                                <ItemTotalSummary :globalTotal="globalTotal" />
+                            <CheckoutForm @onsubmit="submit" :items="cartItem" :tenant-id="tenantId"
+                                :iframe-status="iframeStatus" :errors="errors"
+                                @update-seat-errors="handleSeatErrorsUpdate" />
+                            <div class="col-lg-5 order-1 order-md-2">
+                                <ItemizedList :items="cartItem" :global-total-item="globalTotal"
+                                    :seat-errors="seatErrors" :iframe-status="iframeStatus"
+                                    @update-items="updateItems" />
+                                <ItemTotalSummary :global-total="globalTotal" />
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -39,25 +40,28 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios';
 import { loadStripe } from '@stripe/stripe-js';
 import { stripeCardStyle, stripeEleStyle } from '../utils/stripeUtils';
-import { CountryCodes }  from '../utils/geoUtils';
+import { CountryCodes } from '../utils/geoUtils';
 import NavBtns from './Nav/NavBtns.vue';
-import CheckoutForm from "./Checkout/CheckoutForm.vue";
-import ItemizedList from "./Checkout/ItemizedList.vue";
-import ItemTotalSummary from "./Checkout/ItemTotalSummary.vue";
-import BookWithConfidence from "./Checkout/BookWithConfidence.vue";
+import CheckoutForm from './Checkout/CheckoutForm.vue';
+import ItemizedList from './Checkout/ItemizedList.vue';
+import ItemTotalSummary from './Checkout/ItemTotalSummary.vue';
+import BookWithConfidence from './Checkout/BookWithConfidence.vue';
 
 export default {
-    name: "Checkout",
-    title: "Native American Tours",
-    components:{
+    name: 'Checkout',
+    title: 'Native American Tours',
+    components: {
         NavBtns,
         CheckoutForm,
         ItemizedList,
         ItemTotalSummary,
         BookWithConfidence
+    },
+    props: {
+        // Add props if passed from parent, none currently inferred
     },
     data() {
         return {
@@ -74,170 +78,182 @@ export default {
             cartItemLength: 0,
             errors: [],
             seatErrors: [],
-            seatErrorsLength: 0,
             globalTotal: {
                 subtotal: 0,
                 discount: 0,
                 fees: 0,
                 addons_total: 0,
                 addons_fee: 0,
-                total: 0,
+                total: 0
             },
-            message: "",
-            stripe: "",
-            elements: "",
+            message: '',
+            stripe: null,
+            elements: null,
             cardElement: null,
-            stripeValidationError: "",
-            toast: null,
+            stripeValidationError: '',
             name: null,
             phone_number: null,
-            phone_code: "+1",
+            phone_code: '+1',
             email: null,
             getemailupdates: 0,
             cancellations_policy: 0,
             comment: null,
-            paymentIntentId: null,
+            paymentIntentId: null
         };
+    },
+    computed: {
+        bannerImage() {
+            const tourPkgDetails = this.details.TourPkgDetails?.[0];
+            return tourPkgDetails?.HeaderOne || '';
+        }
     },
     async mounted() {
         this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);
         this.createAndMountFormElements();
     },
     created() {
-        this.iframeStatus = this.$store.state.iframeStatus;
-        this.tenantId = this.$store.state.tenantId;
-        this.hotels = this.$store.state.tourPackage?.hotels;
-        this.comboIds = this.$store.state.comboIds;
-        this.cartItem = this.$store.state.cartItem;
-        this.cartItemLength = Object.values(this.cartItem).length;
-        if (this.cartItemLength) {
-            for (var key in this.cartItem) {
-                this.globalTotal.subtotal = Number(this.globalTotal.subtotal) + Number(this.cartItem[key].subtotal);
-                this.globalTotal.discount = Number(this.globalTotal.discount) + Number(this.cartItem[key].discount2_value);
-                this.globalTotal.fees = Number(this.globalTotal.fees) + Number(this.cartItem[key].fees);
-                this.globalTotal.addons_total = Number(this.globalTotal.addons_total) + Number(this.cartItem[key].addons_total);
-                this.globalTotal.addons_fee = Number(this.globalTotal.addons_fee) + Number(this.cartItem[key].addons_fee);
-                this.globalTotal.total = Number(this.globalTotal.total) + Number(this.cartItem[key].total);
-                this.cartItem[key].couponErrors = [];
-                this.cartItem[key].couponSuccess = [];
-            }
-        }
+        this.initializeFromStore();
+        this.calculateGlobalTotal();
         this.$store.dispatch('storeTabs', this.tabs);
         this.$store.dispatch('storeMindChange', 0);
     },
     methods: {
+        initializeFromStore() {
+            this.iframeStatus = this.$store.state.iframeStatus;
+            this.tenantId = this.$store.state.tenantId;
+            this.hotels = this.$store.state.tourPackage?.hotels || [];
+            this.comboIds = this.$store.state.comboIds;
+            this.cartItem = this.$store.state.cartItem || {};
+            this.cartItemLength = Object.keys(this.cartItem).length;
+        },
+        calculateGlobalTotal() {
+            if (!this.cartItemLength) return;
+
+            this.globalTotal = Object.values(this.cartItem).reduce(
+                (totals, item) => ({
+                    subtotal: totals.subtotal + Number(item.subtotal),
+                    discount: totals.discount + Number(item.discount2_value),
+                    fees: totals.fees + Number(item.fees),
+                    addons_total: totals.addons_total + Number(item.addons_total),
+                    addons_fee: totals.addons_fee + Number(item.addons_fee),
+                    total: totals.total + Number(item.total)
+                }),
+                {
+                    subtotal: 0,
+                    discount: 0,
+                    fees: 0,
+                    addons_total: 0,
+                    addons_fee: 0,
+                    total: 0
+                }
+            );
+
+            Object.values(this.cartItem).forEach(item => {
+                item.couponErrors = item.couponErrors || [];
+                item.couponSuccess = item.couponSuccess || [];
+            });
+        },
         createAndMountFormElements() {
+            if (!this.stripe) return;
             this.elements = this.stripe.elements(stripeEleStyle);
-            this.cardElement = this.elements.create("card", stripeCardStyle);
+            this.cardElement = this.elements.create('card', stripeCardStyle);
         },
         updateItems(updatedItems) {
             this.cartItem = updatedItems;
+            this.cartItemLength = Object.keys(updatedItems).length;
+            this.calculateGlobalTotal();
         },
-        submit(props) {
-           //map props to current data from checkoutForm component
-           for(let key in props){ this[key] = props[key]; }
+        async submit(props) {
+            if (this.processing) return;
 
-            // if an async request is processing
-            if (this.processing === true) {
+            this.processing = true;
+            const loader = this.$loading.show();
+            this.errors = [];
+
+            // Map props to data
+            Object.assign(this, props);
+
+            // Validate inputs
+            this.cartItem = this.$store.state.cartItem || {};
+            this.cartItemLength = Object.keys(this.cartItem).length;
+
+            if (this.comboIds?.length && this.cartItemLength === 1) {
+                this.errors.push('To proceed, please ensure you have selected at least two packages.');
+            }
+            if (!this.paymentIntentId) {
+                this.errors.push('Please enter your card information.');
+            }
+
+            if (this.errors.length) {
+                this.processLoader(loader);
                 return;
             }
 
-            this.cartItem = this.$store.state.cartItem;
-            this.cartItemLength = Object.values(this.cartItem).length;
-
-            // set the async state
-            this.processing = true;
-            var loader = this.$loading.show();
-            this.errors = [];
-            if (this.comboIds.length && this.cartItemLength === 1) {
-                this.errors.push("To proceed, please ensure you have selected at least two packages.");
-            }
-            if (!this.paymentIntentId) {
-                this.errors.push("Please enter your card information.");
-            }
-            if (this.errors.length === 0) {
-                // append the country code to phone number
-                let phone_number = CountryCodes.formatPhoneNumber(this.phone_code, this.phone_number);
-
-                let payload = {
+            try {
+                const phone_number = CountryCodes.formatPhoneNumber(this.phone_code, this.phone_number);
+                const payload = {
                     items: this.cartItem,
                     name: this.name,
                     email: this.email,
-                    phone_number: phone_number,
+                    phone_number,
                     comment: this.comment,
                     getemailupdates: this.getemailupdates,
                     cancellations_policy: this.cancellations_policy,
                     payment_intent_id: this.paymentIntentId,
-                    subtotal: this.globalTotal.subtotal,
-                    discount: this.globalTotal.discount,
-                    fees: this.globalTotal.fees,
-                    addons_total: this.globalTotal.addons_total,
-                    addons_fee: this.globalTotal.addons_fee,
-                    total: this.globalTotal.total
+                    ...this.globalTotal
                 };
 
-                let self = this;
-                let router = this.$router;
-                axios.post("/package-booking-tour", payload).then((response) => {
-                    this.$store.dispatch('storeCustomer', payload);
-                    if (response.data.success == "false") {
-                        self.processLoader(loader);
-                        this.message = response.data.message;
-                        return true;
-                    } else if (response.data.clientSecret) {
-                        this.stripe
-                            .confirmCardPayment(response.data.clientSecret)
-                            .then(function () {
-                                self.bookingIds = response.data.bookingIds;
-                                self.$store.dispatch('storeBookingIds', self.bookingIds)
-                                var stripeObject = {
-                                    booking_ids: response.data.bookingIds,
-                                    affiliate_id: response.data.affiliateId,
-                                    payment_intent: response.data.intentId,
-                                    payment_intent_client_secret: response.data.clientSecret
-                                };
-                                axios.post("/package-booking-3ds-payment", stripeObject).then(() => {
-                                    self.processLoader(loader);
-                                    router.push("/thankyou");
-                                }).catch(function (error) {
-                                    self.processLoader(loader);
-                                    if (error.response) {
-                                        // Request made and server responded
-                                        self.errors.push(error.response.data.message)
-                                    } else if (error.request) {
-                                        // The request was made but no response was received
-                                        console.log(error.request);
-                                    } else {
-                                        // Something happened in setting up the request that triggered an Error
-                                        console.log('Error', error.message);
-                                    }
-                                });
-                            });
-                    } else {
-                        self.processLoader(loader);
-                        this.bookingIds = response.data.BookingIds;
-                        this.$store.dispatch('storeBookingIds', this.bookingIds);
-                        this.$router.push("/thankyou");
-                    }
-                }).catch(function (error) {
-                    self.processLoader(loader);
-                    if (error.response) {
-                        // Request made and server responded
-                        self.errors.push(error.response.data.message)
-                    } else if (error.request) {
-                        // The request was made but no response was received
-                        console.log(error.request);
-                    } else {
-                        // Something happened in setting up the request that triggered an Error
-                        console.log('Error', error.message);
-                    }
-                });
-            } else {            
+                const response = await axios.post('/package-booking-tour', payload);
+                this.$store.dispatch('storeCustomer', payload);
+
+                if (response.data.success === 'false') {
+                    this.message = response.data.message;
+                    this.processLoader(loader);
+                    return;
+                }
+
+                this.bookingIds = response.data.bookingIds || response.data.BookingIds;
+                this.$store.dispatch('storeBookingIds', this.bookingIds);
+
+                if (response.data.clientSecret) {
+                    await this.handleStripePayment(response.data, payload);
+                } else {
+                    this.processLoader(loader);
+                    this.$router.push('/thankyou');
+                }
+            } catch (error) {
+                this.handleError(error);
+            } finally {
                 this.processLoader(loader);
             }
         },
+        async handleStripePayment(data, payload) {
+            const loader = this.$loading.show();
+            try {
+                await this.stripe.confirmCardPayment(data.clientSecret);
+                const stripeObject = {
+                    booking_ids: data.bookingIds,
+                    affiliate_id: data.affiliateId,
+                    payment_intent: data.intentId,
+                    payment_intent_client_secret: data.clientSecret
+                };
+                await axios.post('/package-booking-3ds-payment', stripeObject);
+                this.processLoader(loader);
+                this.$router.push('/thankyou');
+            } catch (error) {
+                this.handleError(error);
+                this.processLoader(loader);
+            }
+        },
+        handleError(error) {
+            if (error.response) {
+                this.errors.push(error.response.data.message);
+            } else {
+                console.error('Error:', error.message);
+            }
+        },
         navigateToTab(tab, destination) {
-            if (tab === 1 || tab === 2 || tab === 3 || tab === 4) {
+            if ([1, 2, 3, 4].includes(tab)) {
                 this.handleTab(tab, destination);
             }
         },
@@ -248,28 +264,13 @@ export default {
             this.$store.dispatch('storeMindChange', 1);
             this.$router.push({ name: destination });
         },
-        dateFormat(date) {
-            this.$store.dispatch('storeDate', date);
-            var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
-            return date.toLocaleDateString("en-US", options)
-        },
         processLoader(loader) {
-            // reset the state
             this.processing = false;
             loader.hide();
         },
-        roundout(amount, places = 2) {
-            if (places < 0) {
-                places = 0;
-            }
-
-            let x = Math.pow(10, places);
-            let formul = (amount * x).toFixed(10);
-            return (amount >= 0 ? Math.ceil(formul) : Math.floor(formul)) / x;
-        },
-        handleSeatErrorsUpdate(errors) {            
+        handleSeatErrorsUpdate(errors) {
             this.seatErrors = errors;
-        },
+        }
     }
 };
 </script>
@@ -278,9 +279,11 @@ export default {
 .card-element {
     margin-top: 5px;
 }
+
 .card-label-text-left {
     text-align: left;
 }
+
 .error {
     color: #dc3545;
 }
