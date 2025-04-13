@@ -1,45 +1,69 @@
 <template>
-<div class="no-container">
-    <div class="row">
-        <div class="col-12">
-            <div class="dropdown text-start d-md-none">
-                <a class="hamburger-menu dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li><button @click="toTab(1, 'Index')" :class="'tabs tab1 dropdown-item ' + (tabs == 1 ? 'active' : '')">Tours</button></li>
-                    <li><button @click="toTab(2, 'Init')" :class="'tabs tab2 dropdown-item ' + (tabs == 2 ? 'active' : '')">Schedule</button></li>
-                    <li><button v-if="comboIds" @click="toTab(3, 'MyTrip')" :class="'tabs tab3 dropdown-item ' + (tabs == 3 ? 'active' : '')">My Trip</button></li>
-                    <li><button v-if="comboIds" @click="toTab(4, 'Maps')" :class="'tabs tab4 dropdown-item ' + (tabs == 4 ? 'active' : '')">Maps</button></li>
-                    <li><button :class="'tabs tab5 dropdown-item ' + (tabs == 5 ? 'active' : '')">Checkout</button></li>
-                </ul>
-            </div>
-            <div class="tabs-wrap d-flex align-items-center w-100">
-                <button @click="toTab(1, 'Index')" :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
-                <button @click="toTab(2, 'Init')" :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
-                <button v-if="comboIds" @click="toTab(3, 'MyTrip')" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">My Trip</button>
-                <button v-if="comboIds" @click="toTab(4, 'Maps')" :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')">Maps</button>
-                <button :class="'tabs tab5 ' + (tabs == 5 ? 'active' : '')">Checkout</button>
+    <div class="no-container">
+        <div class="row">
+            <div class="col-12">
+                <!-- Mobile Dropdown -->
+                <div class="dropdown text-start d-md-none">
+                    <button class="hamburger-menu dropdown-toggle" type="button" id="dropdownMenuLink"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <span v-for="i in 4" :key="i" />
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li v-for="tab in tabsConfig" :key="`mobile-${tab.id}`">
+                            <button v-if="tab && tab.visible" class="dropdown-item tabs"
+                                :class="[tab.class, { active: tabs === tab.id }]" :disabled="!tab.destination"
+                                @click="tab.destination ? toTab(tab.id, tab.destination) : null">
+                                {{ tab.label }}
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Desktop Tabs -->
+                <div class="tabs-wrap d-flex align-items-center w-100">
+                    <button v-for="tab in tabsConfig" :key="tab.id" v-if="tab && tab.visible" class="tabs"
+                        :class="[tab.class, { active: tabs === tab.id }]" :disabled="!tab.destination"
+                        @click="tab.destination ? toTab(tab.id, tab.destination) : null">
+                        {{ tab.label }}
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </template>
 
 <script>
 export default {
-    name: "NavBtns",
-    props: ["comboIds", "tabs"],
-    data: ()=>{
-        return {};
+    name: 'NavBtns',
+    props: {
+        comboIds: {
+            type: [String, Number, Array, Boolean, Object],
+            default: false
+        },
+        tabs: {
+            type: Number,
+            required: true
+        }
     },
-    methods:{
-        toTab(tab, destination){
-            this.$emit('navigatetotab', tab, destination);
+    computed: {
+        tabsConfig() {
+            // Ensure no undefined entries
+            const config = [
+                { id: 1, label: 'Tours', destination: 'Index', class: 'tab1', visible: true },
+                { id: 2, label: 'Schedule', destination: 'Init', class: 'tab2', visible: true },
+                { id: 3, label: 'My Trip', destination: 'MyTrip', class: 'tab3', visible: !!this.comboIds },
+                { id: 4, label: 'Maps', destination: 'Maps', class: 'tab4', visible: !!this.comboIds },
+                { id: 5, label: 'Checkout', destination: null, class: 'tab5', visible: true }
+            ];
+            return config.filter(tab => !!tab); // Extra safety to remove any falsy entries
+        }
+    },
+    methods: {
+        toTab(tabId, destination) {
+            if (tabId && destination) {
+                this.$emit('navigatetotab', tabId, destination);
+            }
         }
     }
-}
+};
 </script>
