@@ -185,7 +185,6 @@ export default {
             }
 
             if (this.errors.length) {
-                this.processLoader(loader);
                 return;
             }
 
@@ -208,7 +207,6 @@ export default {
 
                 if (response.data.success === 'false') {
                     this.message = response.data.message;
-                    this.processLoader(loader);
                     return;
                 }
 
@@ -218,7 +216,6 @@ export default {
                 if (response.data.clientSecret) {
                     await this.handleStripePayment(response.data, payload);
                 } else {
-                    this.processLoader(loader);
                     this.$router.push('/thankyou');
                 }
             } catch (error) {
