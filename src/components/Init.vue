@@ -945,11 +945,12 @@ export default {
                 const discount = (subtotalSum * this.form.discount2_percentage) / 100;
                 this.form.discount2_value = Number(discount).toFixed(2);
                 discountedSubtotal = Number(subtotalSum - discount).toFixed(2);
+                feesSum = this.roundout((discountedSubtotal * this.form.service_commission) / 100, 2);
             } else if (this.form.discount2_value > 0) {
                 discountedSubtotal = Number(subtotalSum - this.form.discount2_value).toFixed(2);
+                feesSum = this.roundout((discountedSubtotal * this.form.service_commission) / 100, 2);
             }
 
-            feesSum = this.roundout((discountedSubtotal * this.form.service_commission) / 100, 2);
             const total = Number(discountedSubtotal) + Number(feesSum);
             this.form.subtotal = this.roundout(discountedSubtotal);
             this.form.fees = feesSum;
