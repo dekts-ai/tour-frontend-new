@@ -1,498 +1,104 @@
 <template>
-    <section v-for="tourPackageData in details.tourPackageData" :key="tourPackageData.package_id"
-        :class="{ 'noiframe-inner-banner': !iframeStatus, 'iframe-inner-banner': iframeStatus }" class="banner-section"
-        :style="{ backgroundImage: `url(${tourPackageData.HeaderOne})` }">
-        <div class="container">
-            <div class="row"></div>
-        </div>
-    </section>
+    <div>
+        <BannerSection 
+            :tour-package-data="details.tourPackageData" 
+            :iframe-status="iframeStatus" 
+        />
 
-    <section v-if="iframeStatus" class="tabs-section">
-        <NavBtns @navigatetotab="navigateToTab" :combo-ids="comboIds" :tabs="tabs" />
-    </section>
+        <TabsSection 
+            :iframe-status="iframeStatus" 
+            :combo-ids="comboIds" 
+            :tabs="tabs"
+            :navigate-to-tab="navigateToTab" 
+        />
 
-    <section class="inner-content-section">
-        <div :class="{ container: !iframeStatus, 'no-container': iframeStatus }">
-            <div class="background-color-sec">
-                <div class="row">
-                    <div class="col-12">
-                        <div v-if="!iframeStatus" class="row bradcumb-row">
-                            <div class="col-12">
-                                <div class="bradcumb-main">
-                                    <ul>
-                                        <li class="home">
-                                            <a :href="homeUrl"
-                                                :data-testid="`home-link-${form.package_id || 'default'}`">
-                                                Home
-                                            </a>
-                                        </li>
-                                        <li>{{ tourPackageName }}</li>
-                                    </ul>
-                                    <div class="cloasedbtn">
-                                        <img src="../assets/images/cross.png" alt="Close" />
-                                    </div>
-                                </div>
-                                <hr class="sep1" />
-                            </div>
-                        </div>
+        <section class="inner-content-section">
+            <div :class="{ container: !iframeStatus, 'no-container': iframeStatus }">
+                <div class="background-color-sec">
+                    <div class="row">
+                        <div class="col-12">
+                            <Breadcrumb 
+                                :iframe-status="iframeStatus" 
+                                :home-url="homeUrl" 
+                                :package-id="form.package_id"
+                                :tour-package-name="tourPackageName" 
+                            />
 
-                        <div class="row payment-row">
-                            <div class="col-12">
-                                <div v-if="!iframeStatus" class="row booking-row">
-                                    <div class="col-lg-5 col-md-12">
-                                        <div class="booking">
-                                            <h2>Book Online</h2>
-                                            <div class="confirmation">
-                                                <img src="../assets/images/confirmation.png" alt="Confirmation" />
-                                                <p>Get Instant Confirmation</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="col-lg-7 col-md-12 text-center text-lg-end text-md-center text-sm-center">
-                                        <div class="info">
-                                            <button class="tooltipbtn btn-info" data-toggle="tooltip"
-                                                data-placement="top" title="Secured">
-                                                Secured
-                                            </button>
-                                            <button class="tooltipbtn btn-danger" data-toggle="tooltip"
-                                                data-placement="top" title="Health & Safety">
-                                                Health & Safety
-                                            </button>
-                                            <button @click="navigateToTab(5, 'Checkout')" class="btn btn-warning"
-                                                aria-label="Checkout">
-                                                <i class="fa fa-shopping-cart" aria-hidden="true"></i> Checkout
-                                            </button>
-                                            <button @click="navigateToTab(1, 'Index')" class="btn btn-primary mt-2"
-                                                aria-label="Home">
-                                                <i class="fa fa-arrow-left" aria-hidden="true"></i> Home
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="row payment-row">
+                                <div class="col-12">
+                                    <BookingInfo 
+                                        :iframe-status="iframeStatus" 
+                                        :navigate-to-tab="navigateToTab" 
+                                    />
 
-                                <form @submit.prevent="submit" data-testid="tour-form">
-                                    <div class="row starttime-row">
-                                        <div class="col-12">
-                                            <div class="row select-time">
-                                                <div class="col-12 col-lg-4">
-                                                    <datepicker v-model="form.date" :inline="true"
-                                                        :disabled-dates="disabledDates"
-                                                        :prevent-disable-date-selection="preventDisableDateSelection"
-                                                        @selected="selectedDate" data-testid="tour-date-picker" />
-                                                </div>
+                                    <TourForm 
+                                        ref="TourForm" 
+                                        :form="form" 
+                                        :disabled-dates="disabledDates"
+                                        :prevent-disable-date-selection="preventDisableDateSelection" 
+                                        :begins="begins"
+                                        :slot-not-found="slotNotFound" 
+                                        :date-time-arr="dateTimeArr" 
+                                        :reveal="reveal"
+                                        :tour-package-name="tourPackageName" 
+                                        :hotels="hotels" 
+                                        :errors="errors"
+                                        :is_group_rate_enabled="is_group_rate_enabled"
+                                        :tour-package-rate-groups="details.tourPackageRateGroups"
+                                        :selectgrouppeoples="selectgrouppeoples" 
+                                        :has_contacts="has_contacts"
+                                        :static-date-range="staticDateRange" 
+                                        :selected-date="selectedDate"
+                                        :call-to-book-validation="callToBookValidation"
+                                        :open-phone-popup="openPhonePopup" 
+                                        :selected-slot="selectedSlot"
+                                        :is-disabled="isDisabled"
+                                        :handle-group-rate-discount-change="handleGroupRateDiscountChange"
+                                        :increment="increment" 
+                                        :decrement="decrement"
+                                        :update-pax-detail="updatePaxDetail" 
+                                        :remove-pax="removePax"
+                                        :has-custom-form-fields="hasCustomFormFields" 
+                                        :submit="submit" 
+                                    />
 
-                                                <div v-if="staticDateRange(form.date, form.tenant_id)"
-                                                    class="col-12 col-lg-8 mt-4 mt-lg-1">
-                                                    <h3 class="watermark static-date-range">
-                                                        Canyon is closed for repairs. Please select another day.
-                                                    </h3>
-                                                </div>
-                                                <div v-else-if="begins" class="col-12 col-lg-8 mt-4 mt-lg-1">
-                                                    <h3 class="watermark static-date-range">
-                                                        Exciting News! Our Tour Begins on <br />{{ begins }}.
-                                                    </h3>
-                                                </div>
-                                                <div v-else-if="slotNotFound && dateTimeArr.length === 0"
-                                                    class="col-12 col-lg-8 mt-4 mt-lg-1">
-                                                    <h3 class="watermark static-date-range">
-                                                        Apologies, No slots available on your chosen date.
-                                                    </h3>
-                                                </div>
-
-                                                <div class="col-12 col-lg-8 mt-4 mt-lg-1">
-                                                    <div class="accordion booking-accordion-wrap" id="accordionExample">
-                                                        <div v-if="
-                                                            reveal &&
-                                                            form.package_has_slots &&
-                                                            !begins &&
-                                                            !staticDateRange(form.date, form.tenant_id) &&
-                                                            dateTimeArr.length > 0
-                                                        " class="accordion-item">
-                                                            <div class="accordion-header" id="headingTwo">
-                                                                <button class="accordion-button" type="button"
-                                                                    data-bs-toggle="collapse"
-                                                                    data-bs-target="#collapseTwo" aria-expanded="true"
-                                                                    aria-controls="collapseTwo">
-                                                                    Select Your Tour Time: <span>{{ form.time_date
-                                                                        }}</span>
-                                                                </button>
-                                                            </div>
-                                                            <div id="collapseTwo"
-                                                                class="accordion-collapse collapse show"
-                                                                aria-labelledby="headingTwo"
-                                                                data-bs-parent="#accordionExample">
-                                                                <div class="accordion-body select-time-wrp">
-                                                                    <div class="radio-toolbar">
-                                                                        <div v-for="slot in dateTimeArr" :key="slot.Id"
-                                                                            class="time-item" :class="{
-                                                                                'seats-free-label': callToBookValidation(slot, false),
-                                                                                'phone-label': callToBookValidation(slot, true),
-                                                                                'watermark-label': !callToBookValidation(slot, false) && !callToBookValidation(slot, true)
-                                                                            }" v-show="slot.visible" @click="
-                                                                                callToBookValidation(slot, true)
-                                                                                    ? openPhonePopup(slot)
-                                                                                    : selectedSlot(slot.Id, slot.Time, slot.slot_time)
-                                                                                    " :style="slot.Id === form.tour_slot_id
-                                                                                        ? { backgroundColor: '#e9f7eb', borderColor: '#37d150' }
-                                                                                        : {}
-                                                                                    " :data-testid="`time-slot-${slot.Id}`">
-                                                                            <label class="time-item-lable"
-                                                                                :for="slot.Id"></label>
-                                                                            <input type="radio" :id="slot.Id"
-                                                                                name="time_date" :value="slot.Time"
-                                                                                :disabled="isDisabled(slot)"
-                                                                                @click.stop />
-                                                                            <span class="background-change"></span>
-                                                                            <label :for="slot.Id">{{ slot.Time
-                                                                                }}</label>
-                                                                            <span
-                                                                                v-if="callToBookValidation(slot, false)"
-                                                                                class="seats-free">
-                                                                                <span
-                                                                                    v-if="form.show_seat_availability">
-                                                                                    {{ slot.seats - slot.dd }} left!
-                                                                                </span>
-                                                                            </span>
-                                                                            <span
-                                                                                v-else-if="callToBookValidation(slot, true)"
-                                                                                class="phone-call">
-                                                                                CALL TO BOOK
-                                                                            </span>
-                                                                            <span
-                                                                                v-else-if="form.show_seat_availability"
-                                                                                class="watermark">
-                                                                                <span
-                                                                                    v-if="staticDateRange(form.date, form.tenant_id)">CLOSED</span>
-                                                                                <span v-else>SOLD OUT</span>
-                                                                            </span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div v-if="reveal && tourPackageName" class="accordion-item">
-                                                            <div class="accordion-header" id="headingOne">
-                                                                <button
-                                                                    :class="{ 'accordion-button': true, collapsed: form.package_has_slots !== 0 }"
-                                                                    type="button" data-bs-toggle="collapse"
-                                                                    data-bs-target="#collapseOne"
-                                                                    :aria-expanded="form.package_has_slots === 0"
-                                                                    aria-controls="collapseOne">
-                                                                    {{ tourPackageName }}:
-                                                                    <span>
-                                                                        {{ form.total_people_selected }}
-                                                                        {{ form?.type === 'Watercraft' ? 'Kayak' :
-                                                                        'People' }}
-                                                                    </span>
-                                                                </button>
-                                                            </div>
-                                                            <div id="collapseOne" :class="{
-                                                                'accordion-collapse collapse': true,
-                                                                show: form.package_has_slots === 0
-                                                            }" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                                                <div class="accordion-body clearfix pb-1">
-                                                                    <div v-if="is_group_rate_enabled"
-                                                                        class="package-wrap">
-                                                                        <div class="package-name">
-                                                                            <div class="title">Guest's</div>
-                                                                            <div class="price">Navajo Nation Tax: ${{
-                                                                                form.selectedTax }}</div>
-                                                                        </div>
-                                                                        <div class="people-count">
-                                                                            <div class="people">
-                                                                                <select
-                                                                                    class="form-select group-rate-discount"
-                                                                                    v-model="form.selectedSize"
-                                                                                    @change="handleGroupRateDiscountChange"
-                                                                                    data-testid="group-rate-select">
-                                                                                    <option
-                                                                                        v-for="group in details.tourPackageRateGroups"
-                                                                                        :value="group.size"
-                                                                                        :key="group.size">
-                                                                                        {{ group.size }} - ${{
-                                                                                        group.rate }}
-                                                                                    </option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div v-else>
-                                                                        <div v-for="tour in details.tourPackageRateGroups"
-                                                                            :key="tour.id" class="package-wrap d-block">
-                                                                            <div
-                                                                                class="d-flex justify-content-between w-100">
-                                                                                <div class="package-name">
-                                                                                    <div class="title">{{ tour.rate_for
-                                                                                        }}</div>
-                                                                                    <div class="price">${{ tour.rate }}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="people-count">
-                                                                                    <div class="people">
-                                                                                        <label>
-                                                                                            {{ form?.type ===
-                                                                                            'Watercraft' ? 'Kayak' :
-                                                                                            'People' }}
-                                                                                        </label>
-                                                                                        <input type="text"
-                                                                                            :name="`people_group_${tour.id}`"
-                                                                                            :id="`people-group-${tour.id}`"
-                                                                                            :value="form.counters[tour.id] ?? 0"
-                                                                                            readonly
-                                                                                            :data-testid="`people-group-${tour.id}`" />
-                                                                                    </div>
-                                                                                    <div class="people-btn">
-                                                                                        <button type="button"
-                                                                                            class="btn-people-count"
-                                                                                            @click="increment(tour.id)"
-                                                                                            aria-label="Increment">
-                                                                                            +
-                                                                                        </button>
-                                                                                        <button type="button"
-                                                                                            class="btn-people-count"
-                                                                                            @click="decrement(tour.id)"
-                                                                                            aria-label="Decrement">
-                                                                                            -
-                                                                                        </button>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <select
-                                                                                    class="form-select people-group1 hidden"
-                                                                                    :name="`people_group${tour.id}`"
-                                                                                    :id="`people_group${tour.id}`"
-                                                                                    v-model="form.counters[tour.id]"
-                                                                                    hidden>
-                                                                                    <option
-                                                                                        v-for="item in selectgrouppeoples"
-                                                                                        :value="item.value"
-                                                                                        :key="item.value">
-                                                                                        {{ item.number }}
-                                                                                    </option>
-                                                                                </select>
-                                                                            </div>
-
-                                                                            <div v-if="has_contacts" class="row">
-                                                                                <div v-for="(pax, index) in form.paxDetails[tour.id] || []"
-                                                                                    :key="index"
-                                                                                    class="col-12 col-md-6 col-lg-4">
-                                                                                    <div class="pax-form">
-                                                                                        <div class="pax-header">
-                                                                                            <span>Attendee {{ index + 1
-                                                                                                }}</span>
-                                                                                            <button type="button"
-                                                                                                class="remove-pax"
-                                                                                                @click="removePax(tour.id, index)"
-                                                                                                aria-label="Remove Attendee">
-                                                                                                ✖
-                                                                                            </button>
-                                                                                        </div>
-                                                                                        <div class="pax-body">
-                                                                                            <div class="form-group">
-                                                                                                <label
-                                                                                                    :for="`name-${tour.id}-${index}`">
-                                                                                                    Name <sup>*</sup>
-                                                                                                </label>
-                                                                                                <input type="text"
-                                                                                                    :id="`name-${tour.id}-${index}`"
-                                                                                                    v-model="pax.name"
-                                                                                                    @input="updatePaxDetail(tour.id, index, 'name', pax.name)"
-                                                                                                    placeholder="Enter name"
-                                                                                                    required />
-                                                                                            </div>
-                                                                                            <div class="form-group">
-                                                                                                <label
-                                                                                                    :for="`age-${tour.id}-${index}`">
-                                                                                                    Age <sup>*</sup>
-                                                                                                </label>
-                                                                                                <input type="number"
-                                                                                                    :id="`age-${tour.id}-${index}`"
-                                                                                                    v-model.number="pax.age"
-                                                                                                    @input="updatePaxDetail(tour.id, index, 'age', pax.age)"
-                                                                                                    placeholder="Enter age"
-                                                                                                    min="0" step="1"
-                                                                                                    required />
-                                                                                            </div>
-                                                                                            <div class="form-group">
-                                                                                                <label
-                                                                                                    :for="`weight-${tour.id}-${index}`">
-                                                                                                    Weight <sup>*</sup>
-                                                                                                </label>
-                                                                                                <input type="number"
-                                                                                                    :id="`weight-${tour.id}-${index}`"
-                                                                                                    v-model.number="pax.weight"
-                                                                                                    @input="updatePaxDetail(tour.id, index, 'weight', pax.weight)"
-                                                                                                    placeholder="Enter weight"
-                                                                                                    min="0" step="0.01"
-                                                                                                    required />
-                                                                                            </div>
-                                                                                            <div class="form-group">
-                                                                                                <label
-                                                                                                    :for="`note-${tour.id}-${index}`">Note</label>
-                                                                                                <textarea
-                                                                                                    :id="`note-${tour.id}-${index}`"
-                                                                                                    v-model="pax.note"
-                                                                                                    @input="updatePaxDetail(tour.id, index, 'note', pax.note)"
-                                                                                                    placeholder="Enter note"></textarea>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div v-if="
-                                                            reveal &&
-                                                            tourPackageName &&
-                                                            form.package_id &&
-                                                            form.package_id !== 0 &&
-                                                            form.service_commission !== 0
-                                                        ">
-                                                            <CustomFields ref="CustomFieldsRef"
-                                                                :values="form.custom_fields" :enabled="true"
-                                                                :display_errors="false" :display_submit="false"
-                                                                :display_height="275"
-                                                                :service_commission="form.service_commission"
-                                                                @customformexists="hasCustomFormFields"
-                                                                :endpoint="`/package/custom/form/${form.package_id}`" />
-                                                        </div>
-
-                                                        <div v-if="reveal && hotels.length" class="accordion-item">
-                                                            <div class="accordion-header" id="headingFour">
-                                                                <button class="accordion-button collapsed" type="button"
-                                                                    data-bs-toggle="collapse"
-                                                                    data-bs-target="#collapseFour" aria-expanded="false"
-                                                                    aria-controls="collapseFour">
-                                                                    Select Pickup Hotel:
-                                                                </button>
-                                                            </div>
-                                                            <div id="collapseFour" class="accordion-collapse collapse"
-                                                                aria-labelledby="headingFour"
-                                                                data-bs-parent="#accordionExample">
-                                                                <div class="accordion-body">
-                                                                    <div class="row">
-                                                                        <div class="col-12 custom-form-wrap">
-                                                                            <Pickup :hotels="hotels" :form="form" />
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div ref="packageErrorDisplay">
-                                                <p v-if="errors.length">
-                                                    <b>Please correct the following error(s):</b>
-                                                </p>
-                                                <ul class="following-error">
-                                                    <li v-for="(error, idx) in errors" :key="`error-${idx}`"
-                                                        :class="{ 'text-danger': error }" style="font-size: 25px">
-                                                        {{ error }}
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                            <div class="starttime-row">
-                                                <div class="groupofpeople">
-                                                    <div class="booknowbtn text-end">
-                                                        <button type="submit" class="btn-continue">
-                                                            Continue
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-
-                                <div v-for="tourPackageData in details.tourPackageData"
-                                    :key="tourPackageData.package_id" class="row permit-tax">
-                                    <div class="col-lg-4 col-md-12">
-                                        <div class="images-sec">
-                                            <img :src="tourPackageData.HeaderImage" :alt="tourPackageData.package_name"
-                                                :data-testid="`header-image-${tourPackageData.package_id}`" />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-8 col-md-12">
-                                        <div class="content-sec">
-                                            <h2>{{ tourPackageData.package_name }}</h2>
-                                            <p>{{ tourPackageData.short_description }}</p>
-                                            <p v-if="form?.tenant_id === 'kens'">{{ tourPackageData.long_description }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div v-if="form?.tenant_id !== 'kens'"
-                                    v-for="tourPackageData in details.tourPackageData"
-                                    :key="`desc-${tourPackageData.package_id}`" class="row hiking-tour-row">
-                                    <div class="col-lg-4 col-md-12">
-                                        <div class="images-sec">
-                                            <img :src="tourPackageData.DescriptionImage"
-                                                :alt="tourPackageData.package_name"
-                                                :data-testid="`desc-image-${tourPackageData.package_id}`" />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-8 col-md-12">
-                                        <div class="content-sec">
-                                            <h2>{{ tourPackageData.package_name }}</h2>
-                                            <p>{{ tourPackageData.long_description }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row tour-start-row">
-                                    <div v-for="tourPackageData in details.tourPackageData"
-                                        :key="`duration-${tourPackageData.package_id}`"
-                                        class="col-12 col-sm-12 col-md-6 duration">
-                                        <h2>Duration</h2>
-                                        <button class="btn-info">{{ tourPackageData.duration }}</button>
-                                    </div>
-                                    <div class="col-12 col-sm-12 col-md-6 whattobring">
-                                        <h2>What to Bring</h2>
-                                        <div class="bring-group">
-                                            <button v-for="(item, key) in details.thingsToBring" :key="key"
-                                                class="btn-info">
-                                                {{ item }}
-                                            </button>
-                                        </div>
-                                    </div>
+                                    <TourDetails 
+                                        :tour-package-data="details.tourPackageData" 
+                                        :form="form"
+                                        :things-to-bring="details.thingsToBring" 
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 </template>
 
 <script>
 import axios from 'axios';
-import Datepicker from 'vuejs3-datepicker';
-import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import { getUTCDateFromTimeZone } from '../utils/dateUtils';
-import CustomFields from './Forms/CustomFields.vue';
-import Pickup from './Hotel/Pickup.vue';
-import NavBtns from './Nav/NavBtns.vue';
+import Swal from 'sweetalert2';
+import BannerSection from './Initialization/BannerSection.vue';
+import TabsSection from './Initialization/TabsSection.vue';
+import Breadcrumb from './Initialization/Breadcrumb.vue';
+import BookingInfo from './Initialization/BookingInfo.vue';
+import TourForm from './Initialization/TourForm.vue';
+import TourDetails from './Initialization/TourDetails.vue';
 
 export default {
     name: 'Init',
     title: 'Native American Tours',
     components: {
-        Datepicker,
-        CustomFields,
-        Pickup,
-        NavBtns
+        BannerSection,
+        TabsSection,
+        Breadcrumb,
+        BookingInfo,
+        TourForm,
+        TourDetails
     },
     data() {
         return {
@@ -503,7 +109,7 @@ export default {
             packageOrder: [],
             comboIds: 0,
             tourPackageName: '',
-            totalavailableseats: 0,
+            totalAvailableSeats: 0,
             selectgrouppeoples: [],
             details: { tourPackageData: [], tourPackageRateGroups: {}, thingsToBring: [] },
             hotels: [],
@@ -539,7 +145,7 @@ export default {
                 total_people_selected: 0,
                 people_group: [],
                 rate_group: [],
-                calucation: [],
+                calculation: [],
                 subtotal: 0,
                 fees: 0,
                 total: 0,
@@ -581,15 +187,22 @@ export default {
             minSeats: 0,
             maxSeats: 0,
             is_group_rate_enabled: 0,
-            with_rate_groups: 1,
+            withRateGroups: 1,
             has_contacts: 0,
             tabs: 2
         };
     },
+    mounted() {
+        console.log('Init.vue mounted, data properties:', {
+            is_group_rate_enabled: this.is_group_rate_enabled,
+            selectgrouppeoples: this.selectgrouppeoples,
+            has_contacts: this.has_contacts
+        });
+    },
     computed: {
         homeUrl() {
             const { tenant_id, tour_operator_id, package_id, affiliate_id, comboIds, iframeStatus } = this.form;
-            let url = `${this.baseUrl}`;
+            let url = this.baseUrl;
             if (iframeStatus) {
                 url += `?tid=${tenant_id}&oid=${tour_operator_id}&pid=${package_id}&cids=${comboIds}`;
                 if (affiliate_id) url += `&aid=${affiliate_id}`;
@@ -603,87 +216,70 @@ export default {
         this.fetchTourData(format(this.form.date, 'yyyy-MM-dd'), false);
         this.$store.dispatch('storeTabs', this.tabs);
         this.$store.dispatch('storeMindChange', 0);
-        console.log('iframeStatus:', this.iframeStatus); // Debug menu visibility
     },
     methods: {
         initializeFromStore() {
-            this.packageOrder = this.$store.state.packageOrder || [];
-            this.comboIds = this.$store.state.comboIds ?? 0;
-            this.cartItem = this.$store.state.cartItem || {};
+            const { state } = this.$store;
+            this.packageOrder = state.packageOrder || [];
+            this.comboIds = state.comboIds ?? 0;
+            this.cartItem = state.cartItem || {};
             this.cartItemLength = Object.keys(this.cartItem).length;
-            this.iframeStatus = this.$store.state.iframeStatus ?? false;
+            this.iframeStatus = state.iframeStatus ?? false;
 
-            const storedForm = this.$store.state.formData;
-            if (storedForm && storedForm.package_id === this.$store.state.packageId) {
-                this.form = { ...this.form, ...storedForm };
-            } else {
-                Object.assign(this.form, {
-                    tenant_id: this.$store.state.tenantId || '',
-                    tour_operator_id: this.$store.state.tourOperatorId || 0,
-                    package_id: this.$store.state.packageId || 0,
-                    affiliate_id: this.$store.state.affiliateId || 0,
-                    tour_slot_id: 0,
-                    time_date: null,
-                    slot_time: null,
-                    people_group: [],
-                    selectedRateId: null,
-                    selectedSize: null,
-                    selectedRate: 0,
-                    selectedTax: 0,
-                    package_has_slots: 1,
-                    tax_applicable: 1,
-                    show_seat_availability: 1,
-                    block_ctb_duration: 0,
-                    ctb_description: '',
-                    call_to_book: false
-                });
-            }
+            const storedForm = state.formData;
+            const defaultForm = {
+                tenant_id: state.tenantId || '',
+                tour_operator_id: state.tourOperatorId || 0,
+                package_id: state.packageId || 0,
+                affiliate_id: state.affiliateId || 0,
+                tour_slot_id: 0,
+                time_date: null,
+                slot_time: null,
+                people_group: [],
+                selectedRateId: null,
+                selectedSize: null,
+                selectedRate: 0,
+                selectedTax: 0,
+                package_has_slots: 1,
+                tax_applicable: 1,
+                show_seat_availability: 1,
+                block_ctb_duration: 0,
+                ctb_description: '',
+                call_to_book: false
+            };
 
-            this.form.date = this.$store.state.date
-                ? new Date(this.$store.state.date)
-                : this.getStartDate();
+            this.form = storedForm && storedForm.package_id === state.packageId
+                ? { ...this.form, ...storedForm }
+                : { ...this.form, ...defaultForm };
+
+            this.form.date = state.date ? new Date(state.date) : this.getStartDate();
         },
+
         async fetchTourData(date, resetSlot = false) {
             this.processLoader(true);
             try {
-                // Fetch slots
-                const slotResponse = await axios.get(
-                    `/tour-slot/${date}/${this.form.package_id}/${this.form.affiliate_id}`
-                );
-                this.begins = slotResponse.data.begins;
-                let slotTimes = slotResponse.data.Time || [];
+                const { package_id, affiliate_id } = this.form;
+                const slotResponse = await axios.get(`/tour-slot/${date}/${package_id}/${affiliate_id}`);
+                const { begins, Time: slotTimes = [], closedSlotVisibility, TotalAvailableSeats = 0 } = slotResponse.data;
 
-                if (slotResponse.data.closedSlotVisibility === false) {
-                    slotTimes = slotTimes.filter(
-                        slot => slot.bookable_status === 'Open' && slot.dd < slot.seats
-                    );
-                }
-                this.dateTimeArr = slotTimes.map(slot => ({
-                    ...slot,
-                    visible: true,
-                    custom_rate: slot.custom_rate || 0
-                }));
+                this.begins = begins;
+                this.dateTimeArr = (closedSlotVisibility === false
+                    ? slotTimes.filter(slot => slot.bookable_status === 'Open' && slot.dd < slot.seats)
+                    : slotTimes
+                ).map(slot => ({ ...slot, visible: true, custom_rate: slot.custom_rate || 0 }));
+
                 this.customRateFound = this.dateTimeArr.some(slot => slot.custom_rate !== 0);
-                this.totalavailableseats = slotResponse.data.TotalAvailableSeats || 0;
-                this.maxSeats = this.totalavailableseats;
+                this.totalAvailableSeats = TotalAvailableSeats;
+                this.maxSeats = TotalAvailableSeats;
                 this.slotNotFound = this.dateTimeArr.length === 0;
 
-                // Update selectgrouppeoples
-                this.selectgrouppeoples = Array.from(
-                    { length: this.totalavailableseats + 1 },
-                    (_, i) => ({
-                        id: i + 1,
-                        value: i,
-                        number: i
-                    })
-                );
+                this.selectgrouppeoples = Array.from({ length: TotalAvailableSeats + 1 }, (_, i) => ({
+                    id: i + 1,
+                    value: i,
+                    number: i
+                }));
 
-                // Fetch package data if needed
-                if (
-                    !this.begins &&
-                    !this.staticDateRange(this.form.date, this.form.tenant_id) &&
-                    !this.customRateFound
-                ) {
+                if (!begins && !this.staticDateRange(this.form.date, this.form.tenant_id) && !this.customRateFound) {
                     await this.fetchPackageData(date, resetSlot);
                 } else if (this.form.tour_slot_id !== 0) {
                     await this.fetchPackageData(date, resetSlot);
@@ -692,18 +288,20 @@ export default {
                     this.tourPackageName = this.customRateFound ? '' : this.tourPackageName;
                 }
             } catch (error) {
+                console.error('Failed to fetch tour data:', error);
                 this.slotNotFound = true;
                 this.details.tourPackageRateGroups = {};
                 this.begins = error?.response?.data?.data?.begins || null;
-                // this.errors.push('Failed to load tour slots.');
             } finally {
                 this.processLoader(false);
             }
         },
+
         async fetchPackageData(date, resetSlot) {
             try {
+                const { tour_operator_id, package_id, affiliate_id, tour_slot_id } = this.form;
                 const response = await axios.get(
-                    `/tour-package/${date}/${this.form.tour_operator_id}/${this.form.package_id}/${this.form.affiliate_id}/0/${this.with_rate_groups}/${this.form.tour_slot_id}`
+                    `/tour-package/${date}/${tour_operator_id}/${package_id}/${affiliate_id}/0/${this.withRateGroups}/${tour_slot_id}`
                 );
                 this.$store.dispatch('storeTourPackage', response.data);
 
@@ -711,7 +309,7 @@ export default {
                 this.tourPackageName = tourData.package_name || '';
                 this.details = {
                     tourPackageData: response.data.tourPackageData || [],
-                    tourPackageRateGroups: response.data.tourPackageRateGroups?.[this.form.package_id] || {},
+                    tourPackageRateGroups: response.data.tourPackageRateGroups?.[package_id] || [],
                     thingsToBring: response.data.thingsToBring || []
                 };
                 this.hotels = response.data.hotels || [];
@@ -733,7 +331,7 @@ export default {
                     block_ctb_duration: tourData.block_ctb_duration || 0,
                     ctb_description: tourData.ctb_description || '',
                     call_to_book: tourData.callToBook || false,
-                    service_commission: this.form.affiliate_id
+                    service_commission: affiliate_id
                         ? Number(tourData.affiliate_processing_percentage || 0)
                         : Number(tourData.service_commission_percentage || 0)
                 });
@@ -755,15 +353,12 @@ export default {
                 }
 
                 if (this.form.package_has_slots === 0 && this.dateTimeArr[0]) {
-                    this.selectedSlot(
-                        this.dateTimeArr[0].Id,
-                        this.dateTimeArr[0].Time,
-                        this.dateTimeArr[0].slot_time
-                    );
+                    this.selectedSlot(this.dateTimeArr[0].Id, this.dateTimeArr[0].Time, this.dateTimeArr[0].slot_time);
                 }
 
                 this.reveal = true;
             } catch (error) {
+                console.error('Failed to fetch package data:', error);
                 this.errors.push('Failed to load tour package data.');
             } finally {
                 if (resetSlot) {
@@ -779,35 +374,34 @@ export default {
                 }
             }
         },
+
         updateBlockedTimes(date) {
-            this.blockedTimes = {};
-            Object.values(this.cartItem).forEach(item => {
+            this.blockedTimes = Object.values(this.cartItem).reduce((acc, item) => {
                 if (item.package_id !== this.form.package_id) {
-                    const packageId = item.package_id;
                     const itemDate = format(new Date(item.date), 'yyyy-MM-dd');
                     const [hours, minutes] = item.travel_duration.split(':').map(Number);
                     const timeBefore = this.calculateTime(item.slot_time, -hours, -minutes);
                     const timeAfter = this.calculateTime(item.slot_time, hours, minutes);
 
-                    this.blockedTimes[packageId] = {
+                    acc[item.package_id] = {
                         date: itemDate,
                         time: [timeBefore, timeAfter],
                         package_has_slots: item.package_has_slots
                     };
                 }
-            });
+                return acc;
+            }, {});
 
-            for (const packageId in this.blockedTimes) {
-                const { date: blockedDate, time, package_has_slots } = this.blockedTimes[packageId];
-                if (blockedDate === date && package_has_slots) {
+            this.dateTimeArr = this.dateTimeArr.filter(slot => {
+                return !Object.values(this.blockedTimes).some(({ date: blockedDate, time, package_has_slots }) => {
+                    if (blockedDate !== date || !package_has_slots) return false;
                     const [startTime, endTime] = time.map(t => new Date(`2000-01-01T${t}`));
-                    this.dateTimeArr = this.dateTimeArr.filter(slot => {
-                        const slotTime = new Date(`2000-01-01T${slot.slot_time}`);
-                        return !(slotTime >= startTime && slotTime <= endTime);
-                    });
-                }
-            }
+                    const slotTime = new Date(`2000-01-01T${slot.slot_time}`);
+                    return slotTime >= startTime && slotTime <= endTime;
+                });
+            });
         },
+
         selectedDate(date) {
             this.processLoader(true);
             this.reveal = false;
@@ -826,6 +420,7 @@ export default {
             this.form.date = date;
             this.fetchTourData(format(date, 'yyyy-MM-dd'), true);
         },
+
         handleGroupRateDiscountChange() {
             const selectedGroup = this.details.tourPackageRateGroups.find(
                 group => group.size === this.form.selectedSize
@@ -839,90 +434,134 @@ export default {
                 });
             }
         },
+
         hasCustomFormFields(exists) {
             this.customFieldExists = exists;
         },
+
         async submit() {
             this.errors = [];
             this.processLoader(true);
             this.form.addons_total = 0;
             this.form.addons_fee = 0;
 
-            // Validate pax details
-            if (this.has_contacts) {
-                let validationPassed = true;
-                this.details.tourPackageRateGroups.forEach(tour => {
-                    this.form.paxDetails[tour.id] = this.form.paxDetails[tour.id] || [];
-                    if (
-                        this.form.counters[tour.id] &&
-                        this.form.paxDetails[tour.id].length !== this.form.counters[tour.id]
-                    ) {
-                        this.errors.push(`Please provide details for all ${this.form.counters[tour.id]} attendees in ${tour.rate_for}.`);
-                        validationPassed = false;
-                    } else {
-                        this.form.paxDetails[tour.id].forEach((pax, index) => {
-                            if (!pax.name || !pax.age || !pax.weight) {
-                                this.errors.push(`Please fill in all fields for Attendee ${index + 1} in ${tour.rate_for}.`);
-                                validationPassed = false;
-                            }
-                        });
+            try {
+                if (this.has_contacts) {
+                    const validationErrors = this.validatePaxDetails();
+                    if (validationErrors.length) {
+                        this.errors = validationErrors;
+                        this.$nextTick(() => this.scrollToErrors());
+                        return;
                     }
-                });
-                if (!validationPassed) {
-                    this.scrollToErrors();
-                    this.processLoader(false);
+                }
+
+                if (this.customFieldExists && this.$refs.TourForm) {
+                    const customFormData = await this.$refs.TourForm.$refs.CustomFieldsRef.submitForm(false);
+                    if (customFormData.errors.length) {
+                        this.errors = customFormData.errors;
+                    } else {
+                        this.form.custom_fields = customFormData.fields;
+                        this.form.addons_total = this.$refs.TourForm.$refs.CustomFieldsRef.sumTotal(customFormData.fields);
+                        this.form.addons_fee = this.roundout(this.$refs.TourForm.$refs.CustomFieldsRef.feeTotal(customFormData.fields));
+                    }
+                }
+
+                if (!this.form.time_date && this.form.package_has_slots) {
+                    this.errors.push('Please select a start time for your tour.');
+                }
+
+                const rateGroups = Object.values(this.details.tourPackageRateGroups);
+                if (this.validateMinMaxScenario(rateGroups)) {
+                    this.$nextTick(() => this.scrollToErrors());
                     return;
                 }
-            }
 
-            // Validate custom fields
-            if (this.customFieldExists) {
-                const customFormData = await this.$refs.CustomFieldsRef.submitForm(false);
-                if (customFormData.errors.length) {
-                    this.errors = [...customFormData.errors];
-                } else {
-                    this.form.custom_fields = customFormData.fields;
-                    this.form.addons_total = this.$refs.CustomFieldsRef.sumTotal(customFormData.fields);
-                    this.form.addons_fee = this.roundout(this.$refs.CustomFieldsRef.feeTotal(customFormData.fields));
+                const { groupPaxArr, rateGroupArr, paxSubtotalArr, feesGroupArr } = this.calculateTotals(rateGroups);
+                const subtotalSum = paxSubtotalArr.reduce((sum, val) => sum + Number(val), 0);
+                let feesSum = feesGroupArr.reduce((sum, val) => sum + Number(val), 0);
+
+                this.form.before_discount_subtotal = Number(subtotalSum);
+                this.form.before_discount_fees = Number(feesSum);
+                this.form.before_discount_total = this.roundout(subtotalSum + feesSum);
+
+                let discountedSubtotal = subtotalSum;
+                if (this.form.discount2_percentage > 0) {
+                    const discount = (subtotalSum * this.form.discount2_percentage) / 100;
+                    this.form.discount2_value = Number(discount).toFixed(2);
+                    discountedSubtotal = Number(subtotalSum - discount).toFixed(2);
+                    feesSum = this.roundout((discountedSubtotal * this.form.service_commission) / 100, 2);
+                } else if (this.form.discount2_value > 0) {
+                    discountedSubtotal = Number(subtotalSum - this.form.discount2_value).toFixed(2);
+                    feesSum = this.roundout((discountedSubtotal * this.form.service_commission) / 100, 2);
                 }
-            }
 
-            // Validate time selection
-            if (!this.form.time_date && this.form.package_has_slots) {
-                this.errors.push('Please select a start time for your tour.');
-            }
+                const total = Number(discountedSubtotal) + Number(feesSum);
+                this.form.subtotal = this.roundout(discountedSubtotal);
+                this.form.fees = feesSum;
+                this.form.total = this.roundout(total);
 
-            // Validate group selection
-            const tourPackageRateGroups = Object.values(this.details.tourPackageRateGroups);
-            if (this.validateMinMaxScenario(tourPackageRateGroups)) {
-                this.scrollToErrors();
+                if (this.form.total <= 0) {
+                    this.errors.push('Oops! Something went wrong. Please try again later.');
+                    this.$nextTick(() => this.scrollToErrors());
+                    return;
+                }
+
+                if (!this.errors.length) {
+                    Object.assign(this.form, {
+                        calculation: paxSubtotalArr,
+                        rate_group: rateGroupArr,
+                        people_group: groupPaxArr,
+                        iframeStatusInfo: this.iframeStatus,
+                        package_name: this.tourPackageName
+                    });
+                    await this.addToCart();
+                }
+
+                if (this.errors.length) {
+                    this.$nextTick(() => this.scrollToErrors());
+                }
+            } catch (error) {
+                console.error('Submit error:', error);
+                this.errors.push('An unexpected error occurred. Please try again.');
+                this.$nextTick(() => this.scrollToErrors());
+            } finally {
                 this.processLoader(false);
-                return;
             }
+        },
 
-            // Calculate totals
-            let groupPaxArr = [];
-            let rateGroupArr = [];
-            let paxSubtotalArr = [];
-            let feesGroupArr = [];
+        validatePaxDetails() {
+            const errors = [];
+            this.details.tourPackageRateGroups.forEach(tour => {
+                this.form.paxDetails[tour.id] = this.form.paxDetails[tour.id] || [];
+                if (this.form.counters[tour.id] && this.form.paxDetails[tour.id].length !== this.form.counters[tour.id]) {
+                    errors.push(`Please provide details for all ${this.form.counters[tour.id]} attendees in ${tour.rate_for}.`);
+                } else {
+                    this.form.paxDetails[tour.id].forEach((pax, index) => {
+                        if (!pax.name || !pax.age || !pax.weight) {
+                            errors.push(`Please fill in all fields for Attendee ${index + 1} in ${tour.rate_for}.`);
+                        }
+                    });
+                }
+            });
+            return errors;
+        },
+
+        calculateTotals(rateGroups) {
+            const groupPaxArr = [];
+            const rateGroupArr = [];
+            const paxSubtotalArr = [];
+            const feesGroupArr = [];
 
             if (this.is_group_rate_enabled) {
-                const selectedGroup = tourPackageRateGroups.find(
-                    group => group.size === this.form.selectedSize
-                );
+                const selectedGroup = rateGroups.find(group => group.size === this.form.selectedSize);
                 groupPaxArr.push(this.form.selectedSize);
                 rateGroupArr.push(selectedGroup.rate_for);
-                const subtotal = Number(
-                    parseFloat(this.form.selectedRate) + parseFloat(this.form.selectedTax)
-                ).toFixed(2);
+                const subtotal = Number(parseFloat(this.form.selectedRate) + parseFloat(this.form.selectedTax)).toFixed(2);
                 paxSubtotalArr.push(subtotal);
-                const fees = this.roundout(
-                    (Number(subtotal) * Number(this.form.service_commission)) / 100,
-                    2
-                );
+                const fees = this.roundout((Number(subtotal) * Number(this.form.service_commission)) / 100, 2);
                 feesGroupArr.push(fees.toFixed(2));
             } else {
-                tourPackageRateGroups.forEach((group, index) => {
+                rateGroups.forEach(group => {
                     const count = this.form.counters[group.id] || 0;
                     groupPaxArr.push(count);
                     rateGroupArr.push(group.rate_for);
@@ -934,49 +573,9 @@ export default {
                 });
             }
 
-            const subtotalSum = paxSubtotalArr.reduce((sum, val) => sum + Number(val), 0);
-            let feesSum = feesGroupArr.reduce((sum, val) => sum + Number(val), 0);
-            this.form.before_discount_subtotal = Number(subtotalSum);
-            this.form.before_discount_fees = Number(feesSum);
-            this.form.before_discount_total = this.roundout(subtotalSum + feesSum);
-
-            let discountedSubtotal = subtotalSum;
-            if (this.form.discount2_percentage > 0) {
-                const discount = (subtotalSum * this.form.discount2_percentage) / 100;
-                this.form.discount2_value = Number(discount).toFixed(2);
-                discountedSubtotal = Number(subtotalSum - discount).toFixed(2);
-                feesSum = this.roundout((discountedSubtotal * this.form.service_commission) / 100, 2);
-            } else if (this.form.discount2_value > 0) {
-                discountedSubtotal = Number(subtotalSum - this.form.discount2_value).toFixed(2);
-                feesSum = this.roundout((discountedSubtotal * this.form.service_commission) / 100, 2);
-            }
-
-            const total = Number(discountedSubtotal) + Number(feesSum);
-            this.form.subtotal = this.roundout(discountedSubtotal);
-            this.form.fees = feesSum;
-            this.form.total = this.roundout(total);
-
-            if (this.form.total <= 0) {
-                this.errors.push('Oops! Something went wrong. Please try again later.');
-                this.scrollToErrors();
-                this.processLoader(false);
-                return;
-            }
-
-            if (this.errors.length === 0) {
-                Object.assign(this.form, {
-                    calucation: paxSubtotalArr,
-                    rate_group: rateGroupArr,
-                    people_group: groupPaxArr,
-                    iframeStatusInfo: this.iframeStatus,
-                    package_name: this.tourPackageName
-                });
-                await this.addToCart();
-            }
-
-            this.scrollToErrors();
-            this.processLoader(false);
+            return { groupPaxArr, rateGroupArr, paxSubtotalArr, feesGroupArr };
         },
+
         validateMinMaxScenario(groups) {
             if (this.is_group_rate_enabled) return false;
 
@@ -1003,6 +602,7 @@ export default {
 
             return this.errors.length > 0;
         },
+
         async addToCart() {
             try {
                 const checkSlot = {
@@ -1016,34 +616,30 @@ export default {
                 const response = await axios.post('/available-seats', checkSlot);
                 if (response.data.success === 'false') {
                     this.errors.push(response.data.message);
+                    this.$nextTick(() => this.scrollToErrors());
                     return;
                 }
 
-                let updatedCart = { ...this.cartItem };
-                if (this.comboIds === 0) {
-                    updatedCart = {};
-                } else {
-                    updatedCart = Object.fromEntries(
-                        Object.entries(this.cartItem).filter(
-                            ([, item]) => item.package_id !== this.form.package_id
-                        )
+                let updatedCart = this.comboIds === 0
+                    ? {}
+                    : Object.fromEntries(
+                        Object.entries(this.cartItem).filter(([, item]) => item.package_id !== this.form.package_id)
                     );
-                }
 
-                this.form.package_image =
-                this.details.tourPackageData?.[0]?.FrontendPackageImage || '';
+                this.form.package_image = this.details.tourPackageData?.[0]?.FrontendPackageImage || '';
                 updatedCart[this.form.tour_slot_id] = { ...this.form };
                 this.cartItem = updatedCart;
                 this.$store.dispatch('storeCartItem', this.cartItem);
                 this.$store.dispatch('storeMindChange', 1);
 
-                this.$router.push({
-                    name: this.comboIds === 0 ? 'Checkout' : 'Index'
-                });
+                this.$router.push({ name: this.comboIds === 0 ? 'Checkout' : 'Index' });
             } catch (error) {
+                console.error('Add to cart error:', error);
                 this.errors.push(error.response?.data?.message || 'Failed to add to cart.');
+                this.$nextTick(() => this.scrollToErrors());
             }
         },
+
         selectedSlot(id, timeDate, slotTime) {
             this.$store.dispatch('storeSlotId', id);
             Object.assign(this.form, {
@@ -1055,7 +651,7 @@ export default {
             if (this.customRateFound) {
                 this.processLoader(true);
                 this.tourPackageName = '';
-                this.details = { tourPackageData: [], tourPackageRateGroups: {}, thingsToBring: [] };
+                this.details = { tourPackageData: [], tourPackageRateGroups: [], thingsToBring: [] };
                 this.form.counters = {};
                 this.form.people_group = [];
                 this.form.total_people_selected = 0;
@@ -1063,13 +659,12 @@ export default {
                 this.fetchPackageData(format(this.form.date, 'yyyy-MM-dd'), false);
             }
         },
-        increment(rateId) {
-            this.form.counters[rateId] = (this.form.counters[rateId] || this.minSeats) + 1;
-            if (this.form.counters[rateId] > this.maxSeats) {
-                this.form.counters[rateId] = this.maxSeats;
-                return;
-            }
 
+        increment(rateId) {
+            const newCount = (this.form.counters[rateId] || this.minSeats) + 1;
+            if (newCount > this.maxSeats) return;
+
+            this.form.counters[rateId] = newCount;
             if (this.has_contacts) {
                 this.form.paxDetails[rateId] = this.form.paxDetails[rateId] || [];
                 this.form.paxDetails[rateId].push({ name: '', age: '', weight: '', note: '' });
@@ -1082,13 +677,12 @@ export default {
                 );
             }
         },
-        decrement(rateId) {
-            this.form.counters[rateId] = (this.form.counters[rateId] || this.minSeats) - 1;
-            if (this.form.counters[rateId] < this.minSeats) {
-                this.form.counters[rateId] = this.minSeats;
-                return;
-            }
 
+        decrement(rateId) {
+            const newCount = (this.form.counters[rateId] || this.minSeats) - 1;
+            if (newCount < this.minSeats) return;
+
+            this.form.counters[rateId] = newCount;
             if (this.has_contacts && this.form.paxDetails[rateId]?.length) {
                 this.form.paxDetails[rateId].pop();
             }
@@ -1100,11 +694,13 @@ export default {
                 );
             }
         },
+
         updatePaxDetail(rateId, index, field, value) {
             if (this.form.paxDetails[rateId]?.[index]) {
                 this.form.paxDetails[rateId][index][field] = value;
             }
         },
+
         removePax(rateId, index) {
             if (this.form.paxDetails[rateId]?.[index]) {
                 this.form.paxDetails[rateId].splice(index, 1);
@@ -1117,6 +713,7 @@ export default {
                 }
             }
         },
+
         callToBookDuration(bookDuration, timeSlot) {
             if (!this.form.call_to_book) return false;
 
@@ -1125,6 +722,7 @@ export default {
             const slotTime = new Date(`${timeSlot.date}T${timeSlot.slot_time}`);
             return slotTime < expiryTime;
         },
+
         callToBookValidation(timeSlot, bool) {
             return (
                 timeSlot.bookable_status === 'Open' &&
@@ -1132,6 +730,7 @@ export default {
                 this.callToBookDuration(this.form.block_ctb_duration, timeSlot) === bool
             );
         },
+
         staticDateRange(date, tenant) {
             const tenants = ['kens', 'dixies'];
             if (!tenants.includes(tenant)) return false;
@@ -1156,6 +755,7 @@ export default {
 
             return isClosed;
         },
+
         navigateToTab(tab, destination) {
             if ([1, 3, 4, 5].includes(tab)) {
                 if (tab === 1 || Object.keys(this.cartItem).length) {
@@ -1170,12 +770,14 @@ export default {
                 }
             }
         },
+
         roundout(amount, places = 2) {
-            if (places < 0) places = 0;
+            if (places < 0) return amount;
             const x = Math.pow(10, places);
             const formul = (amount * x).toFixed(10);
             return (amount >= 0 ? Math.ceil(formul) : Math.floor(formul)) / x;
         },
+
         processLoader(show) {
             if (show) {
                 if (this.loaderInstance) this.loaderInstance.hide();
@@ -1185,18 +787,35 @@ export default {
                 this.loaderInstance = null;
             }
         },
+
         scrollToErrors() {
-            if (this.errors.length && this.$refs.packageErrorDisplay) {
-                this.$refs.packageErrorDisplay.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start',
-                    inline: 'nearest'
+            if (this.errors.length) {
+                this.$nextTick(() => {
+                    if (this.$refs.TourForm?.$refs.packageErrorDisplay) {
+                        this.$refs.TourForm.$refs.packageErrorDisplay.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start',
+                            inline: 'nearest'
+                        });
+                    } else {
+                        console.warn('TourForm or packageErrorDisplay ref is undefined');
+                        const tourFormElement = this.$refs.TourForm?.$el;
+                        if (tourFormElement) {
+                            tourFormElement.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start',
+                                inline: 'nearest'
+                            });
+                        }
+                    }
                 });
             }
         },
+
         getStartDate() {
             return getUTCDateFromTimeZone();
         },
+
         getEndDate() {
             const date = new Date(
                 new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' })).getFullYear() + 1,
@@ -1206,9 +825,11 @@ export default {
             date.setHours(23, 59, 59, 999);
             return date;
         },
+
         isDisabled(slot) {
             return slot.bookable_status === 'Closed' || slot.dd >= slot.seats;
         },
+
         calculateTime(timeValue, hoursToAdd, minutesToAdd) {
             const time = new Date(`2000-01-01T${timeValue}`);
             time.setHours(time.getHours() + hoursToAdd * 2);
@@ -1220,6 +841,7 @@ export default {
                 second: '2-digit'
             });
         },
+
         openPhonePopup() {
             Swal.fire({
                 toast: false,
