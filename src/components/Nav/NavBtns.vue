@@ -14,7 +14,7 @@
                     <li><button @click="toTab(2, 'Init')" :class="'tabs tab2 dropdown-item ' + (tabs == 2 ? 'active' : '')">Schedule</button></li>
                     <li><button v-if="comboIds" @click="toTab(3, 'MyTrip')" :class="'tabs tab3 dropdown-item ' + (tabs == 3 ? 'active' : '')">My Trip</button></li>
                     <li><button v-if="comboIds" @click="toTab(4, 'Maps')" :class="'tabs tab4 dropdown-item ' + (tabs == 4 ? 'active' : '')">Maps</button></li>
-                    <li><button :class="'tabs tab5 dropdown-item ' + (tabs == 5 ? 'active' : '')">Checkout</button></li>
+                    <li><button @click="toTab(5, 'Checkout')" :class="'tabs tab5 dropdown-item ' + (tabs == 5 ? 'active' : '')">Checkout</button></li>
                 </ul>
             </div>
             <div class="tabs-wrap d-flex align-items-center w-100">
@@ -22,7 +22,7 @@
                 <button @click="toTab(2, 'Init')" :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
                 <button v-if="comboIds" @click="toTab(3, 'MyTrip')" :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">My Trip</button>
                 <button v-if="comboIds" @click="toTab(4, 'Maps')" :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')">Maps</button>
-                <button :class="'tabs tab5 ' + (tabs == 5 ? 'active' : '')">Checkout</button>
+                <button @click="toTab(5, 'Checkout')" :class="'tabs tab5 ' + (tabs == 5 ? 'active' : '')">Checkout</button>
             </div>
         </div>
     </div>

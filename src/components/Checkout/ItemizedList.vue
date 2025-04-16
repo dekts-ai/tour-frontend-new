@@ -56,10 +56,15 @@
             <Discount :item="item" :allItem="items" :globalTotalItem="globalTotalItem" @update-items="handleItemsUpdate" />
 
             <p class="text-start tour-packages-detail ms-4 mt-2 mb-2" v-if="seatErrors?.length">
-                <ul>
-                    <li v-for="(error, index) in seatErrors" :key="index" v-bind:class="{ 'text-danger': error[item.tour_slot_id]?.success }"><small>{{ error[item.tour_slot_id]?.message }}</small></li>
-                </ul>
+                <b>Error(s):</b>
             </p>
+            <ul>
+                <li v-for="(error, index) in seatErrors" :key="index"
+                    v-bind:class="{ 'text-danger': error[item.tour_slot_id]?.success }">
+                    <small>{{ error[item.tour_slot_id]?.message }}</small>
+                </li>
+            </ul>
+
         </div>
         <hr />
     </div>

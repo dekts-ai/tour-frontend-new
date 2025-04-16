@@ -263,8 +263,8 @@ ul {list-style: none; }
 .payment-form-sec .makeaayment-detail-wrp {background-color: rgba(255, 255, 255, 0.5); border-radius: 5px;}
 .payment-form-sec .card-detail-main hr:not([size]), 
 .payment-form-sec .card-detail-main hr {height: 3px; border-color: #d1d1d1; margin: 30px 0;}
-.payment-form-sec .makeaayment-wrap input[type="submit"] {font-size: 24px; font-weight: 700; line-height: 1; color: #333; background: rgb(255,222,132); background: linear-gradient(90deg, rgba(255,222,132,1) 0%, rgba(238,208,126,1) 100%); box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.05), -3px -4px 12px 0px rgba(0, 0, 0, 0.12) inset; height: 60px; text-align: center; width: 100%; border: none; border-radius: 5px;}
-.payment-form-sec .makeaayment-wrap input[type="submit"]:hover {background: #0373c3; color: #fff;}
+.payment-form-sec .makeapayment-btn { font-weight: 700; line-height: 1; color: #333; background: rgb(255,222,132); background: linear-gradient(90deg, rgba(255,222,132,1) 0%, rgba(238,208,126,1) 100%); box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.05), -3px -4px 12px 0px rgba(0, 0, 0, 0.12) inset; height: 40px; text-align: center; width: 100%; border: none; border-radius: 5px;}
+.payment-form-sec .makeapayment-btn:hover {background: #0373c3; color: #fff;}
 .payment-form-sec .booking-you-text {font-size: 12px; font-weight: 300; line-height: 1.2; color: #565656; margin-top: 17px; text-align: center;}
 .payment-form-sec .booking-you-text a {color: #618bda;}
 .payment-form-sec .booking-you-text a:hover {color: #333;}
@@ -547,7 +547,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .tabs-section .tabs-wrap .tabs:last-child {margin-right: 0;}
 
 .tabs-section .dropdown-toggle::after {content: none;}
-.tabs-section .hamburger-menu {position: relative; width: 26px; height: 24px; transition: .5s ease-in-out; cursor: pointer;}
+.tabs-section .hamburger-menu {position: relative; width: 26px; height: 24px; transition: .5s ease-in-out; cursor: pointer; border: none;}
 .tabs-section .hamburger-menu span {display: block; position: absolute; height: 3px; width: 100%; background: #000; border-radius: 10px; opacity: 1; left: 0; transition: .25s ease-in-out;}
 .tabs-section .hamburger-menu span:nth-child(1) {top: 2px;}
 .tabs-section .hamburger-menu span:nth-child(2), 
@@ -800,7 +800,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.payment-form-sec .secured-encryption {padding: 9px 15px;}
 	.payment-form-sec .card-detail-wrp {padding: 15px;}
 	.payment-form-sec .makeaayment-wrap {padding: 12px 30px 12px 25px;}
-	.payment-form-sec .makeaayment-wrap input[type="submit"] {height: 50px;}
+	.payment-form-sec .makeapayment-btn {height: 40px;}
 	/***** Payment Page End *****/
 
 	/***** Thank You Page Start *****/
@@ -863,7 +863,7 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 	.payment-form-sec .form-field-title {font-size: 20px; margin-bottom: 20px;}
 	.payment-form-sec .form-field-wrp {margin-bottom: 20px;}
 	.payment-form-sec .payment-text {font-size: 20px; text-align: left;}
-	.payment-form-sec .makeaayment-wrap input[type="submit"] {font-size: 20px;}
+	.payment-form-sec .makeapayment-btn {font-size: 20px;}
 	.payment-form-sec .policy-item-wrp {max-height: unset;}
 	.payment-form-sec .payment-form-notice.important-note {margin-top: -24px;}
 	.payment-form-sec .makeaayment-wrap {padding: 12px 30px 12px 13px; border-left: none;}
