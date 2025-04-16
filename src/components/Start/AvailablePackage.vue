@@ -9,7 +9,9 @@
                     </div>
                     <div class="tourselected-title-wrap">
                         <div class="tourselected-title">{{ tourPackage.package_name }}</div>
-                        <div class="tourselected-title-top">{{ tourPackage.duration }} {{ tourPackage.type }}</div>
+                        <div class="tourselected-title-top">
+                            {{ tourPackage.type !== 'Stay' ? `${tourPackage.duration} ${tourPackage.type}` : tourPackage.type }}
+                        </div>
                         <div class="what-bring-wrap">
                             <p>{{ tourPackage.short_description }}</p>
                         </div>
