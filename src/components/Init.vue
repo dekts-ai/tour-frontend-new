@@ -193,11 +193,11 @@ export default {
         };
     },
     mounted() {
-        console.log('Init.vue mounted, data properties:', {
-            is_group_rate_enabled: this.is_group_rate_enabled,
-            selectgrouppeoples: this.selectgrouppeoples,
-            has_contacts: this.has_contacts
-        });
+        // console.log('Init.vue mounted, data properties:', {
+        //     is_group_rate_enabled: this.is_group_rate_enabled,
+        //     selectgrouppeoples: this.selectgrouppeoples,
+        //     has_contacts: this.has_contacts
+        // });
     },
     computed: {
         homeUrl() {

@@ -70,7 +70,7 @@ export default {
     emits: ['edit-package', 'remove-from-cart', 'tab-change', 'book-now'],
     mounted() {
         // Debug: Log cartItem to verify data
-        console.log('InnerContentSection cartItem:', this.cartItem);
+        // console.log('InnerContentSection cartItem:', this.cartItem);
     },
     methods: {
         isPriceInfoEnabled(customFields) {

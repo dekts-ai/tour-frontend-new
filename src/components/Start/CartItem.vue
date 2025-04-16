@@ -118,8 +118,8 @@ export default {
     emits: ['edit-package', 'remove-from-cart', 'tab-change'],
     mounted() {
         // Debug: Log people_group to inspect its structure
-        console.log('CartItem item:', this.item);
-        console.log('CartItem people_group:', this.item.people_group);
+        // console.log('CartItem item:', this.item);
+        // console.log('CartItem people_group:', this.item.people_group);
     },
     methods: {
         dateFormat(date) {

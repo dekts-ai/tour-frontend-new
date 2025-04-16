@@ -323,7 +323,7 @@ export default {
         'submit'
     ],
     mounted() {
-        console.log('TourForm Mounted reference to get error log if any, refs:', this.$refs);
+        // console.log('TourForm Mounted reference to get error log if any, refs:', this.$refs);
     }
 };
 </script>
