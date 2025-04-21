@@ -298,6 +298,7 @@ export default {
         },
 
         async fetchPackageData(date, resetSlot) {
+            this.processLoader(true);
             try {
                 const { tour_operator_id, package_id, affiliate_id, tour_slot_id } = this.form;
                 const response = await axios.get(
@@ -372,6 +373,7 @@ export default {
                         paxDetails: {}
                     });
                 }
+                this.processLoader(false);
             }
         },
 
@@ -403,7 +405,6 @@ export default {
         },
 
         selectedDate(date) {
-            this.processLoader(true);
             this.reveal = false;
             this.customRateFound = false;
             Object.assign(this.form, {
