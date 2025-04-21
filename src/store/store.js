@@ -23,7 +23,8 @@ export default createStore({
         cartItem: {},
         tabs: 1,
         mindChange: 0,
-        packageOrder: []
+        packageOrder: [],
+        currency: "USD"
     },
     getters: {
         iframeStatus: state => {
@@ -82,6 +83,9 @@ export default createStore({
         },
         packageOrder: state => {
             return state.packageOrder;
+        },
+        currency: state => {
+            return state.currency;
         }
     },
     mutations: {
@@ -141,6 +145,9 @@ export default createStore({
         },
         PACKAGE_ORDER(state, packageOrder) {
             state.packageOrder = packageOrder;
+        },
+        CURRENCY(state, currency) {
+            state.currency = currency;
         }
     },
     actions: {
@@ -200,6 +207,9 @@ export default createStore({
         },
         storePackageOrder({ commit }, packageOrder) {
             commit('PACKAGE_ORDER', packageOrder);
+        },
+        storeCurrency({ commit }, currency) {
+            commit('CURRENCY', currency);
         }
     }
 });

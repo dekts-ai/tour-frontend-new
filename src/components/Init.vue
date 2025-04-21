@@ -182,7 +182,8 @@ export default {
                 phone_number: '',
                 counters: {},
                 paxDetails: {},
-                paymentIntentId: null
+                paymentIntentId: null,
+                currency: "USD"
             },
             minSeats: 0,
             maxSeats: 0,
@@ -307,6 +308,8 @@ export default {
                 this.$store.dispatch('storeTourPackage', response.data);
 
                 const tourData = response.data.tourPackageData?.[0] || {};
+                this.$store.dispatch('storeCurrency', tourData.currency || "USD");
+
                 this.tourPackageName = tourData.package_name || '';
                 this.details = {
                     tourPackageData: response.data.tourPackageData || [],
@@ -334,7 +337,8 @@ export default {
                     call_to_book: tourData.callToBook || false,
                     service_commission: affiliate_id
                         ? Number(tourData.affiliate_processing_percentage || 0)
-                        : Number(tourData.service_commission_percentage || 0)
+                        : Number(tourData.service_commission_percentage || 0),
+                    currency: tourData.currency
                 });
 
                 this.is_group_rate_enabled = tourData.is_group_rate_enabled || 0;
@@ -657,6 +661,7 @@ export default {
                 this.form.people_group = [];
                 this.form.total_people_selected = 0;
                 this.form.paxDetails = {};
+                this.errors = [];
                 this.fetchPackageData(format(this.form.date, 'yyyy-MM-dd'), false);
             }
         },
