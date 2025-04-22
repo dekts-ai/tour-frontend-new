@@ -309,6 +309,7 @@ export default {
 
                 const tourData = response.data.tourPackageData?.[0] || {};
                 this.$store.dispatch('storeCurrency', tourData.currency || "USD");
+                this.$store.dispatch('storeCountryCode', tourData.country_code || "US");
 
                 this.tourPackageName = tourData.package_name || '';
                 this.details = {
@@ -337,8 +338,7 @@ export default {
                     call_to_book: tourData.callToBook || false,
                     service_commission: affiliate_id
                         ? Number(tourData.affiliate_processing_percentage || 0)
-                        : Number(tourData.service_commission_percentage || 0),
-                    currency: tourData.currency
+                        : Number(tourData.service_commission_percentage || 0)
                 });
 
                 this.is_group_rate_enabled = tourData.is_group_rate_enabled || 0;

@@ -24,7 +24,8 @@ export default createStore({
         tabs: 1,
         mindChange: 0,
         packageOrder: [],
-        currency: "USD"
+        currency: "USD",
+        countryCode: "US"
     },
     getters: {
         iframeStatus: state => {
@@ -86,6 +87,9 @@ export default createStore({
         },
         currency: state => {
             return state.currency;
+        },
+        countryCode: state => {
+            return state.countryCode;
         }
     },
     mutations: {
@@ -148,6 +152,9 @@ export default createStore({
         },
         CURRENCY(state, currency) {
             state.currency = currency;
+        },
+        COUNTRY_CODE(state, countryCode) {
+            state.countryCode = countryCode;
         }
     },
     actions: {
@@ -210,6 +217,9 @@ export default createStore({
         },
         storeCurrency({ commit }, currency) {
             commit('CURRENCY', currency);
+        },
+        storeCountryCode({ commit }, countryCode) {
+            commit('COUNTRY_CODE', countryCode);
         }
     }
 });
