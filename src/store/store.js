@@ -23,7 +23,9 @@ export default createStore({
         cartItem: {},
         tabs: 1,
         mindChange: 0,
-        packageOrder: []
+        packageOrder: [],
+        currency: "USD",
+        countryCode: "US"
     },
     getters: {
         iframeStatus: state => {
@@ -82,6 +84,12 @@ export default createStore({
         },
         packageOrder: state => {
             return state.packageOrder;
+        },
+        currency: state => {
+            return state.currency;
+        },
+        countryCode: state => {
+            return state.countryCode;
         }
     },
     mutations: {
@@ -141,6 +149,12 @@ export default createStore({
         },
         PACKAGE_ORDER(state, packageOrder) {
             state.packageOrder = packageOrder;
+        },
+        CURRENCY(state, currency) {
+            state.currency = currency;
+        },
+        COUNTRY_CODE(state, countryCode) {
+            state.countryCode = countryCode;
         }
     },
     actions: {
@@ -200,6 +214,12 @@ export default createStore({
         },
         storePackageOrder({ commit }, packageOrder) {
             commit('PACKAGE_ORDER', packageOrder);
+        },
+        storeCurrency({ commit }, currency) {
+            commit('CURRENCY', currency);
+        },
+        storeCountryCode({ commit }, countryCode) {
+            commit('COUNTRY_CODE', countryCode);
         }
     }
 });
