@@ -15,17 +15,17 @@
             </div>
             <div class="other-details-wrap d-flex justify-content-between align-items-center">
                 <div class="title">Ticket Cost</div>
-                <div class="amount">${{ Number(item.subtotal).toFixed(2) }}</div>
+                <div class="amount">{{ currencyFormat(item.subtotal) }}</div>
             </div>
             <div class="other-details-wrap d-flex justify-content-between align-items-center"
                 v-if="item?.discount2_value > 0">
                 <div class="title">Discount</div>
                 <div class="amount"><span v-if="item?.discount2_percentage">({{ item?.discount2_percentage }}%)</span>
-                    ${{ item?.discount2_value ? Number(item?.discount2_value).toFixed(2) : Number(0).toFixed(2) }}</div>
+                    {{ item?.discount2_value ? currencyFormat(item?.discount2_value) : currencyFormat(0) }}</div>
             </div>
             <!-- <div class="other-details-wrap d-flex justify-content-between align-items-center" v-if="item?.discount2_value > 0">
             <div class="title">Subtotal</div>
-            <div class="amount">${{ Number(item.fees).toFixed(2) }}</div>	
+            <div class="amount">{{ currencyFormat(item.fees) }}</div>	
             </div> -->
             <div v-if="item?.custom_fields?.length && isPriceInfoEnabled(item?.custom_fields)">
                 <div class="ages-wrap d-flex justify-content-between align-items-center">
@@ -35,22 +35,22 @@
                     <div v-if="option.priceInfo.enabled"
                         class="other-details-wrap d-flex justify-content-between align-items-center">
                         <div class="title">{{ option.name }}</div>
-                        <div class="amount">${{ Number(option.priceInfo.price).toFixed(2) }} </div>
+                        <div class="amount">{{ currencyFormat(option.priceInfo.price) }} </div>
                     </div>
                 </div>
                 <!-- <div class="other-details-wrap d-flex justify-content-between align-items-center lemonchiffon">
                     <div class="title"><strong>Total Cost</strong></div>
-                    <div class="amount"><strong>${{ Number(item.total + item.addons_total).toFixed(2) }}</strong></div>
+                    <div class="amount"><strong>{{ currencyFormat(item.total + item.addons_total) }}</strong></div>
                 </div> -->
                 <hr class="m-1">
             </div>
             <div class="other-details-wrap d-flex justify-content-between align-items-center">
                 <div class="title">Booking Fees</div>
-                <div class="amount">${{ Number(Number(item.fees) + Number(item.addons_fee)).toFixed(2) }}</div>
+                <div class="amount">{{ currencyFormat(Number(item.fees) + Number(item.addons_fee)) }}</div>
             </div>
             <div class="other-details-wrap d-flex justify-content-between align-items-center lemonchiffon">
                 <div class="title"><strong>Tour Cost</strong></div>
-                <div class="amount">${{ Number(Number(item.total) + Number(item.addons_total) + Number(item.addons_fee)).toFixed(2) }}</div>
+                <div class="amount">{{ currencyFormat(Number(item.total) + Number(item.addons_total) + Number(item.addons_fee)) }}</div>
             </div>
 
             <Discount :item="item" :allItem="items" :globalTotalItem="globalTotalItem" @update-items="handleItemsUpdate" />
@@ -72,6 +72,7 @@
 
 <script>
 import { defaultDateFormat } from '../../utils/dateUtils';
+import { formatCurrencyIntl } from '../../utils/currency';
 import Discount from './Discount.vue';
 
 export default {
@@ -88,6 +89,9 @@ export default {
         dateFormat(date) {
             this.$store.dispatch('storeDate', date)
             return defaultDateFormat(date);
+        },
+        currencyFormat(amount) {
+            return formatCurrencyIntl(amount, this.$store.state.currency);
         },
         isPriceInfoEnabled(customFields) {
             return customFields.some(item => item.priceInfo.enabled === true);

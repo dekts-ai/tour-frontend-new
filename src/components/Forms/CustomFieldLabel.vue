@@ -4,7 +4,7 @@
         {{ str.toTitle(field.name)}}
     <div v-if="field.description !== ''" class="text-muted">{{ field.description }}</div>
     <div v-if="str.toBool(field.priceInfo.enabled)" >
-        <small>Additional Fee: ${{ Number(field.priceInfo.price).toFixed(2) }}</small>
+        <small>Additional Fee: {{ currencyFormat(field.priceInfo.price) }}</small>
     </div>
 </div>
 </template>
@@ -17,6 +17,7 @@
  */
 
 import { StringUtils } from "../../utils/stringUtils";
+import { formatCurrencyIntl } from '../../utils/currency';
 
 export default {
     name: "CustomFieldLabel",
@@ -26,5 +27,10 @@ export default {
             str: StringUtils
         }
     },
+    methods: {
+        currencyFormat(amount) {
+            return formatCurrencyIntl(amount, this.$store.state.currency);
+        },
+    }
 }
 </script>

@@ -5,16 +5,18 @@
 
             <!-- Contact Form -->
             <div class="form-field-wrp contact-form-field mb-2">
-                <FormInput label="Full Name" id="name" v-model="form.name" required icon="fa-user" placeholder="Your Name" />
+                <FormInput label="Full Name" id="name" v-model="form.name" required icon="fa-user"
+                    placeholder="Your Name" />
                 <FormPhone label="Phone Number" v-model="form.phone_number" required :phone-code="form.phone_code"
                     @update="updatePhoneNumber" />
-                <FormInput label="Email Address" id="email" v-model="form.email" required icon="fa-envelope" type="email"
-                    placeholder="Your Email Address" />
+                <FormInput label="Email Address" id="email" v-model="form.email" required icon="fa-envelope"
+                    type="email" placeholder="Your Email Address" />
                 <FormTextarea label="Comments" id="comment" v-model="form.comment" placeholder="Please type here ..." />
 
                 <FormCheckbox id="cancellations_policy" v-model="form.cancellations_policy" :showPolicy="true" required
                     label="I have read and accept all cancellations terms" @click-policy="openPolicy" />
-                <FormCheckbox id="getemailupdates" v-model="form.getemailupdates" :label="`Get future email updates from ${company_name}`" />
+                <FormCheckbox id="getemailupdates" v-model="form.getemailupdates"
+                    :label="`Get future email updates from ${company_name}`" />
             </div>
 
             <!-- Payment Section -->
@@ -52,7 +54,7 @@ export default {
     props: {
         items: Object,
         tenantId: String,
-        iframeStatus: Boolean|String,
+        iframeStatus: Boolean | String,
         errors: Array
     },
     data: () => ({
@@ -129,7 +131,7 @@ export default {
                 paymentMethodOrder: ['apple_pay', 'google_pay', 'card'], // Prioritize payment methods
                 business: { name: 'Native American Tours' },
                 wallets: { applePay: 'auto', googlePay: 'auto' },
-                defaultValues: { billingDetails: { address: { country: 'US' } } } // Set default country to United States
+                defaultValues: { billingDetails: { address: { country: this.$store.state.countryCode } } }
             };
 
             this.elements = this.stripe.elements({ clientSecret, appearance });

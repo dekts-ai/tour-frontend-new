@@ -182,7 +182,8 @@ export default {
                 phone_number: '',
                 counters: {},
                 paxDetails: {},
-                paymentIntentId: null
+                paymentIntentId: null,
+                currency: "USD"
             },
             minSeats: 0,
             maxSeats: 0,
@@ -307,6 +308,9 @@ export default {
                 this.$store.dispatch('storeTourPackage', response.data);
 
                 const tourData = response.data.tourPackageData?.[0] || {};
+                this.$store.dispatch('storeCurrency', tourData.currency || "USD");
+                this.$store.dispatch('storeCountryCode', tourData.country_code || "US");
+
                 this.tourPackageName = tourData.package_name || '';
                 this.details = {
                     tourPackageData: response.data.tourPackageData || [],
@@ -657,6 +661,7 @@ export default {
                 this.form.people_group = [];
                 this.form.total_people_selected = 0;
                 this.form.paxDetails = {};
+                this.errors = [];
                 this.fetchPackageData(format(this.form.date, 'yyyy-MM-dd'), false);
             }
         },

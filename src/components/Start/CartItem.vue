@@ -61,13 +61,13 @@
             <div class="tourselected-costcount-small-title protanopia">Tour cost:</div>
             <div class="tourselected-costcount-subitem">
                 <div class="tourselected-costcount-subitem-title">Subtotal:</div>
-                <div class="tourselected-costcount-subitem-cost">${{ Number(item.subtotal || 0).toFixed(2) }}</div>
+                <div class="tourselected-costcount-subitem-cost">{{ currencyFormat(item.subtotal || 0) }}</div>
             </div>
             <div class="tourselected-costcount-subitem" v-if="item?.discount2_value > 0">
                 <div class="tourselected-costcount-subitem-title">Discount:</div>
                 <div class="tourselected-costcount-subitem-cost">
                     <span v-if="item?.discount2_percentage">({{ item?.discount2_percentage }}%)</span>
-                    ${{ Number(item?.discount2_value || 0).toFixed(2) }}
+                    {{ currencyFormat(item?.discount2_value || 0) }}
                 </div>
             </div>
             <div v-if="item?.custom_fields?.length && isPriceInfoEnabled(item?.custom_fields)">
@@ -76,20 +76,20 @@
                     <div v-for="(option, k) in item.custom_fields.filter(f => f.priceInfo?.enabled)"
                         :key="`custom-field-${k}`" class="tourselected-costcount-subitem">
                         <div class="tourselected-costcount-subitem-title">{{ option.name }}</div>
-                        <div class="tourselected-costcount-subitem-cost">${{ Number(option.priceInfo?.price ||
-                            0).toFixed(2) }}</div>
+                        <div class="tourselected-costcount-subitem-cost">{{ currencyFormat(option.priceInfo?.price ||
+                            0) }}</div>
                     </div>
                 </div>
             </div>
             <div class="tourselected-costcount-subitem">
                 <div class="tourselected-costcount-subitem-title">Booking Fees:</div>
-                <div class="tourselected-costcount-subitem-cost">${{ (Number(item.fees || 0) + Number(item.addons_fee ||
-                    0)).toFixed(2) }}</div>
+                <div class="tourselected-costcount-subitem-cost">{{ currencyFormat(Number(item.fees || 0) + Number(item.addons_fee ||
+                    0)) }}</div>
             </div>
             <div class="tourselected-costcount-total">
                 <div class="tourselected-costcount-total-title">Tour Cost:</div>
-                <div class="tourselected-costcount-total-cost">${{ (Number(item.total || 0) + Number(item.addons_fee ||
-                    0) + Number(item.addons_total || 0)).toFixed(2) }}</div>
+                <div class="tourselected-costcount-total-cost">{{ currencyFormat(Number(item.total || 0) + Number(item.addons_fee ||
+                    0) + Number(item.addons_total || 0)) }}</div>
             </div>
             <div class="tourselected-edit-wrap">
                 <div class="tourselected-action-wrap">
@@ -112,6 +112,8 @@
 </template>
 
 <script>
+import { formatCurrencyIntl } from '../../utils/currency';
+
 export default {
     name: 'CartItem',
     props: ['item', 'firstPackageId'],
@@ -126,6 +128,9 @@ export default {
             if (!date) return '';
             const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
             return new Date(date).toLocaleDateString('en-US', options);
+        },
+        currencyFormat(amount) {
+            return formatCurrencyIntl(amount, this.$store.state.currency);
         },
         isPriceInfoEnabled(customFields) {
             return customFields?.some(item => item.priceInfo?.enabled === true) || false;

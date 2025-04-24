@@ -176,12 +176,12 @@
 																							<tr>
 																								<td>{{ item.tourists }}
 																								</td>
-																								<td>${{ item.rate }}
+																								<td>{{ currencyFormat(item.rate) }}
 																								</td>
 																								<td
 																									v-if="tourBooking.package_has_slots">
 																									{{ item.fees }}</td>
-																								<td>${{ item.total }}
+																								<td>{{ currencyFormat(item.total) }}
 																								</td>
 																							</tr>
 																						</tbody>
@@ -198,8 +198,8 @@
 																							Subtotal:</div>
 																						<div
 																							class="subtotal-item-price">
-																							${{
-																								Number(tourBooking.subtotal).toFixed(2)
+																							{{
+																								currencyFormat(tourBooking.subtotal)
 																							}}</div>
 																					</div>
 																					<div v-if="tourBooking.discount2_value > 0"
@@ -213,8 +213,8 @@
 																								v-if="tourBooking.discount2_percentage > 0">({{
 																									tourBooking.discount2_percentage
 																								}}%)</span>
-																							${{
-																								tourBooking.discount2_value
+																							{{
+																								currencyFormat(tourBooking.discount2_value)
 																							}}
 																						</div>
 																					</div>
@@ -225,10 +225,10 @@
 																							Subtotal:</div>
 																						<div
 																							class="subtotal-item-price">
-																							${{
-																								Number(tourBooking.subtotal
+																							{{
+																								currencyFormat(tourBooking.subtotal
 																									-
-																									tourBooking.discount2_value).toFixed(2)
+																									tourBooking.discount2_value)
 																							}}
 																						</div>
 																					</div>
@@ -242,8 +242,8 @@
 																								{{ addons.name }}:</div>
 																							<div
 																								class="subtotal-item-price">
-																								${{
-																									Number(addons.price).toFixed(2)
+																								{{
+																									currencyFormat(addons.price)
 																								}}
 																							</div>
 																						</div>
@@ -254,10 +254,10 @@
 																							Booking Fees:</div>
 																						<div
 																							class="subtotal-item-price">
-																							${{
-																								(Number(tourBooking.service_commission)
+																							{{
+																								currencyFormat(Number(tourBooking.service_commission)
 																									+
-																									Number(tourBooking.addons_fee)).toFixed(2)
+																									Number(tourBooking.addons_fee))
 																							}}</div>
 																					</div>
 																					<div class="subtotal-item">
@@ -266,8 +266,8 @@
 																							Booking Total:</div>
 																						<div
 																							class="subtotal-item-price">
-																							${{
-																								((Number(tourBooking.subtotal)
+																							{{
+																								currencyFormat((Number(tourBooking.subtotal)
 																									-
 																									Number(tourBooking.discount2_value))
 																									+
@@ -275,7 +275,7 @@
 																									+
 																									Number(tourBooking.addons_total)
 																									+
-																							Number(tourBooking.addons_fee)).toFixed(2)
+																							Number(tourBooking.addons_fee))
 																							}} <span>(inclusive all
 																								taxes)</span></div>
 																					</div>
@@ -322,6 +322,7 @@
 </template>
 <script>
 import axios from "axios";
+import { formatCurrencyIntl } from '../utils/currency';
 
 export default {
 	name: "Thankyou",
@@ -403,6 +404,9 @@ export default {
 		processLoader(loader) {
 			loader.hide();
 		},
+		currencyFormat(amount) {
+            return formatCurrencyIntl(amount, this.$store.state.currency);
+        },
 	},
 };
 </script>
