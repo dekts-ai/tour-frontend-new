@@ -101,7 +101,7 @@
                                         <div v-if="is_group_rate_enabled" class="package-wrap">
                                             <div class="package-name">
                                                 <div class="title">Guest's</div>
-                                                <div class="price">Navajo Nation Tax: ${{ form.selectedTax }}</div>
+                                                <div class="price">Navajo Nation Tax: {{ currencyFormat(form.selectedTax) }}</div>
                                             </div>
                                             <div class="people-count">
                                                 <div class="people">
@@ -111,7 +111,7 @@
                                                         data-testid="group-rate-select">
                                                         <option v-for="group in tourPackageRateGroups"
                                                             :value="group.size" :key="group.size">
-                                                            {{ group.size }} - ${{ group.rate }}
+                                                            {{ group.size }} - {{ currencyFormat(group.rate) }}
                                                         </option>
                                                     </select>
                                                 </div>
@@ -124,7 +124,7 @@
                                                 <div class="d-flex justify-content-between w-100">
                                                     <div class="package-name">
                                                         <div class="title">{{ tour.rate_for }}</div>
-                                                        <div class="price">${{ tour.rate }}</div>
+                                                        <div class="price">{{ currencyFormat(tour.rate) }}</div>
                                                     </div>
                                                     <div class="people-count">
                                                         <div class="people">
@@ -282,6 +282,7 @@
 </template>
 
 <script>
+import { formatCurrencyIntl } from '../../utils/currency';
 import Datepicker from 'vuejs3-datepicker';
 import CustomFields from './../Forms/CustomFields.vue';
 import Pickup from './../Hotel/Pickup.vue';
@@ -324,6 +325,11 @@ export default {
     ],
     mounted() {
         // console.log('TourForm Mounted reference to get error log if any, refs:', this.$refs);
+    },
+    methods: {
+        currencyFormat(amount) {
+            return formatCurrencyIntl(amount, this.$store.state.currency);
+        },
     }
 };
 </script>
