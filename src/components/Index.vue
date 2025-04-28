@@ -30,15 +30,15 @@ export default {
     data() {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
-            iframeStatus: false,
+            iframeStatus: true,
             tourPackageData: [],
             banner: '',
             tenantId: 'kens',
             tourOperatorId: 1,
             packageId: 0,
             affiliateId: 0,
-            comboIds: '',
-            date: null,
+            comboIds: 0,
+            date: getUTCDateFromTimeZone(),
             disabledDates: {
                 to: this.getStartDate(),
                 from: this.getEndDate(),
@@ -54,17 +54,24 @@ export default {
     async created() {
         const loader = this.$loading.show();
         try {
+            // Remove the single package cart item if exist
+            if (this.$store.state.comboIds) {
+                this.removePreviousSessionCartItems();
+            }
+
+            // Initialize from Vuex store or stored params, respecting URL intent
             this.date = format(this.$store.state.date || new Date(), 'yyyy-MM-dd');
             this.tenantId = this.$store.state.tenantId || 'kens';
             this.tourOperatorId = this.$store.state.tourOperatorId || 1;
             this.packageId = this.$store.state.packageId || 0;
             this.affiliateId = this.$store.state.affiliateId || 0;
-            this.comboIds = this.$store.state.comboIds || '';
+            this.comboIds = this.$store.state.comboIds || 0;
             this.iframeStatus = this.$store.state.iframeStatus || false;
             this.cartItem = this.$store.state.cartItem || {};
             this.cartItemLength = Object.keys(this.cartItem).length;
 
             if (this.cartItemLength) {
+                // Get package IDs from cart
                 this.checkPackageIds = Object.values(this.cartItem).map(item => parseInt(item.package_id));
             }
 
@@ -253,6 +260,19 @@ export default {
             date.setHours(23, 59, 59, 999);
             return date;
         },
+        removePreviousSessionCartItems() {            
+            const strCids = this.$store.state.comboIds.split(',');
+
+            // Filter out items whose package_id is not in strCids
+            const filteredCartItems = Object.values(this.$store.state.cartItem).filter(item => {
+                return strCids.includes(String(item.package_id));
+            });
+
+            if (filteredCartItems.length === 0) {
+                // If no matches found, empty cart
+                this.$store.dispatch('storeCartItem', {});
+            }
+        }
     },
 };
 </script>
