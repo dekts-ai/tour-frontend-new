@@ -332,7 +332,7 @@ export default {
 			idLength: 0,
 			tenantId: 'kens',
 			tourBooking: [],
-			iframeStatus: false,
+			iframeStatus: true,
 			details: [],
 			baseUrl: process.env.VUE_APP_BASE_URL,
 			data: [],

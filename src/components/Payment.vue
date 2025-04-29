@@ -215,7 +215,7 @@ export default {
       processing: false,
       bookingId: null,
       baseUrl: process.env.VUE_APP_BASE_URL,
-      iframeStatus: false,
+      iframeStatus: true,
       cartView: 0,
       details: [],
       hotels: [],

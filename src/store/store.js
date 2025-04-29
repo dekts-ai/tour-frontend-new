@@ -3,9 +3,23 @@
 import { createStore } from "vuex";
 import { getUTCDateFromTimeZone } from '../utils/dateUtils';
 
+// Plugin to persist Vuex state to localStorage
+const localStoragePlugin = store => {
+    // Restore state from localStorage on initialization
+    const savedState = localStorage.getItem('appState');
+    if (savedState) {
+        store.replaceState(Object.assign({}, store.state, JSON.parse(savedState)));
+    }
+
+    // Subscribe to store mutations to save state
+    store.subscribe((mutation, state) => {
+        localStorage.setItem('appState', JSON.stringify(state));
+    });
+};
+
 export default createStore({
     state: {
-        iframeStatus: false,
+        iframeStatus: true,
         date: getUTCDateFromTimeZone(),
         tenantId: 0,
         tourOperatorId: 0,
@@ -221,5 +235,6 @@ export default createStore({
         storeCountryCode({ commit }, countryCode) {
             commit('COUNTRY_CODE', countryCode);
         }
-    }
+    },
+    plugins: [localStoragePlugin]
 });
