@@ -104,7 +104,7 @@ export default {
     data() {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
-            iframeStatus: false,
+            iframeStatus: true,
             banner: '',
             tenantId: 'kens',
             tourOperatorId: 1,

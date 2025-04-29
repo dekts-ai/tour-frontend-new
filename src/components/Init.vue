@@ -103,7 +103,7 @@ export default {
     data() {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
-            iframeStatus: false,
+            iframeStatus: true,
             reveal: false,
             loaderInstance: null,
             packageOrder: [],

@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       baseUrl: process.env.VUE_APP_BASE_URL,
-      iframeStatus: false,
+      iframeStatus: true,
       TourOperatorLogo: null,
       tenantId: 'kens',
       tourOperatorId: 1,
@@ -31,25 +31,50 @@ export default {
     }
   },
   async created() {
+    // Parse URL parameters
     let uri = window.location.search.substring(1);
-    if (uri != '') {
-      let params = new URLSearchParams(uri);
-      this.iframeStatus = params.get("iframe") !== null ? params.get("iframe") : true;
-      this.tenantId = params.get("tid") !== null ? params.get("tid") : 'kens';
-      this.tourOperatorId = params.get("oid") !== null ? params.get("oid") : 1;
-      this.packageId = params.get("pid") !== null ? params.get("pid") : 0;
-      this.affiliateId = params.get("aid") !== null ? params.get("aid") : 0;
-      this.comboIds = params.get("cids") !== null ? params.get("cids") : 0;
-    } else {
-      this.iframeStatus = false;
-    }
+    let params = new URLSearchParams(uri);
 
+    // Load stored parameters from localStorage
+    const storedParams = JSON.parse(localStorage.getItem('urlParams') || '{}');
+
+    // Determine if URL specifies a single package (pid) or combo (cids)
+    const hasPid = params.get("pid") !== null;
+    const hasCids = params.get("cids") !== null;
+
+    // Use URL parameters if present, otherwise fall back to stored parameters or defaults
+    this.iframeStatus = params.get("iframe") !== null ? params.get("iframe") === 'true' : (storedParams.iframeStatus ?? false);
+    this.tenantId = params.get("tid") !== null ? params.get("tid") : (storedParams.tenantId ?? 'kens');
+    this.tourOperatorId = params.get("oid") !== null ? parseInt(params.get("oid")) : (storedParams.tourOperatorId ?? 1);
+    this.packageId = hasPid ? parseInt(params.get("pid")) : (hasCids ? 0 : (storedParams.packageId ?? 0));
+    this.affiliateId = params.get("aid") !== null ? parseInt(params.get("aid")) : (storedParams.affiliateId ?? 0);
+    this.comboIds = hasCids ? params.get("cids") : (hasPid ? 0 : (storedParams.comboIds ?? 0));
+
+    // Save parameters to localStorage
+    localStorage.setItem('urlParams', JSON.stringify({
+      iframeStatus: this.iframeStatus,
+      tenantId: this.tenantId,
+      tourOperatorId: this.tourOperatorId,
+      packageId: this.packageId,
+      affiliateId: this.affiliateId,
+      comboIds: this.comboIds,
+      date: this.date
+    }));
+
+    // Store parameters in Vuex
     this.$store.dispatch('storeTenantId', this.tenantId);
     this.$store.dispatch('storeTourOperatorId', this.tourOperatorId);
     this.$store.dispatch('storePackageId', this.packageId);
     this.$store.dispatch('storeAffiliateId', this.affiliateId);
     this.$store.dispatch('storeComboIds', this.comboIds);
     this.$store.dispatch('storeIframeStatus', this.iframeStatus);
+
+    // Reset cartItem for non-combo URLs
+    if (hasPid && !hasCids) {
+      console.log('App.vue');
+
+      this.$store.dispatch('storeCartItem', {});
+    }
 
     this.date = getUTCDateFromTimeZone();
     this.$store.dispatch('storeDate', this.date);

@@ -67,7 +67,7 @@ export default {
         return {
             processing: false,
             baseUrl: process.env.VUE_APP_BASE_URL,
-            iframeStatus: false,
+            iframeStatus: true,
             tenantId: null,
             tabs: 5,
             comboIds: 0,
