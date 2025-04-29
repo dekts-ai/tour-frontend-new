@@ -87,7 +87,6 @@ export default {
     },
     methods: {
         dateFormat(date) {
-            this.$store.dispatch('storeDate', date)
             return defaultDateFormat(date);
         },
         currencyFormat(amount) {
