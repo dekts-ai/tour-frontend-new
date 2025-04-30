@@ -21,7 +21,7 @@ export default createStore({
     state: {
         iframeStatus: true,
         date: getUTCDateFromTimeZone(),
-        tenantId: 0,
+        tenantId: null,
         tourOperatorId: 0,
         packageId: 0,
         affiliateId: 0,

@@ -330,7 +330,7 @@ export default {
 		return {
 			id: {},
 			idLength: 0,
-			tenantId: 'kens',
+			tenantId: null,
 			tourBooking: [],
 			iframeStatus: true,
 			details: [],

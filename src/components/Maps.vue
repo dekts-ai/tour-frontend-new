@@ -106,8 +106,8 @@ export default {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: true,
             banner: '',
-            tenantId: 'kens',
-            tourOperatorId: 1,
+            tenantId: null,
+            tourOperatorId: 0,
             comboIds: 0,
             cartItem: {},
             tabs: 4,
@@ -135,8 +135,8 @@ export default {
             this.date = this.$store.state.date
                 ? format(new Date(this.$store.state.date), 'yyyy-MM-dd')
                 : format(new Date(), 'yyyy-MM-dd');
-            this.tenantId = this.$store.state.tenantId || 'kens';
-            this.tourOperatorId = this.$store.state.tourOperatorId || 1;
+            this.tenantId = this.$store.state.tenantId || null;
+            this.tourOperatorId = this.$store.state.tourOperatorId || 0;
             this.iframeStatus = this.$store.state.iframeStatus ?? false;
             this.comboIds = this.$store.state.comboIds ?? 0;
             this.cartItem = this.$store.state.cartItem || {};
