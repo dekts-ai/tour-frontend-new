@@ -22,12 +22,12 @@ export default {
       baseUrl: process.env.VUE_APP_BASE_URL,
       iframeStatus: true,
       TourOperatorLogo: null,
-      tenantId: 'kens',
-      tourOperatorId: 1,
+      tenantId: null,
+      tourOperatorId: 0,
       packageId: 0,
       affiliateId: 0,
       comboIds: 0,
-      date: null
+      date: getUTCDateFromTimeZone()
     }
   },
   async created() {
@@ -44,8 +44,8 @@ export default {
 
     // Use URL parameters if present, otherwise fall back to stored parameters or defaults
     this.iframeStatus = params.get("iframe") !== null ? params.get("iframe") === 'true' : (storedParams.iframeStatus ?? false);
-    this.tenantId = params.get("tid") !== null ? params.get("tid") : (storedParams.tenantId ?? 'kens');
-    this.tourOperatorId = params.get("oid") !== null ? parseInt(params.get("oid")) : (storedParams.tourOperatorId ?? 1);
+    this.tenantId = params.get("tid") !== null ? params.get("tid") : (storedParams.tenantId ?? null);
+    this.tourOperatorId = params.get("oid") !== null ? parseInt(params.get("oid")) : (storedParams.tourOperatorId ?? 0);
     this.packageId = hasPid ? parseInt(params.get("pid")) : (hasCids ? 0 : (storedParams.packageId ?? 0));
     this.affiliateId = params.get("aid") !== null ? parseInt(params.get("aid")) : (storedParams.affiliateId ?? 0);
     this.comboIds = hasCids ? params.get("cids") : (hasPid ? 0 : (storedParams.comboIds ?? 0));
@@ -71,8 +71,6 @@ export default {
 
     // Reset cartItem for non-combo URLs
     if (hasPid && !hasCids) {
-      console.log('App.vue');
-
       this.$store.dispatch('storeCartItem', {});
     }
 

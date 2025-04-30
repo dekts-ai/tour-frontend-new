@@ -33,8 +33,8 @@ export default {
             iframeStatus: true,
             tourPackageData: [],
             banner: '',
-            tenantId: 'kens',
-            tourOperatorId: 1,
+            tenantId: null,
+            tourOperatorId: 0,
             packageId: 0,
             affiliateId: 0,
             comboIds: 0,
@@ -61,8 +61,8 @@ export default {
 
             // Initialize from Vuex store or stored params, respecting URL intent
             this.date = format(this.$store.state.date || new Date(), 'yyyy-MM-dd');
-            this.tenantId = this.$store.state.tenantId || 'kens';
-            this.tourOperatorId = this.$store.state.tourOperatorId || 1;
+            this.tenantId = this.$store.state.tenantId || null;
+            this.tourOperatorId = this.$store.state.tourOperatorId || 0;
             this.packageId = this.$store.state.packageId || 0;
             this.affiliateId = this.$store.state.affiliateId || 0;
             this.comboIds = this.$store.state.comboIds || 0;
