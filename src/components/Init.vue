@@ -600,8 +600,9 @@ export default {
                     this.slotNotFound = this.dateTimeArr.length > 0 ? false : true;
 
                     if (!this.staticDateRange(this.form.date, this.form.tenant_id)) {
-                        this.with_rate_groups = this.customRateFound == true ? 0 : 1;
-                        let revealFlag = this.customRateFound == true ? false : true;
+                        const validateVisibility = this.customRateFound == true && this.form.tour_slot_id == 0;
+                        this.with_rate_groups = validateVisibility ? 0 : 1;
+                        const revealFlag = validateVisibility ? false : true;
                         this.updateRateGroups(date, 0, revealFlag);
                     } else if (this.form.tour_slot_id != 0) {
                         this.updateRateGroups(date, 0, true);
@@ -790,7 +791,7 @@ export default {
 
                 if (!this.begins && !this.staticDateRange(this.form.date, this.form.tenant_id)) {
                     this.with_rate_groups = this.customRateFound == true ? 0 : 1;
-                    let revealFlag = this.customRateFound == true ? false : true;
+                    const revealFlag = this.customRateFound == true ? false : true;
                     this.updateRateGroups(date, 1, revealFlag);
                 } else {
                     this.processLoader();
