@@ -286,6 +286,7 @@ import { formatCurrencyIntl } from '../../utils/currency';
 import Datepicker from 'vuejs3-datepicker';
 import CustomFields from './../Forms/CustomFields.vue';
 import Pickup from './../Hotel/Pickup.vue';
+import { format } from 'date-fns';
 
 export default {
     name: 'TourForm',
@@ -325,6 +326,7 @@ export default {
     ],
     mounted() {
         // console.log('TourForm Mounted reference to get error log if any, refs:', this.$refs);
+        this.form.date = format(this.form.date, 'yyyy-MM-dd');
     },
     methods: {
         currencyFormat(amount) {

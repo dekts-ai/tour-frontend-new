@@ -206,7 +206,7 @@ export default {
             }
             this.$store.dispatch('storeFormData', formData);
             this.$store.dispatch('storePackageId', formData.package_id);
-            this.$store.dispatch('storeDate', formData.date);
+            this.$store.dispatch('storeDate', new Date(formData.date));
             this.$router.push({ name: 'Init' });
         },
         generateTimeSlots() {
@@ -252,7 +252,7 @@ export default {
             return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
         },
         dateFormat(date) {
-            this.$store.dispatch('storeDate', date);
+            this.$store.dispatch('storeDate', new Date(date));
             return format(date, 'EEE, MMMM dd, yyyy');
         },
         navigateToTab(tab, destination) {

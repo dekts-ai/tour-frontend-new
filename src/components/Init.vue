@@ -319,7 +319,7 @@ export default {
                 };
                 this.hotels = response.data.hotels || [];
                 this.has_contacts = tourData.has_contacts || 0;
-
+                
                 Object.assign(this.form, {
                     things_to_bring: response.data.thingsToBring || [],
                     short_description: tourData.short_description || '',
@@ -335,7 +335,7 @@ export default {
                     show_seat_availability: tourData.show_seat_availability ?? 1,
                     block_ctb_duration: tourData.block_ctb_duration || 0,
                     ctb_description: tourData.ctb_description || '',
-                    call_to_book: tourData.callToBook || false,
+                    call_to_book: response.data.callToBook || false,
                     service_commission: affiliate_id
                         ? Number(tourData.affiliate_processing_percentage || 0)
                         : Number(tourData.service_commission_percentage || 0)
@@ -662,7 +662,7 @@ export default {
                 this.form.total_people_selected = 0;
                 this.form.paxDetails = {};
                 this.errors = [];
-                this.fetchPackageData(format(this.form.date, 'yyyy-MM-dd'), false);
+                this.fetchPackageData(format(new Date(this.form.date), 'yyyy-MM-dd'), false);
             }
         },
 
@@ -721,8 +721,12 @@ export default {
         },
 
         callToBookDuration(bookDuration, timeSlot) {
+            console.log(this.form.call_to_book);
+            
             if (!this.form.call_to_book) return false;
 
+            console.log(this.form.call_to_book);
+            
             const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' }));
             const expiryTime = new Date(now.getTime() + bookDuration * 60 * 60 * 1000);
             const slotTime = new Date(`${timeSlot.date}T${timeSlot.slot_time}`);
