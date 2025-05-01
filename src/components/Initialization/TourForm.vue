@@ -28,7 +28,6 @@
                     <div class="col-12 col-lg-8 mt-4 mt-lg-1">
                         <div class="accordion booking-accordion-wrap" id="accordionExample">
                             <div v-if="
-                                reveal &&
                                 form.package_has_slots &&
                                 !begins &&
                                 !staticDateRange(form.date, form.tenant_id) &&
