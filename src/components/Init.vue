@@ -723,12 +723,8 @@ export default {
         },
 
         callToBookDuration(bookDuration, timeSlot) {
-            console.log(this.form.call_to_book);
-            
             if (!this.form.call_to_book) return false;
 
-            console.log(this.form.call_to_book);
-            
             const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' }));
             const expiryTime = new Date(now.getTime() + bookDuration * 60 * 60 * 1000);
             const slotTime = new Date(`${timeSlot.date}T${timeSlot.slot_time}`);
