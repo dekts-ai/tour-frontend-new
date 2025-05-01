@@ -14,7 +14,7 @@ import VueGoogleMaps from '@fawmi/vue-google-maps';
 const params = new URLSearchParams(window.location.search);
 const storedParams = JSON.parse(localStorage.getItem('urlParams') || '{}');
 
-const tenant = params.get("tid") || storedParams.tenantId || 'kens';
+const tenant = params.get("tid") || storedParams.tenantId;
 axios.defaults.baseURL = `https://${tenant}.${process.env.VUE_APP_API_URL}`;
 
 // Create and configure app

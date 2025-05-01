@@ -280,10 +280,12 @@ export default {
                     number: i
                 }));
 
-                if (!begins && !this.staticDateRange(this.form.date, this.form.tenant_id) && !this.customRateFound) {
-                    await this.fetchPackageData(date, resetSlot);
+                if (!begins && !this.staticDateRange(this.form.date, this.form.tenant_id)) {
+                    this.with_rate_groups = this.customRateFound == true ? 0 : 1;
+                    let revealFlag = (this.customRateFound == true && this.form.tour_slot_id === 0) ? false : true;
+                    await this.fetchPackageData(date, resetSlot, revealFlag);
                 } else if (this.form.tour_slot_id !== 0) {
-                    await this.fetchPackageData(date, resetSlot);
+                    await this.fetchPackageData(date, resetSlot, true);
                 } else {
                     this.reveal = this.customRateFound;
                     this.tourPackageName = this.customRateFound ? '' : this.tourPackageName;
@@ -298,7 +300,7 @@ export default {
             }
         },
 
-        async fetchPackageData(date, resetSlot) {
+        async fetchPackageData(date, resetSlot, revealFlag) {
             this.processLoader(true);
             try {
                 const { tour_operator_id, package_id, affiliate_id, tour_slot_id } = this.form;
@@ -319,7 +321,7 @@ export default {
                 };
                 this.hotels = response.data.hotels || [];
                 this.has_contacts = tourData.has_contacts || 0;
-
+                
                 Object.assign(this.form, {
                     things_to_bring: response.data.thingsToBring || [],
                     short_description: tourData.short_description || '',
@@ -335,7 +337,7 @@ export default {
                     show_seat_availability: tourData.show_seat_availability ?? 1,
                     block_ctb_duration: tourData.block_ctb_duration || 0,
                     ctb_description: tourData.ctb_description || '',
-                    call_to_book: tourData.callToBook || false,
+                    call_to_book: response.data.callToBook || false,
                     service_commission: affiliate_id
                         ? Number(tourData.affiliate_processing_percentage || 0)
                         : Number(tourData.service_commission_percentage || 0)
@@ -361,7 +363,7 @@ export default {
                     this.selectedSlot(this.dateTimeArr[0].Id, this.dateTimeArr[0].Time, this.dateTimeArr[0].slot_time);
                 }
 
-                this.reveal = true;
+                this.reveal = revealFlag;
             } catch (error) {
                 console.error('Failed to fetch package data:', error);
                 this.errors.push('Failed to load tour package data.');
@@ -662,7 +664,7 @@ export default {
                 this.form.total_people_selected = 0;
                 this.form.paxDetails = {};
                 this.errors = [];
-                this.fetchPackageData(format(this.form.date, 'yyyy-MM-dd'), false);
+                this.fetchPackageData(format(new Date(this.form.date), 'yyyy-MM-dd'), false, true);
             }
         },
 
@@ -721,8 +723,12 @@ export default {
         },
 
         callToBookDuration(bookDuration, timeSlot) {
+            console.log(this.form.call_to_book);
+            
             if (!this.form.call_to_book) return false;
 
+            console.log(this.form.call_to_book);
+            
             const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' }));
             const expiryTime = new Date(now.getTime() + bookDuration * 60 * 60 * 1000);
             const slotTime = new Date(`${timeSlot.date}T${timeSlot.slot_time}`);

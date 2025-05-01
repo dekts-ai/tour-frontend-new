@@ -28,7 +28,6 @@
                     <div class="col-12 col-lg-8 mt-4 mt-lg-1">
                         <div class="accordion booking-accordion-wrap" id="accordionExample">
                             <div v-if="
-                                reveal &&
                                 form.package_has_slots &&
                                 !begins &&
                                 !staticDateRange(form.date, form.tenant_id) &&
@@ -286,6 +285,7 @@ import { formatCurrencyIntl } from '../../utils/currency';
 import Datepicker from 'vuejs3-datepicker';
 import CustomFields from './../Forms/CustomFields.vue';
 import Pickup from './../Hotel/Pickup.vue';
+import { format } from 'date-fns';
 
 export default {
     name: 'TourForm',
@@ -325,6 +325,7 @@ export default {
     ],
     mounted() {
         // console.log('TourForm Mounted reference to get error log if any, refs:', this.$refs);
+        this.form.date = format(this.form.date, 'yyyy-MM-dd');
     },
     methods: {
         currencyFormat(amount) {

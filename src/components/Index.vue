@@ -14,7 +14,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
-import { getUTCDateFromTimeZone } from '../utils/dateUtils';
+import { defaultDateFormat, getUTCDateFromTimeZone } from '../utils/dateUtils';
 import BannerSection from './Start/BannerSection.vue';
 import TabsSection from './Start/TabsSection.vue';
 import InnerContentSection from './Start/InnerContentSection.vue';
@@ -38,7 +38,7 @@ export default {
             packageId: 0,
             affiliateId: 0,
             comboIds: 0,
-            date: getUTCDateFromTimeZone(),
+            date: this.$store.state.date || getUTCDateFromTimeZone(),
             disabledDates: {
                 to: this.getStartDate(),
                 from: this.getEndDate(),
@@ -60,7 +60,7 @@ export default {
             }
 
             // Initialize from Vuex store or stored params, respecting URL intent
-            this.date = format(this.$store.state.date || new Date(), 'yyyy-MM-dd');
+            this.date = format(this.date || new Date(), 'yyyy-MM-dd');
             this.tenantId = this.$store.state.tenantId || null;
             this.tourOperatorId = this.$store.state.tourOperatorId || 0;
             this.packageId = this.$store.state.packageId || 0;
@@ -180,7 +180,7 @@ export default {
             }
             this.$store.dispatch('storeFormData', formData);
             this.$store.dispatch('storePackageId', formData.package_id);
-            this.$store.dispatch('storeDate', formData.date);
+            this.$store.dispatch('storeDate', new Date(formData.date));
             this.$router.push({ name: 'Init' });
         },
         removeFromCart(formData) {
@@ -219,7 +219,7 @@ export default {
         async selectedDate(date) {
             const loader = this.$loading.show();
             this.date = date;
-            this.$store.dispatch('storeDate', date);
+            this.$store.dispatch('storeDate', new Date(date));
             const formattedDate = format(date, 'yyyy-MM-dd');
             try {
                 const url = `/tour-package/${formattedDate}/${this.tourOperatorId}/${this.packageId}/${this.affiliateId}/${this.comboIds}`;
@@ -252,7 +252,7 @@ export default {
             loader.hide();
         },
         getStartDate() {
-            return getUTCDateFromTimeZone();
+            return defaultDateFormat(new Date());
         },
         getEndDate() {
             const date = new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' }));
