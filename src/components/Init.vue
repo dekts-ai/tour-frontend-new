@@ -126,7 +126,7 @@
                                                 <div class="col-12 col-lg-8 mt-4 mt-lg-1">
                                                     <div class="accordion booking-accordion-wrap" id="accordionExample">
 
-                                                        <div v-if="reveal && form.package_has_slots && !begins && !staticDateRange(form.date, form.tenant_id) && dateTimeArr.length > 0" class="accordion-item">
+                                                        <div v-if="form.package_has_slots && !begins && !staticDateRange(form.date, form.tenant_id) && dateTimeArr.length > 0" class="accordion-item">
                                                             <div class="accordion-header" id="headingTwo">
                                                                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                                                                     Select Your Tour Time:  <span>{{ form.time_date }}</span>
@@ -599,15 +599,13 @@ export default {
 
                     this.slotNotFound = this.dateTimeArr.length > 0 ? false : true;
 
-                    if (!this.staticDateRange(this.form.date, this.form.tenant_id) && this.customRateFound == false) {
-                        this.updateRateGroups(date, 0);
+                    if (!this.staticDateRange(this.form.date, this.form.tenant_id)) {
+                        this.with_rate_groups = this.customRateFound == true ? 0 : 1;
+                        let revealFlag = this.customRateFound == true ? false : true;
+                        this.updateRateGroups(date, 0, revealFlag);
                     } else if (this.form.tour_slot_id != 0) {
-                        this.updateRateGroups(date, 0);
+                        this.updateRateGroups(date, 0, true);
                     } else {
-                        if (this.customRateFound == true) {
-                            this.reveal = true;
-                            this.tourPackageName = "";
-                        }
                         this.processLoader();
                     }
                 }).catch(error => {
@@ -617,7 +615,7 @@ export default {
                     this.processLoader();
                 });
         },
-        updateRateGroups(date, calendar = 0) {
+        updateRateGroups(date, calendar = 0, reveal = false) {
             console.log('updateRateGroups');
 
             var comboIds = 0; // Need only selected package data and it's rate groups
@@ -712,7 +710,7 @@ export default {
                         this.selectedSlot(this.dateTimeArr[0]?.Id, this.dateTimeArr[0]?.Time, this.dateTimeArr[0]?.slot_time);
                     }
 
-                    this.reveal = true;
+                    this.reveal = reveal;
                     this.processLoader();
                 }).catch(() => {
                     this.processLoader();
@@ -790,13 +788,11 @@ export default {
 
                 this.slotNotFound = this.dateTimeArr.length > 0 ? false : true;
 
-                if (!this.begins && !this.staticDateRange(this.form.date, this.form.tenant_id) && this.customRateFound == false) {
-                    this.updateRateGroups(date, 1);
+                if (!this.begins && !this.staticDateRange(this.form.date, this.form.tenant_id)) {
+                    this.with_rate_groups = this.customRateFound == true ? 0 : 1;
+                    let revealFlag = this.customRateFound == true ? false : true;
+                    this.updateRateGroups(date, 1, revealFlag);
                 } else {
-                    if (this.customRateFound == true) {
-                        this.reveal = true;
-                        this.tourPackageName = "";
-                    }
                     this.processLoader();
                 }
             }).catch(error => {
@@ -1070,7 +1066,8 @@ export default {
 
                 let date = format(this.form.date, 'yyyy-MM-dd');
 
-                this.updateRateGroups(date, 0);
+                this.with_rate_groups = 1;
+                this.updateRateGroups(date, 0, true);
             }
         },
         callToBookDuration: function (bookDuration, timeSlot) {
