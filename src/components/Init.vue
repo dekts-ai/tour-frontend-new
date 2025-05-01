@@ -351,7 +351,7 @@ export default {
                         selectedSize: this.form.selectedSize || defaultGroup.size,
                         selectedRate: this.form.selectedRate || defaultGroup.rate || 0,
                         selectedTax: this.form.selectedTax || defaultGroup.tax || 0,
-                        total_people_selected: this.form.selectedSize || 0
+                        total_people_selected: this.form.selectedSize || defaultGroup.size || 0
                     });
                 }
 
