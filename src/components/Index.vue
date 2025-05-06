@@ -38,7 +38,7 @@ export default {
             packageId: 0,
             affiliateId: 0,
             comboIds: 0,
-            date: this.$store.state.date || getUTCDateFromTimeZone(),
+            date: null,
             disabledDates: {
                 to: this.getStartDate(),
                 from: this.getEndDate(),
@@ -59,8 +59,12 @@ export default {
                 this.removePreviousSessionCartItems();
             }
 
+            // Initialize date: use stored date if not in the past, otherwise use current date
+            const storedDate = this.$store.state.date ? new Date(this.$store.state.date) : null;
+            const currentDate = getUTCDateFromTimeZone();
+            this.date = (storedDate && storedDate >= currentDate) ? format(storedDate, 'yyyy-MM-dd') : format(currentDate, 'yyyy-MM-dd');
+
             // Initialize from Vuex store or stored params, respecting URL intent
-            this.date = format(this.date || new Date(), 'yyyy-MM-dd');
             this.tenantId = this.$store.state.tenantId || null;
             this.tourOperatorId = this.$store.state.tourOperatorId || 0;
             this.packageId = this.$store.state.packageId || 0;
@@ -214,15 +218,14 @@ export default {
             });
         },
         updateDate(newDate) {
-            this.date = newDate;
+            this.date = format(newDate, 'yyyy-MM-dd');
         },
         async selectedDate(date) {
             const loader = this.$loading.show();
-            this.date = date;
+            this.date = format(date, 'yyyy-MM-dd');
             this.$store.dispatch('storeDate', new Date(date));
-            const formattedDate = format(date, 'yyyy-MM-dd');
             try {
-                const url = `/tour-package/${formattedDate}/${this.tourOperatorId}/${this.packageId}/${this.affiliateId}/${this.comboIds}`;
+                const url = `/tour-package/${this.date}/${this.tourOperatorId}/${this.packageId}/${this.affiliateId}/${this.comboIds}`;
                 const response = await axios.get(url);
                 this.$store.dispatch('storeTourPackage', response.data);
                 this.tourPackageData = response.data.tourPackageData;
