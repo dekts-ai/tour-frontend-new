@@ -116,7 +116,7 @@
                                                                             height="100" alt="" />
                                                                         <div class="content-box">
                                                                             <p class="mb-2">
-                                                                                {{ dateFormat(item.data.date) }}
+                                                                                {{ formatDate(item.data.date) }}
                                                                                 <span
                                                                                     v-if="item.data.package_has_slots">@
                                                                                     {{ item.data.time_date }}</span>
@@ -212,9 +212,11 @@ export default {
         generateTimeSlots() {
             const bookingsByDate = {};
 
+            
+            
             // Get unique sorted dates
             const dates = [...new Set(
-                Object.values(this.cartItem).map(item => format(item.date, 'yyyy-MM-dd'))
+                Object.values(this.cartItem).map(item => item.date)
             )].sort();
 
             // Initialize bookings for each date
@@ -224,7 +226,7 @@ export default {
 
             // Process cart items
             Object.values(this.cartItem).forEach(item => {
-                const currentDate = format(item.date, 'yyyy-MM-dd');
+                const currentDate = item.date;
                 const slotTime = item.slot_time;
 
                 bookingsByDate[currentDate].push({
@@ -250,10 +252,6 @@ export default {
             const period = hours >= 12 ? 'PM' : 'AM';
             const formattedHours = hours % 12 || 12;
             return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
-        },
-        dateFormat(date) {
-            this.$store.dispatch('storeDate', new Date(date));
-            return format(date, 'EEE, MMMM dd, yyyy');
         },
         navigateToTab(tab, destination) {
             if ([1, 2, 4, 5].includes(tab)) {
