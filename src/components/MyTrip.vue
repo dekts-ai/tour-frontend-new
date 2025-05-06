@@ -80,16 +80,16 @@
                                     <div class="accordion" id="accordionExample">
                                         <div class="accordion-item" v-for="(value, date, index) in bookings"
                                             :key="date">
-                                            <h2 class="accordion-header" :id="`heading-${formatDate(date)}`">
+                                            <h2 class="accordion-header" :id="`heading-${formatDate(date, true)}`">
                                                 <button class="accordion-button" :class="{ collapsed: index !== 0 }"
                                                     type="button" data-bs-toggle="collapse"
-                                                    :data-bs-target="`#collapse-${formatDate(date)}`" :aria-expanded="index === 0"
-                                                    :aria-controls="`collapse-${formatDate(date)}`">
+                                                    :data-bs-target="`#collapse-${formatDate(date, true)}`" :aria-expanded="index === 0"
+                                                    :aria-controls="`collapse-${formatDate(date, true)}`">
                                                     {{ formatDate(date) }}
                                                 </button>
                                             </h2>
-                                            <div :id="`collapse-${formatDate(date)}`" class="accordion-collapse collapse"
-                                                :class="{ show: index === 0 }" :aria-labelledby="`heading-${formatDate(date)}`"
+                                            <div :id="`collapse-${formatDate(date, true)}`" class="accordion-collapse collapse"
+                                                :class="{ show: index === 0 }" :aria-labelledby="`heading-${formatDate(date, true)}`"
                                                 data-bs-parent="#accordionExample">
                                                 <div class="accordion-body p-0">
                                                     <div class="timeline">
@@ -244,7 +244,11 @@ export default {
 
             return bookingsByDate;
         },
-        formatDate(dateString) {
+        formatDate(dateString, isClass = false) {
+            if (isClass) {
+                return format(new Date(dateString), 'yyyy-MM-dd');
+            }
+
             return format(new Date(dateString), 'EEE, MMMM d, yyyy');
         },
         formatTime(timeString) {
