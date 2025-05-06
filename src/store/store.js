@@ -8,7 +8,42 @@ const localStoragePlugin = store => {
     // Restore state from localStorage on initialization
     const savedState = localStorage.getItem('appState');
     if (savedState) {
-        store.replaceState(Object.assign({}, store.state, JSON.parse(savedState)));
+        const parsedState = JSON.parse(savedState);
+        const storedDate = parsedState.date ? new Date(parsedState.date) : null;
+        const currentDate = getUTCDateFromTimeZone();
+
+        // Check if stored date is in the past
+        if (storedDate && storedDate < currentDate) {
+            // Clear localStorage and reset state
+            localStorage.removeItem('appState');
+            localStorage.removeItem('urlParams');
+            store.replaceState({
+                iframeStatus: true,
+                date: getUTCDateFromTimeZone(),
+                tenantId: null,
+                tourOperatorId: 0,
+                packageId: 0,
+                affiliateId: 0,
+                comboIds: 0,
+                bookingIds: {},
+                formData: null,
+                tourPackage: null,
+                tourPackageLogo: null,
+                customer: null,
+                slotId: 0,
+                timeDate: null,
+                hotelId: 0,
+                cartItem: {},
+                tabs: 1,
+                mindChange: 0,
+                packageOrder: [],
+                currency: "USD",
+                countryCode: "US"
+            });
+        } else {
+            // Restore state if date is not in the past
+            store.replaceState(Object.assign({}, store.state, parsedState));
+        }
     }
 
     // Subscribe to store mutations to save state

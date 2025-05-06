@@ -8,6 +8,7 @@
 import axios from "axios";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
+import { getUTCDateFromTimeZone } from './utils/dateUtils';
 
 export default {
   name: "App",
@@ -26,7 +27,7 @@ export default {
       packageId: 0,
       affiliateId: 0,
       comboIds: 0,
-      date: this.$store.state.date || getUTCDateFromTimeZone()
+      date: null
     }
   },
   async created() {
@@ -49,6 +50,11 @@ export default {
     this.affiliateId = params.get("aid") !== null ? parseInt(params.get("aid")) : (storedParams.affiliateId ?? 0);
     this.comboIds = hasCids ? params.get("cids") : (hasPid ? 0 : (storedParams.comboIds ?? 0));
 
+    // Determine date: use stored date if not in the past, otherwise use current date
+    const storedDate = storedParams.date ? new Date(storedParams.date) : null;
+    const currentDate = getUTCDateFromTimeZone();
+    this.date = (storedDate && storedDate >= currentDate) ? storedDate : currentDate;
+
     // Save parameters to localStorage
     localStorage.setItem('urlParams', JSON.stringify({
       iframeStatus: this.iframeStatus,
@@ -67,13 +73,12 @@ export default {
     this.$store.dispatch('storeAffiliateId', this.affiliateId);
     this.$store.dispatch('storeComboIds', this.comboIds);
     this.$store.dispatch('storeIframeStatus', this.iframeStatus);
+    this.$store.dispatch('storeDate', this.date);
 
     // Reset cartItem for non-combo URLs
     if (hasPid && !hasCids) {
       this.$store.dispatch('storeCartItem', {});
     }
-    
-    this.$store.dispatch('storeDate', new Date(this.date));
 
     if (this.iframeStatus == false) {
       axios.get("/tour-operator-logo/" + this.tourOperatorId).then((response) => {
