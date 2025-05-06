@@ -78,7 +78,8 @@
                         <!-- Mobile Datepicker -->
                         <datepicker v-if="comboIds" class="d-md-none d-block" :value="date" :inline="false"
                             :disabled-dates="disabledDates" :prevent-disable-date-selection="true"
-                            @update:value="$emit('update:date', $event)" @selected="$emit('selected-date', $event)" />
+                            @update:value="$emit('update:date', $event)"
+                            @selected="$emit('selected-date', $event)" />
                     </div>
                 </div>
             </div>

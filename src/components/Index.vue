@@ -254,8 +254,8 @@ export default {
         processLoader(loader) {
             loader.hide();
         },
-        getStartDate() {
-            return defaultDateFormat(new Date());
+        getStartDate() {            
+            return new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' }));
         },
         getEndDate() {
             const date = new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' }));
