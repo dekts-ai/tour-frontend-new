@@ -80,16 +80,16 @@
                                     <div class="accordion" id="accordionExample">
                                         <div class="accordion-item" v-for="(value, date, index) in bookings"
                                             :key="date">
-                                            <h2 class="accordion-header" :id="`heading-${date}`">
+                                            <h2 class="accordion-header" :id="`heading-${formatDate(date)}`">
                                                 <button class="accordion-button" :class="{ collapsed: index !== 0 }"
                                                     type="button" data-bs-toggle="collapse"
-                                                    :data-bs-target="`#collapse-${date}`" :aria-expanded="index === 0"
-                                                    :aria-controls="`collapse-${date}`">
+                                                    :data-bs-target="`#collapse-${formatDate(date)}`" :aria-expanded="index === 0"
+                                                    :aria-controls="`collapse-${formatDate(date)}`">
                                                     {{ formatDate(date) }}
                                                 </button>
                                             </h2>
-                                            <div :id="`collapse-${date}`" class="accordion-collapse collapse"
-                                                :class="{ show: index === 0 }" :aria-labelledby="`heading-${date}`"
+                                            <div :id="`collapse-${formatDate(date)}`" class="accordion-collapse collapse"
+                                                :class="{ show: index === 0 }" :aria-labelledby="`heading-${formatDate(date)}`"
                                                 data-bs-parent="#accordionExample">
                                                 <div class="accordion-body p-0">
                                                     <div class="timeline">
