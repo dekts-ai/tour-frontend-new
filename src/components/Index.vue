@@ -62,7 +62,7 @@ export default {
             // Initialize date: use stored date if not in the past, otherwise use current date
             const storedDate = this.$store.state.date ? new Date(this.$store.state.date) : null;
             const currentDate = getUTCDateFromTimeZone();
-            this.date = (storedDate && storedDate >= currentDate) ? format(storedDate, 'yyyy-MM-dd') : format(currentDate, 'yyyy-MM-dd');
+            this.date = (storedDate && storedDate >= currentDate) ? storedDate : currentDate;
 
             // Initialize from Vuex store or stored params, respecting URL intent
             this.tenantId = this.$store.state.tenantId || null;
@@ -89,7 +89,8 @@ export default {
                 this.affiliateId = 0;
             }
 
-            const url = `/tour-package/${this.date}/${this.tourOperatorId}/${this.packageId}/${this.affiliateId}/${this.comboIds}`;
+            const formattedDate = format(this.date, 'yyyy-MM-dd');
+            const url = `/tour-package/${formattedDate}/${this.tourOperatorId}/${this.packageId}/${this.affiliateId}/${this.comboIds}`;
             const response = await axios.get(url);
             this.$store.dispatch('storeTourPackage', response.data);
             this.tourPackageData = response.data.tourPackageData;
@@ -116,6 +117,7 @@ export default {
         }
 
         this.$store.dispatch('storeTabs', this.tabs);
+        this.$store.dispatch('storeDate', this.date);
         this.$store.dispatch('storeMindChange', 0);
     },
     methods: {
@@ -218,14 +220,15 @@ export default {
             });
         },
         updateDate(newDate) {
-            this.date = format(newDate, 'yyyy-MM-dd');
+            this.date = newDate;
         },
         async selectedDate(date) {
             const loader = this.$loading.show();
             this.date = format(date, 'yyyy-MM-dd');
             this.$store.dispatch('storeDate', new Date(date));
             try {
-                const url = `/tour-package/${this.date}/${this.tourOperatorId}/${this.packageId}/${this.affiliateId}/${this.comboIds}`;
+                const formattedDate = format(this.date, 'yyyy-MM-dd');
+                const url = `/tour-package/${formattedDate}/${this.tourOperatorId}/${this.packageId}/${this.affiliateId}/${this.comboIds}`;
                 const response = await axios.get(url);
                 this.$store.dispatch('storeTourPackage', response.data);
                 this.tourPackageData = response.data.tourPackageData;
