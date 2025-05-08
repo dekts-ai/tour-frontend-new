@@ -364,6 +364,7 @@ export default {
 
 			axios.post("/package-booking-confirmed", { ids: payload }).then((response) => {
 				this.tourBooking = response.data;
+				this.$store.dispatch('storeBookingIds', {});
 				this.processLoader(loader);
 			}).catch(function (error) {
 				console.log(error);
