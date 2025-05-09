@@ -182,7 +182,6 @@ export default {
                 phone_number: '',
                 counters: {},
                 paxDetails: {},
-                paymentIntentId: null,
                 currency: "USD"
             },
             minSeats: 0,
