@@ -66,7 +66,8 @@ export default {
             getemailupdates: false,
             cancellations_policy: false,
             comment: '',
-            paymentIntentId: null
+            paymentIntentId: null,
+            stripeCustomerId: null
         },
         company_name: '',
         stripe: null,
@@ -101,7 +102,8 @@ export default {
         async initializePayment() {
             this.showLoader();
             try {
-                const { clientSecret } = await this.createPaymentIntent();
+                const { clientSecret, paymentIntentId } = await this.createPaymentIntent();
+                this.form.paymentIntentId = paymentIntentId;
                 this.setupStripeElements(clientSecret);
             } catch (error) {
                 this.handleError('Payment initialization failed', error);
@@ -177,6 +179,16 @@ export default {
 
         async checkAvailability() {
             const cartItem = this.$store.state.cartItem;
+
+            const saveCard = await axios.post('/prepare-to-save-card-on-payment-intent', {
+                name: this.form.name,
+                email: this.form.email,
+                phone_number: this.form.phone_number,
+                payment_intent_id: this.form.paymentIntentId
+            });
+
+            this.form.stripeCustomerId = saveCard.data.stripeCustomerId;
+
             const response = await axios.post('/bulk-check-available-seats', { items: cartItem });
 
             const errors = Object.entries(response.data)

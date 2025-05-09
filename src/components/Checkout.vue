@@ -98,7 +98,8 @@ export default {
             getemailupdates: 0,
             cancellations_policy: 0,
             comment: null,
-            paymentIntentId: null
+            paymentIntentId: null,
+            stripeCustomerId: null
         };
     },
     computed: {
@@ -199,6 +200,7 @@ export default {
                     getemailupdates: this.getemailupdates,
                     cancellations_policy: this.cancellations_policy,
                     payment_intent_id: this.paymentIntentId,
+                    stripe_customer_id: this.stripeCustomerId,
                     ...this.globalTotal
                 };
 
