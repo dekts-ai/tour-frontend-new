@@ -169,7 +169,7 @@ export default {
         dateFormat(date) {
             try {
                 const parsedDate = new Date(date);
-                this.$store.dispatch('storeDate', parsedDate);
+                // this.$store.dispatch('storeDate', parsedDate);
                 return parsedDate.toLocaleDateString('en-US', {
                     weekday: 'short',
                     year: 'numeric',
