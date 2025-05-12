@@ -14,3 +14,9 @@ export const defaultDateFormat = (date) => {
     var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
     return dateObj.toLocaleDateString("en-US", options);
 }
+
+export const getDateTz = (date = '') => {
+    const timezone = store.state.timezone;
+    const dateObj = date == '' ? new Date() : ((date instanceof Date) ? date : new Date(date));
+    return new Date(new Date(dateObj).toLocaleString('en-US', { timeZone: timezone }));
+}
