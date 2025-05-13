@@ -1,81 +1,15 @@
 <template>
-    <section :class="['banner-section', iframeStatus ? 'iframe-inner-banner' : 'noiframe-inner-banner']"
-        :style="{ backgroundImage: `url(${banner})` }">
-        <div class="container">
-            <div class="row">
-                <div class="col-12"></div>
-            </div>
-        </div>
-    </section>
-
-    <section class="tabs-section" v-if="iframeStatus">
-        <div class="no-container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="dropdown text-start d-md-none">
-                        <a class="hamburger-menu dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <li v-for="tab in tabsConfig" :key="`mobile-${tab.id}`">
-                                <button :class="['tabs', `tab${tab.id}`, 'dropdown-item', { active: tabs === tab.id }]"
-                                    @click="navigateToTab(tab.id, tab.route)">
-                                    {{ tab.label }}
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="tabs-wrap d-flex align-items-center w-100">
-                        <button v-for="tab in tabsConfig" :key="tab.id"
-                            :class="['tabs', `tab${tab.id}`, { active: tabs === tab.id }]"
-                            @click="navigateToTab(tab.id, tab.route)">
-                            {{ tab.label }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <section class="tabs-section">
+        <NavBtns @navigatetotab="navigateToTab" :combo-ids="comboIds" :tabs="tabs" />
     </section>
 
     <section class="inner-content-section">
-        <div :class="[iframeStatus ? 'no-container' : 'container']">
+        <div :class="['no-container']">
             <div class="background-color-sec">
                 <div class="row">
                     <div class="col-12">
-                        <div :class="['row', 'payment-row', { 'iframe-row pb-5': iframeStatus }]">
+                        <div :class="['row', 'payment-row', 'iframe-row pb-5']">
                             <div class="col-12">
-                                <div class="row booking-row pb-5" v-if="!iframeStatus">
-                                    <div class="col-lg-6 col-md-12">
-                                        <div class="booking">
-                                            <h2>Book Online</h2>
-                                            <div class="confirmation">
-                                                <img src="../assets/images/confirmation.png" alt="Confirmation" />
-                                                <p>Get Instant Confirmation</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="col-lg-6 col-md-12 text-center text-lg-end text-md-center text-sm-center">
-                                        <div class="info">
-                                            <button class="tooltipbtn btn-info" data-toggle="tooltip"
-                                                data-placement="top" title="">
-                                                Secured
-                                            </button>
-                                            <button class="tooltipbtn btn-danger" data-toggle="tooltip"
-                                                data-placement="top" title="">
-                                                Health & Safety
-                                            </button>
-                                            <button @click="navigateToTab(5, 'Checkout')" class="btn btn-warning mt-2">
-                                                <i class="fa fa-shopping-cart" aria-hidden="true"></i> Checkout
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <div class="tourlist-packages-wrap h-100">
                                     <div class="accordion" id="accordionExample">
                                         <div class="accordion-item" v-for="(value, date, index) in bookings"
@@ -153,31 +87,28 @@
 
 <script>
 import { format } from 'date-fns';
+import NavBtns from './Nav/NavBtns.vue';
 
 export default {
     name: 'MyTrip',
     title: 'Native American Tours',
+    components: {
+        NavBtns
+    },
     data() {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: true,
-            banner: '',
             tenantId: null,
             tourOperatorId: 0,
+            comboIds: 0,
             packageId: 0,
             affiliateId: 0,
             cartItem: {},
             cartItemLength: 0,
             tabs: 3,
             checkPackageIds: [],
-            bookings: {},
-            tabsConfig: [
-                { id: 1, label: 'Tours', route: 'Index' },
-                { id: 2, label: 'Schedule', route: 'Init' },
-                { id: 3, label: 'My Trip', route: '' },
-                { id: 4, label: 'Maps', route: 'Maps' },
-                { id: 5, label: 'Checkout', route: 'Checkout' },
-            ],
+            bookings: {}
         };
     },
     async created() {
@@ -193,6 +124,7 @@ export default {
             this.packageId = this.$store.state.packageId;
             this.affiliateId = this.$store.state.affiliateId;
             this.iframeStatus = this.$store.state.iframeStatus;
+            this.comboIds = this.$store.state.comboIds;
             this.cartItem = this.$store.state.cartItem;
             this.cartItemLength = Object.values(this.cartItem).length;
 
@@ -212,8 +144,6 @@ export default {
         generateTimeSlots() {
             const bookingsByDate = {};
 
-            
-            
             // Get unique sorted dates
             const dates = [...new Set(
                 Object.values(this.cartItem).map(item => item.date)
@@ -259,15 +189,12 @@ export default {
         },
         navigateToTab(tab, destination) {
             if ([1, 2, 4, 5].includes(tab)) {
-                this.handleTab(tab, destination);
+                if (tab === 2) {
+                    this.$store.dispatch('storeFormData', null);
+                }
+                this.$store.dispatch('storeMindChange', 1);
+                this.$router.push({ name: destination });
             }
-        },
-        handleTab(tab, destination) {
-            if (tab === 2) {
-                this.$store.dispatch('storeFormData', null);
-            }
-            this.$store.dispatch('storeMindChange', 1);
-            this.$router.push({ name: destination });
         },
         processLoader(loader) {
             loader.hide();

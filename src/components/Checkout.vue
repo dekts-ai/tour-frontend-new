@@ -1,34 +1,18 @@
 <template>
-    <section :class="{ 'noiframe-inner-banner': !iframeStatus, 'iframe-inner-banner': iframeStatus }"
-        class="banner-section" :style="{ backgroundImage: `url(${bannerImage})` }">
-        <div class="container">
-            <div class="row">
-                <div class="col-12"></div>
-            </div>
-        </div>
-    </section>
-
-    <section v-if="iframeStatus" class="tabs-section">
+    <section class="tabs-section">
         <NavBtns @navigatetotab="navigateToTab" :combo-ids="comboIds" :tabs="tabs" />
     </section>
 
     <section class="inner-content-section">
-        <div :class="{ container: !iframeStatus, 'no-container': iframeStatus }">
+        <div :class="['no-container']">
             <div class="background-color-sec row">
-                <div :class="{ 'row payment-row': true, 'iframe-row': iframeStatus }">
+                <div :class="['row payment-row iframe-row']">
                     <div class="col-12">
-                        <div v-if="!iframeStatus" class="row booking-row">
-                            <BookWithConfidence @navigatetotab="navigateToTab" />
-                        </div>
-
                         <div class="row payment-form-sec">
-                            <CheckoutForm @onsubmit="submit" :items="cartItem" :tenant-id="tenantId"
-                                :iframe-status="iframeStatus" :errors="errors"
+                            <CheckoutForm @onsubmit="submit" :items="cartItem" :tenant-id="tenantId" :errors="errors"
                                 @update-seat-errors="handleSeatErrorsUpdate" />
                             <div class="col-lg-5 order-1 order-md-2">
-                                <ItemizedList :items="cartItem" :global-total-item="globalTotal"
-                                    :seat-errors="seatErrors" :iframe-status="iframeStatus"
-                                    @update-items="updateItems" />
+                                <ItemizedList :items="cartItem" :global-total-item="globalTotal" :seat-errors="seatErrors" @update-items="updateItems" />
                                 <ItemTotalSummary :global-total="globalTotal" />
                             </div>
                         </div>
@@ -42,13 +26,11 @@
 <script>
 import axios from 'axios';
 import { loadStripe } from '@stripe/stripe-js';
-import { stripeCardStyle, stripeEleStyle } from '../utils/stripeUtils';
 import { CountryCodes } from '../utils/geoUtils';
 import NavBtns from './Nav/NavBtns.vue';
 import CheckoutForm from './Checkout/CheckoutForm.vue';
 import ItemizedList from './Checkout/ItemizedList.vue';
 import ItemTotalSummary from './Checkout/ItemTotalSummary.vue';
-import BookWithConfidence from './Checkout/BookWithConfidence.vue';
 
 export default {
     name: 'Checkout',
@@ -58,7 +40,6 @@ export default {
         CheckoutForm,
         ItemizedList,
         ItemTotalSummary,
-        BookWithConfidence
     },
     props: {
         // Add props if passed from parent, none currently inferred
@@ -102,15 +83,8 @@ export default {
             stripeCustomerId: null
         };
     },
-    computed: {
-        bannerImage() {
-            const tourPkgDetails = this.details.TourPkgDetails?.[0];
-            return tourPkgDetails?.HeaderOne || '';
-        }
-    },
     async mounted() {
         this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);
-        this.createAndMountFormElements();
     },
     created() {
         this.initializeFromStore();
@@ -153,11 +127,6 @@ export default {
                 item.couponErrors = item.couponErrors || [];
                 item.couponSuccess = item.couponSuccess || [];
             });
-        },
-        createAndMountFormElements() {
-            if (!this.stripe) return;
-            this.elements = this.stripe.elements(stripeEleStyle);
-            this.cardElement = this.elements.create('card', stripeCardStyle);
         },
         updateItems(updatedItems) {
             this.cartItem = updatedItems;
@@ -253,15 +222,12 @@ export default {
         },
         navigateToTab(tab, destination) {
             if ([1, 2, 3, 4].includes(tab)) {
-                this.handleTab(tab, destination);
+                if (tab === 2) {
+                    this.$store.dispatch('storeFormData', null);
+                }
+                this.$store.dispatch('storeMindChange', 1);
+                this.$router.push({ name: destination });
             }
-        },
-        handleTab(tab, destination) {
-            if (tab === 2) {
-                this.$store.dispatch('storeFormData', null);
-            }
-            this.$store.dispatch('storeMindChange', 1);
-            this.$router.push({ name: destination });
         },
         processLoader(loader) {
             this.processing = false;

@@ -1,8 +1,6 @@
 <template>
     <div class="col-lg-7 mt-lg-0 mt-md-5 mt-4 order-2 order-md-1">
         <div class="contact-wrap">
-            <div class="form-field-title" v-if="!iframeStatus">Contact:</div>
-
             <!-- Contact Form -->
             <div class="form-field-wrp contact-form-field mb-2">
                 <FormInput label="Full Name" id="name" v-model="form.name" required icon="fa-user"
@@ -54,7 +52,6 @@ export default {
     props: {
         items: Object,
         tenantId: String,
-        iframeStatus: Boolean | String,
         errors: Array
     },
     data: () => ({

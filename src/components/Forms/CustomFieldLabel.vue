@@ -1,12 +1,12 @@
 <template>
-<div>
+    <div>
         {{ str.toBool(field.required) ? "* " : " " }}
-        {{ str.toTitle(field.name)}}
-    <div v-if="field.description !== ''" class="text-muted">{{ field.description }}</div>
-    <div v-if="str.toBool(field.priceInfo.enabled)" >
-        <small>Additional Fee: {{ currencyFormat(field.priceInfo.price) }}</small>
+        {{ str.toTitle(field.name) }}
+        <div v-if="field.description !== ''" class="text-muted">{{ field.description }}</div>
+        <div v-if="str.toBool(field.priceInfo.enabled)">
+            <small>Additional Fee: {{ currencyFormat(field.priceInfo.price) }}</small>
+        </div>
     </div>
-</div>
 </template>
 
 <script>
@@ -22,7 +22,7 @@ import { formatCurrencyIntl } from '../../utils/currency';
 export default {
     name: "CustomFieldLabel",
     props: ["field"],
-    data:()=>{
+    data: () => {
         return {
             str: StringUtils
         }

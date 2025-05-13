@@ -1,30 +1,30 @@
 <template>
-    <div>
-        <banner-section :banner="banner" :iframe-status="iframeStatus" />
-        <tabs-section :iframe-status="iframeStatus" :combo-ids="comboIds" :date="date" :tabs="tabs"
-            :disabled-dates="disabledDates" @tab-change="handleTabChange" @selected-date="selectedDate"
-            @update:date="updateDate" />
-        <inner-content-section :iframe-status="iframeStatus" :cart-item="cartItem" :tour-package-data="tourPackageData"
-            :check-package-ids="checkPackageIds" :first-package-id="firstPackageId" @edit-package="editPackage"
-            @remove-from-cart="removeFromCart" @tab-change="handleTabChange" @book-now="bookNow" />
-    </div>
+    <section class="tabs-section">
+        <NavBtns @navigatetotab="handleTabChange" :combo-ids="comboIds" :tabs="tabs" />
+    </section>
+    <!-- <tabs-section :combo-ids="comboIds" :date="date" :tabs="tabs"
+        :disabled-dates="disabledDates" @tab-change="handleTabChange" @selected-date="selectedDate"
+        @update:date="updateDate" /> -->
+    <inner-content-section :cart-item="cartItem" :tour-package-data="tourPackageData"
+        :check-package-ids="checkPackageIds" :first-package-id="firstPackageId" @edit-package="editPackage"
+        @remove-from-cart="removeFromCart" @tab-change="handleTabChange" @book-now="bookNow" />
 </template>
 
 <script>
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
-import { defaultDateFormat, getUTCDateFromTimeZone } from '../utils/dateUtils';
-import BannerSection from './Start/BannerSection.vue';
-import TabsSection from './Start/TabsSection.vue';
+import { getUTCDateFromTimeZone } from '../utils/dateUtils';
+import NavBtns from './Nav/NavBtns.vue';
+// import TabsSection from './Start/TabsSection.vue';
 import InnerContentSection from './Start/InnerContentSection.vue';
 
 export default {
     name: 'Index',
     title: 'Native American Tours',
     components: {
-        BannerSection,
-        TabsSection,
+        NavBtns,
+        // TabsSection,
         InnerContentSection,
     },
     data() {
@@ -32,7 +32,6 @@ export default {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: true,
             tourPackageData: [],
-            banner: '',
             tenantId: null,
             tourOperatorId: 0,
             packageId: 0,
@@ -48,7 +47,7 @@ export default {
             tabs: 1,
             checkPackageIds: [],
             firstPackageId: 0,
-            firstPackageName: 'lower antelope canyon tour',
+            firstPackageName: '',
         };
     },
     async created() {
@@ -94,7 +93,6 @@ export default {
             const response = await axios.get(url);
             this.$store.dispatch('storeTourPackage', response.data);
             this.tourPackageData = response.data.tourPackageData;
-            this.banner = this.tourPackageData[0]?.HeaderOne || '';
             if (this.comboIds) {
                 const strCids = this.comboIds.split(',');
                 this.firstPackageId = parseInt(strCids[0]) || 0;
@@ -111,7 +109,6 @@ export default {
                 showConfirmButton: false,
             });
             this.tourPackageData = [];
-            this.banner = '';
         } finally {
             this.processLoader(loader);
         }
@@ -120,7 +117,7 @@ export default {
         this.$store.dispatch('storeMindChange', 0);
     },
     methods: {
-        handleTabChange({ tab, destination }) {
+        handleTabChange(tab, destination) {
             if (tab === 1 || tab === 3 || tab === 4 || tab === 5) {
                 this.handleTab(tab, destination);
             }
@@ -230,7 +227,6 @@ export default {
                 const response = await axios.get(url);
                 this.$store.dispatch('storeTourPackage', response.data);
                 this.tourPackageData = response.data.tourPackageData;
-                this.banner = this.tourPackageData[0]?.HeaderOne || '';
                 if (this.comboIds) {
                     const strCids = this.comboIds.split(',');
                     this.firstPackageId = parseInt(strCids[0]) || 0;
@@ -247,7 +243,6 @@ export default {
                     showConfirmButton: false,
                 });
                 this.tourPackageData = [];
-                this.banner = '';
             } finally {
                 this.processLoader(loader);
             }

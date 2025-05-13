@@ -1,7 +1,5 @@
 <template>
     <div>
-        <div class="form-field-title mt-md-0 mt-3" v-if="iframeStatus == false">Tour Cost:</div>
-
         <div class="total-cost-wrap" v-for="item in items" :key="item.tour_slot_id">
             <div class="title-wrap">
                 <div class="title">{{ item.package_name }}</div>
@@ -77,7 +75,7 @@ import Discount from './Discount.vue';
 
 export default {
     name: "ItemizedList",
-    props: ["items", "globalTotalItem", "seatErrors", "iframeStatus"],
+    props: ["items", "globalTotalItem", "seatErrors"],
     components: {
         Discount,
     },

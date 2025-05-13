@@ -1,51 +1,15 @@
 <template>
-    <section :class="{ 'noiframe-inner-banner': !iframeStatus, 'iframe-inner-banner': iframeStatus }"
-        class="banner-section" :style="{ backgroundImage: `url(${banner})` }">
-        <div class="container">
-            <div class="row"></div>
-        </div>
-    </section>
-
-    <section v-if="iframeStatus" class="tabs-section">
+    <section class="tabs-section">
         <NavBtns @navigatetotab="navigateToTab" :combo-ids="comboIds" :tabs="tabs" />
     </section>
 
     <section class="inner-content-section">
-        <div :class="{ container: !iframeStatus, 'no-container': iframeStatus }">
+        <div :class="['no-container']">
             <div class="background-color-sec">
                 <div class="row">
                     <div class="col-12">
-                        <div :class="{ 'row payment-row': true, 'iframe-row': iframeStatus }">
+                        <div :class="['row payment-row iframe-row']">
                             <div class="col-12">
-                                <div v-if="!iframeStatus" class="row booking-row">
-                                    <div class="col-lg-6 col-md-12">
-                                        <div class="booking">
-                                            <h2>Book Online</h2>
-                                            <div class="confirmation">
-                                                <img src="../assets/images/confirmation.png" alt="Confirmation" />
-                                                <p>Get Instant Confirmation</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="col-lg-6 col-md-12 text-center text-lg-end text-md-center text-sm-center">
-                                        <div class="info">
-                                            <button class="tooltipbtn btn-info" data-toggle="tooltip"
-                                                data-placement="top" title="Secured">
-                                                Secured
-                                            </button>
-                                            <button class="tooltipbtn btn-danger" data-toggle="tooltip"
-                                                data-placement="top" title="Health & Safety">
-                                                Health & Safety
-                                            </button>
-                                            <button @click="navigateToTab(5, 'Checkout')" class="btn btn-warning mt-2"
-                                                aria-label="Checkout" data-testid="checkout-button">
-                                                <i class="fa fa-shopping-cart" aria-hidden="true"></i> Checkout
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <div class="tourlist-packages-wrap">
                                     <GMapMap :center="center" ref="mapRef" :zoom="10" class="tour-map"
                                         :options="mapOptions" data-testid="tour-map">
@@ -105,7 +69,6 @@ export default {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: true,
-            banner: '',
             tenantId: null,
             tourOperatorId: 0,
             comboIds: 0,
@@ -137,7 +100,7 @@ export default {
                 : format(new Date(), 'yyyy-MM-dd');
             this.tenantId = this.$store.state.tenantId || null;
             this.tourOperatorId = this.$store.state.tourOperatorId || 0;
-            this.iframeStatus = this.$store.state.iframeStatus ?? false;
+            this.iframeStatus = this.$store.state.iframeStatus;
             this.comboIds = this.$store.state.comboIds ?? 0;
             this.cartItem = this.$store.state.cartItem || {};
         },

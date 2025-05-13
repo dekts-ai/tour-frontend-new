@@ -1,15 +1,6 @@
 <template>
-    <section :class="[(iframeStatus == false) ? 'noiframe-inner-banner' : 'iframe-inner-banner', '']" class="banner-section"
-        v-bind:style="{ 'background-image': 'url(' + banner + ')' }">
-        <div class="container">
-            <div class="row">
-                <div class="col-12"></div>
-            </div>
-        </div>
-    </section>
-
     <section class="inner-content-section" style="background: none !important;">
-        <div :class="[(iframeStatus == false) ? 'container' : 'no-container', '']">
+        <div :class="['no-container', '']">
             <div class="background-color-sec" style="background: #e7e7e7;">
                 
             </div>
@@ -24,8 +15,6 @@ import Swal from 'sweetalert2';
 export default {
     data() {
         return {
-            banner: "",
-            iframeStatus: true,
             loading: true,
         };
     },
