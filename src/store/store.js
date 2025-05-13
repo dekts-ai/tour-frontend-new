@@ -10,7 +10,7 @@ const localStoragePlugin = store => {
     if (savedState) {
         const parsedState = JSON.parse(savedState);
         const storedDate = parsedState.date ? new Date(parsedState.date) : null;
-        const currentDate = getUTCDateFromTimeZone();
+        const currentDate = getUTCDateFromTimeZone(parsedState.timezone);
 
         // Check if stored date is in the past
         if (storedDate && storedDate < currentDate) {
@@ -19,7 +19,7 @@ const localStoragePlugin = store => {
             localStorage.removeItem('urlParams');
             store.replaceState({
                 iframeStatus: true,
-                date: getUTCDateFromTimeZone(),
+                date: getUTCDateFromTimeZone(parsedState.timezone),
                 tenantId: null,
                 tourOperatorId: 0,
                 packageId: 0,
@@ -38,7 +38,8 @@ const localStoragePlugin = store => {
                 mindChange: 0,
                 packageOrder: [],
                 currency: "USD",
-                countryCode: "US"
+                countryCode: "US",
+                timezone: "America/Phoenix"
             });
         } else {
             // Restore state if date is not in the past
@@ -74,7 +75,8 @@ export default createStore({
         mindChange: 0,
         packageOrder: [],
         currency: "USD",
-        countryCode: "US"
+        countryCode: "US",
+        timezone: "America/Phoenix"
     },
     getters: {
         iframeStatus: state => {
@@ -139,6 +141,9 @@ export default createStore({
         },
         countryCode: state => {
             return state.countryCode;
+        },
+        timezone: state => {
+            return state.timezone;
         }
     },
     mutations: {
@@ -204,6 +209,9 @@ export default createStore({
         },
         COUNTRY_CODE(state, countryCode) {
             state.countryCode = countryCode;
+        },
+        TIMEZONE(state, timezone) {
+            state.timezone = timezone;
         }
     },
     actions: {
@@ -269,6 +277,9 @@ export default createStore({
         },
         storeCountryCode({ commit }, countryCode) {
             commit('COUNTRY_CODE', countryCode);
+        },
+        storeTimezone({ commit }, timezone) {
+            commit('TIMEZONE', timezone);
         }
     },
     plugins: [localStoragePlugin]
