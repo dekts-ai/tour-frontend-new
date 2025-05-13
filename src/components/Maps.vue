@@ -100,7 +100,7 @@ export default {
                 : format(new Date(), 'yyyy-MM-dd');
             this.tenantId = this.$store.state.tenantId || null;
             this.tourOperatorId = this.$store.state.tourOperatorId || 0;
-            this.iframeStatus = this.$store.state.iframeStatus ?? false;
+            this.iframeStatus = this.$store.state.iframeStatus;
             this.comboIds = this.$store.state.comboIds ?? 0;
             this.cartItem = this.$store.state.cartItem || {};
         },

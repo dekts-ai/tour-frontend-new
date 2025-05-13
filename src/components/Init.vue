@@ -176,7 +176,7 @@ export default {
             this.comboIds = state.comboIds ?? 0;
             this.cartItem = state.cartItem || {};
             this.cartItemLength = Object.keys(this.cartItem).length;
-            this.iframeStatus = state.iframeStatus ?? false;
+            this.iframeStatus = state.iframeStatus;
 
             const storedForm = state.formData;
             const defaultForm = {
