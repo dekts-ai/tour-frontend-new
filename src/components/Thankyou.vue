@@ -1,43 +1,10 @@
 <template>
-	<section :class="[(iframeStatus == false) ? 'noiframe-inner-banner' : 'iframe-inner-banner', '']"
-		v-for="TourPkgDetails in details.TourPkgDetails" :key="TourPkgDetails.pkg_rate_id" class="banner-section"
-		v-bind:style="{ 'background-image': 'url(' + TourPkgDetails.HeaderOne + ')' }">
-		<div class="container">
-			<div class="row">
-				<div class="col-12"></div>
-			</div>
-		</div>
-	</section>
-
 	<section class="inner-content-section">
-		<div :class="[iframeStatus ? 'no-container' : 'container', '']">
+		<div :class="['no-container']">
 			<div class="background-color-sec">
 				<div class="row">
 					<div class="col-12">
-						<div class="row bradcumb-row" v-if="iframeStatus == false">
-							<div class="col-12">
-								<div class="bradcumb-main">
-									<ul>
-										<li class="home">
-											<a v-if="iframeStatus && data.package_id && affiliate_id"
-												:href="`${baseUrl}?tid=${data.tenant_id}&oid=${data.tour_operator_id}&pid=${data.package_id}&aid=${affiliate_id}&iframe=${iframeStatus}`">
-												Home
-											</a>
-											<a v-else-if="iframeStatus && data.package_id"
-												:href="`${baseUrl}?tid=${data.tenant_id}&oid=${data.tour_operator_id}&pid=${data.package_id}&iframe=${iframeStatus}`">
-												Home
-											</a>
-											<a v-else :href="`${baseUrl}`">
-												Home
-											</a>
-										</li>
-										<li>Lower Antelope Canyon Hiking Tour</li>
-									</ul>
-								</div>
-								<hr class="sep1" />
-							</div>
-						</div>
-						<div :class="[iframeStatus ? 'row thankyou-main-row iframe-row' : 'row thankyou-main-row', '']">
+						<div :class="['row thankyou-main-row iframe-row']">
 							<div class="col-12">
 								<div class="row status-bar-row">
 									<div class="col-12">
@@ -299,13 +266,6 @@
 																	tourBooking.data[0].company_number }}</a>
 															</p>
 														</div>
-														<ul v-if="iframeStatus == false">
-															<li>
-																<a class="mind-change" @click="mindChange()">
-																	Home Page
-																</a>
-															</li>
-														</ul>
 													</div>
 												</div>
 											</div>
@@ -370,37 +330,6 @@ export default {
 				console.log(error);
 				self.processLoader(loader);
 			});
-		},
-		mindChange() {
-			var routeData = this.tourBooking?.data ? this.tourBooking?.data[0] : null;
-
-			if (this.iframeStatus && routeData && routeData.is_affiliate == 'Yes') {
-				this.$store.dispatch('storePackageId', routeData.package_id)
-				this.$store.dispatch('storeAffiliateId', routeData.customer_id)
-
-				this.$router.push({
-					name: "Init",
-					query: {
-						iframe: this.iframeStatus,
-						tid: routeData.tenant_id,
-						oid: routeData.tour_operator_id,
-						pid: routeData.package_id,
-						aid: routeData.customer_id
-					}
-				});
-			} else if (this.iframeStatus && routeData && routeData?.tenant_id) {
-				this.$store.dispatch('storePackageId', routeData.package_id)
-
-				this.$router.push({
-					name: "Init",
-					query: {
-						iframe: this.iframeStatus,
-						tid: routeData.tenant_id,
-						oid: routeData.tour_operator_id,
-						pid: routeData.package_id
-					}
-				});
-			}
 		},
 		processLoader(loader) {
 			loader.hide();

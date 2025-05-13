@@ -1,6 +1,6 @@
 <template>
   <section class="inner-content-section">
-    <div :class="[(iframeStatus == false) ? 'container' : 'no-container', '']">
+    <div :class="['no-container']">
       <div class="background-color-sec">
         <div class="row footer-row align-items-center">
           <div class="col-md-6 text-start col-start">
@@ -17,12 +17,6 @@
 
 <script>
 export default {
-  name: "Footer",
-  props: ["iframeStatus", "TourOperatorLogo"],
-  data() {
-    return {
-      baseUrl: process.env.VUE_APP_BASE_URL
-    }
-  }
+  name: "Footer"
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <section v-if="iframeStatus" class="tabs-section">
+    <section class="tabs-section">
         <NavBtns @navigatetotab="navigateToTab" :combo-ids="comboIds" :tabs="tabs" />
     </section>
 </template>
@@ -12,6 +12,6 @@ export default {
     components: {
         NavBtns
     },
-    props: ['iframeStatus', 'comboIds', 'tabs', 'navigateToTab']
+    props: ['comboIds', 'tabs', 'navigateToTab']
 };
 </script>

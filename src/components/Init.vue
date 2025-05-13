@@ -1,80 +1,58 @@
 <template>
-    <div>
-        <BannerSection 
-            :tour-package-data="details.tourPackageData" 
-            :iframe-status="iframeStatus" 
-        />
+    <section class="tabs-section">
+        <NavBtns @navigatetotab="navigateToTab" :combo-ids="comboIds" :tabs="tabs" />
+    </section>
 
-        <TabsSection 
-            :iframe-status="iframeStatus" 
-            :combo-ids="comboIds" 
-            :tabs="tabs"
-            :navigate-to-tab="navigateToTab" 
-        />
+    <section class="inner-content-section">
+        <div :class="['no-container']">
+            <div class="background-color-sec">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row payment-row">
+                            <div class="col-12">
+                                <TourForm 
+                                    ref="TourForm" 
+                                    :form="form" 
+                                    :disabled-dates="disabledDates"
+                                    :prevent-disable-date-selection="preventDisableDateSelection" 
+                                    :begins="begins"
+                                    :slot-not-found="slotNotFound" 
+                                    :date-time-arr="dateTimeArr" 
+                                    :reveal="reveal"
+                                    :tour-package-name="tourPackageName" 
+                                    :hotels="hotels" 
+                                    :errors="errors"
+                                    :is_group_rate_enabled="is_group_rate_enabled"
+                                    :tour-package-rate-groups="details.tourPackageRateGroups"
+                                    :selectgrouppeoples="selectgrouppeoples" 
+                                    :has_contacts="has_contacts"
+                                    :static-date-range="staticDateRange" 
+                                    :selected-date="selectedDate"
+                                    :call-to-book-validation="callToBookValidation"
+                                    :open-phone-popup="openPhonePopup" 
+                                    :selected-slot="selectedSlot"
+                                    :is-disabled="isDisabled"
+                                    :handle-group-rate-discount-change="handleGroupRateDiscountChange"
+                                    :increment="increment" 
+                                    :decrement="decrement"
+                                    :update-pax-detail="updatePaxDetail" 
+                                    :remove-pax="removePax"
+                                    :has-custom-form-fields="hasCustomFormFields" 
+                                    :submit="submit" 
+                                />
 
-        <section class="inner-content-section">
-            <div :class="{ container: !iframeStatus, 'no-container': iframeStatus }">
-                <div class="background-color-sec">
-                    <div class="row">
-                        <div class="col-12">
-                            <Breadcrumb 
-                                :iframe-status="iframeStatus" 
-                                :home-url="homeUrl" 
-                                :package-id="form.package_id"
-                                :tour-package-name="tourPackageName" 
-                            />
-
-                            <div class="row payment-row">
-                                <div class="col-12">
-                                    <BookingInfo 
-                                        :iframe-status="iframeStatus" 
-                                        :navigate-to-tab="navigateToTab" 
-                                    />
-
-                                    <TourForm 
-                                        ref="TourForm" 
-                                        :form="form" 
-                                        :disabled-dates="disabledDates"
-                                        :prevent-disable-date-selection="preventDisableDateSelection" 
-                                        :begins="begins"
-                                        :slot-not-found="slotNotFound" 
-                                        :date-time-arr="dateTimeArr" 
-                                        :reveal="reveal"
-                                        :tour-package-name="tourPackageName" 
-                                        :hotels="hotels" 
-                                        :errors="errors"
-                                        :is_group_rate_enabled="is_group_rate_enabled"
-                                        :tour-package-rate-groups="details.tourPackageRateGroups"
-                                        :selectgrouppeoples="selectgrouppeoples" 
-                                        :has_contacts="has_contacts"
-                                        :static-date-range="staticDateRange" 
-                                        :selected-date="selectedDate"
-                                        :call-to-book-validation="callToBookValidation"
-                                        :open-phone-popup="openPhonePopup" 
-                                        :selected-slot="selectedSlot"
-                                        :is-disabled="isDisabled"
-                                        :handle-group-rate-discount-change="handleGroupRateDiscountChange"
-                                        :increment="increment" 
-                                        :decrement="decrement"
-                                        :update-pax-detail="updatePaxDetail" 
-                                        :remove-pax="removePax"
-                                        :has-custom-form-fields="hasCustomFormFields" 
-                                        :submit="submit" 
-                                    />
-
-                                    <TourDetails 
-                                        :tour-package-data="details.tourPackageData" 
-                                        :form="form"
-                                        :things-to-bring="details.thingsToBring" 
-                                    />
-                                </div>
+                                <TourDetails 
+                                    :tour-package-data="details.tourPackageData" 
+                                    :form="form"
+                                    :things-to-bring="details.thingsToBring" 
+                                />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
 </template>
 
 <script>
@@ -82,10 +60,7 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { getDateTz, getUTCDateFromTimeZone } from '../utils/dateUtils';
 import Swal from 'sweetalert2';
-import BannerSection from './Initialization/BannerSection.vue';
-import TabsSection from './Initialization/TabsSection.vue';
-import Breadcrumb from './Initialization/Breadcrumb.vue';
-import BookingInfo from './Initialization/BookingInfo.vue';
+import NavBtns from './Nav/NavBtns.vue';
 import TourForm from './Initialization/TourForm.vue';
 import TourDetails from './Initialization/TourDetails.vue';
 
@@ -93,10 +68,7 @@ export default {
     name: 'Init',
     title: 'Native American Tours',
     components: {
-        BannerSection,
-        TabsSection,
-        Breadcrumb,
-        BookingInfo,
+        NavBtns,
         TourForm,
         TourDetails
     },
@@ -128,7 +100,6 @@ export default {
             errors: [],
             customFieldExists: false,
             form: {
-                iframeStatusInfo: false,
                 tenant_id: '',
                 tour_operator_id: 0,
                 package_id: 0,
@@ -191,25 +162,6 @@ export default {
             has_contacts: 0,
             tabs: 2
         };
-    },
-    mounted() {
-        // console.log('Init.vue mounted, data properties:', {
-        //     is_group_rate_enabled: this.is_group_rate_enabled,
-        //     selectgrouppeoples: this.selectgrouppeoples,
-        //     has_contacts: this.has_contacts
-        // });
-    },
-    computed: {
-        homeUrl() {
-            const { tenant_id, tour_operator_id, package_id, affiliate_id, comboIds, iframeStatus } = this.form;
-            let url = this.baseUrl;
-            if (iframeStatus) {
-                url += `?tid=${tenant_id}&oid=${tour_operator_id}&pid=${package_id}&cids=${comboIds}`;
-                if (affiliate_id) url += `&aid=${affiliate_id}`;
-                url += `&iframe=${iframeStatus}`;
-            }
-            return url;
-        }
     },
     created() {
         this.initializeFromStore();
@@ -517,7 +469,6 @@ export default {
                         calculation: paxSubtotalArr,
                         rate_group: rateGroupArr,
                         people_group: groupPaxArr,
-                        iframeStatusInfo: this.iframeStatus,
                         package_name: this.tourPackageName
                     });
                     await this.addToCart();

@@ -1,12 +1,10 @@
 <template>
-  <Header :iframeStatus="iframeStatus" :TourOperatorLogo="TourOperatorLogo"></Header>
   <router-view></router-view>
-  <Footer :iframeStatus="iframeStatus" :TourOperatorLogo="TourOperatorLogo"></Footer>
+  <Footer></Footer>
 </template>
 
 <script>
 import axios from "axios";
-import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import { getUTCDateFromTimeZone } from './utils/dateUtils';
 
@@ -14,14 +12,11 @@ export default {
   name: "App",
   title: "Native American Tours",
   components: {
-    Header,
     Footer
   },
   data() {
     return {
-      baseUrl: process.env.VUE_APP_BASE_URL,
       iframeStatus: true,
-      TourOperatorLogo: null,
       tenantId: null,
       tourOperatorId: 0,
       packageId: 0,
@@ -52,7 +47,6 @@ export default {
     this.comboIds = hasCids ? params.get("cids") : (hasPid ? 0 : (storedParams.comboIds ?? 0));
 
     axios.get("/tour-operator-logo/" + this.tourOperatorId).then((response) => {
-      this.TourOperatorLogo = response.data.TourOperatorLogo;
       this.timezone = response.data.timezone;
     });
 

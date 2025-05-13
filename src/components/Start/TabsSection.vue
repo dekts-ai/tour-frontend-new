@@ -1,5 +1,5 @@
 <template>
-    <section v-if="iframeStatus" class="tabs-section">
+    <section class="tabs-section">
         <div class="no-container padding-sec">
             <div class="row">
                 <div class="col-12">
@@ -95,7 +95,7 @@ export default {
     components: {
         Datepicker,
     },
-    props: ['iframeStatus', 'comboIds', 'date', 'tabs', 'disabledDates'],
+    props: ['comboIds', 'date', 'tabs', 'disabledDates'],
     emits: ['update:date', 'selected-date', 'tab-change'],
 };
 </script>
