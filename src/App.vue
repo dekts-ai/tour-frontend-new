@@ -27,7 +27,8 @@ export default {
       packageId: 0,
       affiliateId: 0,
       comboIds: 0,
-      date: null
+      date: null,
+      timezone: "America/Phoenix"
     }
   },
   async created() {
@@ -50,9 +51,14 @@ export default {
     this.affiliateId = params.get("aid") !== null ? parseInt(params.get("aid")) : (storedParams.affiliateId ?? 0);
     this.comboIds = hasCids ? params.get("cids") : (hasPid ? 0 : (storedParams.comboIds ?? 0));
 
+    axios.get("/tour-operator-logo/" + this.tourOperatorId).then((response) => {
+      this.TourOperatorLogo = response.data.TourOperatorLogo;
+      this.timezone = response.data.timezone;
+    });
+
     // Determine date: use stored date if not in the past, otherwise use current date
     const storedDate = storedParams.date ? new Date(storedParams.date) : null;
-    const currentDate = getUTCDateFromTimeZone();
+    const currentDate = getUTCDateFromTimeZone(this.timezone);
     this.date = (storedDate && storedDate >= currentDate) ? storedDate : currentDate;
 
     // Save parameters to localStorage
@@ -74,16 +80,11 @@ export default {
     this.$store.dispatch('storeComboIds', this.comboIds);
     this.$store.dispatch('storeIframeStatus', this.iframeStatus);
     this.$store.dispatch('storeDate', this.date);
+    this.$store.dispatch('storeTimezone', this.timezone);
 
     // Reset cartItem for non-combo URLs
     if (hasPid && !hasCids) {
       this.$store.dispatch('storeCartItem', {});
-    }
-
-    if (this.iframeStatus == false) {
-      axios.get("/tour-operator-logo/" + this.tourOperatorId).then((response) => {
-        this.TourOperatorLogo = response.data.TourOperatorLogo;
-      });
     }
   }
 };

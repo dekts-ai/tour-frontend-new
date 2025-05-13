@@ -60,8 +60,9 @@ export default {
             }
 
             // Initialize date: use stored date if not in the past, otherwise use current date
+            const timezone = this.$store.state.timezone;
             const storedDate = this.$store.state.date ? new Date(this.$store.state.date) : null;
-            const currentDate = getUTCDateFromTimeZone();
+            const currentDate = getUTCDateFromTimeZone(timezone);
             this.date = (storedDate && storedDate >= currentDate) ? format(storedDate, 'yyyy-MM-dd') : format(currentDate, 'yyyy-MM-dd');
 
             // Initialize from Vuex store or stored params, respecting URL intent

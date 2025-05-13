@@ -10,7 +10,7 @@ const localStoragePlugin = store => {
     if (savedState) {
         const parsedState = JSON.parse(savedState);
         const storedDate = parsedState.date ? new Date(parsedState.date) : null;
-        const currentDate = getUTCDateFromTimeZone();
+        const currentDate = getUTCDateFromTimeZone(parsedState.timezone);
 
         // Check if stored date is in the past
         if (storedDate && storedDate < currentDate) {
@@ -19,7 +19,7 @@ const localStoragePlugin = store => {
             localStorage.removeItem('urlParams');
             store.replaceState({
                 iframeStatus: true,
-                date: getUTCDateFromTimeZone(),
+                date: getUTCDateFromTimeZone(parsedState.timezone),
                 tenantId: null,
                 tourOperatorId: 0,
                 packageId: 0,

@@ -80,7 +80,7 @@
 <script>
 import axios from 'axios';
 import { format } from 'date-fns';
-import { getUTCDateFromTimeZone } from '../utils/dateUtils';
+import { getDateTz, getUTCDateFromTimeZone } from '../utils/dateUtils';
 import Swal from 'sweetalert2';
 import BannerSection from './Initialization/BannerSection.vue';
 import TabsSection from './Initialization/TabsSection.vue';
@@ -139,8 +139,8 @@ export default {
                 hotel_name: '',
                 hotel_image: '',
                 hotel_address: '',
-                timezone: 'US/Arizona',
-                date: getUTCDateFromTimeZone(),
+                timezone: this.$store.state.timezone,
+                date: getUTCDateFromTimeZone(this.$store.state.timezone),
                 time_date: null,
                 total_people_selected: 0,
                 people_group: [],
@@ -724,7 +724,7 @@ export default {
         callToBookDuration(bookDuration, timeSlot) {
             if (!this.form.call_to_book) return false;
 
-            const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' }));
+            const now = getDateTz(new Date(), this.form.timezone);
             const expiryTime = new Date(now.getTime() + bookDuration * 60 * 60 * 1000);
             const slotTime = new Date(`${timeSlot.date}T${timeSlot.slot_time}`);
             return slotTime < expiryTime;
@@ -820,12 +820,12 @@ export default {
         },
 
         getStartDate() {
-            return getUTCDateFromTimeZone();
+            return getUTCDateFromTimeZone(this.$store.state.timezone);
         },
 
         getEndDate() {
             const date = new Date(
-                new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' })).getFullYear() + 1,
+                getDateTz(new Date(), this.$store.state.timezone).getFullYear() + 1,
                 11,
                 31
             );
