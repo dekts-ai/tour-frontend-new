@@ -181,7 +181,7 @@ export default {
                     return;
                 }
 
-                this.bookingIds = response.data.bookingIds || response.data.BookingIds;
+                this.bookingIds = response.data.bookingIds;
                 this.$store.dispatch('storeBookingIds', this.bookingIds);
 
                 if (response.data.clientSecret) {
