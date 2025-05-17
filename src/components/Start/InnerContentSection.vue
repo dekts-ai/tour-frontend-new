@@ -12,7 +12,7 @@
                                             :first-package-id="firstPackageId"
                                             @edit-package="$emit('edit-package', $event)"
                                             @remove-from-cart="$emit('remove-from-cart', $event)"
-                                            @tab-change="$emit('tab-change', $event)" />
+                                            @tab-change="$emit('tab-change', 5, 'Checkout')" />
                                     </div>
                                     <available-package v-for="tourPackage in tourPackageData" :key="tourPackage.id"
                                         :tour-package="tourPackage" :check-package-ids="checkPackageIds"
