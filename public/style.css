@@ -545,7 +545,8 @@ input.help-block + .checkmark {border-color: #f00 !important;}
 .tabs-section .tabs-wrap .tabs {color: #004085; text-decoration: none; background: #cce5ff; border: 1px solid #b8daff; font-size: 13px; font-weight: 700; padding: 6px 20px; width: 100%; max-width: 150px; text-align: center; margin-right: 6px; border-radius: 3px 3px 0px 0px;}
 .tabs-section .tabs-wrap .tabs.active {color: #1d875a; border: 1px solid rgba(29,135,90,.5); border-bottom-color: #fff; background: #f2f9f3;}
 .tabs-section .tabs-wrap .tabs:last-child {margin-right: 0;}
-
+.tabs-section .tabs-wrap .tabs.prev-next { background-color: #004085; color: #cce5ff; width: 8%; }
+.tabs-section .tabs-wrap .tabs.prev-next:disabled { opacity: 0.5; cursor: not-allowed; }
 .tabs-section .dropdown-toggle::after {content: none;}
 .tabs-section .hamburger-menu {position: relative; width: 26px; height: 24px; transition: .5s ease-in-out; cursor: pointer; border: none;}
 .tabs-section .hamburger-menu span {display: block; position: absolute; height: 3px; width: 100%; background: #000; border-radius: 10px; opacity: 1; left: 0; transition: .25s ease-in-out;}
