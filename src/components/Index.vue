@@ -120,6 +120,14 @@ export default {
         handleTabChange(tab, destination) {
             if (tab === 1 || tab === 3 || tab === 4 || tab === 5) {
                 this.handleTab(tab, destination);
+            } else {
+                Swal.fire({
+                    toast: true,
+                    html: `In order to proceed with scheduling, please add package.`,
+                    icon: 'info',
+                    timer: 3000,
+                    showConfirmButton: false,
+                });
             }
         },
         handleTab(tab, destination) {
