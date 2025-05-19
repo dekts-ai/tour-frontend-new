@@ -177,12 +177,16 @@ export default {
         async checkAvailability() {
             const cartItem = this.$store.state.cartItem;
 
-            const saveCard = await axios.post('/prepare-to-save-card-on-payment-intent', {
+            const payload = {
                 name: this.form.name,
                 email: this.form.email,
                 phone_number: this.form.phone_number,
                 payment_intent_id: this.form.paymentIntentId
-            });
+            };
+
+            this.$store.dispatch('storeCustomer', payload);
+
+            const saveCard = await axios.post('/prepare-to-save-card-on-payment-intent', payload);
 
             this.form.stripeCustomerId = saveCard.data.stripeCustomerId;
 

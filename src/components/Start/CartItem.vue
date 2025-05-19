@@ -101,7 +101,7 @@
                     </div>
                     <div class="tourselected-action-btn">
                         <a class="action-btn action-btn-checkout"
-                            @click="$emit('tab-change', { tab: 5, destination: 'Checkout' })">
+                            @click="$emit('tab-change', 5, 'Checkout')">
                             Checkout
                         </a>
                     </div>
@@ -118,11 +118,6 @@ export default {
     name: 'CartItem',
     props: ['item', 'firstPackageId'],
     emits: ['edit-package', 'remove-from-cart', 'tab-change'],
-    mounted() {
-        // Debug: Log people_group to inspect its structure
-        // console.log('CartItem item:', this.item);
-        // console.log('CartItem people_group:', this.item.people_group);
-    },
     methods: {
         dateFormat(date) {
             if (!date) return '';
