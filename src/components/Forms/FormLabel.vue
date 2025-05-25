@@ -1,6 +1,6 @@
 <template>
     <label :for="id" :class="className">
-        {{ (req) ? " * " : " "}}
+        {{ (req) ? " * " : " " }}
         <slot></slot>
     </label>
 </template>
@@ -9,8 +9,8 @@
 export default {
     name: "FormLabel",
     props: {
-        className: { type: String, default:" "  },
-        id: { type: String, default:""  },
+        className: { type: String, default: " " },
+        id: { type: String, default: "" },
         req: { type: Boolean, default: false }
     }
 }

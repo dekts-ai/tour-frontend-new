@@ -1,37 +1,32 @@
 import { createApp } from 'vue';
 import App from './App.vue';
+
 import router from './routers';
+import store from './store/store';
+
 import axios from 'axios';
-import store from "./store/store";
 import VueLoading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
-import VueGoogleMaps from '@fawmi/vue-google-maps'
 
-// axios.defaults.baseURL = process.env.VUE_APP_API_URL;
+import VueGoogleMaps from '@fawmi/vue-google-maps';
 
-let tenant = "kens";
-let uri = window.location.search.substring(1);
-if (uri != '') {
-    let params = new URLSearchParams(uri);
-    tenant = params.get("tid") !== null ? params.get("tid") : "kens";
-}
+// Set base API URL based on tenant
+const params = new URLSearchParams(window.location.search);
+const storedParams = JSON.parse(localStorage.getItem('urlParams') || '{}');
 
-const url = process.env.VUE_APP_API_URL;
-axios.defaults.baseURL = `https://${url}`;
+const tenant = params.get("tid") || storedParams.tenantId;
+axios.defaults.baseURL = `https://${tenant}.${process.env.VUE_APP_API_URL}`;
 
-if (tenant) {
-    axios.defaults.baseURL = `https://${tenant}.${url}`;
-}
-
+// Create and configure app
 const app = createApp(App);
 
-app.use(router);
-app.use(store);
-app.use(VueLoading);
-app.use(VueGoogleMaps, {
-    load: {
-      key: process?.env?.VUE_APP_MAP_KEY
-    }
-});
+app.use(router)
+   .use(store)
+   .use(VueLoading)
+   .use(VueGoogleMaps, {
+      load: {
+         key: process.env.VUE_APP_MAP_KEY
+      }
+   });
 
 app.mount('#app');

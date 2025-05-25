@@ -3,11 +3,61 @@
 import { createStore } from "vuex";
 import { getUTCDateFromTimeZone } from '../utils/dateUtils';
 
+// Plugin to persist Vuex state to localStorage
+const localStoragePlugin = store => {
+    // Restore state from localStorage on initialization
+    const savedState = localStorage.getItem('appState');
+    if (savedState) {
+        const parsedState = JSON.parse(savedState);
+        const storedDate = parsedState.date ? new Date(parsedState.date) : null;
+        const currentDate = getUTCDateFromTimeZone(parsedState.timezone);
+
+        // Check if stored date is in the past
+        if (storedDate && storedDate < currentDate) {
+            // Clear localStorage and reset state
+            localStorage.removeItem('appState');
+            localStorage.removeItem('urlParams');
+            store.replaceState({
+                iframeStatus: true,
+                date: getUTCDateFromTimeZone(parsedState.timezone),
+                tenantId: null,
+                tourOperatorId: 0,
+                packageId: 0,
+                affiliateId: 0,
+                comboIds: 0,
+                bookingIds: {},
+                formData: null,
+                tourPackage: null,
+                tourPackageLogo: null,
+                customer: null,
+                slotId: 0,
+                timeDate: null,
+                hotelId: 0,
+                cartItem: {},
+                tabs: 1,
+                mindChange: 0,
+                packageOrder: [],
+                currency: "USD",
+                countryCode: "US",
+                timezone: "America/Phoenix"
+            });
+        } else {
+            // Restore state if date is not in the past
+            store.replaceState(Object.assign({}, store.state, parsedState));
+        }
+    }
+
+    // Subscribe to store mutations to save state
+    store.subscribe((mutation, state) => {
+        localStorage.setItem('appState', JSON.stringify(state));
+    });
+};
+
 export default createStore({
     state: {
-        iframeStatus: false,
+        iframeStatus: true,
         date: getUTCDateFromTimeZone(),
-        tenantId: 0,
+        tenantId: null,
         tourOperatorId: 0,
         packageId: 0,
         affiliateId: 0,
@@ -23,7 +73,10 @@ export default createStore({
         cartItem: {},
         tabs: 1,
         mindChange: 0,
-        packageOrder: []
+        packageOrder: [],
+        currency: "USD",
+        countryCode: "US",
+        timezone: "America/Phoenix"
     },
     getters: {
         iframeStatus: state => {
@@ -82,6 +135,15 @@ export default createStore({
         },
         packageOrder: state => {
             return state.packageOrder;
+        },
+        currency: state => {
+            return state.currency;
+        },
+        countryCode: state => {
+            return state.countryCode;
+        },
+        timezone: state => {
+            return state.timezone;
         }
     },
     mutations: {
@@ -141,6 +203,15 @@ export default createStore({
         },
         PACKAGE_ORDER(state, packageOrder) {
             state.packageOrder = packageOrder;
+        },
+        CURRENCY(state, currency) {
+            state.currency = currency;
+        },
+        COUNTRY_CODE(state, countryCode) {
+            state.countryCode = countryCode;
+        },
+        TIMEZONE(state, timezone) {
+            state.timezone = timezone;
         }
     },
     actions: {
@@ -200,6 +271,16 @@ export default createStore({
         },
         storePackageOrder({ commit }, packageOrder) {
             commit('PACKAGE_ORDER', packageOrder);
+        },
+        storeCurrency({ commit }, currency) {
+            commit('CURRENCY', currency);
+        },
+        storeCountryCode({ commit }, countryCode) {
+            commit('COUNTRY_CODE', countryCode);
+        },
+        storeTimezone({ commit }, timezone) {
+            commit('TIMEZONE', timezone);
         }
-    }
+    },
+    plugins: [localStoragePlugin]
 });
