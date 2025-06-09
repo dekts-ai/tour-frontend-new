@@ -180,7 +180,7 @@ export default {
 
             const storedForm = state.formData;
             const defaultForm = {
-                tenant_id: state.tenantId || '',
+                tenant_id: state.tenantId || null,
                 tour_operator_id: state.tourOperatorId || 0,
                 package_id: state.packageId || 0,
                 affiliate_id: state.affiliateId || 0,

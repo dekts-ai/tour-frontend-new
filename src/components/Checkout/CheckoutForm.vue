@@ -49,11 +49,7 @@ import { getPolicyByTenant } from './../../utils/policyUtils';
 export default {
     name: "CheckoutForm",
     components: { FormInput, FormPhone, FormTextarea, FormCheckbox, PaymentHeader, ErrorList, PolicyFooter },
-    props: {
-        items: Object,
-        tenantId: String,
-        errors: Array
-    },
+    props: ["items", "tenantId", "errors"],
     data: () => ({
         form: {
             name: '',
