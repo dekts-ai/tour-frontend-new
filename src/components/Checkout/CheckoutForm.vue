@@ -67,6 +67,7 @@ export default {
             stripeCustomerId: null
         },
         company_name: '',
+        receipt_email: null,
         stripe: null,
         elements: null,
         localErrors: [],
@@ -110,14 +111,17 @@ export default {
         },
 
         async createPaymentIntent() {
-            const response = await fetch(`https://${this.tenantId}.${process.env.VUE_APP_API_URL}/create-payment-intent`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ items: this.items })
-            });
-            const data = await response.json();
-            if (data.error) throw new Error(data.error.message);
-            return data;
+            try {
+                const response = await axios.post('/create-payment-intent', {
+                    items: this.items
+                });
+
+                const data = response.data;
+                if (data.error) throw new Error(data.error.message);
+                return data;
+            } catch (error) {
+                this.handleError(error);
+            }
         },
 
         setupStripeElements(clientSecret) {
@@ -148,7 +152,9 @@ export default {
             }
 
             try {
-                await this.checkAvailability();
+                const isAvailable = await this.checkAvailability();
+                if (!isAvailable) return;
+
                 const { paymentIntent, error } = await this.confirmPayment();
 
                 if (error) throw new Error(error.message);
@@ -175,6 +181,19 @@ export default {
         },
 
         async checkAvailability() {
+            if (this.receipt_email && this.receipt_email !== this.form.email) {
+                Swal.fire({
+                    toast: true,
+                    title: 'Error',
+                    html: 'Email cannot be changed after payment setup.',
+                    icon: 'error'
+                });
+
+                return false;
+            }
+
+            this.receipt_email = this.form.email;
+
             const cartItem = this.$store.state.cartItem;
 
             const payload = {
