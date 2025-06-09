@@ -45,7 +45,6 @@ import PolicyFooter from '../Layout/PolicyFooter.vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { getPolicyByTenant } from './../../utils/policyUtils';
-import { debounce } from 'lodash';
 
 export default {
     name: "CheckoutForm",
@@ -94,13 +93,6 @@ export default {
                 }
             },
             deep: true
-        },
-        'form.email': {
-            handler: debounce(function (newEmail, oldEmail) {
-                if (oldEmail && newEmail !== oldEmail && this.form.paymentIntentId) {
-                    this.handleEmailChange();
-                }
-            }, 500)
         }
     },
     methods: {
@@ -114,39 +106,6 @@ export default {
                 this.handleError('Payment initialization failed', error);
             } finally {
                 this.hideLoader();
-            }
-        },
-
-        async handleEmailChange() {
-            this.showLoader();
-            try {
-                if (this.form.stripeCustomerId) {
-                    // Cancel the existing PaymentIntent if a customer was associated
-                    await this.cancelPaymentIntent();
-                }
-                // Create a new PaymentIntent
-                const { clientSecret, paymentIntentId } = await this.createPaymentIntent();
-                this.form.paymentIntentId = paymentIntentId;
-                this.form.stripeCustomerId = null; // Reset customer ID
-                this.localErrors = [];
-                this.setupStripeElements(clientSecret);
-            } catch (error) {
-                this.handleError('Failed to update payment details for new email', error);
-            } finally {
-                this.hideLoader();
-            }
-        },
-
-        async cancelPaymentIntent() {
-            try {
-                const response = await axios.post(`/cancel-payment-intent`, {
-                    payment_intent_id: this.form.paymentIntentId
-                });
-                if (!response.data.success) {
-                    throw new Error(response.data.error || 'Failed to cancel payment intent');
-                }
-            } catch (error) {
-                throw new Error('Failed to cancel existing payment intent: ' + error.message);
             }
         },
 
