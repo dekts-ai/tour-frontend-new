@@ -272,7 +272,7 @@ export default {
                 };
                 this.hotels = response.data.hotels || [];
                 this.has_contacts = tourData.has_contacts || 0;
-                
+
                 Object.assign(this.form, {
                     things_to_bring: response.data.thingsToBring || [],
                     short_description: tourData.short_description || '',
