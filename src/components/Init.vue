@@ -522,7 +522,7 @@ export default {
                     const count = this.form.counters[group.id] || 0;
                     groupPaxArr.push(count);
                     rateGroupArr.push(group.rate_for);
-                    const rate = Number(group.rate) + Number(group.permit_fee || 0) + Number(group.tax || 0);
+                    const rate = Number(group.rate) + Number(group.permit_fee || 0) + Number(group.tax || 0) + Number(group.partner_fee_amount || 0);
                     const subtotal = count > 0 ? (count * rate).toFixed(2) : 0;
                     paxSubtotalArr.push(subtotal);
                     const fees = this.roundout((Number(rate) * Number(this.form.service_commission)) / 100, 2);
