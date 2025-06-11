@@ -180,7 +180,7 @@ export default {
 
             const storedForm = state.formData;
             const defaultForm = {
-                tenant_id: state.tenantId || '',
+                tenant_id: state.tenantId || null,
                 tour_operator_id: state.tourOperatorId || 0,
                 package_id: state.packageId || 0,
                 affiliate_id: state.affiliateId || 0,
@@ -272,7 +272,7 @@ export default {
                 };
                 this.hotels = response.data.hotels || [];
                 this.has_contacts = tourData.has_contacts || 0;
-                
+
                 Object.assign(this.form, {
                     things_to_bring: response.data.thingsToBring || [],
                     short_description: tourData.short_description || '',
@@ -522,7 +522,7 @@ export default {
                     const count = this.form.counters[group.id] || 0;
                     groupPaxArr.push(count);
                     rateGroupArr.push(group.rate_for);
-                    const rate = Number(group.rate) + Number(group.permit_fee || 0) + Number(group.tax || 0);
+                    const rate = Number(group.rate) + Number(group.permit_fee || 0) + Number(group.tax || 0) + Number(group.partner_fee_amount || 0);
                     const subtotal = count > 0 ? (count * rate).toFixed(2) : 0;
                     paxSubtotalArr.push(subtotal);
                     const fees = this.roundout((Number(rate) * Number(this.form.service_commission)) / 100, 2);
