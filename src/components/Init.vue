@@ -200,7 +200,7 @@ export default {
                 call_to_book: false
             };
 
-            this.form = storedForm && storedForm.package_id === state.packageId
+            this.form = storedForm && storedForm.package_id === state.packageId && storedForm.affiliate_id === state.affiliateId
                 ? { ...this.form, ...storedForm }
                 : { ...this.form, ...defaultForm };
 

@@ -31,18 +31,22 @@ export default {
 		let uri = window.location.search.substring(1);
 		let params = new URLSearchParams(uri);
 
+		// Check if any URL parameters exist
+		const hasUrlParams = params.size > 0;
+
 		// Load stored parameters from localStorage
 		const storedParams = JSON.parse(localStorage.getItem('urlParams') || '{}');
 
 		// Determine if URL specifies a single package (pid) or combo (cids)
 		const hasPid = params.get("pid") !== null;
 		const hasCids = params.get("cids") !== null;
+		const hasAid = params.get("aid") !== null;
 
 		// Use URL parameters if present, otherwise fall back to stored parameters or defaults
 		this.tenantId = params.get("tid") !== null ? params.get("tid") : (storedParams.tenantId ?? null);
 		this.tourOperatorId = params.get("oid") !== null ? parseInt(params.get("oid")) : (storedParams.tourOperatorId ?? 0);
 		this.packageId = hasPid ? parseInt(params.get("pid")) : (hasCids ? 0 : (storedParams.packageId ?? 0));
-		this.affiliateId = params.get("aid") !== null ? parseInt(params.get("aid")) : (storedParams.affiliateId ?? 0);
+		this.affiliateId = hasAid ? parseInt(params.get("aid")) : (hasUrlParams ? 0 : (storedParams.affiliateId ?? 0));
 		this.comboIds = hasCids ? params.get("cids") : (hasPid ? 0 : (storedParams.comboIds ?? 0));
 
 		axios.get("/tour-operator-logo/" + this.tourOperatorId).then((response) => {
