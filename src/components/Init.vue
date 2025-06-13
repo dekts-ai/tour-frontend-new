@@ -158,6 +158,7 @@ export default {
             minSeats: 0,
             maxSeats: 0,
             is_group_rate_enabled: 0,
+            is_partner_package: 0,
             withRateGroups: 1,
             has_contacts: 0,
             tabs: 2
@@ -295,6 +296,7 @@ export default {
                 });
 
                 this.is_group_rate_enabled = tourData.is_group_rate_enabled || 0;
+                this.is_partner_package = tourData.is_partner_package || 0;
                 if (this.is_group_rate_enabled) {
                     const defaultGroup = this.details.tourPackageRateGroups[0] || {};
                     Object.assign(this.form, {
@@ -519,10 +521,11 @@ export default {
                 feesGroupArr.push(fees.toFixed(2));
             } else {
                 rateGroups.forEach(group => {
+                    const partnerFeeAmount = this.is_partner_package ? group.partner_fee_amount : 0;
                     const count = this.form.counters[group.id] || 0;
                     groupPaxArr.push(count);
                     rateGroupArr.push(group.rate_for);
-                    const rate = Number(group.rate) + Number(group.permit_fee || 0) + Number(group.tax || 0) + Number(group.partner_fee_amount || 0);
+                    const rate = Number(group.rate) + Number(group.permit_fee || 0) + Number(group.tax || 0) + Number(partnerFeeAmount || 0);
                     const subtotal = count > 0 ? (count * rate).toFixed(2) : 0;
                     paxSubtotalArr.push(subtotal);
                     const fees = this.roundout((Number(rate) * Number(this.form.service_commission)) / 100, 2);
