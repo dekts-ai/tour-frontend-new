@@ -94,6 +94,11 @@ export default {
     },
     methods: {
         async initializePayment() {
+            if (this.itemTotal.length === 0) {
+                this.$router.push('/initialize');
+                return;
+            }
+
             this.showLoader();
             try {
                 const { clientSecret, paymentIntentId } = await this.createPaymentIntent();
