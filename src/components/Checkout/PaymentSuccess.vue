@@ -54,6 +54,14 @@ export default {
                     icon: "error"
                 });
                 return;
+            } else if (verifyResponse.data.status === "review_opened") {
+                Swal.fire({
+                    title: "Info!",
+                    html: "Payment is under review. Please try again.",
+                    width: '40vw',
+                    icon: "info"
+                });
+                return;
             }
 
             // Step 2: Retrieve stored data from Vuex store
