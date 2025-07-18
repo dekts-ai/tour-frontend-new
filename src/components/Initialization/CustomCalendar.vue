@@ -15,15 +15,43 @@
                 v-for="day in daysInMonth"
                 :key="'d' + day"
                 class="calendar-cell"
-                :class="{
-                    disabled: isDisabled(day),
-                    selected: isSelected(day),
-                    today: isToday(day),
-                    [getColorClass(day)]: true
-                }"
+                :class="[
+                    getColorClass(day),
+                    { disabled: isDisabled(day) },
+                    { selected: isSelected(day) },
+                    { today: isToday(day) }
+                ]"
                 @click="selectDate(day)"
             >
                 {{ day }}
+            </div>
+        </div>
+
+        <div class="calendar-footer">
+            <div class="selected-date">
+                <strong>Selected Date:</strong>
+                <div>{{ formattedSelectedDate }}</div>
+            </div>
+
+            <div class="color-legend">
+                <div class="legend-item">
+                    <span class="legend-box bg-light-green"></span> Low Booking (≤ 30%)
+                </div>
+                <div class="legend-item">
+                    <span class="legend-box bg-orange"></span> Medium Booking (31–70%)
+                </div>
+                <div class="legend-item">
+                    <span class="legend-box bg-red"></span> High Booking (> 70%)
+                </div>
+                <div class="legend-item">
+                    <span class="legend-box bg-green"></span> Available (0% booked)
+                </div>
+                <div class="legend-item">
+                    <span class="legend-box" style="outline: 2px solid black; background: white;"></span> Selected Date
+                </div>
+                <div class="legend-item">
+                    <span class="legend-box disabled-box"></span> Not Available
+                </div>
             </div>
         </div>
     </div>
@@ -31,6 +59,7 @@
 
 <script>
 import axios from 'axios';
+import { format } from 'date-fns';
 
 export default {
     name: 'CustomCalendar',
@@ -75,6 +104,9 @@ export default {
                 this.currentYear === today.getFullYear() &&
                 this.currentMonth === today.getMonth()
             );
+        },
+        formattedSelectedDate() {
+            return format(new Date(this.modelValue), 'EEEE, MMMM d, yyyy');
         }
     },
     methods: {
@@ -92,7 +124,7 @@ export default {
                         colored[date] = { color: null, disabled: true };
                     } else {
                         const percent = (info.booked / info.seats) * 100;
-                        
+
                         let colorClass = 'bg-light-green';
                         if (percent > 70) colorClass = 'bg-red';
                         else if (percent > 30) colorClass = 'bg-orange';
@@ -229,8 +261,10 @@ export default {
 }
 
 .calendar-cell.selected {
-    background: #4caf50 !important;
-    color: white;
+    outline: 2px solid #000;
+    font-weight: bold;
+    background-color: #ffffff !important;
+    color: #000;
 }
 
 .calendar-cell.today {
@@ -278,19 +312,65 @@ export default {
     cursor: not-allowed;
 }
 
-.calendar-cell.bg-light-green {
-  background-color: #C8E6C9;
+.bg-light-green {
+    background-color: #C8E6C9;
 }
 
-.calendar-cell.bg-orange {
-  background-color: #FFE082;
+.bg-orange {
+    background-color: #FFE082;
 }
 
-.calendar-cell.bg-red {
-  background-color: #FF8A80;
+.bg-red {
+    background-color: #FF8A80;
 }
 
-.calendar-cell.bg-green {
-  background-color: #7fdc82;
+.bg-green {
+    background-color: #7fdc82;
+}
+
+.calendar-footer {
+    margin-top: 24px;
+    padding: 16px;
+    background-color: #f5faff;
+    border: 1px solid #d0e7ff;
+    border-radius: 12px;
+    /* font-family: system-ui, sans-serif; */
+}
+
+.selected-date {
+    margin-bottom: 12px;
+    font-size: 15px;
+    color: #333;
+}
+
+.selected-date strong {
+    color: #0074cc;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.color-legend {
+    font-size: 14px;
+    color: #444;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin: 4px 0;
+}
+
+.legend-box {
+    width: 16px;
+    height: 16px;
+    margin-right: 10px;
+    border-radius: 4px;
+    border: 1px solid #bbb;
+    flex-shrink: 0;
+}
+
+.disabled-box {
+    background-color: #eee !important;
+    border: 1px dashed #999;
 }
 </style>
