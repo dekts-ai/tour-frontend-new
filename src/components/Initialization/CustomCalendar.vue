@@ -150,15 +150,7 @@ export default {
             if (data?.disabled) return true;
 
             // Disable due to timezone/past
-            const formatter = new Intl.DateTimeFormat('en-CA', {
-                timeZone: this.form.timezone,
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-            });
-
-            const parts = formatter.formatToParts(new Date());
-            const dateParts = Object.fromEntries(parts.map(p => [p.type, p.value]));
+            const dateParts = this.getDateParts();
 
             const tzYear = parseInt(dateParts.year);
             const tzMonth = parseInt(dateParts.month) - 1;
@@ -177,15 +169,7 @@ export default {
             return data?.color || '';
         },
         isToday(day) {
-            const formatter = new Intl.DateTimeFormat('en-CA', {
-                timeZone: this.form.timezone,
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-            });
-
-            const parts = formatter.formatToParts(new Date());
-            const dateParts = Object.fromEntries(parts.map(p => [p.type, p.value]));
+            const dateParts = this.getDateParts();
 
             const tzYear = parseInt(dateParts.year);
             const tzMonth = parseInt(dateParts.month) - 1; // month is zero-based
@@ -219,6 +203,19 @@ export default {
             } else {
                 this.currentMonth++;
             }
+        },
+        getDateParts() {
+            const formatter = new Intl.DateTimeFormat('en-US', {
+                timeZone: this.form.timezone,
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+
+            const parts = formatter.formatToParts(new Date());
+            const dateParts = Object.fromEntries(parts.map(p => [p.type, p.value]));
+
+            return dateParts;
         }
     }
 };
