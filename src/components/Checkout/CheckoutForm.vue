@@ -44,7 +44,8 @@ import ErrorList from '../Error/ErrorList.vue';
 import PolicyFooter from '../Layout/PolicyFooter.vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { getPolicyByTenant } from './../../utils/policyUtils';
+import { getPolicyByTenant } from '../../utils/policyUtils';
+import { CountryCodes } from '../../utils/geoUtils';
 
 export default {
     name: "CheckoutForm",
@@ -155,6 +156,22 @@ export default {
             try {
                 const isAvailable = await this.checkAvailability();
                 if (!isAvailable) return;
+
+                const phone_number = CountryCodes.formatPhoneNumber(this.form.phone_code, this.form.phone_number);
+                const payload = {
+                    items: this.items,
+                    name: this.form.name,
+                    email: this.form.email,
+                    phone_number,
+                    comment: this.form.comment,
+                    getemailupdates: this.form.getemailupdates,
+                    cancellations_policy: this.form.cancellations_policy,
+                    payment_intent_id: this.form.paymentIntentId,
+                    stripe_customer_id: this.form.stripeCustomerId,
+                    ...this.globalTotal
+                };
+
+                axios.post('/create-pre-booking', payload);
 
                 const { paymentIntent, error } = await this.confirmPayment();
 

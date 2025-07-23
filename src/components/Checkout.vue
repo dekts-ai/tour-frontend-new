@@ -187,6 +187,7 @@ export default {
                 if (response.data.clientSecret) {
                     await this.handleStripePayment(response.data, payload);
                 } else {
+                    axios.post('/delete-pre-booking', payload);
                     this.$router.push('/thankyou');
                 }
             } catch (error) {
@@ -207,6 +208,7 @@ export default {
                 };
                 await axios.post('/package-booking-3ds-payment', stripeObject);
                 this.processLoader(loader);
+                axios.post('/delete-pre-booking', payload);
                 this.$router.push('/thankyou');
             } catch (error) {
                 this.handleError(error);
