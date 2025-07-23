@@ -13,8 +13,6 @@
                                 <TourForm 
                                     ref="TourForm" 
                                     :form="form" 
-                                    :disabled-dates="disabledDates"
-                                    :prevent-disable-date-selection="preventDisableDateSelection" 
                                     :begins="begins"
                                     :slot-not-found="slotNotFound" 
                                     :date-time-arr="dateTimeArr" 
@@ -89,11 +87,6 @@ export default {
             cartItemLength: 0,
             slotNotFound: false,
             customRateFound: false,
-            disabledDates: {
-                to: this.getStartDate(),
-                from: this.getEndDate()
-            },
-            preventDisableDateSelection: true,
             dateTimeArr: [],
             begins: null,
             blockedTimes: {},
@@ -377,8 +370,10 @@ export default {
             });
             this.dateTimeArr = [];
             this.errors = [];
-            this.form.date = date;
-            this.fetchTourData(format(date, 'yyyy-MM-dd'), true);
+            const dateObj = new Date(date);
+            const formatted = format(dateObj, 'yyyy-MM-dd');
+            this.form.date = formatted;
+            this.fetchTourData(formatted, true);
         },
 
         handleGroupRateDiscountChange() {
