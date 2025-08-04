@@ -222,20 +222,24 @@ export default {
                 this.$emit('customformexists', data.isset);
                 if (data.isset) {
                     this.form = data.form;
-                    const fields = JSON.parse(this.form.form_fields);
-                    // format the data to attach it to a v-model with a value prop
-                    fields.forEach((_field, idx) => {
-                        fields[idx].value = this.getValueFromProps(fields[idx].id);
-                        fields[idx].error = false;
-                        fields[idx].form_id = this.form.id
-                        fields[idx].priceInfo.enabled = this.str.toBool(fields[idx].priceInfo.enabled);
-                        fields[idx].priceInfo.price = this.str.toFloat(fields[idx].priceInfo.price);
-                        fields[idx].priceInfo.fee = this.str.toFloat(this.roundout(fields[idx].priceInfo.price * this.service_commission / 100));
+                    let fields = JSON.parse(this.form.form_fields);
+
+                    // Filter out 'backend' fields
+                    fields = fields.filter(field => field.visibility !== 'backend');
+
+                    // Process remaining fields
+                    fields.forEach((field) => {
+                        field.value = this.getValueFromProps(field.id);
+                        field.error = false;
+                        field.form_id = this.form.id;
+                        field.priceInfo.enabled = this.str.toBool(field.priceInfo.enabled);
+                        field.priceInfo.price = this.str.toFloat(field.priceInfo.price);
+                        field.priceInfo.fee = this.str.toFloat(this.roundout(field.priceInfo.price * this.service_commission / 100));
                     });
+
                     this.fields = fields;
                     this.display_form = true;
                 }
-
             } catch (err) {
                 console.log(err);
             }

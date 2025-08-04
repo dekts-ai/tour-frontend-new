@@ -4,9 +4,7 @@
             <div class="col-12">
                 <div class="row select-time">
                     <div class="col-12 col-lg-4">
-                        <datepicker v-model="form.date" :inline="true" :disabled-dates="disabledDates"
-                            :prevent-disable-date-selection="preventDisableDateSelection" @selected="selectedDate"
-                            data-testid="tour-date-picker" />
+                        <CustomCalendar v-model="form.date" @selected="selectedDate" :form="form" />
                     </div>
 
                     <div v-if="staticDateRange(form.date, form.tenant_id)" class="col-12 col-lg-8 mt-4 mt-lg-1">
@@ -282,22 +280,20 @@
 
 <script>
 import { formatCurrencyIntl } from '../../utils/currency';
-import Datepicker from 'vuejs3-datepicker';
 import CustomFields from './../Forms/CustomFields.vue';
 import Pickup from './../Hotel/Pickup.vue';
 import { format } from 'date-fns';
+import CustomCalendar from './CustomCalendar.vue';
 
 export default {
     name: 'TourForm',
     components: {
-        Datepicker,
+        CustomCalendar,
         CustomFields,
         Pickup
     },
     props: [
         'form',
-        'disabledDates',
-        'preventDisableDateSelection',
         'begins',
         'slotNotFound',
         'dateTimeArr',
@@ -324,7 +320,6 @@ export default {
         'submit'
     ],
     mounted() {
-        // console.log('TourForm Mounted reference to get error log if any, refs:', this.$refs);
         this.form.date = format(this.form.date, 'yyyy-MM-dd');
     },
     methods: {
