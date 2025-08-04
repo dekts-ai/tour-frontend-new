@@ -159,7 +159,8 @@ export default {
     },
     created() {
         this.initializeFromStore();
-        this.fetchTourData(this.form.date, false);
+        let date = format(this.form.date, 'yyyy-MM-dd');
+        this.fetchTourData(date, false);
         this.$store.dispatch('storeTabs', this.tabs);
         this.$store.dispatch('storeMindChange', 0);
     },
