@@ -28,10 +28,10 @@
         </div>
 
         <div class="calendar-footer">
-            <div class="selected-date">
+            <!-- <div class="selected-date">
                 <strong>Selected Date:</strong>
                 <div>{{ formattedSelectedDate }}</div>
-            </div>
+            </div> -->
 
             <div class="color-legend">
                 <div class="legend-item">

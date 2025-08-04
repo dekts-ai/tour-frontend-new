@@ -159,7 +159,7 @@ export default {
     },
     created() {
         this.initializeFromStore();
-        this.fetchTourData(format(this.form.date, 'yyyy-MM-dd'), false);
+        this.fetchTourData(this.form.date, false);
         this.$store.dispatch('storeTabs', this.tabs);
         this.$store.dispatch('storeMindChange', 0);
     },
@@ -370,10 +370,8 @@ export default {
             });
             this.dateTimeArr = [];
             this.errors = [];
-            const dateObj = new Date(date);
-            const formatted = format(dateObj, 'yyyy-MM-dd');
-            this.form.date = formatted;
-            this.fetchTourData(formatted, true);
+            this.form.date = date;
+            this.fetchTourData(date, true);
         },
 
         handleGroupRateDiscountChange() {
