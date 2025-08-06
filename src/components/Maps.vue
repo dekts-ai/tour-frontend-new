@@ -55,9 +55,9 @@
 </template>
 
 <script>
-import { format } from 'date-fns';
 import Swal from 'sweetalert2';
 import NavBtns from './Nav/NavBtns.vue';
+import { formatMomentDate, getMomentDate } from '../utils/dateUtils';
 
 export default {
     name: 'GoogleMap',
@@ -96,8 +96,8 @@ export default {
     methods: {
         initializeFromStore() {
             this.date = this.$store.state.date
-                ? format(new Date(this.$store.state.date), 'yyyy-MM-dd')
-                : format(new Date(), 'yyyy-MM-dd');
+                ? formatMomentDate(this.$store.state.date, 'YYYY-MM-DD')
+                : formatMomentDate(getMomentDate(), 'YYYY-MM-DD');
             this.tenantId = this.$store.state.tenantId || null;
             this.tourOperatorId = this.$store.state.tourOperatorId || 0;
             this.iframeStatus = this.$store.state.iframeStatus;
@@ -131,9 +131,9 @@ export default {
         },
         dateFormat(date) {
             try {
-                const parsedDate = new Date(date);
+                const parsedDate = getMomentDate(date);
                 // this.$store.dispatch('storeDate', parsedDate);
-                return parsedDate.toLocaleDateString('en-US', {
+                return parsedDate.format('en-US', {
                     weekday: 'short',
                     year: 'numeric',
                     month: 'long',

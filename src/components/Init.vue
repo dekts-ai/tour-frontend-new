@@ -55,8 +55,7 @@
 
 <script>
 import axios from 'axios';
-import { format } from 'date-fns';
-import { getDateTz, getUTCDateFromTimeZone } from '../utils/dateUtils';
+import { getMomentDate, formatMomentDate } from '../utils/dateUtils';
 import Swal from 'sweetalert2';
 import NavBtns from './Nav/NavBtns.vue';
 import TourForm from './Initialization/TourForm.vue';
@@ -104,7 +103,7 @@ export default {
                 hotel_image: '',
                 hotel_address: '',
                 timezone: this.$store.state.timezone,
-                date: getUTCDateFromTimeZone(this.$store.state.timezone),
+                date: getMomentDate(),
                 time_date: null,
                 total_people_selected: 0,
                 people_group: [],
@@ -159,7 +158,7 @@ export default {
     },
     created() {
         this.initializeFromStore();
-        let date = format(this.form.date, 'yyyy-MM-dd');
+        let date = formatMomentDate(this.form.date, 'YYYY-MM-DD');
         this.fetchTourData(date, false);
         this.$store.dispatch('storeTabs', this.tabs);
         this.$store.dispatch('storeMindChange', 0);
@@ -199,7 +198,7 @@ export default {
                 ? { ...this.form, ...storedForm }
                 : { ...this.form, ...defaultForm };
 
-            this.form.date = state.date ? new Date(state.date) : this.getStartDate();
+            this.form.date = state.date ? getMomentDate(state.date) : this.getStartDate();
         },
 
         async fetchTourData(date, resetSlot = false) {
@@ -333,7 +332,7 @@ export default {
         updateBlockedTimes(date) {
             this.blockedTimes = Object.values(this.cartItem).reduce((acc, item) => {
                 if (item.package_id !== this.form.package_id) {
-                    const itemDate = format(new Date(item.date), 'yyyy-MM-dd');
+                    const itemDate = formatMomentDate(item.date, 'YYYY-MM-DD');
                     const [hours, minutes] = item.travel_duration.split(':').map(Number);
                     const timeBefore = this.calculateTime(item.slot_time, -hours, -minutes);
                     const timeAfter = this.calculateTime(item.slot_time, hours, minutes);
@@ -350,8 +349,8 @@ export default {
             this.dateTimeArr = this.dateTimeArr.filter(slot => {
                 return !Object.values(this.blockedTimes).some(({ date: blockedDate, time, package_has_slots }) => {
                     if (blockedDate !== date || !package_has_slots) return false;
-                    const [startTime, endTime] = time.map(t => new Date(`2000-01-01T${t}`));
-                    const slotTime = new Date(`2000-01-01T${slot.slot_time}`);
+                    const [startTime, endTime] = time.map(t => getMomentDate(`2000-01-01T${t}`));
+                    const slotTime = getMomentDate(`2000-01-01T${slot.slot_time}`);
                     return slotTime >= startTime && slotTime <= endTime;
                 });
             });
@@ -611,7 +610,7 @@ export default {
                 this.form.total_people_selected = 0;
                 this.form.paxDetails = {};
                 this.errors = [];
-                this.fetchPackageData(format(new Date(this.form.date), 'yyyy-MM-dd'), false, true);
+                this.fetchPackageData(formatMomentDate(this.form.date, 'YYYY-MM-DD'), false, true);
             }
         },
 
@@ -672,9 +671,8 @@ export default {
         callToBookDuration(bookDuration, timeSlot) {
             if (!this.form.call_to_book) return false;
 
-            const now = getDateTz(new Date(), this.form.timezone);
-            const expiryTime = new Date(now.getTime() + bookDuration * 60 * 60 * 1000);
-            const slotTime = new Date(`${timeSlot.date}T${timeSlot.slot_time}`);
+            const expiryTime = getMomentDate().add(bookDuration, 'hours');
+            const slotTime = getMomentDate(`${timeSlot.date}T${timeSlot.slot_time}`);
             return slotTime < expiryTime;
         },
 
@@ -691,9 +689,9 @@ export default {
             if (!tenants.includes(tenant)) return false;
 
             const packageIds = tenant === 'kens' ? [1, 2, 6] : [1];
-            const selectedDate = new Date(date);
-            const firstDate = new Date('2025-01-13');
-            const secondDate = new Date('2025-01-27');
+            const selectedDate = getMomentDate(date);
+            const firstDate = getMomentDate('2025-01-13');
+            const secondDate = getMomentDate('2025-01-27');
             const isClosed =
                 selectedDate >= firstDate &&
                 selectedDate < secondDate &&
@@ -768,12 +766,12 @@ export default {
         },
 
         getStartDate() {
-            return getUTCDateFromTimeZone(this.$store.state.timezone);
+            return getMomentDate();
         },
 
         getEndDate() {
-            const date = new Date(
-                getDateTz(new Date(), this.$store.state.timezone).getFullYear() + 1,
+            const date = getMomentDate(
+                getMomentDate().year() + 1,
                 11,
                 31
             );
@@ -786,15 +784,10 @@ export default {
         },
 
         calculateTime(timeValue, hoursToAdd, minutesToAdd) {
-            const time = new Date(`2000-01-01T${timeValue}`);
-            time.setHours(time.getHours() + hoursToAdd * 2);
-            time.setMinutes(time.getMinutes() + minutesToAdd * 2);
-            return time.toLocaleTimeString('en-US', {
-                hour12: false,
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
+            const time = getMomentDate(`2000-01-01T${timeValue}`);
+            time.add(hoursToAdd * 2, 'hours');
+            time.add(minutesToAdd * 2, 'minutes');
+            return time.format('HH:mm:ss');
         },
 
         openPhonePopup() {

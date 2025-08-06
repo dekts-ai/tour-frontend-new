@@ -59,17 +59,17 @@
 
 <script>
 import axios from 'axios';
-import { format } from 'date-fns';
+import { formatMomentDate, getMomentDate } from '../../utils/dateUtils';
 
 export default {
     name: 'CustomCalendar',
     props: ['modelValue', 'form'],
     emits: ['update:modelValue', 'selected'],
     data() {
-        const today = new Date();
+        const today = getMomentDate();
         return {
-            currentMonth: today.getMonth(),
-            currentYear: today.getFullYear(),
+            currentMonth: today.month(),
+            currentYear: today.year(),
             selected: this.modelValue,
             colorDates: {}
         };
@@ -87,26 +87,26 @@ export default {
     },
     computed: {
         daysInMonth() {
-            return new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
+            return getMomentDate([this.currentYear, this.currentMonth]).daysInMonth();
         },
         blanks() {
-            return new Date(this.currentYear, this.currentMonth, 1).getDay();
+            return getMomentDate([this.currentYear, this.currentMonth, 1]).day(); // day of week (0-6)
         },
         weekDays() {
             return ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
         },
         monthName() {
-            return new Date(this.currentYear, this.currentMonth).toLocaleString('default', { month: 'long' });
+            return getMomentDate([this.currentYear, this.currentMonth]).format('MMMM');
         },
         isPrevDisabled() {
-            const today = new Date();
+            const today = getMomentDate();
             return (
-                this.currentYear === today.getFullYear() &&
-                this.currentMonth === today.getMonth()
+                this.currentYear === today.year() &&
+                this.currentMonth === today.month()
             );
         },
         formattedSelectedDate() {
-            return format(new Date(this.form.date), 'EEEE, MMMM d, yyyy');
+            return formatMomentDate(this.form.date, 'dddd, MMMM D, YYYY');
         }
     },
     methods: {
@@ -156,8 +156,8 @@ export default {
             const tzMonth = parseInt(dateParts.month) - 1;
             const tzDay = parseInt(dateParts.day);
 
-            const cellDate = new Date(this.currentYear, this.currentMonth, day);
-            const todayDate = new Date(tzYear, tzMonth, tzDay);
+            const cellDate = getMomentDate([this.currentYear, this.currentMonth, day]);
+            const todayDate = getMomentDate([tzYear, tzMonth, tzDay]);
 
             return cellDate < todayDate;
         },
@@ -172,7 +172,7 @@ export default {
             const dateParts = this.getDateParts();
 
             const tzYear = parseInt(dateParts.year);
-            const tzMonth = parseInt(dateParts.month) - 1; // month is zero-based
+            const tzMonth = parseInt(dateParts.month) - 1;
             const tzDay = parseInt(dateParts.day);
 
             return (
@@ -205,17 +205,13 @@ export default {
             }
         },
         getDateParts() {
-            const formatter = new Intl.DateTimeFormat('en-US', {
-                timeZone: this.form.timezone,
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-            });
+            const m = getMomentDate();
 
-            const parts = formatter.formatToParts(new Date());
-            const dateParts = Object.fromEntries(parts.map(p => [p.type, p.value]));
-
-            return dateParts;
+            return {
+                year: m.format('YYYY'),
+                month: m.format('MM'),
+                day: m.format('DD')
+            };
         }
     }
 };

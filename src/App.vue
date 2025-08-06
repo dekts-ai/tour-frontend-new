@@ -6,7 +6,7 @@
 <script>
 import axios from "axios";
 import Footer from "@/components/Footer.vue";
-import { getUTCDateFromTimeZone } from './utils/dateUtils';
+import { getMomentDate } from './utils/dateUtils';
 
 export default {
 	name: "App",
@@ -51,12 +51,13 @@ export default {
 
 		axios.get("/tour-operator-logo/" + this.tourOperatorId).then((response) => {
 			this.timezone = response.data.timezone;
+			this.$store.dispatch('storeTimezone', this.timezone);
 		});
 
 		// Determine date: use stored date if not in the past, otherwise use current date
-		const storedDate = storedParams.date ? new Date(storedParams.date) : null;
-		const currentDate = getUTCDateFromTimeZone(this.timezone);
-		this.date = (storedDate && storedDate >= currentDate) ? storedDate : currentDate;
+		const storedDate = storedParams.date ? getMomentDate(storedParams.date) : null;
+		const currentDate = getMomentDate();
+		this.date = (storedDate && storedDate.isSameOrAfter(currentDate, 'day')) ? storedDate : currentDate;
 
 		// Save parameters to localStorage
 		localStorage.setItem('urlParams', JSON.stringify({
@@ -76,7 +77,6 @@ export default {
 		this.$store.dispatch('storeComboIds', this.comboIds);
 		this.$store.dispatch('storeIframeStatus', this.iframeStatus);
 		this.$store.dispatch('storeDate', this.date);
-		this.$store.dispatch('storeTimezone', this.timezone);
 
 		// Reset cartItem for non-combo URLs
 		if (hasPid && !hasCids) {

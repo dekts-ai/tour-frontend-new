@@ -86,7 +86,6 @@
 </template>
 
 <script>
-import { format } from 'date-fns';
 import NavBtns from './Nav/NavBtns.vue';
 
 export default {
@@ -138,7 +137,7 @@ export default {
             }
             this.$store.dispatch('storeFormData', formData);
             this.$store.dispatch('storePackageId', formData.package_id);
-            this.$store.dispatch('storeDate', new Date(formData.date));
+            this.$store.dispatch('storeDate', getMomentDate(formData.date));
             this.$router.push({ name: 'Init' });
         },
         generateTimeSlots() {
@@ -176,10 +175,10 @@ export default {
         },
         formatDate(dateString, isClass = false) {
             if (isClass) {
-                return format(new Date(dateString), 'yyyy-MM-dd');
+                return formatMomentDate(dateString, 'YYYY-MM-DD');
             }
 
-            return format(new Date(dateString), 'EEE, MMMM d, yyyy');
+            return formatMomentDate(dateString, 'EEE, MMMM d, yyyy');
         },
         formatTime(timeString) {
             const [hours, minutes] = timeString.split(':').map(Number);

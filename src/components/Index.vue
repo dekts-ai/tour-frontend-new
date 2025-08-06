@@ -13,8 +13,7 @@
 <script>
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { format } from 'date-fns';
-import { getUTCDateFromTimeZone } from '../utils/dateUtils';
+import { formatMomentDate, getMomentDate } from '../utils/dateUtils';
 import NavBtns from './Nav/NavBtns.vue';
 // import TabsSection from './Start/TabsSection.vue';
 import InnerContentSection from './Start/InnerContentSection.vue';
@@ -38,10 +37,6 @@ export default {
             affiliateId: 0,
             comboIds: 0,
             date: null,
-            disabledDates: {
-                to: this.getStartDate(),
-                from: this.getEndDate(),
-            },
             cartItem: {},
             cartItemLength: 0,
             tabs: 1,
@@ -59,10 +54,9 @@ export default {
             }
 
             // Initialize date: use stored date if not in the past, otherwise use current date
-            const timezone = this.$store.state.timezone;
-            const storedDate = this.$store.state.date ? new Date(this.$store.state.date) : null;
-            const currentDate = getUTCDateFromTimeZone(timezone);
-            this.date = (storedDate && storedDate >= currentDate) ? format(storedDate, 'yyyy-MM-dd') : format(currentDate, 'yyyy-MM-dd');
+            const storedDate = this.$store.state.date ? getMomentDate(this.$store.state.date) : null;
+            const currentDate = getMomentDate();
+            this.date = (storedDate && storedDate >= currentDate) ? formatMomentDate(storedDate, 'YYYY-MM-DD') : formatMomentDate(currentDate, 'YYYY-MM-DD');
 
             // Initialize from Vuex store or stored params, respecting URL intent
             this.tenantId = this.$store.state.tenantId || null;
@@ -190,7 +184,7 @@ export default {
             }
             this.$store.dispatch('storeFormData', formData);
             this.$store.dispatch('storePackageId', formData.package_id);
-            this.$store.dispatch('storeDate', new Date(formData.date));
+            this.$store.dispatch('storeDate', getMomentDate(formData.date));
             this.$router.push({ name: 'Init' });
         },
         removeFromCart(formData) {
@@ -223,49 +217,8 @@ export default {
                 }
             });
         },
-        updateDate(newDate) {
-            this.date = format(newDate, 'yyyy-MM-dd');
-        },
-        async selectedDate(date) {
-            const loader = this.$loading.show();
-            this.date = format(date, 'yyyy-MM-dd');
-            this.$store.dispatch('storeDate', new Date(date));
-            try {
-                const url = `/tour-package/${this.date}/${this.tourOperatorId}/${this.packageId}/${this.affiliateId}/${this.comboIds}`;
-                const response = await axios.get(url);
-                this.$store.dispatch('storeTourPackage', response.data);
-                this.tourPackageData = response.data.tourPackageData;
-                if (this.comboIds) {
-                    const strCids = this.comboIds.split(',');
-                    this.firstPackageId = parseInt(strCids[0]) || 0;
-                    const firstPkg = this.tourPackageData.find(pkg => pkg.package_id === this.firstPackageId);
-                    if (firstPkg) this.firstPackageName = firstPkg.package_name.toLowerCase();
-                }
-            } catch (error) {
-                console.error('Error in selectedDate:', error);
-                Swal.fire({
-                    toast: true,
-                    html: 'Failed to load tour packages. Please try again.',
-                    icon: 'error',
-                    timer: 3000,
-                    showConfirmButton: false,
-                });
-                this.tourPackageData = [];
-            } finally {
-                this.processLoader(loader);
-            }
-        },
         processLoader(loader) {
             loader.hide();
-        },
-        getStartDate() {            
-            return new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' }));
-        },
-        getEndDate() {
-            const date = new Date(new Date().toLocaleString('en-US', { timeZone: 'US/Arizona' }));
-            date.setFullYear(date.getFullYear() + 1, 11, 31);
-            date.setHours(23, 59, 59, 999);
-            return date;
         },
         removePreviousSessionCartItems() {            
             const strCids = this.$store.state.comboIds.split(',');

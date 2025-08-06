@@ -113,6 +113,7 @@
 
 <script>
 import { formatCurrencyIntl } from '../../utils/currency';
+import { getMomentDate } from '../../utils/dateUtils';
 
 export default {
     name: 'CartItem',
@@ -122,7 +123,7 @@ export default {
         dateFormat(date) {
             if (!date) return '';
             const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
-            return new Date(date).toLocaleDateString('en-US', options);
+            return getMomentDate(date).format('en-US', options);
         },
         currencyFormat(amount) {
             return formatCurrencyIntl(amount, this.$store.state.currency);
