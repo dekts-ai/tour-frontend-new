@@ -14,7 +14,7 @@
                             </div>
                         </div>
                         <div class="tourselected-title-top">
-                            {{ dateFormat(item.date) }}
+                            {{ item.date }}
                             <span v-if="item.package_has_slots">@ {{ item.time_date || '' }}</span>
                         </div>
                         <div class="tourselected-title-top">{{ item.short_description || '' }}</div>
