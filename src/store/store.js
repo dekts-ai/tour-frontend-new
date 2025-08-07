@@ -1,7 +1,7 @@
 // store/index.js
 
 import { createStore } from "vuex";
-import { getMomentDate } from '../utils/dateUtils';
+import { getMomentTimezone } from '../utils/dateUtils';
 
 /**
  * Vuex plugin to persist state to localStorage.
@@ -17,7 +17,7 @@ const localStoragePlugin = store => {
     if (savedState) {
         const parsedState = JSON.parse(savedState);
         const storedDate = parsedState.date ? parsedState.date : null;
-        const currentDate = getMomentDate().format('YYYY-MM-DD');
+        const currentDate = getMomentTimezone().format('YYYY-MM-DD');
 
         // Check if stored date is in the past
         if (storedDate && storedDate < currentDate) {
@@ -26,7 +26,7 @@ const localStoragePlugin = store => {
             localStorage.removeItem('urlParams');
             store.replaceState({
                 iframeStatus: true,
-                date: getMomentDate().format('YYYY-MM-DD'),
+                date: getMomentTimezone().format('YYYY-MM-DD'),
                 tenantId: null,
                 tourOperatorId: 0,
                 packageId: 0,
@@ -63,7 +63,7 @@ const localStoragePlugin = store => {
 export default createStore({
     state: {
         iframeStatus: true,
-        date: getMomentDate().format('YYYY-MM-DD'),
+        date: getMomentTimezone().format('YYYY-MM-DD'),
         tenantId: null,
         tourOperatorId: 0,
         packageId: 0,

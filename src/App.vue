@@ -6,7 +6,7 @@
 <script>
 import axios from "axios";
 import Footer from "@/components/Footer.vue";
-import { getMomentDate } from './utils/dateUtils';
+import { getMomentTimezone } from './utils/dateUtils';
 
 export default {
 	name: "App",
@@ -44,20 +44,29 @@ export default {
 
 		// Use URL parameters if present, otherwise fall back to stored parameters or defaults
 		this.tenantId = params.get("tid") !== null ? params.get("tid") : (storedParams.tenantId ?? null);
-		this.tourOperatorId = params.get("oid") !== null ? parseInt(params.get("oid")) : (storedParams.tourOperatorId ?? 0);
-		this.packageId = hasPid ? parseInt(params.get("pid")) : (hasCids ? 0 : (storedParams.packageId ?? 0));
-		this.affiliateId = hasAid ? parseInt(params.get("aid")) : (hasUrlParams ? 0 : (storedParams.affiliateId ?? 0));
-		this.comboIds = hasCids ? params.get("cids") : (hasPid ? 0 : (storedParams.comboIds ?? 0));
+		this.$store.dispatch('storeTenantId', this.tenantId);
 
-		axios.get("/tour-operator-logo/" + this.tourOperatorId).then((response) => {
-			this.timezone = response.data.timezone;
-			this.$store.dispatch('storeTimezone', this.timezone);
-		});
+		this.tourOperatorId = params.get("oid") !== null ? parseInt(params.get("oid")) : (storedParams.tourOperatorId ?? 0);
+		this.$store.dispatch('storeTourOperatorId', this.tourOperatorId);
+
+		this.packageId = hasPid ? parseInt(params.get("pid")) : (hasCids ? 0 : (storedParams.packageId ?? 0));
+		this.$store.dispatch('storePackageId', this.packageId);
+
+		this.affiliateId = hasAid ? parseInt(params.get("aid")) : (hasUrlParams ? 0 : (storedParams.affiliateId ?? 0));
+		this.$store.dispatch('storeAffiliateId', this.affiliateId);
+
+		this.comboIds = hasCids ? params.get("cids") : (hasPid ? 0 : (storedParams.comboIds ?? 0));
+		this.$store.dispatch('storeComboIds', this.comboIds);
+
+		const response = await axios.get("/tour-operator-logo/" + this.tourOperatorId);
+		this.timezone = response.data.timezone;
+		this.$store.dispatch('storeTimezone', this.timezone);
 
 		// Determine date: use stored date if not in the past, otherwise use current date
-		const storedDate = storedParams.date ? getMomentDate(storedParams.date).format('YYYY-MM-DD') : null;
-		const currentDate = getMomentDate().format('YYYY-MM-DD');
+		const storedDate = storedParams.date ? storedParams.date : null;
+		const currentDate = getMomentTimezone(this.timezone).format('YYYY-MM-DD');
 		this.date = (storedDate && storedDate >= currentDate) ? storedDate : currentDate;
+		this.$store.dispatch('storeDate', this.date);
 
 		// Save parameters to localStorage
 		localStorage.setItem('urlParams', JSON.stringify({
@@ -68,15 +77,6 @@ export default {
 			comboIds: this.comboIds,
 			date: this.date
 		}));
-
-		// Store parameters in Vuex
-		this.$store.dispatch('storeTenantId', this.tenantId);
-		this.$store.dispatch('storeTourOperatorId', this.tourOperatorId);
-		this.$store.dispatch('storePackageId', this.packageId);
-		this.$store.dispatch('storeAffiliateId', this.affiliateId);
-		this.$store.dispatch('storeComboIds', this.comboIds);
-		this.$store.dispatch('storeIframeStatus', this.iframeStatus);
-		this.$store.dispatch('storeDate', this.date);
 
 		// Reset cartItem for non-combo URLs
 		if (hasPid && !hasCids) {

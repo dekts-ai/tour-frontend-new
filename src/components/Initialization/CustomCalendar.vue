@@ -59,14 +59,14 @@
 
 <script>
 import axios from 'axios';
-import { getMomentDate } from '../../utils/dateUtils';
+import { getMomentTimezone } from '../../utils/dateUtils';
 
 export default {
     name: 'CustomCalendar',
     props: ['modelValue', 'form'],
     emits: ['update:modelValue', 'selected'],
     data() {
-        const today = getMomentDate();
+        const today = getMomentTimezone(this.$store.state.timezone);
         return {
             currentMonth: today.month(),
             currentYear: today.year(),
@@ -87,26 +87,26 @@ export default {
     },
     computed: {
         daysInMonth() {
-            return getMomentDate([this.currentYear, this.currentMonth]).daysInMonth();
+            return getMomentTimezone(this.$store.state.timezone, [this.currentYear, this.currentMonth]).daysInMonth();
         },
         blanks() {
-            return getMomentDate([this.currentYear, this.currentMonth, 1]).day(); // day of week (0-6)
+            return getMomentTimezone(this.$store.state.timezone, [this.currentYear, this.currentMonth, 1]).day(); // day of week (0-6)
         },
         weekDays() {
             return ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
         },
         monthName() {
-            return getMomentDate([this.currentYear, this.currentMonth]).format('MMMM');
+            return getMomentTimezone(this.$store.state.timezone, [this.currentYear, this.currentMonth]).format('MMMM');
         },
         isPrevDisabled() {
-            const today = getMomentDate();
+            const today = getMomentTimezone(this.$store.state.timezone);
             return (
                 this.currentYear === today.year() &&
                 this.currentMonth === today.month()
             );
         },
         formattedSelectedDate() {
-            return getMomentDate(this.form.date).format('dddd, MMMM D, YYYY');
+            return getMomentTimezone(this.$store.state.timezone, this.form.date).format('dddd, MMMM D, YYYY');
         }
     },
     methods: {
@@ -156,8 +156,8 @@ export default {
             const tzMonth = parseInt(dateParts.month) - 1;
             const tzDay = parseInt(dateParts.day);
 
-            const cellDate = getMomentDate([this.currentYear, this.currentMonth, day]);
-            const todayDate = getMomentDate([tzYear, tzMonth, tzDay]);
+            const cellDate = getMomentTimezone(this.$store.state.timezone, [this.currentYear, this.currentMonth, day]);
+            const todayDate = getMomentTimezone(this.$store.state.timezone, [tzYear, tzMonth, tzDay]);
 
             return cellDate < todayDate;
         },
@@ -205,7 +205,7 @@ export default {
             }
         },
         getDateParts() {
-            const m = getMomentDate();
+            const m = getMomentTimezone(this.$store.state.timezone);
 
             return {
                 year: m.format('YYYY'),

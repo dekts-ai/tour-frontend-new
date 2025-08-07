@@ -87,7 +87,7 @@
 
 <script>
 import NavBtns from './Nav/NavBtns.vue';
-import { getMomentDate } from '@/utils/dateUtils';
+import { getMomentTimezone } from '@/utils/dateUtils';
 
 export default {
     name: 'MyTrip',
@@ -176,10 +176,10 @@ export default {
         },
         formatDate(dateString, isClass = false) {
             if (isClass) {
-                return getMomentDate(dateString).format('YYYY-MM-DD');
+                return getMomentTimezone(this.$store.state.timezone, dateString).format('YYYY-MM-DD');
             }
 
-            return getMomentDate(dateString).format('dddd, MMMM D, YYYY');
+            return getMomentTimezone(this.$store.state.timezone, dateString).format('dddd, MMMM D, YYYY');
         },
         formatTime(timeString) {
             const [hours, minutes] = timeString.split(':').map(Number);

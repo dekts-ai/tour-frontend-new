@@ -113,7 +113,7 @@
 
 <script>
 import { formatCurrencyIntl } from '../../utils/currency';
-import { getMomentDate } from '../../utils/dateUtils';
+import { getMomentTimezone } from '../../utils/dateUtils';
 
 export default {
     name: 'CartItem',
@@ -121,7 +121,7 @@ export default {
     emits: ['edit-package', 'remove-from-cart', 'tab-change'],
     methods: {
         dateFormat(date) {
-            return getMomentDate(date).format('dddd, MMMM D, YYYY');
+            return getMomentTimezone(this.$store.state.timezone, date).format('dddd, MMMM D, YYYY');
         },
         currencyFormat(amount) {
             return formatCurrencyIntl(amount, this.$store.state.currency);

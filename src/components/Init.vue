@@ -55,11 +55,12 @@
 
 <script>
 import axios from 'axios';
-import { getMomentDate } from '../utils/dateUtils';
+import { getMomentTimezone } from '../utils/dateUtils';
 import Swal from 'sweetalert2';
 import NavBtns from './Nav/NavBtns.vue';
 import TourForm from './Initialization/TourForm.vue';
 import TourDetails from './Initialization/TourDetails.vue';
+import moment from 'moment';
 
 export default {
     name: 'Init',
@@ -103,7 +104,7 @@ export default {
                 hotel_image: '',
                 hotel_address: '',
                 timezone: this.$store.state.timezone,
-                date: getMomentDate().format('YYYY-MM-DD'),
+                date: getMomentTimezone(this.$store.state.timezone).format('YYYY-MM-DD'),
                 time_date: null,
                 total_people_selected: 0,
                 people_group: [],
@@ -347,8 +348,8 @@ export default {
             this.dateTimeArr = this.dateTimeArr.filter(slot => {
                 return !Object.values(this.blockedTimes).some(({ date: blockedDate, time, package_has_slots }) => {
                     if (blockedDate !== date || !package_has_slots) return false;
-                    const [startTime, endTime] = time.map(t => getMomentDate(`2000-01-01T${t}`));
-                    const slotTime = getMomentDate(`2000-01-01T${slot.slot_time}`);
+                    const [startTime, endTime] = time.map(t => getMomentTimezone(this.$store.state.timezone, `2000-01-01T${t}`).format('YYYY-MM-DD HH:mm:ss'));
+                    const slotTime = getMomentTimezone(this.$store.state.timezone, `2000-01-01T${slot.slot_time}`).format('YYYY-MM-DD HH:mm:ss');
                     return slotTime >= startTime && slotTime <= endTime;
                 });
             });
@@ -669,9 +670,22 @@ export default {
         callToBookDuration(bookDuration, timeSlot) {
             if (!this.form.call_to_book) return false;
 
-            const expiryTime = getMomentDate().add(bookDuration, 'hours');
-            const slotTime = getMomentDate(`${timeSlot.date}T${timeSlot.slot_time}`);
-            return slotTime < expiryTime;
+            const timezone = this.$store.state.timezone;
+
+            // Use backend time as-is, don't convert timezone
+            const slotTime = moment.parseZone(`${timeSlot.date}T${timeSlot.slot_time}`);
+
+            // Get current time in timezone
+            const currentTime = getMomentTimezone(timezone);
+
+            const latestBookableTime = slotTime.clone().subtract(bookDuration, 'hours');
+
+            const currentTimeFormatted = currentTime.format('YYYY-MM-DD HH:mm:ss');
+            const slotTimeFormatted = latestBookableTime.format('YYYY-MM-DD HH:mm:ss');
+
+            const isPast = currentTimeFormatted > slotTimeFormatted;
+
+            return isPast;
         },
 
         callToBookValidation(timeSlot, bool) {
@@ -687,9 +701,9 @@ export default {
             if (!tenants.includes(tenant)) return false;
 
             const packageIds = tenant === 'kens' ? [1, 2, 6] : [1];
-            const selectedDate = getMomentDate(date).format('YYYY-MM-DD');
-            const firstDate = getMomentDate('2026-01-13').format('YYYY-MM-DD');
-            const secondDate = getMomentDate('2026-01-27').format('YYYY-MM-DD');
+            const selectedDate = getMomentTimezone(this.$store.state.timezone, date).format('YYYY-MM-DD');
+            const firstDate = getMomentTimezone(this.$store.state.timezone, '2026-01-13').format('YYYY-MM-DD');
+            const secondDate = getMomentTimezone(this.$store.state.timezone, '2026-01-27').format('YYYY-MM-DD');
             const isClosed =
                 selectedDate >= firstDate &&
                 selectedDate < secondDate &&
@@ -764,11 +778,11 @@ export default {
         },
 
         getStartDate() {
-            return getMomentDate().format('YYYY-MM-DD');
+            return getMomentTimezone(this.$store.state.timezone).format('YYYY-MM-DD');
         },
 
         getEndDate() {
-            const date = getMomentDate().year(getMomentDate().year() + 1).month(11).date(31);
+            const date = getMomentTimezone(this.$store.state.timezone).year(getMomentTimezone(this.$store.state.timezone).year() + 1).month(11).date(31);
             date.set({ hour: 23, minute: 59, second: 59, millisecond: 999 });
             return date.format('YYYY-MM-DD');
         },
@@ -778,9 +792,9 @@ export default {
         },
 
         calculateTime(timeValue, hoursToAdd, minutesToAdd) {
-            const time = getMomentDate(`2000-01-01T${timeValue}`);
-            time.add(hoursToAdd * 2, 'hours');
-            time.add(minutesToAdd * 2, 'minutes');
+            const time = getMomentTimezone(this.$store.state.timezone, `2000-01-01T${timeValue}`);
+            time.add(hoursToAdd, 'hours');
+            time.add(minutesToAdd, 'minutes');
             return time.format('HH:mm:ss');
         },
 
