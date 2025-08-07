@@ -121,9 +121,7 @@ export default {
     emits: ['edit-package', 'remove-from-cart', 'tab-change'],
     methods: {
         dateFormat(date) {
-            if (!date) return '';
-            const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
-            return getMomentDate(date).format('en-US', options);
+            return getMomentDate(date).format('dddd, MMMM D, YYYY');
         },
         currencyFormat(amount) {
             return formatCurrencyIntl(amount, this.$store.state.currency);

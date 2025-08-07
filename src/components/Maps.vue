@@ -57,7 +57,7 @@
 <script>
 import Swal from 'sweetalert2';
 import NavBtns from './Nav/NavBtns.vue';
-import { formatMomentDate, getMomentDate } from '../utils/dateUtils';
+import { getMomentDate } from '../utils/dateUtils';
 
 export default {
     name: 'GoogleMap',
@@ -96,8 +96,8 @@ export default {
     methods: {
         initializeFromStore() {
             this.date = this.$store.state.date
-                ? formatMomentDate(this.$store.state.date, 'YYYY-MM-DD')
-                : formatMomentDate(getMomentDate(), 'YYYY-MM-DD');
+                ? this.$store.state.date
+                : getMomentDate().format('YYYY-MM-DD');
             this.tenantId = this.$store.state.tenantId || null;
             this.tourOperatorId = this.$store.state.tourOperatorId || 0;
             this.iframeStatus = this.$store.state.iframeStatus;
@@ -130,18 +130,7 @@ export default {
             });
         },
         dateFormat(date) {
-            try {
-                const parsedDate = getMomentDate(date);
-                // this.$store.dispatch('storeDate', parsedDate);
-                return parsedDate.format('en-US', {
-                    weekday: 'short',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-            } catch {
-                return 'Invalid Date';
-            }
+            return getMomentDate(date).format('dddd, MMMM D, YYYY');
         },
         navigateToTab(tab, destination) {
             if ([1, 2, 3, 5].includes(tab)) {

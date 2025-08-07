@@ -55,7 +55,7 @@
 
 <script>
 import axios from 'axios';
-import { getMomentDate, formatMomentDate } from '../utils/dateUtils';
+import { getMomentDate } from '../utils/dateUtils';
 import Swal from 'sweetalert2';
 import NavBtns from './Nav/NavBtns.vue';
 import TourForm from './Initialization/TourForm.vue';
@@ -103,7 +103,7 @@ export default {
                 hotel_image: '',
                 hotel_address: '',
                 timezone: this.$store.state.timezone,
-                date: getMomentDate(),
+                date: getMomentDate().format('YYYY-MM-DD'),
                 time_date: null,
                 total_people_selected: 0,
                 people_group: [],
@@ -158,8 +158,7 @@ export default {
     },
     created() {
         this.initializeFromStore();
-        let date = formatMomentDate(this.form.date, 'YYYY-MM-DD');
-        this.fetchTourData(date, false);
+        this.fetchTourData(this.form.date, false);
         this.$store.dispatch('storeTabs', this.tabs);
         this.$store.dispatch('storeMindChange', 0);
     },
@@ -198,7 +197,7 @@ export default {
                 ? { ...this.form, ...storedForm }
                 : { ...this.form, ...defaultForm };
 
-            this.form.date = state.date ? getMomentDate(state.date) : this.getStartDate();
+            this.form.date = state.date ? state.date : this.getStartDate();
         },
 
         async fetchTourData(date, resetSlot = false) {
@@ -332,13 +331,12 @@ export default {
         updateBlockedTimes(date) {
             this.blockedTimes = Object.values(this.cartItem).reduce((acc, item) => {
                 if (item.package_id !== this.form.package_id) {
-                    const itemDate = formatMomentDate(item.date, 'YYYY-MM-DD');
                     const [hours, minutes] = item.travel_duration.split(':').map(Number);
                     const timeBefore = this.calculateTime(item.slot_time, -hours, -minutes);
                     const timeAfter = this.calculateTime(item.slot_time, hours, minutes);
 
                     acc[item.package_id] = {
-                        date: itemDate,
+                        date: item.date,
                         time: [timeBefore, timeAfter],
                         package_has_slots: item.package_has_slots
                     };
@@ -610,7 +608,7 @@ export default {
                 this.form.total_people_selected = 0;
                 this.form.paxDetails = {};
                 this.errors = [];
-                this.fetchPackageData(formatMomentDate(this.form.date, 'YYYY-MM-DD'), false, true);
+                this.fetchPackageData(this.form.date, false, true);
             }
         },
 
@@ -689,9 +687,9 @@ export default {
             if (!tenants.includes(tenant)) return false;
 
             const packageIds = tenant === 'kens' ? [1, 2, 6] : [1];
-            const selectedDate = getMomentDate(date);
-            const firstDate = getMomentDate('2025-01-13');
-            const secondDate = getMomentDate('2025-01-27');
+            const selectedDate = getMomentDate(date).format('YYYY-MM-DD');
+            const firstDate = getMomentDate('2026-01-13').format('YYYY-MM-DD');
+            const secondDate = getMomentDate('2026-01-27').format('YYYY-MM-DD');
             const isClosed =
                 selectedDate >= firstDate &&
                 selectedDate < secondDate &&
@@ -766,17 +764,13 @@ export default {
         },
 
         getStartDate() {
-            return getMomentDate();
+            return getMomentDate().format('YYYY-MM-DD');
         },
 
         getEndDate() {
-            const date = getMomentDate(
-                getMomentDate().year() + 1,
-                11,
-                31
-            );
-            date.setHours(23, 59, 59, 999);
-            return date;
+            const date = getMomentDate().year(getMomentDate().year() + 1).month(11).date(31);
+            date.set({ hour: 23, minute: 59, second: 59, millisecond: 999 });
+            return date.format('YYYY-MM-DD');
         },
 
         isDisabled(slot) {

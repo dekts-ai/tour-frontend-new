@@ -13,7 +13,7 @@
 <script>
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { formatMomentDate, getMomentDate } from '../utils/dateUtils';
+import { getMomentDate } from '../utils/dateUtils';
 import NavBtns from './Nav/NavBtns.vue';
 // import TabsSection from './Start/TabsSection.vue';
 import InnerContentSection from './Start/InnerContentSection.vue';
@@ -54,9 +54,9 @@ export default {
             }
 
             // Initialize date: use stored date if not in the past, otherwise use current date
-            const storedDate = this.$store.state.date ? getMomentDate(this.$store.state.date) : null;
-            const currentDate = getMomentDate();
-            this.date = (storedDate && storedDate >= currentDate) ? formatMomentDate(storedDate, 'YYYY-MM-DD') : formatMomentDate(currentDate, 'YYYY-MM-DD');
+            const storedDate = this.$store.state.date ? this.$store.state.date : null;
+            const currentDate = getMomentDate().format('YYYY-MM-DD');
+            this.date = (storedDate && storedDate >= currentDate) ? storedDate : currentDate;
 
             // Initialize from Vuex store or stored params, respecting URL intent
             this.tenantId = this.$store.state.tenantId || null;
@@ -184,7 +184,7 @@ export default {
             }
             this.$store.dispatch('storeFormData', formData);
             this.$store.dispatch('storePackageId', formData.package_id);
-            this.$store.dispatch('storeDate', getMomentDate(formData.date));
+            this.$store.dispatch('storeDate', formData.date);
             this.$router.push({ name: 'Init' });
         },
         removeFromCart(formData) {

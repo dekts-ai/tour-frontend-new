@@ -87,6 +87,7 @@
 
 <script>
 import NavBtns from './Nav/NavBtns.vue';
+import { getMomentDate } from '@/utils/dateUtils';
 
 export default {
     name: 'MyTrip',
@@ -137,7 +138,7 @@ export default {
             }
             this.$store.dispatch('storeFormData', formData);
             this.$store.dispatch('storePackageId', formData.package_id);
-            this.$store.dispatch('storeDate', getMomentDate(formData.date));
+            this.$store.dispatch('storeDate', formData.date);
             this.$router.push({ name: 'Init' });
         },
         generateTimeSlots() {
@@ -175,10 +176,10 @@ export default {
         },
         formatDate(dateString, isClass = false) {
             if (isClass) {
-                return formatMomentDate(dateString, 'YYYY-MM-DD');
+                return getMomentDate(dateString).format('YYYY-MM-DD');
             }
 
-            return formatMomentDate(dateString, 'EEE, MMMM d, yyyy');
+            return getMomentDate(dateString).format('dddd, MMMM D, YYYY');
         },
         formatTime(timeString) {
             const [hours, minutes] = timeString.split(':').map(Number);

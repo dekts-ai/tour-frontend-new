@@ -16,7 +16,7 @@ const localStoragePlugin = store => {
     const savedState = localStorage.getItem('appState');
     if (savedState) {
         const parsedState = JSON.parse(savedState);
-        const storedDate = parsedState.date ? getMomentDate(parsedState.date).format('YYYY-MM-DD') : null;
+        const storedDate = parsedState.date ? parsedState.date : null;
         const currentDate = getMomentDate().format('YYYY-MM-DD');
 
         // Check if stored date is in the past
@@ -26,7 +26,7 @@ const localStoragePlugin = store => {
             localStorage.removeItem('urlParams');
             store.replaceState({
                 iframeStatus: true,
-                date: getMomentDate(),
+                date: getMomentDate().format('YYYY-MM-DD'),
                 tenantId: null,
                 tourOperatorId: 0,
                 packageId: 0,
@@ -63,7 +63,7 @@ const localStoragePlugin = store => {
 export default createStore({
     state: {
         iframeStatus: true,
-        date: getMomentDate(),
+        date: getMomentDate().format('YYYY-MM-DD'),
         tenantId: null,
         tourOperatorId: 0,
         packageId: 0,

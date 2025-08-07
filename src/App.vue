@@ -55,9 +55,9 @@ export default {
 		});
 
 		// Determine date: use stored date if not in the past, otherwise use current date
-		const storedDate = storedParams.date ? getMomentDate(storedParams.date) : null;
-		const currentDate = getMomentDate();
-		this.date = (storedDate && storedDate.isSameOrAfter(currentDate, 'day')) ? storedDate : currentDate;
+		const storedDate = storedParams.date ? getMomentDate(storedParams.date).format('YYYY-MM-DD') : null;
+		const currentDate = getMomentDate().format('YYYY-MM-DD');
+		this.date = (storedDate && storedDate >= currentDate) ? storedDate : currentDate;
 
 		// Save parameters to localStorage
 		localStorage.setItem('urlParams', JSON.stringify({

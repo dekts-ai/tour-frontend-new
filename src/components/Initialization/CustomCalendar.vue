@@ -59,7 +59,7 @@
 
 <script>
 import axios from 'axios';
-import { formatMomentDate, getMomentDate } from '../../utils/dateUtils';
+import { getMomentDate } from '../../utils/dateUtils';
 
 export default {
     name: 'CustomCalendar',
@@ -106,7 +106,7 @@ export default {
             );
         },
         formattedSelectedDate() {
-            return formatMomentDate(this.form.date, 'dddd, MMMM D, YYYY');
+            return getMomentDate(this.form.date).format('dddd, MMMM D, YYYY');
         }
     },
     methods: {
