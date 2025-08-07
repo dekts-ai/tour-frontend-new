@@ -172,7 +172,7 @@ export default {
             this.cartItemLength = Object.keys(this.cartItem).length;
             this.iframeStatus = state.iframeStatus;
 
-            const storedForm = state.formData;
+            const storedForm = this.comboIds ? state?.formData : state?.cartItem?.[state.slotId];
             const defaultForm = {
                 tenant_id: state.tenantId || null,
                 tour_operator_id: state.tourOperatorId || 0,
@@ -197,8 +197,6 @@ export default {
             this.form = storedForm && storedForm.package_id === state.packageId && storedForm.affiliate_id === state.affiliateId
                 ? { ...this.form, ...storedForm }
                 : { ...this.form, ...defaultForm };
-
-            this.form.date = state.date ? state.date : this.getStartDate();
         },
 
         async fetchTourData(date, resetSlot = false) {
