@@ -11,18 +11,12 @@
         <div class="calendar-grid">
             <div class="calendar-day" v-for="day in weekDays" :key="day">{{ day }}</div>
             <div v-for="blank in blanks" :key="'b' + blank" class="calendar-cell blank"></div>
-            <div
-                v-for="day in daysInMonth"
-                :key="'d' + day"
-                class="calendar-cell"
-                :class="[
-                    getColorClass(day),
-                    { disabled: isDisabled(day) },
-                    { selected: isSelected(day) },
-                    { today: isToday(day) }
-                ]"
-                @click="selectDate(day)"
-            >
+            <div v-for="day in daysInMonth" :key="'d' + day" class="calendar-cell" :class="[
+                getColorClass(day),
+                { disabled: isDisabled(day) },
+                { selected: isSelected(day) },
+                { today: isToday(day) }
+            ]" @click="selectDate(day)">
                 {{ day }}
             </div>
         </div>

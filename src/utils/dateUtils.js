@@ -11,7 +11,7 @@ export const getMomentTimezone = (
     date = null
 ) => {
     return date
-        ? moment(date).tz(timezone)
+        ? moment.tz(date, timezone)
         : moment.tz(timezone);
 };
 
