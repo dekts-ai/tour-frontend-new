@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { defaultDateFormat } from '../../utils/dateUtils';
+import { getMomentTimezone } from '../../utils/dateUtils';
 import { formatCurrencyIntl } from '../../utils/currency';
 import Discount from './Discount.vue';
 
@@ -85,7 +85,7 @@ export default {
     },
     methods: {
         dateFormat(date) {
-            return defaultDateFormat(date);
+            return getMomentTimezone(this.$store.state.timezone, date).format('dddd, MMMM D, YYYY');
         },
         currencyFormat(amount) {
             return formatCurrencyIntl(amount, this.$store.state.currency);
