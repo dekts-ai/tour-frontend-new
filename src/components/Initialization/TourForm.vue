@@ -282,7 +282,6 @@
 import { formatCurrencyIntl } from '../../utils/currency';
 import CustomFields from './../Forms/CustomFields.vue';
 import Pickup from './../Hotel/Pickup.vue';
-import { format } from 'date-fns';
 import CustomCalendar from './CustomCalendar.vue';
 
 export default {
@@ -319,9 +318,6 @@ export default {
         'hasCustomFormFields',
         'submit'
     ],
-    mounted() {
-        this.form.date = format(this.form.date, 'yyyy-MM-dd');
-    },
     methods: {
         currencyFormat(amount) {
             return formatCurrencyIntl(amount, this.$store.state.currency);

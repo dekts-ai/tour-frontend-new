@@ -55,12 +55,12 @@
 
 <script>
 import axios from 'axios';
-import { format } from 'date-fns';
-import { getDateTz, getUTCDateFromTimeZone } from '../utils/dateUtils';
+import { getMomentTimezone } from '../utils/dateUtils';
 import Swal from 'sweetalert2';
 import NavBtns from './Nav/NavBtns.vue';
 import TourForm from './Initialization/TourForm.vue';
 import TourDetails from './Initialization/TourDetails.vue';
+import moment from 'moment';
 
 export default {
     name: 'Init',
@@ -104,7 +104,7 @@ export default {
                 hotel_image: '',
                 hotel_address: '',
                 timezone: this.$store.state.timezone,
-                date: getUTCDateFromTimeZone(this.$store.state.timezone),
+                date: getMomentTimezone(this.$store.state.timezone).format('YYYY-MM-DD'),
                 time_date: null,
                 total_people_selected: 0,
                 people_group: [],
@@ -159,8 +159,7 @@ export default {
     },
     created() {
         this.initializeFromStore();
-        let date = format(this.form.date, 'yyyy-MM-dd');
-        this.fetchTourData(date, false);
+        this.fetchTourData(this.form.date, false);
         this.$store.dispatch('storeTabs', this.tabs);
         this.$store.dispatch('storeMindChange', 0);
     },
@@ -173,7 +172,7 @@ export default {
             this.cartItemLength = Object.keys(this.cartItem).length;
             this.iframeStatus = state.iframeStatus;
 
-            const storedForm = state.formData;
+            const storedForm = this.comboIds ? state?.formData : state?.cartItem?.[state.slotId];
             const defaultForm = {
                 tenant_id: state.tenantId || null,
                 tour_operator_id: state.tourOperatorId || 0,
@@ -198,8 +197,6 @@ export default {
             this.form = storedForm && storedForm.package_id === state.packageId && storedForm.affiliate_id === state.affiliateId
                 ? { ...this.form, ...storedForm }
                 : { ...this.form, ...defaultForm };
-
-            this.form.date = state.date ? new Date(state.date) : this.getStartDate();
         },
 
         async fetchTourData(date, resetSlot = false) {
@@ -333,13 +330,12 @@ export default {
         updateBlockedTimes(date) {
             this.blockedTimes = Object.values(this.cartItem).reduce((acc, item) => {
                 if (item.package_id !== this.form.package_id) {
-                    const itemDate = format(new Date(item.date), 'yyyy-MM-dd');
                     const [hours, minutes] = item.travel_duration.split(':').map(Number);
                     const timeBefore = this.calculateTime(item.slot_time, -hours, -minutes);
                     const timeAfter = this.calculateTime(item.slot_time, hours, minutes);
 
                     acc[item.package_id] = {
-                        date: itemDate,
+                        date: item.date,
                         time: [timeBefore, timeAfter],
                         package_has_slots: item.package_has_slots
                     };
@@ -350,8 +346,8 @@ export default {
             this.dateTimeArr = this.dateTimeArr.filter(slot => {
                 return !Object.values(this.blockedTimes).some(({ date: blockedDate, time, package_has_slots }) => {
                     if (blockedDate !== date || !package_has_slots) return false;
-                    const [startTime, endTime] = time.map(t => new Date(`2000-01-01T${t}`));
-                    const slotTime = new Date(`2000-01-01T${slot.slot_time}`);
+                    const [startTime, endTime] = time.map(t => getMomentTimezone(this.$store.state.timezone, `2000-01-01T${t}`).format('YYYY-MM-DD HH:mm:ss'));
+                    const slotTime = getMomentTimezone(this.$store.state.timezone, `2000-01-01T${slot.slot_time}`).format('YYYY-MM-DD HH:mm:ss');
                     return slotTime >= startTime && slotTime <= endTime;
                 });
             });
@@ -611,7 +607,7 @@ export default {
                 this.form.total_people_selected = 0;
                 this.form.paxDetails = {};
                 this.errors = [];
-                this.fetchPackageData(format(new Date(this.form.date), 'yyyy-MM-dd'), false, true);
+                this.fetchPackageData(this.form.date, false, true);
             }
         },
 
@@ -672,10 +668,22 @@ export default {
         callToBookDuration(bookDuration, timeSlot) {
             if (!this.form.call_to_book) return false;
 
-            const now = getDateTz(new Date(), this.form.timezone);
-            const expiryTime = new Date(now.getTime() + bookDuration * 60 * 60 * 1000);
-            const slotTime = new Date(`${timeSlot.date}T${timeSlot.slot_time}`);
-            return slotTime < expiryTime;
+            const timezone = this.$store.state.timezone;
+
+            // Use backend time as-is, don't convert timezone
+            const slotTime = moment.parseZone(`${timeSlot.date}T${timeSlot.slot_time}`);
+
+            // Get current time in timezone
+            const currentTime = getMomentTimezone(timezone);
+
+            const latestBookableTime = slotTime.clone().subtract(bookDuration, 'hours');
+
+            const currentTimeFormatted = currentTime.format('YYYY-MM-DD HH:mm:ss');
+            const slotTimeFormatted = latestBookableTime.format('YYYY-MM-DD HH:mm:ss');
+
+            const isPast = currentTimeFormatted > slotTimeFormatted;
+
+            return isPast;
         },
 
         callToBookValidation(timeSlot, bool) {
@@ -691,9 +699,9 @@ export default {
             if (!tenants.includes(tenant)) return false;
 
             const packageIds = tenant === 'kens' ? [1, 2, 6] : [1];
-            const selectedDate = new Date(date);
-            const firstDate = new Date('2025-01-13');
-            const secondDate = new Date('2025-01-27');
+            const selectedDate = getMomentTimezone(this.$store.state.timezone, date).format('YYYY-MM-DD');
+            const firstDate = getMomentTimezone(this.$store.state.timezone, '2026-01-13').format('YYYY-MM-DD');
+            const secondDate = getMomentTimezone(this.$store.state.timezone, '2026-01-27').format('YYYY-MM-DD');
             const isClosed =
                 selectedDate >= firstDate &&
                 selectedDate < secondDate &&
@@ -768,17 +776,13 @@ export default {
         },
 
         getStartDate() {
-            return getUTCDateFromTimeZone(this.$store.state.timezone);
+            return getMomentTimezone(this.$store.state.timezone).format('YYYY-MM-DD');
         },
 
         getEndDate() {
-            const date = new Date(
-                getDateTz(new Date(), this.$store.state.timezone).getFullYear() + 1,
-                11,
-                31
-            );
-            date.setHours(23, 59, 59, 999);
-            return date;
+            const date = getMomentTimezone(this.$store.state.timezone).year(getMomentTimezone(this.$store.state.timezone).year() + 1).month(11).date(31);
+            date.set({ hour: 23, minute: 59, second: 59, millisecond: 999 });
+            return date.format('YYYY-MM-DD');
         },
 
         isDisabled(slot) {
@@ -786,15 +790,10 @@ export default {
         },
 
         calculateTime(timeValue, hoursToAdd, minutesToAdd) {
-            const time = new Date(`2000-01-01T${timeValue}`);
-            time.setHours(time.getHours() + hoursToAdd * 2);
-            time.setMinutes(time.getMinutes() + minutesToAdd * 2);
-            return time.toLocaleTimeString('en-US', {
-                hour12: false,
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
+            const time = getMomentTimezone(this.$store.state.timezone, `2000-01-01T${timeValue}`);
+            time.add(hoursToAdd, 'hours');
+            time.add(minutesToAdd, 'minutes');
+            return time.format('HH:mm:ss');
         },
 
         openPhonePopup() {

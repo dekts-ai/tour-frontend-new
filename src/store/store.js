@@ -1,16 +1,23 @@
 // store/index.js
 
 import { createStore } from "vuex";
-import { getUTCDateFromTimeZone } from '../utils/dateUtils';
+import { getMomentTimezone } from '../utils/dateUtils';
 
-// Plugin to persist Vuex state to localStorage
+/**
+ * Vuex plugin to persist state to localStorage.
+ *
+ * Restores state from localStorage on initialization, and checks if the stored
+ * date is in the past. If it is, clear localStorage and reset state.
+ *
+ * Subscribes to store mutations to save state to localStorage.
+ */
 const localStoragePlugin = store => {
     // Restore state from localStorage on initialization
     const savedState = localStorage.getItem('appState');
     if (savedState) {
         const parsedState = JSON.parse(savedState);
-        const storedDate = parsedState.date ? new Date(parsedState.date) : null;
-        const currentDate = getUTCDateFromTimeZone(parsedState.timezone);
+        const storedDate = parsedState.date ? parsedState.date : null;
+        const currentDate = getMomentTimezone().format('YYYY-MM-DD');
 
         // Check if stored date is in the past
         if (storedDate && storedDate < currentDate) {
@@ -19,7 +26,7 @@ const localStoragePlugin = store => {
             localStorage.removeItem('urlParams');
             store.replaceState({
                 iframeStatus: true,
-                date: getUTCDateFromTimeZone(parsedState.timezone),
+                date: getMomentTimezone().format('YYYY-MM-DD'),
                 tenantId: null,
                 tourOperatorId: 0,
                 packageId: 0,
@@ -56,7 +63,7 @@ const localStoragePlugin = store => {
 export default createStore({
     state: {
         iframeStatus: true,
-        date: getUTCDateFromTimeZone(),
+        date: getMomentTimezone().format('YYYY-MM-DD'),
         tenantId: null,
         tourOperatorId: 0,
         packageId: 0,
