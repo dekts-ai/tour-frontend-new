@@ -55,9 +55,9 @@
 </template>
 
 <script>
-import { format } from 'date-fns';
 import Swal from 'sweetalert2';
 import NavBtns from './Nav/NavBtns.vue';
+import { getMomentTimezone } from '../utils/dateUtils';
 
 export default {
     name: 'GoogleMap',
@@ -96,8 +96,8 @@ export default {
     methods: {
         initializeFromStore() {
             this.date = this.$store.state.date
-                ? format(new Date(this.$store.state.date), 'yyyy-MM-dd')
-                : format(new Date(), 'yyyy-MM-dd');
+                ? this.$store.state.date
+                : getMomentTimezone(this.$store.state.timezone).format('YYYY-MM-DD');
             this.tenantId = this.$store.state.tenantId || null;
             this.tourOperatorId = this.$store.state.tourOperatorId || 0;
             this.iframeStatus = this.$store.state.iframeStatus;
@@ -130,18 +130,7 @@ export default {
             });
         },
         dateFormat(date) {
-            try {
-                const parsedDate = new Date(date);
-                // this.$store.dispatch('storeDate', parsedDate);
-                return parsedDate.toLocaleDateString('en-US', {
-                    weekday: 'short',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-            } catch {
-                return 'Invalid Date';
-            }
+            return getMomentTimezone(this.$store.state.timezone, date).format('dddd, MMMM D, YYYY');
         },
         navigateToTab(tab, destination) {
             if ([1, 2, 3, 5].includes(tab)) {
