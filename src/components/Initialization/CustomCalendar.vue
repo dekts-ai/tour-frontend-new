@@ -26,7 +26,6 @@
                 <strong>Selected Date:</strong>
                 <div>{{ formattedSelectedDate }}</div>
             </div>
-
             <div class="color-legend">
                 <div class="legend-item">
                     <span class="legend-box bg-light-green"></span> Low Booking (≤ 30%)
