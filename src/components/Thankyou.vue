@@ -122,7 +122,7 @@
 																								<th scope="col"> Total
 																									Booked <br>People
 																									({{
-																									tourBooking.tourists
+																										tourBooking.tourists
 																									}})
 																								</th>
 																								<th scope="col">Price
@@ -143,12 +143,16 @@
 																							<tr>
 																								<td>{{ item.tourists }}
 																								</td>
-																								<td>{{ currencyFormat(item.rate) }}
+																								<td>{{
+																									currencyFormat(item.rate)
+																								}}
 																								</td>
 																								<td
 																									v-if="tourBooking.package_has_slots">
 																									{{ item.fees }}</td>
-																								<td>{{ currencyFormat(item.total) }}
+																								<td>{{
+																									currencyFormat(item.total)
+																								}}
 																								</td>
 																							</tr>
 																						</tbody>
@@ -242,7 +246,7 @@
 																									+
 																									Number(tourBooking.addons_total)
 																									+
-																							Number(tourBooking.addons_fee))
+																									Number(tourBooking.addons_fee))
 																							}} <span>(inclusive all
 																								taxes)</span></div>
 																					</div>
@@ -324,6 +328,22 @@ export default {
 
 			axios.post("/package-booking-confirmed", { ids: payload }).then((response) => {
 				this.tourBooking = response.data;
+				// 🔥 Push booking success event to GTM
+				if (window.dataLayer) {
+					const bookingData = this.tourBooking.data[0]; // assuming multiple but taking first
+					window.dataLayer.push({
+						event: "thankyou",
+						booking_id: bookingData.id,
+						customer_name: this.customer.name,
+						customer_email: this.customer.email,
+						customer_phone: this.customer.phone_number,
+						tid: this.$store.state.tenantId || null,
+						oid: this.$store.state.tourOperatorId || 0,
+						pid: this.$store.state.packageId || 0,
+						aid: this.$store.state.affiliateId || 0,
+						cids: this.$store.state.comboIds || 0
+					});
+				}
 				this.$store.dispatch('storeBookingIds', {});
 				this.processLoader(loader);
 			}).catch(function (error) {
@@ -335,8 +355,8 @@ export default {
 			loader.hide();
 		},
 		currencyFormat(amount) {
-            return formatCurrencyIntl(amount, this.$store.state.currency);
-        },
+			return formatCurrencyIntl(amount, this.$store.state.currency);
+		},
 	},
 };
 </script>

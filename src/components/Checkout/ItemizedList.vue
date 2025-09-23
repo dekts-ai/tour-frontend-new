@@ -3,7 +3,8 @@
         <div class="total-cost-wrap" v-for="item in items" :key="item.tour_slot_id">
             <div class="title-wrap">
                 <div class="title">{{ item.package_name }}</div>
-                <div class="time">{{ dateFormat(item.date) }} <span v-if="item.package_has_slots">@ {{ item.time_date }}</span></div>
+                <div class="time">{{ dateFormat(item.date) }} <span v-if="item.package_has_slots">@ {{ item.time_date
+                        }}</span></div>
             </div>
             <div v-for="(pax, key) in item.people_group" :key="key">
                 <div v-if="pax > 0" class="ages-wrap d-flex justify-content-between align-items-center">
@@ -48,10 +49,12 @@
             </div>
             <div class="other-details-wrap d-flex justify-content-between align-items-center lemonchiffon">
                 <div class="title"><strong>Tour Cost</strong></div>
-                <div class="amount">{{ currencyFormat(Number(item.total) + Number(item.addons_total) + Number(item.addons_fee)) }}</div>
+                <div class="amount">{{ currencyFormat(Number(item.total) + Number(item.addons_total) +
+                    Number(item.addons_fee)) }}</div>
             </div>
 
-            <Discount :item="item" :allItem="items" :globalTotalItem="globalTotalItem" @update-items="handleItemsUpdate" />
+            <Discount :item="item" :allItem="items" :globalTotalItem="globalTotalItem"
+                @update-items="handleItemsUpdate" />
 
             <p class="text-start tour-packages-detail ms-4 mt-2 mb-2" v-if="seatErrors?.length">
                 <b>Error(s):</b>

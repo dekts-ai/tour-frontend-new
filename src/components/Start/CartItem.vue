@@ -13,10 +13,10 @@
                                 <span class="duration-text">{{ item.duration || '' }} {{ item.type || '' }}</span>
                             </div>
                         </div>
-                        <div class="tourselected-title-top">
+                        <!-- <div class="tourselected-title-top">
                             {{ dateFormat(item.date) }}
                             <span v-if="item.package_has_slots">@ {{ item.time_date || '' }}</span>
-                        </div>
+                        </div> -->
                         <div class="tourselected-title-top">{{ item.short_description || '' }}</div>
                         <div class="what-bring-wrap-added" v-if="item?.things_to_bring?.length">
                             <div class="what-bring-title">What to bring</div>
@@ -30,6 +30,15 @@
         </div>
         <div class="tourselected-totalcost">
             <div class="tourselected-group-wrap">
+                <!-- <div class="tourselected-title">Scheduled On</div> -->
+                <div class="tourselected-title-top">
+                    <span style="color: #fb7e05;">{{ dateFormat(item.date) }}</span>
+                    <span v-if="item.package_has_slots" style="color: #004085;"> @
+                        <span style="color: #0070FF">
+                            {{ item.time_date || '' }}
+                        </span>
+                    </span>
+                </div>
                 <div class="tourselected-group-small-title protanopia">Guests:</div>
                 <div class="tourselected-group-people">
                     <div
@@ -76,20 +85,24 @@
                     <div v-for="(option, k) in item.custom_fields.filter(f => f.priceInfo?.enabled)"
                         :key="`custom-field-${k}`" class="tourselected-costcount-subitem">
                         <div class="tourselected-costcount-subitem-title">{{ option.name }}</div>
-                        <div class="tourselected-costcount-subitem-cost">{{ currencyFormat(option.priceInfo?.price ||
-                            0) }}</div>
+                        <div class="tourselected-costcount-subitem-cost">
+                            {{ currencyFormat(option.priceInfo?.price || 0) }}
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="tourselected-costcount-subitem">
                 <div class="tourselected-costcount-subitem-title">Booking Fees:</div>
-                <div class="tourselected-costcount-subitem-cost">{{ currencyFormat(Number(item.fees || 0) + Number(item.addons_fee ||
-                    0)) }}</div>
+                <div class="tourselected-costcount-subitem-cost">
+                    {{ currencyFormat(Number(item.fees || 0) + Number(item.addons_fee || 0)) }}
+                </div>
             </div>
             <div class="tourselected-costcount-total">
                 <div class="tourselected-costcount-total-title">Tour Cost:</div>
-                <div class="tourselected-costcount-total-cost">{{ currencyFormat(Number(item.total || 0) + Number(item.addons_fee ||
-                    0) + Number(item.addons_total || 0)) }}</div>
+                <div class="tourselected-costcount-total-cost">
+                    {{ currencyFormat(Number(item.total || 0) + Number(item.addons_fee || 0) + Number(item.addons_total
+                        || 0)) }}
+                </div>
             </div>
             <div class="tourselected-edit-wrap">
                 <div class="tourselected-action-wrap">
@@ -100,8 +113,7 @@
                         <a class="action-btn action-btn-delete" @click="$emit('remove-from-cart', item)">Delete</a>
                     </div>
                     <div class="tourselected-action-btn">
-                        <a class="action-btn action-btn-checkout"
-                            @click="$emit('tab-change', 5, 'Checkout')">
+                        <a class="action-btn action-btn-checkout" @click="$emit('tab-change', 5, 'Checkout')">
                             Checkout
                         </a>
                     </div>

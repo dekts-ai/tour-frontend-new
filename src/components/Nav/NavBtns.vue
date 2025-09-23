@@ -70,10 +70,7 @@ export default {
                 } else if (currentTab === 4) {
                     targetTab = 3;
                     destination = 'MyTrip';
-                } else if (currentTab === 3) {
-                    targetTab = 2;
-                    destination = 'Init';
-                } else if (currentTab === 2) {
+                } else if (currentTab === 3 || currentTab === 2) {
                     targetTab = 1;
                     destination = 'Index';
                 }
@@ -99,10 +96,7 @@ export default {
 
             if (this.comboIds) {
                 // Navigate to the next tab if comboIds is truthy
-                if (currentTab === 1) {
-                    targetTab = 2;
-                    destination = 'Init';
-                } else if (currentTab === 2) {
+                if (currentTab === 1 || currentTab === 2) {
                     targetTab = 3;
                     destination = 'MyTrip';
                 } else if (currentTab === 3) {
@@ -122,8 +116,6 @@ export default {
                     destination = 'Checkout';
                 }
             }
-
-            // console.log(currentTab, targetTab, destination);
 
             if (targetTab) {
                 this.toTab(targetTab, destination);
