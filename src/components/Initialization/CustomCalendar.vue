@@ -105,10 +105,11 @@ export default {
     methods: {
         async fetchColorDates() {
             const month = this.currentMonth + 1;
+            const year = this.currentYear;
             const { package_id, affiliate_id } = this.form;
 
             try {
-                const response = await axios.get(`/get-color-date/${month}/${package_id}/${affiliate_id}`);
+                const response = await axios.get(`/get-color-date/${month}/${year}/${package_id}/${affiliate_id}`);
                 const data = response.data;
                 const colored = {};
 
