@@ -168,9 +168,8 @@ export default {
 
         roundout(amount, places = 2) {
             if (places < 0) places = 0;
-            const x = Math.pow(10, places);
-            const formul = (amount * x).toFixed(10);
-            return (amount >= 0 ? Math.ceil(formul) : Math.floor(formul)) / x;
+            let factor = Math.pow(10, places);
+            return Math.round(amount * factor) / factor;
         }
     }
 };

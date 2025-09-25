@@ -10,40 +10,21 @@
                     <div class="col-12">
                         <div class="row payment-row">
                             <div class="col-12">
-                                <TourForm 
-                                    ref="TourForm" 
-                                    :form="form" 
-                                    :begins="begins"
-                                    :slot-not-found="slotNotFound" 
-                                    :date-time-arr="dateTimeArr" 
-                                    :reveal="reveal"
-                                    :tour-package-name="tourPackageName" 
-                                    :hotels="hotels" 
-                                    :errors="errors"
-                                    :is_group_rate_enabled="is_group_rate_enabled"
+                                <TourForm ref="TourForm" :form="form" :begins="begins" :slot-not-found="slotNotFound"
+                                    :date-time-arr="dateTimeArr" :reveal="reveal" :tour-package-name="tourPackageName"
+                                    :hotels="hotels" :errors="errors" :is_group_rate_enabled="is_group_rate_enabled"
                                     :tour-package-rate-groups="details.tourPackageRateGroups"
-                                    :selectgrouppeoples="selectgrouppeoples" 
-                                    :has_contacts="has_contacts"
-                                    :static-date-range="staticDateRange" 
-                                    :selected-date="selectedDate"
-                                    :call-to-book-validation="callToBookValidation"
-                                    :open-phone-popup="openPhonePopup" 
-                                    :selected-slot="selectedSlot"
-                                    :is-disabled="isDisabled"
+                                    :selectgrouppeoples="selectgrouppeoples" :has_contacts="has_contacts"
+                                    :static-date-range="staticDateRange" :selected-date="selectedDate"
+                                    :call-to-book-validation="callToBookValidation" :open-phone-popup="openPhonePopup"
+                                    :selected-slot="selectedSlot" :is-disabled="isDisabled"
                                     :handle-group-rate-discount-change="handleGroupRateDiscountChange"
-                                    :increment="increment" 
-                                    :decrement="decrement"
-                                    :update-pax-detail="updatePaxDetail" 
-                                    :remove-pax="removePax"
-                                    :has-custom-form-fields="hasCustomFormFields" 
-                                    :submit="submit" 
-                                />
+                                    :increment="increment" :decrement="decrement" :update-pax-detail="updatePaxDetail"
+                                    :remove-pax="removePax" :has-custom-form-fields="hasCustomFormFields"
+                                    :submit="submit" />
 
-                                <TourDetails 
-                                    :tour-package-data="details.tourPackageData" 
-                                    :form="form"
-                                    :things-to-bring="details.thingsToBring" 
-                                />
+                                <TourDetails :tour-package-data="details.tourPackageData" :form="form"
+                                    :things-to-bring="details.thingsToBring" />
                             </div>
                         </div>
                     </div>
@@ -735,10 +716,9 @@ export default {
         },
 
         roundout(amount, places = 2) {
-            if (places < 0) return amount;
-            const x = Math.pow(10, places);
-            const formul = (amount * x).toFixed(10);
-            return (amount >= 0 ? Math.ceil(formul) : Math.floor(formul)) / x;
+            if (places < 0) places = 0;
+            let factor = Math.pow(10, places);
+            return Math.round(amount * factor) / factor;
         },
 
         processLoader(show) {

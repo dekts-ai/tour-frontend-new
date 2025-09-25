@@ -439,13 +439,9 @@ export default {
         },
 
         roundout(amount, places = 2) {
-            if (places < 0) {
-                places = 0;
-            }
-
-            let x = Math.pow(10, places);
-            let formul = (amount * x).toFixed(10);
-            return (amount >= 0 ? Math.ceil(formul) : Math.floor(formul)) / x;
+            if (places < 0) places = 0;
+            let factor = Math.pow(10, places);
+            return Math.round(amount * factor) / factor;
         }
     }
 }
