@@ -681,8 +681,8 @@ export default {
 
             const packageIds = tenant === 'kens' ? [1, 2, 6] : [1];
             const selectedDate = getMomentTimezone(this.$store.state.timezone, date).format('YYYY-MM-DD');
-            const firstDate = getMomentTimezone(this.$store.state.timezone, '2026-01-13').format('YYYY-MM-DD');
-            const secondDate = getMomentTimezone(this.$store.state.timezone, '2026-01-27').format('YYYY-MM-DD');
+            const firstDate = getMomentTimezone(this.$store.state.timezone, '2026-01-12').format('YYYY-MM-DD');
+            const secondDate = getMomentTimezone(this.$store.state.timezone, '2026-01-19').format('YYYY-MM-DD');
             const isClosed =
                 selectedDate >= firstDate &&
                 selectedDate < secondDate &&
