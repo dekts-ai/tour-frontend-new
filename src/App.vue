@@ -63,8 +63,10 @@ export default {
 		this.$store.dispatch('storeTimezone', this.timezone);
 
 		// Determine date: use stored date if not in the past, otherwise use current date
+		const today = getMomentTimezone(this.$store.state.timezone);
+		const isDixies = this.$store.state.tenantId === 'dixies' && today.year() === 2025;
 		const storedDate = storedParams.date ? storedParams.date : null;
-		const currentDate = getMomentTimezone(this.timezone).format('YYYY-MM-DD');
+		const currentDate = isDixies ? getMomentTimezone(this.$store.state.timezone, [2026, 0, 1]).format('YYYY-MM-DD') : getMomentTimezone(this.$store.state.timezone).format('YYYY-MM-DD');
 		this.date = (storedDate && storedDate >= currentDate) ? storedDate : currentDate;
 		this.$store.dispatch('storeDate', this.date);
 

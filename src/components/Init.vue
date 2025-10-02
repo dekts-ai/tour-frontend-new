@@ -85,7 +85,7 @@ export default {
                 hotel_image: '',
                 hotel_address: '',
                 timezone: this.$store.state.timezone,
-                date: getMomentTimezone(this.$store.state.timezone).format('YYYY-MM-DD'),
+                date: this.getFormDate(),
                 time_date: null,
                 total_people_selected: 0,
                 people_group: [],
@@ -145,6 +145,13 @@ export default {
         this.$store.dispatch('storeMindChange', 0);
     },
     methods: {
+        getFormDate() {
+            const today = getMomentTimezone(this.$store.state.timezone);
+            if (this.$store.state.tenantId === 'dixies' && today.year() === 2025) {
+                return getMomentTimezone(this.$store.state.timezone, [2026, 0, 1]).format('YYYY-MM-DD');
+            }
+            return getMomentTimezone(this.$store.state.timezone).format('YYYY-MM-DD');
+        },
         initializeFromStore() {
             const { state } = this.$store;
             this.packageOrder = state.packageOrder || [];
