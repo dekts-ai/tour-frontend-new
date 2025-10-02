@@ -54,8 +54,10 @@ export default {
             }
 
             // Initialize date: use stored date if not in the past, otherwise use current date
+            const today = getMomentTimezone(this.$store.state.timezone);
+            const isDixies = this.$store.state.tenantId === 'dixies' && today.year() === 2025;
             const storedDate = this.$store.state.date ? this.$store.state.date : null;
-            const currentDate = getMomentTimezone(this.$store.state.timezone).format('YYYY-MM-DD');
+            const currentDate = isDixies ? getMomentTimezone(this.$store.state.timezone, [2026, 0, 1]).format('YYYY-MM-DD') : getMomentTimezone(this.$store.state.timezone).format('YYYY-MM-DD');
             this.date = (storedDate && storedDate >= currentDate) ? storedDate : currentDate;
 
             // Initialize from Vuex store or stored params, respecting URL intent
@@ -220,7 +222,7 @@ export default {
         processLoader(loader) {
             loader.hide();
         },
-        removePreviousSessionCartItems() {            
+        removePreviousSessionCartItems() {
             const strCids = this.$store.state.comboIds.split(',');
 
             // Filter out items whose package_id is not in strCids

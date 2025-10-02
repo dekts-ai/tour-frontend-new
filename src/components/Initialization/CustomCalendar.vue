@@ -60,11 +60,15 @@ export default {
     emits: ['update:modelValue', 'selected'],
     data() {
         const today = getMomentTimezone(this.$store.state.timezone);
+        const isDixies = this.$store.state.tenantId === 'dixies' && today.year() === 2025;
+
         return {
-            currentMonth: today.month(),
-            currentYear: today.year(),
+            currentMonth: isDixies ? 0 : today.month(),  // Jan if Dixies
+            currentYear: isDixies ? 2026 : today.year(), // 2026 if Dixies
             selected: this.modelValue,
-            colorDates: {}
+            colorDates: {},
+            minYear: isDixies ? 2026 : today.year(),
+            minMonth: isDixies ? 0 : today.month()
         };
     },
     mounted() {
@@ -93,6 +97,15 @@ export default {
         },
         isPrevDisabled() {
             const today = getMomentTimezone(this.$store.state.timezone);
+
+            if (this.$store.state.tenantId === 'dixies' && today.year() === 2025) {
+                return (
+                    (this.currentYear < this.minYear) ||
+                    (this.currentYear === this.minYear && this.currentMonth <= this.minMonth)
+                );
+            }
+
+            // default logic for others
             return (
                 this.currentYear === today.year() &&
                 this.currentMonth === today.month()
@@ -140,20 +153,24 @@ export default {
             const dateKey = this.dateKey(day);
             const data = this.colorDates[dateKey];
 
-            // Disable due to backend data
             if (data?.disabled) return true;
 
-            // Disable due to timezone/past
-            const dateParts = this.getDateParts();
-
-            const tzYear = parseInt(dateParts.year);
-            const tzMonth = parseInt(dateParts.month) - 1;
-            const tzDay = parseInt(dateParts.day);
-
+            const today = getMomentTimezone(this.$store.state.timezone);
             const cellDate = getMomentTimezone(this.$store.state.timezone, [this.currentYear, this.currentMonth, day]);
-            const todayDate = getMomentTimezone(this.$store.state.timezone, [tzYear, tzMonth, tzDay]);
 
-            return cellDate < todayDate;
+            if (this.$store.state.tenantId === 'dixies' && today.year() === 2025) {
+                // Block all before Jan 2026
+                const minDate = getMomentTimezone(this.$store.state.timezone, [this.minYear, this.minMonth, 1]);
+                return cellDate < minDate;
+            } else {
+                // Existing past-date logic
+                const dateParts = this.getDateParts();
+                const tzYear = parseInt(dateParts.year);
+                const tzMonth = parseInt(dateParts.month) - 1;
+                const tzDay = parseInt(dateParts.day);
+                const todayDate = getMomentTimezone(this.$store.state.timezone, [tzYear, tzMonth, tzDay]);
+                return cellDate < todayDate;
+            }
         },
         isSelected(day) {
             return this.modelValue === this.dateKey(day);
