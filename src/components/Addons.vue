@@ -20,9 +20,9 @@
                         </label>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Meal Preference</label>
-                        <select v-model="addons.mealPreference" class="form-select">
+                    <div class="addon-field">
+                        <label class="addon-field-label">Meal Preference</label>
+                        <select v-model="addons.mealPreference" class="addon-select">
                             <option value="">Select meal preference</option>
                             <option value="vegetarian">Vegetarian</option>
                             <option value="vegan">Vegan</option>
@@ -42,20 +42,20 @@
                         </label>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Payment Notes</label>
+                    <div class="addon-field">
+                        <label class="addon-field-label">Payment Notes</label>
                         <textarea v-model="addons.paymentNotes" 
-                            class="form-textarea" 
+                            class="addon-textarea" 
                             rows="3" 
-                            placeholder="Any payment - related notes"></textarea>
+                            placeholder="Any payment-related notes"></textarea>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Internal Comments</label>
+                    <div class="addon-field">
+                        <label class="addon-field-label">Internal Comments</label>
                         <textarea v-model="addons.internalComments" 
-                            class="form-textarea" 
+                            class="addon-textarea" 
                             rows="3" 
-                            placeholder="Internal comments for staff ..."></textarea>
+                            placeholder="Internal comments for staff..."></textarea>
                     </div>
                 </div>
 
@@ -258,11 +258,11 @@ export default {
     font-weight: var(--font-medium);
 }
 
-.form-group {
+.addon-field {
     margin-bottom: var(--space-5);
 }
 
-.form-label {
+.addon-field-label {
     display: block;
     font-size: var(--text-base);
     font-weight: var(--font-semibold);
@@ -270,7 +270,7 @@ export default {
     margin-bottom: var(--space-2);
 }
 
-.form-select {
+.addon-select {
     width: 100%;
     padding: var(--space-3);
     border: 2px solid var(--neutral-200);
@@ -281,13 +281,13 @@ export default {
     transition: all var(--transition-base);
 }
 
-.form-select:focus {
+.addon-select:focus {
     outline: none;
     border-color: var(--primary-teal);
     box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
 }
 
-.form-textarea {
+.addon-textarea {
     width: 100%;
     padding: var(--space-3);
     border: 2px solid var(--neutral-200);
@@ -299,7 +299,7 @@ export default {
     transition: all var(--transition-base);
 }
 
-.form-textarea:focus {
+.addon-textarea:focus {
     outline: none;
     border-color: var(--primary-teal);
     box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
