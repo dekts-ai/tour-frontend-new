@@ -237,6 +237,14 @@ export default {
                 this.phone_num = this.current_phone_number;
                 this.phone_ext = this.current_phone_code;
                 this.phone_flag = this.getFlagEmoji(this.phone_ext, true);
+                
+                // Add click outside listener
+                document.addEventListener('click', this.handleClickOutside);
+        },
+
+        unmounted() {
+                // Remove click outside listener
+                document.removeEventListener('click', this.handleClickOutside);
         },
 
         created() {
@@ -256,6 +264,14 @@ export default {
         },
 
         methods: {
+                handleClickOutside(event) {
+                        // Close dropdown if click is outside the component
+                        const dropdown = this.$el?.querySelector('.country-code-selector');
+                        if (dropdown && !dropdown.contains(event.target)) {
+                                this.hideCodes();
+                        }
+                },
+
                 getFlagEmoji(countryCode, useExt = false) {
                         let code = countryCode;
                         if (useExt) {

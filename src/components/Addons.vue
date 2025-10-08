@@ -392,6 +392,14 @@ export default {
     box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
 }
 
+.addons-left {
+    background: white;
+    padding: var(--space-6);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--neutral-200);
+    box-shadow: var(--shadow-sm);
+}
+
 .addons-right {
     background: white;
     padding: var(--space-6);

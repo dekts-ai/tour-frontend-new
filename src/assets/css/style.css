@@ -4223,6 +4223,8 @@ button.btn-quantity {
     max-width: 1400px;
     margin: 0 auto;
     background: var(--neutral-50);
+    margin-top: 0 !important;
+    padding-top: var(--space-8);
 }
 
 .checkout-left {
@@ -4598,6 +4600,49 @@ button.btn-quantity {
     font-size: var(--text-sm);
     color: var(--neutral-600);
     margin-bottom: var(--space-2);
+}
+
+.tour-summary-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+}
+
+.tour-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2);
+    background: var(--neutral-50);
+    border: 1px solid var(--neutral-200);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    color: var(--neutral-700);
+    font-weight: var(--font-medium);
+}
+
+.tour-badge svg {
+    flex-shrink: 0;
+    opacity: 0.7;
+}
+
+.tour-badge-duration {
+    background: rgba(13, 148, 136, 0.05);
+    border-color: rgba(13, 148, 136, 0.2);
+    color: var(--primary-teal-dark);
+}
+
+.tour-badge-age {
+    background: rgba(245, 158, 11, 0.05);
+    border-color: rgba(245, 158, 11, 0.2);
+    color: var(--amber-dark);
+}
+
+.tour-badge-tag {
+    background: rgba(224, 120, 86, 0.05);
+    border-color: rgba(224, 120, 86, 0.2);
+    color: var(--terracotta-dark);
 }
 
 .tour-summary-price {

@@ -3,15 +3,18 @@
         <div class="modern-nav-container">
             <!-- Brand -->
             <div class="modern-nav-brand">
-                <div class="brand-icon">
+                <div class="brand-logo" v-if="tourOperatorLogo && tourOperatorLogo.logo">
+                    <img :src="tourOperatorLogo.logo" :alt="tourOperatorName" />
+                </div>
+                <div class="brand-icon" v-else>
                     <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
                         <path d="M16 4L4 10V22L16 28L28 22V10L16 4Z" fill="currentColor" opacity="0.2"/>
                         <path d="M16 4V16M16 16L4 10M16 16L28 10M16 16V28M16 28L4 22M16 28L28 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
                 <div class="brand-text">
-                    <div class="brand-title">Native Journeys</div>
-                    <div class="brand-subtitle">Cultural Tours</div>
+                    <div class="brand-title">{{ tourOperatorName }}</div>
+                    <div class="brand-subtitle">Tours</div>
                 </div>
             </div>
 
@@ -70,6 +73,16 @@ export default {
     created() {
         this.iframeStatus = this.$store.state.iframeStatus;
     },
+    computed: {
+        tourOperatorLogo() {
+            return this.$store.state.tourPackageLogo;
+        },
+        tourOperatorName() {
+            return this.tourOperatorLogo && this.tourOperatorLogo.name 
+                ? this.tourOperatorLogo.name 
+                : 'Native Journeys';
+        }
+    },
     methods: {
         canNavigateTo(stepId) {
             // Allow navigation to current or previous steps
@@ -104,6 +117,8 @@ export default {
     display: flex;
     align-items: center;
     gap: var(--space-8);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Brand */
@@ -123,6 +138,21 @@ export default {
     align-items: center;
     justify-content: center;
     color: white;
+}
+
+.brand-logo {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.brand-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
 }
 
 .brand-text {

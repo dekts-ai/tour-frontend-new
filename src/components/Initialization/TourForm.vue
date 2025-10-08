@@ -75,10 +75,28 @@
                         </div>
                         <div class="tour-summary-info">
                             <h4 class="tour-summary-title">{{ form.package_name || tourPackageName }}</h4>
-                            <div class="tour-summary-meta">
-                                <span v-if="tourPackageData[0]?.duration">{{ tourPackageData[0].duration }}</span>
-                                <span v-if="tourPackageData[0]?.age_range">• For {{ tourPackageData[0].age_range }}</span>
-                                <span v-if="tourPackageData[0]?.tag">• {{ tourPackageData[0].tag }}</span>
+                            <div class="tour-summary-badges">
+                                <span v-if="tourPackageData[0]?.duration" class="tour-badge tour-badge-duration">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                    {{ tourPackageData[0].duration }}
+                                </span>
+                                <span v-if="tourPackageData[0]?.age_range" class="tour-badge tour-badge-age">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                    {{ tourPackageData[0].age_range }}
+                                </span>
+                                <span v-if="tourPackageData[0]?.tag" class="tour-badge tour-badge-tag">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                                        <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                                    </svg>
+                                    {{ tourPackageData[0].tag }}
+                                </span>
                             </div>
                         </div>
                     </div>

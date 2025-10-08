@@ -65,6 +65,12 @@ export default {
                 const response = await axios.get("/tour-operator-logo/" + this.tourOperatorId);
                 this.timezone = response.data.timezone;
                 this.$store.dispatch('storeTimezone', this.timezone);
+                
+                // Store tour operator logo and company name
+                this.$store.dispatch('storeTourPackageLogo', {
+                        logo: response.data.TourOperatorLogo,
+                        name: response.data.name
+                });
 
                 // Determine date: use stored date if not in the past, otherwise use current date
                 const today = getMomentTimezone(this.$store.state.timezone);
