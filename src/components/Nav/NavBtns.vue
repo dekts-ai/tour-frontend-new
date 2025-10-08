@@ -1,125 +1,308 @@
 <template>
-    <div class="booking-header">
-        <div class="booking-header-content">
-            <h1 class="booking-title">Book Your Experience</h1>
-            <div class="booking-tabs">
-                <button @click="toTab(1, 'Index')"
-                    :class="['booking-tab', { 'active': tabs == 1 }]">Tours</button>
-                <button @click="toTab(2, 'Init')"
-                    :class="['booking-tab', { 'active': tabs == 2 }]">Schedule</button>
-                <button @click="toTab(3, 'Addons')"
-                    :class="['booking-tab', { 'active': tabs == 3 }]">Add-Ons</button>
-                <button @click="toTab(6, 'Checkout')"
-                    :class="['booking-tab', { 'active': tabs == 6 }]">Checkout</button>
+    <div class="modern-nav">
+        <div class="modern-nav-container">
+            <!-- Brand -->
+            <div class="modern-nav-brand">
+                <div class="brand-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <path d="M16 4L4 10V22L16 28L28 22V10L16 4Z" fill="currentColor" opacity="0.2"/>
+                        <path d="M16 4V16M16 16L4 10M16 16L28 10M16 16V28M16 28L4 22M16 28L28 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <div class="brand-title">Native Journeys</div>
+                    <div class="brand-subtitle">Cultural Tours</div>
+                </div>
             </div>
-            <button class="booking-close" @click="closeBooking">×</button>
+
+            <!-- Progress Steps -->
+            <div class="nav-steps">
+                <div 
+                    v-for="(step, index) in steps" 
+                    :key="index"
+                    class="nav-step"
+                    :class="{
+                        'active': tabs === step.id,
+                        'completed': tabs > step.id,
+                        'disabled': !canNavigateTo(step.id)
+                    }"
+                    @click="handleNavigation(step.id, step.route)">
+                    
+                    <div class="step-indicator">
+                        <div class="step-number" v-if="tabs < step.id">{{ index + 1 }}</div>
+                        <svg v-else class="step-check" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="step-content">
+                        <div class="step-label">Step {{ index + 1 }}</div>
+                        <div class="step-title">{{ step.title }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Close Button -->
+            <button v-if="iframeStatus" class="nav-close" @click="closeIframe" aria-label="Close">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    name: "NavBtns",
-    props: ["comboIds", "tabs"],
-    data: () => {
-        return {};
+    name: 'NavBtns',
+    props: ['comboIds', 'tabs'],
+    data() {
+        return {
+            iframeStatus: true,
+            steps: [
+                { id: 1, title: 'Browse Tours', route: 'Index' },
+                { id: 2, title: 'Choose Date', route: 'Init' },
+                { id: 4, title: 'Add Extras', route: 'Addons' },
+                { id: 5, title: 'Checkout', route: 'Checkout' }
+            ]
+        };
+    },
+    created() {
+        this.iframeStatus = this.$store.state.iframeStatus;
     },
     methods: {
-        toTab(tab, destination) {
-            this.$emit('navigatetotab', tab, destination);
+        canNavigateTo(stepId) {
+            // Allow navigation to current or previous steps
+            return stepId <= this.tabs || stepId === 1;
         },
-        closeBooking() {
-            window.close();
+        handleNavigation(tab, destination) {
+            if (this.canNavigateTo(tab)) {
+                this.$emit('navigatetotab', tab, destination);
+            }
+        },
+        closeIframe() {
+            window.parent.postMessage({ message: 'close_iframe' }, '*');
         }
     }
-}
+};
 </script>
 
 <style scoped>
-.booking-header {
-    background: #fff;
-    padding: 20px 40px;
-    border-bottom: 1px solid #e5e5e5;
+.modern-nav {
+    background: white;
+    border-bottom: 1px solid var(--neutral-200);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    box-shadow: var(--shadow-sm);
 }
 
-.booking-header-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: 1200px;
+.modern-nav-container {
+    max-width: 1400px;
     margin: 0 auto;
-}
-
-.booking-title {
-    font-size: 24px;
-    font-weight: 600;
-    margin: 0;
-    color: #1a1a1a;
-}
-
-.booking-tabs {
+    padding: var(--space-4) var(--space-6);
     display: flex;
-    gap: 8px;
-    flex: 1;
-    justify-content: center;
+    align-items: center;
+    gap: var(--space-8);
 }
 
-.booking-tab {
-    background: #f5f3f3;
-    border: none;
-    border-radius: 20px;
-    padding: 10px 24px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #666;
-    cursor: pointer;
-    transition: all 0.3s ease;
+/* Brand */
+.modern-nav-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-shrink: 0;
 }
 
-.booking-tab:hover {
-    background: #e5e5e5;
-}
-
-.booking-tab.active {
-    background: #2d3139;
-    color: #fff;
-}
-
-.booking-close {
-    background: none;
-    border: none;
-    font-size: 32px;
-    color: #666;
-    cursor: pointer;
-    padding: 0;
-    width: 32px;
-    height: 32px;
+.brand-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-teal-light) 100%);
+    border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
     justify-content: center;
+    color: white;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-title {
+    font-size: var(--text-base);
+    font-weight: var(--font-bold);
+    color: var(--neutral-900);
+    line-height: 1.2;
+}
+
+.brand-subtitle {
+    font-size: var(--text-xs);
+    color: var(--neutral-500);
     line-height: 1;
 }
 
-.booking-close:hover {
-    color: #000;
+/* Steps */
+.nav-steps {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.nav-steps::-webkit-scrollbar {
+    display: none;
+}
+
+.nav-step {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    flex-shrink: 0;
+    position: relative;
+}
+
+.nav-step::after {
+    content: '';
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 2px;
+    background: var(--neutral-300);
+}
+
+.nav-step:last-child::after {
+    display: none;
+}
+
+.nav-step.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.nav-step.active {
+    background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-teal-light) 100%);
+    color: white;
+}
+
+.nav-step.completed {
+    background: var(--neutral-100);
+}
+
+.nav-step:not(.disabled):not(.active):hover {
+    background: var(--neutral-100);
+}
+
+.step-indicator {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+}
+
+.nav-step.active .step-indicator {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-step.completed .step-indicator {
+    background: var(--primary-teal);
+    color: white;
+}
+
+.step-number {
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+    color: var(--neutral-600);
+}
+
+.nav-step.active .step-number {
+    color: white;
+}
+
+.step-check {
+    color: white;
+}
+
+.step-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.step-label {
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    opacity: 0.8;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.step-title {
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    line-height: 1.2;
+}
+
+/* Close Button */
+.nav-close {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-lg);
+    border: none;
+    background: var(--neutral-100);
+    color: var(--neutral-600);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.nav-close:hover {
+    background: var(--neutral-200);
+    color: var(--neutral-900);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .modern-nav-container {
+        gap: var(--space-4);
+    }
+    
+    .step-label {
+        display: none;
+    }
 }
 
 @media (max-width: 768px) {
-    .booking-header {
-        padding: 15px 20px;
+    .modern-nav-container {
+        padding: var(--space-3) var(--space-4);
     }
-
-    .booking-title {
-        font-size: 18px;
+    
+    .brand-subtitle {
+        display: none;
     }
-
-    .booking-tabs {
-        gap: 4px;
+    
+    .step-content {
+        display: none;
     }
-
-    .booking-tab {
-        padding: 8px 12px;
-        font-size: 12px;
+    
+    .nav-step {
+        padding: var(--space-2);
     }
 }
 </style>
