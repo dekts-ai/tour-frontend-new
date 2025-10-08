@@ -138,7 +138,7 @@ export default {
 .tour-image-container {
     position: relative;
     width: 100%;
-    height: 280px;
+    height: 200px;
     overflow: hidden;
 }
 
@@ -168,7 +168,7 @@ export default {
 
 /* Tour Content */
 .tour-content {
-    padding: var(--space-6);
+    padding: var(--space-4);
 }
 
 /* Header with Title and Icon Actions */
@@ -176,9 +176,9 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: var(--space-4);
-    margin-bottom: var(--space-5);
-    padding-bottom: var(--space-5);
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
     border-bottom: 2px solid var(--neutral-100);
 }
 
@@ -187,10 +187,10 @@ export default {
 }
 
 .tour-title {
-    font-size: var(--text-2xl);
+    font-size: var(--text-lg);
     font-weight: var(--font-bold);
     color: var(--neutral-900);
-    margin: 0 0 var(--space-2) 0;
+    margin: 0 0 var(--space-1) 0;
 }
 
 .tour-description {

@@ -108,8 +108,8 @@ export default {
 
 .selected-tours-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-6);
 }
 
 /* Available Tours Section */
