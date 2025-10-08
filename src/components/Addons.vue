@@ -136,10 +136,15 @@ export default {
             return this.calculateSubtotal + this.calculateFees + this.addonsTotal;
         },
         customFieldsWithPricing() {
-            // Use the reactive currentCustomFields data property for real-time updates
-            return this.currentCustomFields.filter(field => 
-                field.priceInfo && field.priceInfo.enabled === true
-            );
+            // Only include fields that have pricing enabled AND have a value selected
+            return this.currentCustomFields.filter(field => {
+                if (!field.priceInfo || field.priceInfo.enabled !== true) {
+                    return false;
+                }
+                
+                // Check if field has a valid selected value based on its type
+                return this.hasValidFieldValue(field);
+            });
         },
         addonsTotal() {
             // Calculate real-time total from custom fields with pricing
@@ -182,6 +187,34 @@ export default {
         handleFieldsChanged(fields) {
             // Update the reactive data property for real-time price updates
             this.currentCustomFields = fields;
+        },
+        hasValidFieldValue(field) {
+            // Check if a field has a valid selected value based on its type
+            const value = field.value;
+            
+            switch (field.type) {
+                case 'checkbox':
+                    // Checkbox must be checked (truthy value)
+                    return !!value;
+                
+                case 'number':
+                    // Number must be greater than 0
+                    return Number(value) > 0;
+                
+                case 'radio':
+                case 'select':
+                    // Radio and select must have a non-empty value selected
+                    return value !== null && value !== undefined && value !== '';
+                
+                case 'text':
+                case 'textarea':
+                    // Text fields must have a non-empty value
+                    return value !== null && value !== undefined && String(value).trim() !== '';
+                
+                default:
+                    // For any other type, check if value exists
+                    return value !== null && value !== undefined && value !== '';
+            }
         },
         navigateToTab(tab, destination) {
             if ([1, 2, 3, 4, 5, 6].includes(tab)) {
