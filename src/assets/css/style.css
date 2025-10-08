@@ -4205,14 +4205,15 @@ button.btn-quantity {
     }
 }
 
-/* Checkout Page Redesign */
+/* Checkout Page - Native Journey Design */
 .checkout-container {
     display: grid;
-    grid-template-columns: 1fr 450px;
-    gap: 30px;
-    padding: 20px;
+    grid-template-columns: 1fr 480px;
+    gap: var(--space-6);
+    padding: var(--space-8) var(--space-6);
     max-width: 1400px;
     margin: 0 auto;
+    background: var(--neutral-50);
 }
 
 .checkout-left {
@@ -4223,60 +4224,65 @@ button.btn-quantity {
 .checkout-right {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--space-5);
 }
 
 .checkout-form-container {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: var(--space-6);
 }
 
 .checkout-section {
-    background: #fafafa;
-    border-radius: 8px;
-    padding: 24px;
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    border: 1px solid var(--neutral-200);
+    box-shadow: var(--shadow-sm);
 }
 
 .checkout-section-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #2d3139;
-    margin-bottom: 20px;
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: var(--neutral-900);
+    margin-bottom: var(--space-5);
 }
 
 .checkout-form-fields {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--space-4);
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--space-2);
 }
 
 .form-group label {
-    font-size: 14px;
-    font-weight: 500;
-    color: #2d3139;
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--neutral-900);
 }
 
 .form-input,
 .form-textarea {
-    padding: 12px 16px;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    font-size: 14px;
-    font-family: 'Inter', sans-serif;
-    transition: border-color 0.2s;
+    padding: var(--space-3);
+    border: 2px solid var(--neutral-200);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    font-family: var(--font-body);
+    transition: all var(--transition-base);
+    background: white;
+    color: var(--neutral-900);
 }
 
 .form-input:focus,
 .form-textarea:focus {
     outline: none;
-    border-color: #df7151;
+    border-color: var(--primary-teal);
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
 }
 
 .form-textarea {
@@ -4284,58 +4290,83 @@ button.btn-quantity {
 }
 
 .payment-element-wrapper {
-    margin-top: 12px;
+    margin-top: var(--space-3);
+    padding: var(--space-4);
+    background: var(--neutral-50);
+    border-radius: var(--radius-lg);
 }
 
 .checkbox-group {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--space-3);
 }
 
 .checkbox-label {
     display: flex;
     align-items: flex-start;
-    gap: 8px;
-    font-size: 14px;
-    color: #2d3139;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--neutral-700);
     cursor: pointer;
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    transition: background var(--transition-base);
+}
+
+.checkbox-label:hover {
+    background: var(--neutral-50);
 }
 
 .checkbox-label input[type="checkbox"] {
     margin-top: 2px;
     cursor: pointer;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-teal);
 }
 
 .policy-link {
-    color: #df7151;
+    color: var(--primary-teal);
     text-decoration: underline;
+    font-weight: var(--font-medium);
 }
 
 .policy-link:hover {
-    color: #c85d3d;
+    color: var(--primary-teal-dark);
 }
 
 .btn-checkout {
     width: 100%;
-    padding: 16px 24px;
-    background: #df7151;
-    color: #ffffff;
+    padding: var(--space-4) var(--space-6);
+    background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-teal-light) 100%);
+    color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
+    border-radius: var(--radius-lg);
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
     cursor: pointer;
-    transition: background 0.2s;
-    margin-bottom: 16px;
+    transition: all var(--transition-base);
+    margin-bottom: var(--space-4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
 }
 
 .btn-checkout:hover {
-    background: #c85d3d;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-checkout:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
 }
 
 /* Checkout Responsive */
-@media (max-width: 992px) {
+@media (max-width: 1024px) {
     .checkout-container {
         grid-template-columns: 1fr;
     }
@@ -4345,9 +4376,13 @@ button.btn-quantity {
     }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 768px) {
+    .checkout-container {
+        padding: var(--space-6) var(--space-4);
+    }
+    
     .checkout-section {
-        padding: 16px;
+        padding: var(--space-4);
     }
 }
 
