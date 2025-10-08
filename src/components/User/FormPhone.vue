@@ -1,8 +1,5 @@
 <template>
     <div class="form-group">
-        <label for="phonenumber" class="col-form-label">
-            {{ label }} <span v-if="required" class="required-star">*</span>
-        </label>
         <div class="phone-wrap">
             <IntPhoneNumber :current_phone_number="value" :current_phone_code="phoneCode"
                 @onphoneupdate="$emit('update', $event)" />
