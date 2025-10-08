@@ -116,6 +116,63 @@ This creates optimized static files in the `dist/` directory.
 
 ## Recent Changes (October 2025)
 
+### UI Redesign (October 8, 2025)
+Complete redesign of the user interface with modern, clean aesthetics:
+
+**Navigation & Header:**
+- Redesigned navigation with "Book Your Experience" branding
+- Pill-style tab navigation (Tours, Schedule, Add-Ons, Checkout)
+- Active tab styling with #2d3139 background
+- Inactive tabs with #f5f3f3 background
+- Close button (×) on the right
+
+**Tours Page (Index.vue):**
+- 3-column responsive grid layout for tour cards
+- Clean card design with image, title, description, pricing
+- "From $XX per person" pricing display
+- Orange #df7151 "Select Tour" buttons
+- Responsive: 2 columns on tablet, 1 on mobile
+
+**Schedule Page (Init.vue / TourForm.vue):**
+- Two-column layout: calendar/guest selection (left), time slots (right)
+- Calendar picker for date selection
+- Interactive time slot cards with availability info
+- Guest selection with increment/decrement counters
+- Clean section titles and #fafafa backgrounds
+- Visual feedback for selected, disabled, and sold-out slots
+
+**Add-Ons Page (Addons.vue):**
+- Left: booking options (checkboxes, dropdowns, text areas)
+- Right: booking summary sidebar
+- Checkbox options for Texi Pickup and VIP Lounge
+- Meal preference dropdown
+- Payment notes and internal comments fields
+- Summary with subtotal, taxes, and total
+- Orange "Continue" button
+
+**Checkout Page (Checkout.vue / CheckoutForm.vue):**
+- Clean form layout for contact information
+- Payment section with Stripe integration
+- Checkbox for terms and conditions with policy link
+- Email updates opt-in
+- Orange "Complete Booking" button
+- Responsive layout with summary on right
+
+**Design System:**
+- Primary CTA color: #df7151 (orange)
+- Active state: #2d3139 (dark gray)
+- Inactive state: #f5f3f3 (light gray)
+- Background: #fafafa (off-white)
+- Consistent spacing and border-radius (8px)
+- Clean typography with Inter font
+- Fully responsive design
+
+**Technical Updates:**
+- Fixed all navigation guards to allow smooth flow between tabs
+- Added comprehensive CSS for new design components
+- Maintained all existing functionality while improving UX
+- Production-ready with successful compilation
+
 ### Import Setup for Replit
 - Installed all Node.js dependencies
 - Configured Vue CLI dev server for Replit environment:
