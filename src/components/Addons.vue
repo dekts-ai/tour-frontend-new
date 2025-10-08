@@ -161,30 +161,41 @@ export default {
 
 <style scoped>
 .addons-section {
-    padding: 40px;
-    background: #fafafa;
+    padding: var(--space-8) var(--space-6);
+    background: var(--neutral-50);
+    min-height: calc(100vh - 200px);
 }
 
 .addons-container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
 .addons-content {
     display: grid;
-    grid-template-columns: 1fr 400px;
-    gap: 40px;
+    grid-template-columns: 1fr 440px;
+    gap: var(--space-6);
 }
 
 .section-title {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0 0 24px 0;
-    color: #1a1a1a;
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    margin: 0 0 var(--space-6) 0;
+    color: var(--neutral-900);
 }
 
 .addon-item {
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
+    padding: var(--space-4);
+    background: white;
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--neutral-200);
+    transition: all var(--transition-base);
+}
+
+.addon-item:hover {
+    border-color: var(--primary-teal-light);
+    box-shadow: var(--shadow-sm);
 }
 
 .addon-checkbox {
@@ -203,15 +214,18 @@ export default {
 .checkmark {
     width: 24px;
     height: 24px;
-    border: 2px solid #df7151;
-    border-radius: 4px;
-    margin-right: 12px;
+    border: 2px solid var(--neutral-300);
+    border-radius: var(--radius-md);
+    margin-right: var(--space-3);
     flex-shrink: 0;
     position: relative;
+    background: white;
+    transition: all var(--transition-base);
 }
 
 .addon-checkbox input:checked ~ .checkmark {
-    background: #df7151;
+    background: linear-gradient(135deg, var(--primary-teal), var(--primary-teal-light));
+    border-color: var(--primary-teal);
 }
 
 .addon-checkbox input:checked ~ .checkmark::after {
@@ -232,114 +246,147 @@ export default {
 }
 
 .addon-name {
-    font-size: 16px;
-    font-weight: 500;
-    color: #1a1a1a;
-    margin-bottom: 4px;
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    color: var(--neutral-900);
+    margin-bottom: var(--space-1);
 }
 
 .addon-price {
-    font-size: 14px;
-    color: #666;
+    font-size: var(--text-sm);
+    color: var(--primary-terracotta);
+    font-weight: var(--font-medium);
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
 }
 
 .form-label {
     display: block;
-    font-size: 16px;
-    font-weight: 500;
-    color: #1a1a1a;
-    margin-bottom: 8px;
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    color: var(--neutral-900);
+    margin-bottom: var(--space-2);
 }
 
 .form-select {
     width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-    color: #666;
-    background: #fff;
+    padding: var(--space-3);
+    border: 2px solid var(--neutral-200);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    color: var(--neutral-700);
+    background: white;
+    transition: all var(--transition-base);
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: var(--primary-teal);
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
 }
 
 .form-textarea {
     width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-    color: #666;
+    padding: var(--space-3);
+    border: 2px solid var(--neutral-200);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    color: var(--neutral-700);
     resize: vertical;
-    font-family: inherit;
+    font-family: var(--font-body);
+    transition: all var(--transition-base);
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--primary-teal);
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
 }
 
 .addons-right {
-    background: #fff;
-    padding: 24px;
-    border-radius: 8px;
-    border: 1px solid #e5e5e5;
+    background: white;
+    padding: var(--space-6);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--neutral-200);
     height: fit-content;
+    box-shadow: var(--shadow-sm);
 }
 
 .booking-summary {
-    margin-bottom: 20px;
+    margin-bottom: var(--space-5);
 }
 
 .summary-placeholder {
-    color: #999;
-    font-size: 14px;
+    color: var(--neutral-500);
+    font-size: var(--text-sm);
     text-align: center;
-    padding: 20px;
+    padding: var(--space-6);
+    background: var(--neutral-50);
+    border-radius: var(--radius-lg);
 }
 
 .summary-totals {
-    border-top: 1px solid #e5e5e5;
-    padding-top: 16px;
+    border-top: 2px solid var(--neutral-200);
+    padding-top: var(--space-4);
 }
 
 .summary-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 12px;
-    font-size: 14px;
-    color: #666;
+    margin-bottom: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--neutral-600);
 }
 
 .summary-total {
     display: flex;
     justify-content: space-between;
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid #e5e5e5;
-    font-size: 18px;
-    font-weight: 600;
-    color: #1a1a1a;
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 2px solid var(--neutral-200);
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: var(--neutral-900);
 }
 
 .continue-button {
     width: 100%;
-    background: #df7151;
-    color: #fff;
+    background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-teal-light) 100%);
+    color: white;
     border: none;
-    border-radius: 6px;
-    padding: 14px;
-    font-size: 16px;
-    font-weight: 500;
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    font-size: var(--text-base);
+    font-weight: var(--font-bold);
     cursor: pointer;
-    margin-top: 20px;
-    transition: background 0.3s ease;
+    margin-top: var(--space-5);
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
 }
 
 .continue-button:hover {
-    background: #c9604a;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1024px) {
     .addons-content {
         grid-template-columns: 1fr;
+    }
+    
+    .addons-right {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .addons-section {
+        padding: var(--space-6) var(--space-4);
     }
 }
 </style>
