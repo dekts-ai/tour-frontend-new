@@ -1,75 +1,97 @@
 <template>
     <div class="selected-tour-card">
-        <div class="tour-header">
-            <div class="tour-image-wrapper">
-                <img :src="item.package_image || ''" :alt="`${item.package_name || 'Package'} image`" class="tour-image">
-            </div>
-            <div class="tour-info">
-                <h3 class="tour-title">{{ item.package_name || 'Unnamed Package' }}</h3>
-                <div class="tour-meta">
-                    <span class="tour-duration">{{ item.duration || '' }} {{ item.type || '' }}</span>
-                </div>
-                <p class="tour-description">{{ item.short_description || '' }}</p>
+        <!-- Tour Image -->
+        <div class="tour-image-container">
+            <img :src="item.package_image || ''" :alt="`${item.package_name || 'Package'} image`" class="tour-image">
+            <div class="duration-badge">
+                {{ item.duration || '' }} {{ item.type || '' }}
             </div>
         </div>
 
-        <div class="tour-details">
-            <div class="detail-section">
-                <div class="detail-label">Scheduled Date & Time</div>
-                <div class="detail-value">
-                    {{ dateFormat(item.date) }}
-                    <span v-if="item.package_has_slots"> @ {{ item.time_date || '' }}</span>
+        <!-- Tour Content -->
+        <div class="tour-content">
+            <!-- Header with Title and Actions -->
+            <div class="tour-header">
+                <div class="tour-title-section">
+                    <h3 class="tour-title">{{ item.package_name || 'Unnamed Package' }}</h3>
+                    <p class="tour-description">{{ item.short_description || '' }}</p>
+                </div>
+                <div class="tour-actions">
+                    <button class="action-icon-btn edit-btn" @click="$emit('edit-package', item)" title="Edit Tour">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
+                    <button v-if="firstPackageId !== item.package_id" class="action-icon-btn delete-btn" @click="$emit('remove-from-cart', item)" title="Delete Tour">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </button>
+                    <button class="action-icon-btn checkout-btn" @click="$emit('tab-change', 5, 'Checkout')" title="Proceed to Checkout">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m5 12 5 5L20 7"></path>
+                        </svg>
+                    </button>
                 </div>
             </div>
 
-            <div class="detail-section">
-                <div class="detail-label">Guests</div>
-                <div class="guests-list">
-                    <div v-if="item.people_group && typeof item.people_group === 'object' && Object.keys(item.people_group).length">
-                        <div v-for="(count, groupType) in item.people_group" :key="groupType" class="guest-item">
-                            <span class="guest-type">{{ item.rate_group?.[groupType] || groupType }}</span>
-                            <span class="guest-count">{{ count }}</span>
+            <!-- Tour Details Grid -->
+            <div class="tour-details-grid">
+                <!-- Date & Time -->
+                <div class="detail-card">
+                    <div class="detail-label">Date & Time</div>
+                    <div class="detail-value">
+                        {{ dateFormat(item.date) }}
+                        <span v-if="item.package_has_slots" class="time-value">@ {{ item.time_date || '' }}</span>
+                    </div>
+                </div>
+
+                <!-- Guests -->
+                <div class="detail-card">
+                    <div class="detail-label">Guests</div>
+                    <div class="guests-list">
+                        <div v-if="item.people_group && typeof item.people_group === 'object' && Object.keys(item.people_group).length">
+                            <div v-for="(count, groupType) in item.people_group" :key="groupType" class="guest-item">
+                                <span class="guest-type">{{ item.rate_group?.[groupType] || groupType }}</span>
+                                <span class="guest-count">{{ count }}</span>
+                            </div>
+                        </div>
+                        <div v-else class="no-guests">No guests</div>
+                    </div>
+                </div>
+
+                <!-- Pricing -->
+                <div class="detail-card pricing-card">
+                    <div class="detail-label">Cost Breakdown</div>
+                    <div class="pricing-rows">
+                        <div class="pricing-row">
+                            <span>Subtotal</span>
+                            <span>{{ currencyFormat(item.subtotal || 0) }}</span>
+                        </div>
+                        <div class="pricing-row" v-if="item?.discount2_value > 0">
+                            <span>Discount <span v-if="item?.discount2_percentage">({{ item?.discount2_percentage }}%)</span></span>
+                            <span class="discount-value">-{{ currencyFormat(item?.discount2_value || 0) }}</span>
+                        </div>
+                        <div v-if="item?.custom_fields?.length && isPriceInfoEnabled(item?.custom_fields)">
+                            <div v-for="(option, k) in item.custom_fields.filter(f => f.priceInfo?.enabled)"
+                                :key="`custom-field-${k}`" class="pricing-row">
+                                <span>{{ option.name }}</span>
+                                <span>{{ currencyFormat(option.priceInfo?.price || 0) }}</span>
+                            </div>
+                        </div>
+                        <div class="pricing-row">
+                            <span>Booking Fees</span>
+                            <span>{{ currencyFormat(Number(item.fees || 0) + Number(item.addons_fee || 0)) }}</span>
+                        </div>
+                        <div class="pricing-row total">
+                            <span>Total Cost</span>
+                            <span>{{ currencyFormat(Number(item.total || 0) + Number(item.addons_fee || 0) + Number(item.addons_total || 0)) }}</span>
                         </div>
                     </div>
-                    <div v-else class="no-guests">No guests selected</div>
                 </div>
             </div>
-
-            <div class="pricing-section">
-                <div class="pricing-label">Tour Cost</div>
-                <div class="pricing-rows">
-                    <div class="pricing-row">
-                        <span>Subtotal</span>
-                        <span>{{ currencyFormat(item.subtotal || 0) }}</span>
-                    </div>
-                    <div class="pricing-row" v-if="item?.discount2_value > 0">
-                        <span>Discount <span v-if="item?.discount2_percentage">({{ item?.discount2_percentage }}%)</span></span>
-                        <span>-{{ currencyFormat(item?.discount2_value || 0) }}</span>
-                    </div>
-                    <div v-if="item?.custom_fields?.length && isPriceInfoEnabled(item?.custom_fields)">
-                        <div class="pricing-label small">Add-ons</div>
-                        <div v-for="(option, k) in item.custom_fields.filter(f => f.priceInfo?.enabled)"
-                            :key="`custom-field-${k}`" class="pricing-row">
-                            <span>{{ option.name }}</span>
-                            <span>{{ currencyFormat(option.priceInfo?.price || 0) }}</span>
-                        </div>
-                    </div>
-                    <div class="pricing-row">
-                        <span>Booking Fees</span>
-                        <span>{{ currencyFormat(Number(item.fees || 0) + Number(item.addons_fee || 0)) }}</span>
-                    </div>
-                    <div class="pricing-row total">
-                        <span>Tour Cost</span>
-                        <span>{{ currencyFormat(Number(item.total || 0) + Number(item.addons_fee || 0) + Number(item.addons_total || 0)) }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="tour-actions">
-            <button class="action-btn edit-btn" @click="$emit('edit-package', item)">Edit</button>
-            <button v-if="firstPackageId !== item.package_id" class="action-btn delete-btn" @click="$emit('remove-from-cart', item)">Delete</button>
-            <button class="action-btn checkout-btn" @click="$emit('tab-change', 5, 'Checkout')">Checkout</button>
         </div>
     </div>
 </template>
@@ -97,29 +119,26 @@ export default {
 </script>
 
 <style scoped>
-/* Selected Tour Card - Native Journey Design */
+/* Selected Tour Card - Card-Based Design (Bigger than Available Tours) */
 .selected-tour-card {
     background: white;
     border-radius: var(--radius-xl);
-    padding: var(--space-6);
-    border: 1px solid var(--neutral-200);
-    box-shadow: var(--shadow-sm);
-    margin-bottom: var(--space-5);
+    overflow: hidden;
+    border: 2px solid var(--primary-teal-light);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
 }
 
-.tour-header {
-    display: flex;
-    gap: var(--space-4);
-    padding-bottom: var(--space-5);
-    border-bottom: 1px solid var(--neutral-200);
-    margin-bottom: var(--space-5);
+.selected-tour-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
 }
 
-.tour-image-wrapper {
-    flex-shrink: 0;
-    width: 120px;
-    height: 120px;
-    border-radius: var(--radius-lg);
+/* Tour Image */
+.tour-image-container {
+    position: relative;
+    width: 100%;
+    height: 280px;
     overflow: hidden;
 }
 
@@ -127,46 +146,116 @@ export default {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform var(--transition-base);
 }
 
-.tour-info {
+.selected-tour-card:hover .tour-image {
+    transform: scale(1.05);
+}
+
+.duration-badge {
+    position: absolute;
+    top: var(--space-4);
+    left: var(--space-4);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--primary-teal);
+}
+
+/* Tour Content */
+.tour-content {
+    padding: var(--space-6);
+}
+
+/* Header with Title and Icon Actions */
+.tour-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-5);
+    border-bottom: 2px solid var(--neutral-100);
+}
+
+.tour-title-section {
     flex: 1;
 }
 
 .tour-title {
-    font-size: var(--text-xl);
+    font-size: var(--text-2xl);
     font-weight: var(--font-bold);
     color: var(--neutral-900);
     margin: 0 0 var(--space-2) 0;
 }
 
-.tour-meta {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    margin-bottom: var(--space-3);
-}
-
-.tour-duration {
-    font-size: var(--text-sm);
-    color: var(--primary-teal);
-    font-weight: var(--font-medium);
-}
-
 .tour-description {
-    font-size: var(--text-sm);
+    font-size: var(--text-base);
     color: var(--neutral-600);
     margin: 0;
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
-.tour-details {
+.tour-actions {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-5);
+    gap: var(--space-2);
+    flex-shrink: 0;
 }
 
-.detail-section {
+.action-icon-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.action-icon-btn.edit-btn {
+    background: var(--neutral-100);
+    color: var(--primary-teal);
+}
+
+.action-icon-btn.edit-btn:hover {
+    background: var(--primary-teal);
+    color: white;
+}
+
+.action-icon-btn.delete-btn {
+    background: var(--neutral-100);
+    color: #EF4444;
+}
+
+.action-icon-btn.delete-btn:hover {
+    background: #EF4444;
+    color: white;
+}
+
+.action-icon-btn.checkout-btn {
+    background: linear-gradient(135deg, var(--primary-terracotta) 0%, #D97454 100%);
+    color: white;
+}
+
+.action-icon-btn.checkout-btn:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
+}
+
+/* Tour Details Grid */
+.tour-details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-4);
+}
+
+.detail-card {
     background: var(--neutral-50);
     padding: var(--space-4);
     border-radius: var(--radius-lg);
@@ -174,19 +263,28 @@ export default {
 
 .detail-label {
     font-size: var(--text-xs);
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-bold);
     color: var(--neutral-500);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-3);
 }
 
 .detail-value {
     font-size: var(--text-base);
     color: var(--neutral-900);
-    font-weight: var(--font-medium);
+    font-weight: var(--font-semibold);
+    line-height: 1.5;
 }
 
+.time-value {
+    display: block;
+    font-size: var(--text-sm);
+    color: var(--primary-teal);
+    margin-top: var(--space-1);
+}
+
+/* Guests */
 .guests-list {
     display: flex;
     flex-direction: column;
@@ -197,7 +295,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--space-2);
+    padding: var(--space-2) var(--space-3);
     background: white;
     border-radius: var(--radius-md);
 }
@@ -212,7 +310,8 @@ export default {
     font-size: var(--text-sm);
     font-weight: var(--font-bold);
     color: var(--primary-teal);
-    background: var(--neutral-100);
+    background: var(--primary-teal);
+    background: rgba(13, 148, 136, 0.1);
     padding: var(--space-1) var(--space-3);
     border-radius: var(--radius-full);
 }
@@ -223,22 +322,9 @@ export default {
     font-style: italic;
 }
 
-.pricing-section {
-    background: var(--neutral-50);
-    padding: var(--space-4);
-    border-radius: var(--radius-lg);
-}
-
-.pricing-label {
-    font-size: var(--text-sm);
-    font-weight: var(--font-bold);
-    color: var(--neutral-900);
-    margin-bottom: var(--space-3);
-}
-
-.pricing-label.small {
-    font-size: var(--text-xs);
-    margin-top: var(--space-3);
+/* Pricing */
+.pricing-card {
+    grid-column: 1 / -1;
 }
 
 .pricing-rows {
@@ -253,86 +339,47 @@ export default {
     align-items: center;
     font-size: var(--text-sm);
     color: var(--neutral-700);
-    padding: var(--space-2);
+    padding: var(--space-2) var(--space-3);
     background: white;
     border-radius: var(--radius-md);
+}
+
+.discount-value {
+    color: var(--primary-terracotta);
+    font-weight: var(--font-semibold);
 }
 
 .pricing-row.total {
     background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-teal-light) 100%);
     color: white;
     font-weight: var(--font-bold);
-    margin-top: var(--space-2);
-    padding: var(--space-3);
+    font-size: var(--text-base);
+    margin-top: var(--space-3);
+    padding: var(--space-3) var(--space-4);
 }
 
-.tour-actions {
-    display: flex;
-    gap: var(--space-3);
-    margin-top: var(--space-5);
-    padding-top: var(--space-5);
-    border-top: 1px solid var(--neutral-200);
-}
-
-.action-btn {
-    flex: 1;
-    padding: var(--space-3);
-    border: none;
-    border-radius: var(--radius-lg);
-    font-size: var(--text-sm);
-    font-weight: var(--font-semibold);
-    cursor: pointer;
-    transition: all var(--transition-base);
-}
-
-.edit-btn {
-    background: white;
-    border: 2px solid var(--primary-teal);
-    color: var(--primary-teal);
-}
-
-.edit-btn:hover {
-    background: var(--primary-teal);
-    color: white;
-}
-
-.delete-btn {
-    background: white;
-    border: 2px solid #EF4444;
-    color: #EF4444;
-}
-
-.delete-btn:hover {
-    background: #EF4444;
-    color: white;
-}
-
-.checkout-btn {
-    background: linear-gradient(135deg, var(--primary-terracotta) 0%, #D97454 100%);
-    color: white;
-}
-
-.checkout-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-}
-
+/* Responsive */
 @media (max-width: 768px) {
+    .tour-image-container {
+        height: 220px;
+    }
+    
+    .tour-content {
+        padding: var(--space-4);
+    }
+    
     .tour-header {
         flex-direction: column;
+        gap: var(--space-3);
     }
-
-    .tour-image-wrapper {
-        width: 100%;
-        height: 200px;
-    }
-
+    
     .tour-actions {
-        flex-direction: column;
-    }
-
-    .action-btn {
         width: 100%;
+        justify-content: flex-end;
+    }
+    
+    .tour-details-grid {
+        grid-template-columns: 1fr;
     }
 }
 </style>

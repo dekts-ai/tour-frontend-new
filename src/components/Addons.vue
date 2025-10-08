@@ -7,81 +7,67 @@
         <div class="addons-container">
             <div class="addons-content">
                 <div class="addons-left">
-                    <h2 class="section-title">Booking Add-Ons</h2>
+                    <h2 class="section-title">Additional Options</h2>
                     
-                    <div class="addon-item">
-                        <label class="addon-checkbox">
-                            <input type="checkbox" v-model="addons.texiPickup">
-                            <span class="checkmark"></span>
-                            <div class="addon-info">
-                                <span class="addon-name">Texi Pickup</span>
-                                <span class="addon-price">Additional Fee: $10.00</span>
-                            </div>
-                        </label>
+                    <!-- Custom Fields Integration -->
+                    <div v-if="packageId && serviceCommission !== null">
+                        <CustomFields
+                            ref="CustomFieldsRef"
+                            :values="customFieldValues"
+                            :enabled="true"
+                            :display_errors="true"
+                            :display_submit="false"
+                            :display_height="500"
+                            :service_commission="serviceCommission"
+                            @customformexists="handleCustomFormExists"
+                            :endpoint="`/package/custom/form/${packageId}`" />
                     </div>
 
-                    <div class="addon-field">
-                        <label class="addon-field-label">Meal Preference</label>
-                        <select v-model="addons.mealPreference" class="addon-select">
-                            <option value="">Select meal preference</option>
-                            <option value="vegetarian">Vegetarian</option>
-                            <option value="vegan">Vegan</option>
-                            <option value="gluten-free">Gluten Free</option>
-                            <option value="no-preference">No Preference</option>
-                        </select>
-                    </div>
-
-                    <div class="addon-item">
-                        <label class="addon-checkbox">
-                            <input type="checkbox" v-model="addons.vipLounge">
-                            <span class="checkmark"></span>
-                            <div class="addon-info">
-                                <span class="addon-name">VIP Lounge Access</span>
-                                <span class="addon-price">Additional Fee: $25.00</span>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="addon-field">
-                        <label class="addon-field-label">Payment Notes</label>
-                        <textarea v-model="addons.paymentNotes" 
-                            class="addon-textarea" 
-                            rows="3" 
-                            placeholder="Any payment-related notes"></textarea>
-                    </div>
-
-                    <div class="addon-field">
-                        <label class="addon-field-label">Internal Comments</label>
-                        <textarea v-model="addons.internalComments" 
-                            class="addon-textarea" 
-                            rows="3" 
-                            placeholder="Internal comments for staff..."></textarea>
+                    <!-- Fallback message if no custom fields -->
+                    <div v-if="!hasCustomFields && !loadingCustomFields" class="no-addons-message">
+                        <p>No additional options available for this tour package.</p>
                     </div>
                 </div>
 
                 <div class="addons-right">
                     <h2 class="section-title">Booking Summary</h2>
+                    
+                    <!-- Cart Items Summary -->
                     <div class="booking-summary">
-                        <p class="summary-placeholder">Booking details will appear here</p>
+                        <div v-if="cartItemLength > 0" class="cart-summary-list">
+                            <div v-for="(item, slotId) in cartItem" :key="slotId" class="cart-summary-item">
+                                <div class="item-name">{{ item.package_name }}</div>
+                                <div class="item-details">
+                                    <span class="item-date">{{ formatDate(item.date) }}</span>
+                                    <span class="item-price">{{ currencyFormat(Number(item.total || 0) + Number(item.addons_fee || 0) + Number(item.addons_total || 0)) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p v-else class="summary-placeholder">No tours selected</p>
                     </div>
                     
+                    <!-- Totals -->
                     <div class="summary-totals">
                         <div class="summary-row">
-                            <span>Subtotal (3×)</span>
-                            <span>$360</span>
+                            <span>Subtotal</span>
+                            <span>{{ currencyFormat(calculateSubtotal) }}</span>
+                        </div>
+                        <div class="summary-row" v-if="addonsTotal > 0">
+                            <span>Add-ons</span>
+                            <span>{{ currencyFormat(addonsTotal) }}</span>
                         </div>
                         <div class="summary-row">
                             <span>Taxes & Fees</span>
-                            <span>$43.20</span>
+                            <span>{{ currencyFormat(calculateFees) }}</span>
                         </div>
                         <div class="summary-total">
                             <span>Total</span>
-                            <span>$403.20</span>
+                            <span>{{ currencyFormat(calculateGrandTotal) }}</span>
                         </div>
                     </div>
 
                     <button class="continue-button" @click="continueToCheckout">
-                        Continue →
+                        Continue to Checkout →
                     </button>
                 </div>
             </div>
@@ -91,12 +77,17 @@
 
 <script>
 import NavBtns from './Nav/NavBtns.vue';
+import CustomFields from './Forms/CustomFields.vue';
+import { formatCurrencyIntl } from '../utils/currency';
+import { getMomentTimezone } from '../utils/dateUtils';
+import Swal from 'sweetalert2';
 
 export default {
     name: 'Addons',
     title: 'Native American Tours',
     components: {
-        NavBtns
+        NavBtns,
+        CustomFields
     },
     data() {
         return {
@@ -109,16 +100,30 @@ export default {
             affiliateId: 0,
             cartItem: {},
             cartItemLength: 0,
-            tabs: 3,
+            tabs: 4,
             checkPackageIds: [],
-            addons: {
-                texiPickup: false,
-                mealPreference: '',
-                vipLounge: false,
-                paymentNotes: '',
-                internalComments: ''
-            }
+            hasCustomFields: false,
+            loadingCustomFields: true,
+            customFieldValues: [],
+            addonsTotal: 0,
+            addonsFee: 0,
+            serviceCommission: 0
         };
+    },
+    computed: {
+        calculateSubtotal() {
+            return Object.values(this.cartItem).reduce((sum, item) => {
+                return sum + (Number(item.subtotal) || 0);
+            }, 0);
+        },
+        calculateFees() {
+            return Object.values(this.cartItem).reduce((sum, item) => {
+                return sum + (Number(item.fees) || 0) + (Number(item.addons_fee) || 0);
+            }, 0) + this.addonsFee;
+        },
+        calculateGrandTotal() {
+            return this.calculateSubtotal + this.calculateFees + this.addonsTotal;
+        }
     },
     async created() {
         this.initializeState();
@@ -138,7 +143,18 @@ export default {
 
             if (this.cartItemLength) {
                 this.checkPackageIds = Object.values(this.cartItem).map(item => parseInt(item.package_id));
+                
+                // Get service commission from first cart item
+                const firstItem = Object.values(this.cartItem)[0];
+                if (firstItem) {
+                    this.serviceCommission = firstItem.service_commission || 0;
+                    this.customFieldValues = firstItem.custom_fields || [];
+                }
             }
+        },
+        handleCustomFormExists(exists) {
+            this.hasCustomFields = exists;
+            this.loadingCustomFields = false;
         },
         navigateToTab(tab, destination) {
             if ([1, 2, 3, 4, 5, 6].includes(tab)) {
@@ -149,8 +165,53 @@ export default {
                 this.$router.push({ name: destination });
             }
         },
-        continueToCheckout() {
+        async continueToCheckout() {
+            // Validate and save custom fields if they exist
+            if (this.hasCustomFields && this.$refs.CustomFieldsRef) {
+                try {
+                    const customFormData = await this.$refs.CustomFieldsRef.submitForm(false);
+                    
+                    if (customFormData.errors.length) {
+                        Swal.fire({
+                            toast: true,
+                            html: 'Please fill in all required fields.',
+                            icon: 'warning',
+                            timer: 3000,
+                            showConfirmButton: false,
+                        });
+                        return;
+                    }
+                    
+                    // Update cart items with custom fields
+                    this.addonsTotal = this.$refs.CustomFieldsRef.sumTotal(customFormData.fields);
+                    this.addonsFee = this.roundout(this.$refs.CustomFieldsRef.feeTotal(customFormData.fields));
+                    
+                    // Update each cart item with custom fields
+                    const updatedCart = { ...this.cartItem };
+                    for (const slotId in updatedCart) {
+                        updatedCart[slotId].custom_fields = customFormData.fields;
+                        updatedCart[slotId].addons_total = this.addonsTotal;
+                        updatedCart[slotId].addons_fee = this.addonsFee;
+                    }
+                    
+                    this.$store.dispatch('storeCartItem', updatedCart);
+                } catch (error) {
+                    console.error('Error processing custom fields:', error);
+                }
+            }
+            
             this.$router.push({ name: 'Checkout' });
+        },
+        formatDate(date) {
+            return getMomentTimezone(this.$store.state.timezone, date).format('MMM D, YYYY');
+        },
+        currencyFormat(amount) {
+            return formatCurrencyIntl(amount, this.$store.state.currency);
+        },
+        roundout(amount, places = 2) {
+            if (places < 0) places = 0;
+            let factor = Math.pow(10, places);
+            return Math.round(amount * factor) / factor;
         },
         processLoader(loader) {
             loader.hide();
@@ -318,6 +379,43 @@ export default {
     margin-bottom: var(--space-5);
 }
 
+.cart-summary-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.cart-summary-item {
+    padding: var(--space-4);
+    background: var(--neutral-50);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--neutral-200);
+}
+
+.item-name {
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    color: var(--neutral-900);
+    margin-bottom: var(--space-2);
+}
+
+.item-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-date {
+    font-size: var(--text-sm);
+    color: var(--neutral-600);
+}
+
+.item-price {
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+    color: var(--primary-teal);
+}
+
 .summary-placeholder {
     color: var(--neutral-500);
     font-size: var(--text-sm);
@@ -325,6 +423,14 @@ export default {
     padding: var(--space-6);
     background: var(--neutral-50);
     border-radius: var(--radius-lg);
+}
+
+.no-addons-message {
+    padding: var(--space-8);
+    text-align: center;
+    background: var(--neutral-50);
+    border-radius: var(--radius-lg);
+    color: var(--neutral-600);
 }
 
 .summary-totals {

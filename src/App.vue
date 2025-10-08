@@ -1,5 +1,9 @@
 <template>
-        <router-view></router-view>
+        <router-view v-slot="{ Component }">
+                <transition name="fade" mode="out-in">
+                        <component :is="Component" />
+                </transition>
+        </router-view>
         <Footer></Footer>
 </template>
 
@@ -98,5 +102,27 @@ export default {
         -moz-osx-font-smoothing: grayscale;
         color: var(--neutral-800);
         background: var(--neutral-50);
+}
+
+/* Page Transitions */
+.fade-enter-active,
+.fade-leave-active {
+        transition: opacity var(--transition-base), transform var(--transition-base);
+}
+
+.fade-enter-from {
+        opacity: 0;
+        transform: translateY(10px);
+}
+
+.fade-leave-to {
+        opacity: 0;
+        transform: translateY(-10px);
+}
+
+.fade-enter-to,
+.fade-leave-from {
+        opacity: 1;
+        transform: translateY(0);
 }
 </style>
