@@ -133,7 +133,7 @@ export default {
             return getMomentTimezone(this.$store.state.timezone, date).format('dddd, MMMM D, YYYY');
         },
         navigateToTab(tab, destination) {
-            if ([1, 2, 3, 5].includes(tab)) {
+            if ([1, 2, 3, 4, 6].includes(tab)) {
                 if (tab === 2) {
                     this.$store.dispatch('storeFormData', null);
                 }

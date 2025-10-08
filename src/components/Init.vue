@@ -570,7 +570,11 @@ export default {
                 this.$store.dispatch('storeCartItem', this.cartItem);
                 this.$store.dispatch('storeMindChange', 1);
 
-                this.$router.push({ name: this.comboIds === 0 ? 'Checkout' : 'Index' });
+                if (this.customFieldExists) {
+                    this.$router.push({ name: 'Addons' });
+                } else {
+                    this.$router.push({ name: this.comboIds === 0 ? 'Checkout' : 'Index' });
+                }
             } catch (error) {
                 console.error('Add to cart error:', error);
                 this.errors.push(error.response?.data?.message || 'Failed to add to cart.');
@@ -708,7 +712,7 @@ export default {
         },
 
         navigateToTab(tab, destination) {
-            if ([1, 3, 4, 5].includes(tab)) {
+            if ([1, 3, 4, 5, 6].includes(tab)) {
                 if (tab === 1 || Object.keys(this.cartItem).length) {
                     this.$store.dispatch('storeMindChange', 1);
                     this.$router.push({ name: destination });

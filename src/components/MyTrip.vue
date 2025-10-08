@@ -17,13 +17,15 @@
                                             <h2 class="accordion-header" :id="`heading-${formatDate(date, true)}`">
                                                 <button class="accordion-button" :class="{ collapsed: index !== 0 }"
                                                     type="button" data-bs-toggle="collapse"
-                                                    :data-bs-target="`#collapse-${formatDate(date, true)}`" :aria-expanded="index === 0"
+                                                    :data-bs-target="`#collapse-${formatDate(date, true)}`"
+                                                    :aria-expanded="index === 0"
                                                     :aria-controls="`collapse-${formatDate(date, true)}`">
                                                     {{ formatDate(date) }}
                                                 </button>
                                             </h2>
-                                            <div :id="`collapse-${formatDate(date, true)}`" class="accordion-collapse collapse"
-                                                :class="{ show: index === 0 }" :aria-labelledby="`heading-${formatDate(date, true)}`"
+                                            <div :id="`collapse-${formatDate(date, true)}`"
+                                                class="accordion-collapse collapse" :class="{ show: index === 0 }"
+                                                :aria-labelledby="`heading-${formatDate(date, true)}`"
                                                 data-bs-parent="#accordionExample">
                                                 <div class="accordion-body p-0">
                                                     <div class="timeline">
@@ -188,7 +190,7 @@ export default {
             return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
         },
         navigateToTab(tab, destination) {
-            if ([1, 2, 4, 5].includes(tab)) {
+            if ([1, 2, 3, 5, 6].includes(tab)) {
                 if (tab === 2) {
                     this.$store.dispatch('storeFormData', null);
                 }

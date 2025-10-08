@@ -222,8 +222,13 @@
                                 form.package_id !== 0 &&
                                 form.service_commission !== 0
                             ">
-                                <CustomFields ref="CustomFieldsRef" :values="form.custom_fields" :enabled="true"
-                                    :display_errors="false" :display_submit="false" :display_height="275"
+                                <CustomFields
+                                    ref="CustomFieldsRef"
+                                    :values="form.custom_fields"
+                                    :enabled="true"
+                                    :display_errors="true"
+                                    :display_submit="false"
+                                    :display_height="275"
                                     :service_commission="form.service_commission"
                                     @customformexists="hasCustomFormFields"
                                     :endpoint="`/package/custom/form/${form.package_id}`" />

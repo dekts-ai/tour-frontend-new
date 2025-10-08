@@ -1,5 +1,6 @@
-import Index from'./components/Index.vue';
-import Init from'./components/Init.vue';
+import Index from './components/Index.vue';
+import Init from './components/Init.vue';
+import Addons from './components/Addons.vue';
 import Checkout from './components/Checkout.vue';
 import Thankyou from './components/Thankyou.vue';
 import MyTrip from './components/MyTrip.vue';
@@ -22,6 +23,11 @@ const routes = [
         path: '/initialize'
     },
     {
+        name: 'Addons',
+        component: Addons,
+        path: '/addons'
+    },
+    {
         name: 'MyTrip',
         component: MyTrip,
         path: '/mytrip'
@@ -42,7 +48,7 @@ const routes = [
         path: '/payment-success'
     },
     {
-        name:'Thankyou',
+        name: 'Thankyou',
         component: Thankyou,
         path: '/thankyou'
     },
@@ -63,7 +69,7 @@ const routes = [
     //},
 ];
 const router = createRouter({
-    history:createWebHistory(),
+    history: createWebHistory(),
     routes,
 });
 

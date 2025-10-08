@@ -12,7 +12,8 @@
                             <CheckoutForm @onsubmit="submit" :items="cartItem" :tenant-id="tenantId" :errors="errors"
                                 @update-seat-errors="handleSeatErrorsUpdate" />
                             <div class="col-lg-5 order-1 order-md-2">
-                                <ItemizedList :items="cartItem" :global-total-item="globalTotal" :seat-errors="seatErrors" @update-items="updateItems" />
+                                <ItemizedList :items="cartItem" :global-total-item="globalTotal"
+                                    :seat-errors="seatErrors" @update-items="updateItems" />
                                 <ItemTotalSummary :global-total="globalTotal" />
                             </div>
                         </div>
@@ -223,7 +224,7 @@ export default {
             }
         },
         navigateToTab(tab, destination) {
-            if ([1, 2, 3, 4].includes(tab)) {
+            if ([1, 2, 3, 4, 5].includes(tab)) {
                 if (tab === 2) {
                     this.$store.dispatch('storeFormData', null);
                 }

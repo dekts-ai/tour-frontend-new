@@ -15,12 +15,14 @@
                                 :class="'tabs tab1 dropdown-item ' + (tabs == 1 ? 'active' : '')">Tours</button></li>
                         <li><button @click="toTab(2, 'Init')"
                                 :class="'tabs tab2 dropdown-item ' + (tabs == 2 ? 'active' : '')">Schedule</button></li>
-                        <li><button v-if="comboIds" @click="toTab(3, 'MyTrip')"
-                                :class="'tabs tab3 dropdown-item ' + (tabs == 3 ? 'active' : '')">My Trip</button></li>
-                        <li><button v-if="comboIds" @click="toTab(4, 'Maps')"
-                                :class="'tabs tab4 dropdown-item ' + (tabs == 4 ? 'active' : '')">Maps</button></li>
-                        <li><button @click="toTab(5, 'Checkout')"
-                                :class="'tabs tab5 dropdown-item ' + (tabs == 5 ? 'active' : '')">Checkout</button></li>
+                        <li><button @click="toTab(3, 'Addons')"
+                                :class="'tabs tab2 dropdown-item ' + (tabs == 3 ? 'active' : '')">Add-ons</button></li>
+                        <li><button v-if="comboIds" @click="toTab(4, 'MyTrip')"
+                                :class="'tabs tab3 dropdown-item ' + (tabs == 4 ? 'active' : '')">My Trip</button></li>
+                        <li><button v-if="comboIds" @click="toTab(5, 'Maps')"
+                                :class="'tabs tab4 dropdown-item ' + (tabs == 5 ? 'active' : '')">Maps</button></li>
+                        <li><button @click="toTab(6, 'Checkout')"
+                                :class="'tabs tab5 dropdown-item ' + (tabs == 6 ? 'active' : '')">Checkout</button></li>
                     </ul>
                 </div>
                 <div class="tabs-wrap d-flex align-items-center w-100">
@@ -31,13 +33,15 @@
                         :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
                     <button @click="toTab(2, 'Init')"
                         :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
-                    <button v-if="comboIds" @click="toTab(3, 'MyTrip')"
-                        :class="'tabs tab3 ' + (tabs == 3 ? 'active' : '')">My Trip</button>
-                    <button v-if="comboIds" @click="toTab(4, 'Maps')"
-                        :class="'tabs tab4 ' + (tabs == 4 ? 'active' : '')">Maps</button>
-                    <button @click="toTab(5, 'Checkout')"
-                        :class="'tabs tab5 ' + (tabs == 5 ? 'active' : '')">Checkout</button>
-                    <button v-if="comboIds" @click="nextTab" :class="'tabs prev-next tab6'" :disabled="tabs === 5">
+                    <button @click="toTab(4, 'Init')"
+                        :class="'tabs tab2 ' + (tabs == 3 ? 'active' : '')">Add-ons</button>
+                    <button v-if="comboIds" @click="toTab(4, 'MyTrip')"
+                        :class="'tabs tab3 ' + (tabs == 4 ? 'active' : '')">My Trip</button>
+                    <button v-if="comboIds" @click="toTab(5, 'Maps')"
+                        :class="'tabs tab4 ' + (tabs == 5 ? 'active' : '')">Maps</button>
+                    <button @click="toTab(6, 'Checkout')"
+                        :class="'tabs tab5 ' + (tabs == 6 ? 'active' : '')">Checkout</button>
+                    <button v-if="comboIds" @click="nextTab" :class="'tabs prev-next tab6'" :disabled="tabs === 6">
                         Next <i class="fa fa-chevron-right"></i>
                     </button>
                 </div>
@@ -64,22 +68,22 @@ export default {
 
             if (this.comboIds) {
                 // Navigate to the previous tab if comboIds is truthy
-                if (currentTab === 5) {
-                    targetTab = 4;
+                if (currentTab === 6) {
+                    targetTab = 5;
                     destination = 'Maps';
-                } else if (currentTab === 4) {
-                    targetTab = 3;
+                } else if (currentTab === 5) {
+                    targetTab = 4;
                     destination = 'MyTrip';
-                } else if (currentTab === 3 || currentTab === 2) {
+                } else if (currentTab === 2 || currentTab === 3 || currentTab === 4) {
                     targetTab = 1;
                     destination = 'Index';
                 }
             } else {
                 // If no comboIds, skip My Trip and Maps tabs
-                if (currentTab === 5) {
+                if (currentTab === 6) {
                     targetTab = 2;
                     destination = 'Init';
-                } else if (currentTab === 2) {
+                } else if (currentTab === 2 || currentTab === 3) {
                     targetTab = 1;
                     destination = 'Index';
                 }
@@ -96,14 +100,14 @@ export default {
 
             if (this.comboIds) {
                 // Navigate to the next tab if comboIds is truthy
-                if (currentTab === 1 || currentTab === 2) {
-                    targetTab = 3;
-                    destination = 'MyTrip';
-                } else if (currentTab === 3) {
+                if (currentTab === 1 || currentTab === 2 || currentTab === 3) {
                     targetTab = 4;
-                    destination = 'Maps';
+                    destination = 'MyTrip';
                 } else if (currentTab === 4) {
                     targetTab = 5;
+                    destination = 'Maps';
+                } else if (currentTab === 5) {
+                    targetTab = 6;
                     destination = 'Checkout';
                 }
             } else {
@@ -111,8 +115,8 @@ export default {
                 if (currentTab === 1) {
                     targetTab = 2;
                     destination = 'Init';
-                } else if (currentTab === 2) {
-                    targetTab = 5;
+                } else if (currentTab === 2 || currentTab === 3) {
+                    targetTab = 6;
                     destination = 'Checkout';
                 }
             }
