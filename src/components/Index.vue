@@ -114,7 +114,7 @@ export default {
     },
     methods: {
         handleTabChange(tab, destination) {
-            if (tab === 1 || tab === 3 || tab === 4 || tab === 5) {
+            if (tab === 1 || tab === 2 || tab === 3 || tab === 4 || tab === 5 || tab === 6) {
                 this.handleTab(tab, destination);
             } else {
                 Swal.fire({

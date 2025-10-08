@@ -1,51 +1,18 @@
 <template>
-    <div class="no-container">
-        <div class="row">
-            <div class="col-12">
-                <div class="dropdown text-start d-md-none">
-                    <a class="hamburger-menu dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <li><button @click="toTab(1, 'Index')"
-                                :class="'tabs tab1 dropdown-item ' + (tabs == 1 ? 'active' : '')">Tours</button></li>
-                        <li><button @click="toTab(2, 'Init')"
-                                :class="'tabs tab2 dropdown-item ' + (tabs == 2 ? 'active' : '')">Schedule</button></li>
-                        <li><button @click="toTab(3, 'Addons')"
-                                :class="'tabs tab2 dropdown-item ' + (tabs == 3 ? 'active' : '')">Add-ons</button></li>
-                        <li><button v-if="comboIds" @click="toTab(4, 'MyTrip')"
-                                :class="'tabs tab3 dropdown-item ' + (tabs == 4 ? 'active' : '')">My Trip</button></li>
-                        <li><button v-if="comboIds" @click="toTab(5, 'Maps')"
-                                :class="'tabs tab4 dropdown-item ' + (tabs == 5 ? 'active' : '')">Maps</button></li>
-                        <li><button @click="toTab(6, 'Checkout')"
-                                :class="'tabs tab5 dropdown-item ' + (tabs == 6 ? 'active' : '')">Checkout</button></li>
-                    </ul>
-                </div>
-                <div class="tabs-wrap d-flex align-items-center w-100">
-                    <button v-if="comboIds" @click="prevTab" :class="'tabs prev-next tab0'" :disabled="tabs === 1">
-                        <i class="fa fa-chevron-left"></i> Previous
-                    </button>
-                    <button @click="toTab(1, 'Index')"
-                        :class="'tabs tab1 ' + (tabs == 1 ? 'active' : '')">Tours</button>
-                    <button @click="toTab(2, 'Init')"
-                        :class="'tabs tab2 ' + (tabs == 2 ? 'active' : '')">Schedule</button>
-                    <button @click="toTab(4, 'Init')"
-                        :class="'tabs tab2 ' + (tabs == 3 ? 'active' : '')">Add-ons</button>
-                    <button v-if="comboIds" @click="toTab(4, 'MyTrip')"
-                        :class="'tabs tab3 ' + (tabs == 4 ? 'active' : '')">My Trip</button>
-                    <button v-if="comboIds" @click="toTab(5, 'Maps')"
-                        :class="'tabs tab4 ' + (tabs == 5 ? 'active' : '')">Maps</button>
-                    <button @click="toTab(6, 'Checkout')"
-                        :class="'tabs tab5 ' + (tabs == 6 ? 'active' : '')">Checkout</button>
-                    <button v-if="comboIds" @click="nextTab" :class="'tabs prev-next tab6'" :disabled="tabs === 6">
-                        Next <i class="fa fa-chevron-right"></i>
-                    </button>
-                </div>
+    <div class="booking-header">
+        <div class="booking-header-content">
+            <h1 class="booking-title">Book Your Experience</h1>
+            <div class="booking-tabs">
+                <button @click="toTab(1, 'Index')"
+                    :class="['booking-tab', { 'active': tabs == 1 }]">Tours</button>
+                <button @click="toTab(2, 'Init')"
+                    :class="['booking-tab', { 'active': tabs == 2 }]">Schedule</button>
+                <button @click="toTab(3, 'Addons')"
+                    :class="['booking-tab', { 'active': tabs == 3 }]">Add-Ons</button>
+                <button @click="toTab(6, 'Checkout')"
+                    :class="['booking-tab', { 'active': tabs == 6 }]">Checkout</button>
             </div>
+            <button class="booking-close" @click="closeBooking">×</button>
         </div>
     </div>
 </template>
@@ -61,70 +28,98 @@ export default {
         toTab(tab, destination) {
             this.$emit('navigatetotab', tab, destination);
         },
-        prevTab() {
-            let currentTab = this.tabs;
-            let targetTab = null;
-            let destination = '';
-
-            if (this.comboIds) {
-                // Navigate to the previous tab if comboIds is truthy
-                if (currentTab === 6) {
-                    targetTab = 5;
-                    destination = 'Maps';
-                } else if (currentTab === 5) {
-                    targetTab = 4;
-                    destination = 'MyTrip';
-                } else if (currentTab === 2 || currentTab === 3 || currentTab === 4) {
-                    targetTab = 1;
-                    destination = 'Index';
-                }
-            } else {
-                // If no comboIds, skip My Trip and Maps tabs
-                if (currentTab === 6) {
-                    targetTab = 2;
-                    destination = 'Init';
-                } else if (currentTab === 2 || currentTab === 3) {
-                    targetTab = 1;
-                    destination = 'Index';
-                }
-            }
-
-            if (targetTab) {
-                this.toTab(targetTab, destination);
-            }
-        },
-        nextTab() {
-            let currentTab = this.tabs;
-            let targetTab = null;
-            let destination = '';
-
-            if (this.comboIds) {
-                // Navigate to the next tab if comboIds is truthy
-                if (currentTab === 1 || currentTab === 2 || currentTab === 3) {
-                    targetTab = 4;
-                    destination = 'MyTrip';
-                } else if (currentTab === 4) {
-                    targetTab = 5;
-                    destination = 'Maps';
-                } else if (currentTab === 5) {
-                    targetTab = 6;
-                    destination = 'Checkout';
-                }
-            } else {
-                // If no comboIds, skip My Trip and Maps tabs
-                if (currentTab === 1) {
-                    targetTab = 2;
-                    destination = 'Init';
-                } else if (currentTab === 2 || currentTab === 3) {
-                    targetTab = 6;
-                    destination = 'Checkout';
-                }
-            }
-
-            if (targetTab) {
-                this.toTab(targetTab, destination);
-            }
+        closeBooking() {
+            window.close();
         }
     }
 }
 </script>
+
+<style scoped>
+.booking-header {
+    background: #fff;
+    padding: 20px 40px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.booking-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.booking-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    color: #1a1a1a;
+}
+
+.booking-tabs {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+    justify-content: center;
+}
+
+.booking-tab {
+    background: #f5f3f3;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.booking-tab:hover {
+    background: #e5e5e5;
+}
+
+.booking-tab.active {
+    background: #2d3139;
+    color: #fff;
+}
+
+.booking-close {
+    background: none;
+    border: none;
+    font-size: 32px;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.booking-close:hover {
+    color: #000;
+}
+
+@media (max-width: 768px) {
+    .booking-header {
+        padding: 15px 20px;
+    }
+
+    .booking-title {
+        font-size: 18px;
+    }
+
+    .booking-tabs {
+        gap: 4px;
+    }
+
+    .booking-tab {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+</style>
