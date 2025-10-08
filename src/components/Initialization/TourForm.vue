@@ -163,7 +163,9 @@
                         </div>
                     </div>
 
-                    <div v-if="reveal && tourPackageName && form.package_id && form.package_id !== 0 && form.service_commission !== 0">
+                    <!-- Additional Options removed from Schedule section as per user request -->
+                    <!-- Move to Add Extras section if needed -->
+                    <!-- <div v-if="reveal && tourPackageName && form.package_id && form.package_id !== 0 && form.service_commission !== 0">
                         <CustomFields
                             ref="CustomFieldsRef"
                             :values="form.custom_fields"
@@ -174,7 +176,7 @@
                             :service_commission="form.service_commission"
                             @customformexists="hasCustomFormFields"
                             :endpoint="`/package/custom/form/${form.package_id}`" />
-                    </div>
+                    </div> -->
 
                     <div v-if="reveal && hotels.length" class="hotel-pickup-summary">
                         <h4 class="summary-subsection-title">Select Pickup Hotel</h4>

@@ -24,8 +24,9 @@
                                     :remove-pax="removePax" :has-custom-form-fields="hasCustomFormFields"
                                     :submit="submit" />
 
-                                <TourDetails :tour-package-data="details.tourPackageData" :form="form"
-                                    :things-to-bring="details.thingsToBring" />
+                                <!-- Package details removed from Schedule section as per user request -->
+                                <!-- <TourDetails :tour-package-data="details.tourPackageData" :form="form"
+                                    :things-to-bring="details.thingsToBring" /> -->
                             </div>
                         </div>
                     </div>
