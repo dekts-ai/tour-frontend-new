@@ -1,9 +1,10 @@
 <template>
-    <section class="tabs-section">
-        <NavBtns @navigatetotab="navigateToTab" :combo-ids="comboIds" :tabs="tabs" />
-    </section>
+    <div>
+        <section class="tabs-section">
+            <NavBtns @navigatetotab="navigateToTab" :combo-ids="comboIds" :tabs="tabs" />
+        </section>
 
-    <section class="inner-content-section">
+        <section class="inner-content-section">
         <div class="checkout-container">
             <div class="checkout-left">
                 <CheckoutForm @onsubmit="submit" :items="cartItem" :tenant-id="tenantId" :errors="errors"
@@ -15,7 +16,8 @@
                 <ItemTotalSummary :global-total="globalTotal" />
             </div>
         </div>
-    </section>
+        </section>
+    </div>
 </template>
 
 <script>

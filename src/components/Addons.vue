@@ -1,9 +1,10 @@
 <template>
-    <section class="tabs-section">
-        <NavBtns @navigatetotab="navigateToTab" :combo-ids="comboIds" :tabs="tabs" />
-    </section>
+    <div>
+        <section class="tabs-section">
+            <NavBtns @navigatetotab="navigateToTab" :combo-ids="comboIds" :tabs="tabs" />
+        </section>
 
-    <section class="addons-section">
+        <section class="addons-section">
         <div class="addons-container">
             <div class="addons-content">
                 <div class="addons-left">
@@ -72,7 +73,8 @@
                 </div>
             </div>
         </div>
-    </section>
+        </section>
+    </div>
 </template>
 
 <script>

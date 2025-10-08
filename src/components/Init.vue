@@ -572,11 +572,8 @@ export default {
                 this.$store.dispatch('storeCartItem', this.cartItem);
                 this.$store.dispatch('storeMindChange', 1);
 
-                if (this.customFieldExists) {
-                    this.$router.push({ name: 'Addons' });
-                } else {
-                    this.$router.push({ name: this.comboIds === 0 ? 'Checkout' : 'Index' });
-                }
+                // Always go to Add Extras first (tab 4), then to Checkout (tab 5)
+                this.$router.push({ name: 'Addons' });
             } catch (error) {
                 console.error('Add to cart error:', error);
                 this.errors.push(error.response?.data?.message || 'Failed to add to cart.');
