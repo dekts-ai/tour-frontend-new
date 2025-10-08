@@ -80,9 +80,6 @@
                                 <span v-if="tourPackageData[0]?.age_range">• For {{ tourPackageData[0].age_range }}</span>
                                 <span v-if="tourPackageData[0]?.tag">• {{ tourPackageData[0].tag }}</span>
                             </div>
-                            <div class="tour-summary-price">
-                                From {{ currencyFormat(tourPackageData[0]?.base_rate || form.selectedRate) }} (per guest)
-                            </div>
                         </div>
                     </div>
 
