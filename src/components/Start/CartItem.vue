@@ -14,7 +14,7 @@
             <div class="tour-header">
                 <div class="tour-title-section">
                     <h3 class="tour-title">{{ item.package_name || 'Unnamed Package' }}</h3>
-                    <p class="tour-description">{{ item.short_description || '' }}</p>
+                    <!-- <p class="tour-description">{{ item.short_description || '' }}</p> -->
                 </div>
                 <div class="tour-actions">
                     <button class="action-icon-btn edit-btn" @click="$emit('edit-package', item)" title="Edit Tour">
