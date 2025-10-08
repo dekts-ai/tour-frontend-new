@@ -1,73 +1,63 @@
 <template>
-    <div>
-        <div class="total-cost-wrap" v-for="item in items" :key="item.tour_slot_id">
-            <div class="title-wrap">
-                <div class="title">{{ item.package_name }}</div>
-                <div class="time">{{ dateFormat(item.date) }} <span v-if="item.package_has_slots">@ {{ item.time_date
-                }}</span></div>
+    <div class="itemized-list-container">
+        <div class="item-card" v-for="item in items" :key="item.tour_slot_id">
+            <div class="item-header">
+                <h4 class="item-title">{{ item.package_name }}</h4>
+                <p class="item-datetime">{{ dateFormat(item.date) }} <span v-if="item.package_has_slots">@ {{ item.time_date }}</span></p>
             </div>
-            <div v-for="(pax, key) in item.people_group" :key="key">
-                <div v-if="pax > 0" class="ages-wrap d-flex justify-content-between align-items-center">
-                    <div class="title">{{ item.rate_group[key] }}</div>
-                    <div class="number">{{ pax }}</div>
-                </div>
-            </div>
-            <div class="other-details-wrap d-flex justify-content-between align-items-center">
-                <div class="title">Ticket Cost</div>
-                <div class="amount">{{ currencyFormat(item.subtotal) }}</div>
-            </div>
-            <div class="other-details-wrap d-flex justify-content-between align-items-center"
-                v-if="item?.discount2_value > 0">
-                <div class="title">Discount</div>
-                <div class="amount"><span v-if="item?.discount2_percentage">({{ item?.discount2_percentage }}%)</span>
-                    {{ item?.discount2_value ? currencyFormat(item?.discount2_value) : currencyFormat(0) }}</div>
-            </div>
-            <!-- <div class="other-details-wrap d-flex justify-content-between align-items-center" v-if="item?.discount2_value > 0">
-            <div class="title">Subtotal</div>
-            <div class="amount">{{ currencyFormat(item.fees) }}</div>	
-            </div> -->
-            <div v-if="item?.custom_fields?.length && isPriceInfoEnabled(item?.custom_fields)">
-                <div class="ages-wrap d-flex justify-content-between align-items-center">
-                    <div class="title">Add-ons:</div>
-                </div>
-                <div v-for="(option, idx) in item.custom_fields" :key="`custom-option-${idx}`">
-                    <div v-if="option.priceInfo.enabled"
-                        class="other-details-wrap d-flex justify-content-between align-items-center">
-                        <div class="title">{{ option.name }}</div>
-                        <div class="amount">{{ currencyFormat(option.priceInfo.price) }} </div>
+
+            <div class="item-guests">
+                <div v-for="(pax, key) in item.people_group" :key="key">
+                    <div v-if="pax > 0" class="guest-row">
+                        <span class="guest-label">{{ item.rate_group[key] }}</span>
+                        <span class="guest-value">{{ pax }}</span>
                     </div>
                 </div>
-                <!-- <div class="other-details-wrap d-flex justify-content-between align-items-center lemonchiffon">
-                    <div class="title"><strong>Total Cost</strong></div>
-                    <div class="amount"><strong>{{ currencyFormat(item.total + item.addons_total) }}</strong></div>
-                </div> -->
-                <hr class="m-1">
             </div>
-            <div class="other-details-wrap d-flex justify-content-between align-items-center">
-                <div class="title">Booking Fees</div>
-                <div class="amount">{{ currencyFormat(Number(item.fees) + Number(item.addons_fee)) }}</div>
-            </div>
-            <div class="other-details-wrap d-flex justify-content-between align-items-center lemonchiffon">
-                <div class="title"><strong>Tour Cost</strong></div>
-                <div class="amount">{{ currencyFormat(Number(item.total) + Number(item.addons_total) +
-                    Number(item.addons_fee)) }}</div>
+
+            <div class="item-pricing">
+                <div class="pricing-line">
+                    <span>Ticket Cost</span>
+                    <span>{{ currencyFormat(item.subtotal) }}</span>
+                </div>
+                <div class="pricing-line" v-if="item?.discount2_value > 0">
+                    <span>Discount <span v-if="item?.discount2_percentage">({{ item?.discount2_percentage }}%)</span></span>
+                    <span class="discount">-{{ item?.discount2_value ? currencyFormat(item?.discount2_value) : currencyFormat(0) }}</span>
+                </div>
+
+                <div v-if="item?.custom_fields?.length && isPriceInfoEnabled(item?.custom_fields)" class="addons-section">
+                    <div class="addon-header">Add-ons:</div>
+                    <div v-for="(option, idx) in item.custom_fields" :key="`custom-option-${idx}`">
+                        <div v-if="option.priceInfo.enabled" class="pricing-line">
+                            <span>{{ option.name }}</span>
+                            <span>{{ currencyFormat(option.priceInfo.price) }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pricing-line">
+                    <span>Booking Fees</span>
+                    <span>{{ currencyFormat(Number(item.fees) + Number(item.addons_fee)) }}</span>
+                </div>
+                <div class="pricing-line total">
+                    <span>Tour Cost</span>
+                    <span>{{ currencyFormat(Number(item.total) + Number(item.addons_total) + Number(item.addons_fee)) }}</span>
+                </div>
             </div>
 
             <Discount :item="item" :allItem="items" :globalTotalItem="globalTotalItem"
                 @update-items="handleItemsUpdate" />
 
-            <p class="text-start tour-packages-detail ms-4 mt-2 mb-2" v-if="seatErrors?.length">
-                <b>Error(s):</b>
-            </p>
-            <ul>
-                <li v-for="(error, index) in seatErrors" :key="index"
-                    v-bind:class="{ 'text-danger': error[item.tour_slot_id]?.success }">
-                    <small>{{ error[item.tour_slot_id]?.message }}</small>
-                </li>
-            </ul>
-
+            <div v-if="seatErrors?.length" class="errors-section">
+                <p class="error-title">Error(s):</p>
+                <ul class="error-list">
+                    <li v-for="(error, index) in seatErrors" :key="index"
+                        :class="{ 'error-success': error[item.tour_slot_id]?.success }">
+                        <small>{{ error[item.tour_slot_id]?.message }}</small>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <hr />
     </div>
 </template>
 
@@ -103,3 +93,135 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.itemized-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.item-card {
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: var(--space-5);
+    border: 1px solid var(--neutral-200);
+}
+
+.item-header {
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--neutral-200);
+    margin-bottom: var(--space-4);
+}
+
+.item-title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
+    color: var(--neutral-900);
+    margin: 0 0 var(--space-2) 0;
+}
+
+.item-datetime {
+    font-size: var(--text-sm);
+    color: var(--neutral-600);
+    margin: 0;
+}
+
+.item-guests {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+    background: var(--neutral-50);
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+}
+
+.guest-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--text-sm);
+}
+
+.guest-label {
+    color: var(--neutral-700);
+}
+
+.guest-value {
+    font-weight: var(--font-semibold);
+    color: var(--neutral-900);
+}
+
+.item-pricing {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.pricing-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--text-sm);
+    color: var(--neutral-700);
+    padding: var(--space-2);
+    background: var(--neutral-50);
+    border-radius: var(--radius-md);
+}
+
+.pricing-line.total {
+    background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-teal-light) 100%);
+    color: white;
+    font-weight: var(--font-bold);
+    margin-top: var(--space-3);
+    padding: var(--space-3);
+}
+
+.discount {
+    color: var(--primary-terracotta);
+}
+
+.addons-section {
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px dashed var(--neutral-300);
+}
+
+.addon-header {
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    color: var(--neutral-500);
+    text-transform: uppercase;
+    margin-bottom: var(--space-2);
+}
+
+.errors-section {
+    margin-top: var(--space-4);
+    padding: var(--space-3);
+    background: #FEE2E2;
+    border-radius: var(--radius-lg);
+}
+
+.error-title {
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+    color: #991B1B;
+    margin: 0 0 var(--space-2) 0;
+}
+
+.error-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.error-list li {
+    color: #DC2626;
+    font-size: var(--text-sm);
+}
+
+.error-list li.error-success {
+    color: #059669;
+}
+</style>

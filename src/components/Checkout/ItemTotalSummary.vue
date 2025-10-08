@@ -1,27 +1,27 @@
 <template>
-    <div class="total-cost-wrap third">
-        <div class="title-wrap">
-            <div class="title mb-0">Total Cost</div>
-        </div>
-        <div class="other-details-wrap d-flex justify-content-between align-items-center mt-0">
-            <div class="title">Ticket Cost</div>
-            <div class="amount">{{ currencyFormat(globalTotal.subtotal) }}</div>
-        </div>
-        <div class="other-details-wrap d-flex justify-content-between align-items-center" v-if="globalTotal.discount > 0">
-            <div class="title">Discount</div>
-            <div class="amount">{{ currencyFormat(globalTotal.discount) }}</div>
-        </div>
-        <div v-if="globalTotal.addons_total" class="other-details-wrap d-flex justify-content-between align-items-center">
-            <div class="title">Add-ons</div>
-            <div class="amount">{{ currencyFormat(globalTotal.addons_total) }}</div>
-        </div>
-        <div class="other-details-wrap d-flex justify-content-between align-items-center">
-            <div class="title">Booking Fees</div>
-            <div class="amount">{{ currencyFormat(Number(globalTotal.fees) + Number(globalTotal.addons_fee)) }}</div>
-        </div>
-        <div class="other-details-wrap d-flex justify-content-between align-items-center last">
-            <div class="title"><strong>Total Cost</strong></div>
-            <div class="amount"><strong>{{ currencyFormat(Number(globalTotal.total) + Number(globalTotal.addons_total) + Number(globalTotal.addons_fee)) }}</strong></div>
+    <div class="summary-card">
+        <h3 class="summary-title">Total Cost</h3>
+        <div class="summary-rows">
+            <div class="summary-row">
+                <span>Ticket Cost</span>
+                <span>{{ currencyFormat(globalTotal.subtotal) }}</span>
+            </div>
+            <div class="summary-row" v-if="globalTotal.discount > 0">
+                <span>Discount</span>
+                <span class="discount-amount">-{{ currencyFormat(globalTotal.discount) }}</span>
+            </div>
+            <div v-if="globalTotal.addons_total" class="summary-row">
+                <span>Add-ons</span>
+                <span>{{ currencyFormat(globalTotal.addons_total) }}</span>
+            </div>
+            <div class="summary-row">
+                <span>Booking Fees</span>
+                <span>{{ currencyFormat(Number(globalTotal.fees) + Number(globalTotal.addons_fee)) }}</span>
+            </div>
+            <div class="summary-row grand-total">
+                <span>Total Cost</span>
+                <span>{{ currencyFormat(Number(globalTotal.total) + Number(globalTotal.addons_total) + Number(globalTotal.addons_fee)) }}</span>
+            </div>
         </div>
     </div>
 </template>
@@ -42,3 +42,52 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.summary-card {
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: var(--space-5);
+    border: 1px solid var(--neutral-200);
+    box-shadow: var(--shadow-sm);
+}
+
+.summary-title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
+    color: var(--neutral-900);
+    margin: 0 0 var(--space-4) 0;
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--neutral-200);
+}
+
+.summary-rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--text-sm);
+    color: var(--neutral-700);
+    padding: var(--space-2);
+    background: var(--neutral-50);
+    border-radius: var(--radius-md);
+}
+
+.summary-row.grand-total {
+    background: linear-gradient(135deg, var(--primary-terracotta) 0%, #D97454 100%);
+    color: white;
+    font-weight: var(--font-bold);
+    font-size: var(--text-base);
+    margin-top: var(--space-3);
+    padding: var(--space-4);
+}
+
+.discount-amount {
+    color: var(--primary-terracotta);
+}
+</style>

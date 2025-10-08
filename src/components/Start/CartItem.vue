@@ -1,124 +1,75 @@
 <template>
-    <div class="tourselected-packages-item">
-        <div class="tourselected-inner-wrap">
-            <div class="tourselected-inner">
-                <div class="tourselected-detail">
-                    <div class="tourselected-image">
-                        <img :src="item.package_image || ''" :alt="`${item.package_name || 'Package'} image`">
+    <div class="selected-tour-card">
+        <div class="tour-header">
+            <div class="tour-image-wrapper">
+                <img :src="item.package_image || ''" :alt="`${item.package_name || 'Package'} image`" class="tour-image">
+            </div>
+            <div class="tour-info">
+                <h3 class="tour-title">{{ item.package_name || 'Unnamed Package' }}</h3>
+                <div class="tour-meta">
+                    <span class="tour-duration">{{ item.duration || '' }} {{ item.type || '' }}</span>
+                </div>
+                <p class="tour-description">{{ item.short_description || '' }}</p>
+            </div>
+        </div>
+
+        <div class="tour-details">
+            <div class="detail-section">
+                <div class="detail-label">Scheduled Date & Time</div>
+                <div class="detail-value">
+                    {{ dateFormat(item.date) }}
+                    <span v-if="item.package_has_slots"> @ {{ item.time_date || '' }}</span>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-label">Guests</div>
+                <div class="guests-list">
+                    <div v-if="item.people_group && typeof item.people_group === 'object' && Object.keys(item.people_group).length">
+                        <div v-for="(count, groupType) in item.people_group" :key="groupType" class="guest-item">
+                            <span class="guest-type">{{ item.rate_group?.[groupType] || groupType }}</span>
+                            <span class="guest-count">{{ count }}</span>
+                        </div>
                     </div>
-                    <div class="tourselected-title-wrap">
-                        <div class="d-flex align-items-start justify-content-between">
-                            <div class="tourselected-title">{{ item.package_name || 'Unnamed Package' }}</div>
-                            <div class="tourselected-title">
-                                <span class="duration-text">{{ item.duration || '' }} {{ item.type || '' }}</span>
-                            </div>
+                    <div v-else class="no-guests">No guests selected</div>
+                </div>
+            </div>
+
+            <div class="pricing-section">
+                <div class="pricing-label">Tour Cost</div>
+                <div class="pricing-rows">
+                    <div class="pricing-row">
+                        <span>Subtotal</span>
+                        <span>{{ currencyFormat(item.subtotal || 0) }}</span>
+                    </div>
+                    <div class="pricing-row" v-if="item?.discount2_value > 0">
+                        <span>Discount <span v-if="item?.discount2_percentage">({{ item?.discount2_percentage }}%)</span></span>
+                        <span>-{{ currencyFormat(item?.discount2_value || 0) }}</span>
+                    </div>
+                    <div v-if="item?.custom_fields?.length && isPriceInfoEnabled(item?.custom_fields)">
+                        <div class="pricing-label small">Add-ons</div>
+                        <div v-for="(option, k) in item.custom_fields.filter(f => f.priceInfo?.enabled)"
+                            :key="`custom-field-${k}`" class="pricing-row">
+                            <span>{{ option.name }}</span>
+                            <span>{{ currencyFormat(option.priceInfo?.price || 0) }}</span>
                         </div>
-                        <!-- <div class="tourselected-title-top">
-                            {{ dateFormat(item.date) }}
-                            <span v-if="item.package_has_slots">@ {{ item.time_date || '' }}</span>
-                        </div> -->
-                        <div class="tourselected-title-top">{{ item.short_description || '' }}</div>
-                        <div class="what-bring-wrap-added" v-if="item?.things_to_bring?.length">
-                            <div class="what-bring-title">What to bring</div>
-                            <ul>
-                                <li v-for="bring in item?.things_to_bring" :key="bring">{{ bring }}</li>
-                            </ul>
-                        </div>
+                    </div>
+                    <div class="pricing-row">
+                        <span>Booking Fees</span>
+                        <span>{{ currencyFormat(Number(item.fees || 0) + Number(item.addons_fee || 0)) }}</span>
+                    </div>
+                    <div class="pricing-row total">
+                        <span>Tour Cost</span>
+                        <span>{{ currencyFormat(Number(item.total || 0) + Number(item.addons_fee || 0) + Number(item.addons_total || 0)) }}</span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="tourselected-totalcost">
-            <div class="tourselected-group-wrap">
-                <!-- <div class="tourselected-title">Scheduled On</div> -->
-                <div class="tourselected-title-top">
-                    <span style="color: #fb7e05;">{{ dateFormat(item.date) }}</span>
-                    <span v-if="item.package_has_slots" style="color: #004085;"> @
-                        <span style="color: #0070FF">
-                            {{ item.time_date || '' }}
-                        </span>
-                    </span>
-                </div>
-                <div class="tourselected-group-small-title protanopia">Guests:</div>
-                <div class="tourselected-group-people">
-                    <div
-                        v-if="item.people_group && typeof item.people_group === 'object' && Object.keys(item.people_group).length">
-                        <div v-for="(count, groupType) in item.people_group" :key="groupType"
-                            class="tourselected-people">
-                            <div class="tourselected-people-icon">
-                                <svg width="8" height="11" viewBox="0 0 8 11" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M4.07976 5.3184C5.3978 5.3184 6.46628 4.24991 6.46628 2.93187C6.46628 1.61383 5.3978 0.545349 4.07976 0.545349C2.76172 0.545349 1.69324 1.61383 1.69324 2.93187C1.69324 4.24991 2.76172 5.3184 4.07976 5.3184Z"
-                                        fill="#4C76B2" />
-                                    <path
-                                        d="M5.6879 6.11444H2.47167C1.94894 6.11507 1.44781 6.323 1.07819 6.69263C0.708563 7.06225 0.500632 7.56338 0.5 8.08611L0.5 10.092H7.65957V8.08611C7.65894 7.56338 7.45101 7.06225 7.08139 6.69263C6.71176 6.323 6.21063 6.11507 5.6879 6.11444Z"
-                                        fill="#4C76B2" />
-                                </svg>
-                            </div>
-                            <div class="tourselected-people-title">{{ item.rate_group?.[groupType] || groupType }}</div>
-                            <div class="tourselected-people-count">
-                                <input type="text" name="guest-count" :disabled="true" :value="count">
-                            </div>
-                        </div>
-                    </div>
-                    <div v-else>
-                        No guests selected
-                    </div>
-                </div>
-            </div>
-            <div class="tourselected-costcount-small-title protanopia">Tour cost:</div>
-            <div class="tourselected-costcount-subitem">
-                <div class="tourselected-costcount-subitem-title">Subtotal:</div>
-                <div class="tourselected-costcount-subitem-cost">{{ currencyFormat(item.subtotal || 0) }}</div>
-            </div>
-            <div class="tourselected-costcount-subitem" v-if="item?.discount2_value > 0">
-                <div class="tourselected-costcount-subitem-title">Discount:</div>
-                <div class="tourselected-costcount-subitem-cost">
-                    <span v-if="item?.discount2_percentage">({{ item?.discount2_percentage }}%)</span>
-                    {{ currencyFormat(item?.discount2_value || 0) }}
-                </div>
-            </div>
-            <div v-if="item?.custom_fields?.length && isPriceInfoEnabled(item?.custom_fields)">
-                <div class="tourselected-costcount-small-title protanopia">Add-ons:</div>
-                <div class="max-height-200">
-                    <div v-for="(option, k) in item.custom_fields.filter(f => f.priceInfo?.enabled)"
-                        :key="`custom-field-${k}`" class="tourselected-costcount-subitem">
-                        <div class="tourselected-costcount-subitem-title">{{ option.name }}</div>
-                        <div class="tourselected-costcount-subitem-cost">
-                            {{ currencyFormat(option.priceInfo?.price || 0) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tourselected-costcount-subitem">
-                <div class="tourselected-costcount-subitem-title">Booking Fees:</div>
-                <div class="tourselected-costcount-subitem-cost">
-                    {{ currencyFormat(Number(item.fees || 0) + Number(item.addons_fee || 0)) }}
-                </div>
-            </div>
-            <div class="tourselected-costcount-total">
-                <div class="tourselected-costcount-total-title">Tour Cost:</div>
-                <div class="tourselected-costcount-total-cost">
-                    {{ currencyFormat(Number(item.total || 0) + Number(item.addons_fee || 0) + Number(item.addons_total
-                        || 0)) }}
-                </div>
-            </div>
-            <div class="tourselected-edit-wrap">
-                <div class="tourselected-action-wrap">
-                    <div class="tourselected-action-btn">
-                        <a class="action-btn action-btn-edit" @click="$emit('edit-package', item)">Edit</a>
-                    </div>
-                    <div v-if="firstPackageId !== item.package_id" class="tourselected-action-btn">
-                        <a class="action-btn action-btn-delete" @click="$emit('remove-from-cart', item)">Delete</a>
-                    </div>
-                    <div class="tourselected-action-btn">
-                        <a class="action-btn action-btn-checkout" @click="$emit('tab-change', 5, 'Checkout')">
-                            Checkout
-                        </a>
-                    </div>
-                </div>
-            </div>
+
+        <div class="tour-actions">
+            <button class="action-btn edit-btn" @click="$emit('edit-package', item)">Edit</button>
+            <button v-if="firstPackageId !== item.package_id" class="action-btn delete-btn" @click="$emit('remove-from-cart', item)">Delete</button>
+            <button class="action-btn checkout-btn" @click="$emit('tab-change', 5, 'Checkout')">Checkout</button>
         </div>
     </div>
 </template>
@@ -146,21 +97,242 @@ export default {
 </script>
 
 <style scoped>
-.duration-text {
-    color: #004085;
+/* Selected Tour Card - Native Journey Design */
+.selected-tour-card {
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    border: 1px solid var(--neutral-200);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-5);
 }
 
-.tourselected-people {
+.tour-header {
+    display: flex;
+    gap: var(--space-4);
+    padding-bottom: var(--space-5);
+    border-bottom: 1px solid var(--neutral-200);
+    margin-bottom: var(--space-5);
+}
+
+.tour-image-wrapper {
+    flex-shrink: 0;
+    width: 120px;
+    height: 120px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.tour-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tour-info {
+    flex: 1;
+}
+
+.tour-title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: var(--neutral-900);
+    margin: 0 0 var(--space-2) 0;
+}
+
+.tour-meta {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
 }
 
-.tourselected-people-title {
+.tour-duration {
+    font-size: var(--text-sm);
+    color: var(--primary-teal);
+    font-weight: var(--font-medium);
+}
+
+.tour-description {
+    font-size: var(--text-sm);
+    color: var(--neutral-600);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.tour-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+.detail-section {
+    background: var(--neutral-50);
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+}
+
+.detail-label {
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    color: var(--neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-2);
+}
+
+.detail-value {
+    font-size: var(--text-base);
+    color: var(--neutral-900);
+    font-weight: var(--font-medium);
+}
+
+.guests-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.guest-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-2);
+    background: white;
+    border-radius: var(--radius-md);
+}
+
+.guest-type {
+    font-size: var(--text-sm);
+    color: var(--neutral-700);
     text-transform: capitalize;
 }
 
-.tourselected-group-people {
-    margin-top: 0.5rem;
+.guest-count {
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+    color: var(--primary-teal);
+    background: var(--neutral-100);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+}
+
+.no-guests {
+    font-size: var(--text-sm);
+    color: var(--neutral-500);
+    font-style: italic;
+}
+
+.pricing-section {
+    background: var(--neutral-50);
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+}
+
+.pricing-label {
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+    color: var(--neutral-900);
+    margin-bottom: var(--space-3);
+}
+
+.pricing-label.small {
+    font-size: var(--text-xs);
+    margin-top: var(--space-3);
+}
+
+.pricing-rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.pricing-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--text-sm);
+    color: var(--neutral-700);
+    padding: var(--space-2);
+    background: white;
+    border-radius: var(--radius-md);
+}
+
+.pricing-row.total {
+    background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-teal-light) 100%);
+    color: white;
+    font-weight: var(--font-bold);
+    margin-top: var(--space-2);
+    padding: var(--space-3);
+}
+
+.tour-actions {
+    display: flex;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--neutral-200);
+}
+
+.action-btn {
+    flex: 1;
+    padding: var(--space-3);
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.edit-btn {
+    background: white;
+    border: 2px solid var(--primary-teal);
+    color: var(--primary-teal);
+}
+
+.edit-btn:hover {
+    background: var(--primary-teal);
+    color: white;
+}
+
+.delete-btn {
+    background: white;
+    border: 2px solid #EF4444;
+    color: #EF4444;
+}
+
+.delete-btn:hover {
+    background: #EF4444;
+    color: white;
+}
+
+.checkout-btn {
+    background: linear-gradient(135deg, var(--primary-terracotta) 0%, #D97454 100%);
+    color: white;
+}
+
+.checkout-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 768px) {
+    .tour-header {
+        flex-direction: column;
+    }
+
+    .tour-image-wrapper {
+        width: 100%;
+        height: 200px;
+    }
+
+    .tour-actions {
+        flex-direction: column;
+    }
+
+    .action-btn {
+        width: 100%;
+    }
 }
 </style>
