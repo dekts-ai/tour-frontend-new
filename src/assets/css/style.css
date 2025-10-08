@@ -4730,7 +4730,7 @@ button.btn-quantity {
 .guest-type-counter {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
     gap: var(--space-4);
 }
 
