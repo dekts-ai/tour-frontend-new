@@ -4,21 +4,15 @@
     </section>
 
     <section class="inner-content-section">
-        <div :class="['no-container']">
-            <div class="background-color-sec row">
-                <div :class="['row payment-row iframe-row']">
-                    <div class="col-12">
-                        <div class="row payment-form-sec">
-                            <CheckoutForm @onsubmit="submit" :items="cartItem" :tenant-id="tenantId" :errors="errors"
-                                @update-seat-errors="handleSeatErrorsUpdate" />
-                            <div class="col-lg-5 order-1 order-md-2">
-                                <ItemizedList :items="cartItem" :global-total-item="globalTotal"
-                                    :seat-errors="seatErrors" @update-items="updateItems" />
-                                <ItemTotalSummary :global-total="globalTotal" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="checkout-container">
+            <div class="checkout-left">
+                <CheckoutForm @onsubmit="submit" :items="cartItem" :tenant-id="tenantId" :errors="errors"
+                    @update-seat-errors="handleSeatErrorsUpdate" />
+            </div>
+            <div class="checkout-right">
+                <ItemizedList :items="cartItem" :global-total-item="globalTotal"
+                    :seat-errors="seatErrors" @update-items="updateItems" />
+                <ItemTotalSummary :global-total="globalTotal" />
             </div>
         </div>
     </section>

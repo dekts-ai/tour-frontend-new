@@ -1,34 +1,55 @@
 <template>
-    <div class="col-lg-7 mt-lg-0 mt-md-5 mt-4 order-2 order-md-1">
-        <div class="contact-wrap">
-            <!-- Contact Form -->
-            <div class="form-field-wrp contact-form-field mb-2">
-                <FormInput label="Full Name" id="name" v-model="form.name" required icon="fa-user"
-                    placeholder="Your Name" />
-                <FormPhone label="Phone Number" v-model="form.phone_number" required :phone-code="form.phone_code"
-                    @update="updatePhoneNumber" />
-                <FormInput label="Email Address" id="email" v-model="form.email" required icon="fa-envelope"
-                    type="email" placeholder="Your Email Address" />
-                <FormTextarea label="Comments" id="comment" v-model="form.comment" placeholder="Please type here ..." />
-
-                <FormCheckbox id="cancellations_policy" v-model="form.cancellations_policy" :showPolicy="true" required
-                    label="I have read and accept all cancellations terms" @click-policy="openPolicy" />
-                <FormCheckbox id="getemailupdates" v-model="form.getemailupdates"
-                    :label="`Get future email updates from ${company_name}`" />
-            </div>
-
-            <!-- Payment Section -->
-            <div class="payment-box text-start mb-2">
-                <PaymentHeader />
-                <div class="card-detail-main">
-                    <div class="card-detail-wrp card-form-field">
-                        <div id="payment-element"></div>
-                        <ErrorList :errors="localErrors" />
-                        <button class="makeapayment-btn mt-3" @click="handleSubmit">Make a Payment</button>
-                        <PolicyFooter />
-                    </div>
+    <div class="checkout-form-container">
+        <!-- Contact Information -->
+        <div class="checkout-section">
+            <h3 class="checkout-section-title">Contact Information</h3>
+            <div class="checkout-form-fields">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" v-model="form.name" class="form-input" placeholder="Your Name" required />
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" v-model="form.email" class="form-input" placeholder="your@email.com" required />
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <FormPhone label="" v-model="form.phone_number" required :phone-code="form.phone_code" @update="updatePhoneNumber" />
+                </div>
+                <div class="form-group">
+                    <label for="comment">Comments (Optional)</label>
+                    <textarea id="comment" v-model="form.comment" class="form-textarea" rows="4" placeholder="Any special requests or comments..."></textarea>
                 </div>
             </div>
+        </div>
+
+        <!-- Payment Information -->
+        <div class="checkout-section">
+            <h3 class="checkout-section-title">Payment Information</h3>
+            <div class="payment-element-wrapper">
+                <div id="payment-element"></div>
+            </div>
+            <ErrorList :errors="localErrors" />
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="checkout-section">
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" v-model="form.cancellations_policy" required />
+                    <span>I have read and accept all <a href="#" @click.prevent="openPolicy" class="policy-link">cancellations terms</a> *</span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" v-model="form.getemailupdates" />
+                    <span>Get future email updates from {{ company_name }}</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="checkout-section">
+            <button class="btn-checkout" @click="handleSubmit">Complete Booking</button>
+            <PolicyFooter />
         </div>
     </div>
 </template>
