@@ -1,9 +1,10 @@
 <template>
-    <section class="tabs-section">
-        <NavBtns @navigatetotab="navigateToTab" :combo-ids="comboIds" :tabs="tabs" />
-    </section>
+    <div>
+        <section class="tabs-section">
+            <NavBtns @navigatetotab="navigateToTab" :combo-ids="comboIds" :tabs="tabs" />
+        </section>
 
-    <section class="inner-content-section">
+        <section class="inner-content-section">
         <div :class="['no-container']">
             <div class="background-color-sec">
                 <div class="row">
@@ -33,7 +34,8 @@
                 </div>
             </div>
         </div>
-    </section>
+        </section>
+    </div>
 </template>
 
 <script>
