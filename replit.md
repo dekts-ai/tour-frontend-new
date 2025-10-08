@@ -226,6 +226,50 @@ Complete comprehensive redesign of the entire application with a modern, nature-
 - Maintained all existing functionality while improving UX
 - **Architect-approved: 100% Native Journey design system compliance achieved**
 
+### Latest Updates - Selected Tours & CustomFields Integration (October 8, 2025)
+
+**CartItem.vue (Selected Tours) Redesign:**
+- Upgraded to larger card-based design (bigger than available tour cards)
+- Action icons (edit, delete, checkout) positioned on right side of package name
+- Modern card layout with teal accents and gradient elements
+- Improved visual hierarchy with better spacing and typography
+- Fully responsive with Native Journey design system compliance
+
+**CustomFields Integration in Add Extras:**
+- Moved CustomFields component from Schedule page to Add Extras (Addons.vue)
+- Modified functionality with custom endpoint: `/package/custom/form/${packageId}`
+- Service commission parameter passed for proper pricing calculations
+- Dynamic custom form fields load based on selected package
+- Proper validation and error handling
+- Custom field totals (addons_total, addons_fee) persist to cart state
+- Fixed critical bug: Changed condition from `serviceCommission` to `serviceCommission !== null` to support zero-commission packages
+
+**CustomFields.vue Complete Redesign:**
+- Full Native Journey design system integration
+- Modern form inputs with teal focus states and glow effects
+- Custom checkbox styling with teal gradient checkmarks
+- Radio button redesign with teal accents
+- Dropdown/select styling with consistent borders and focus rings
+- Textarea with proper focus states and rounded corners
+- Error messages with terracotta/amber gradient backgrounds
+- All form elements use design system CSS custom properties
+
+**App.vue Transitions:**
+- Implemented smooth fade transitions between all route changes
+- Fade-in animation with subtle translateY effect (10px)
+- Fade-out animation with opposite translateY direction
+- Mode: "out-in" for clean transition between pages
+- Uses design system transition duration (200ms)
+- Enhances user experience during navigation flow
+
+**Data Flow & State Management:**
+- CustomFields properly validates all inputs
+- Calculates and emits custom field totals (addons_total, addons_fee)
+- Updates Vuex cart state with custom field data
+- Persists custom field values through checkout process
+- Booking summary displays custom field costs correctly
+- Zero-commission packages now properly display custom fields
+
 ### Import Setup for Replit
 - Installed all Node.js dependencies
 - Configured Vue CLI dev server for Replit environment:

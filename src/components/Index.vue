@@ -1,13 +1,15 @@
 <template>
-    <section class="tabs-section">
-        <NavBtns @navigatetotab="handleTabChange" :combo-ids="comboIds" :tabs="tabs" />
-    </section>
-    <!-- <tabs-section :combo-ids="comboIds" :date="date" :tabs="tabs"
-        :disabled-dates="disabledDates" @tab-change="handleTabChange" @selected-date="selectedDate"
-        @update:date="updateDate" /> -->
-    <inner-content-section :cart-item="cartItem" :tour-package-data="tourPackageData"
-        :check-package-ids="checkPackageIds" :first-package-id="firstPackageId" @edit-package="editPackage"
-        @remove-from-cart="removeFromCart" @tab-change="handleTabChange" @book-now="bookNow" />
+    <div>
+        <section class="tabs-section">
+            <NavBtns @navigatetotab="handleTabChange" :combo-ids="comboIds" :tabs="tabs" />
+        </section>
+        <!-- <tabs-section :combo-ids="comboIds" :date="date" :tabs="tabs"
+            :disabled-dates="disabledDates" @tab-change="handleTabChange" @selected-date="selectedDate"
+            @update:date="updateDate" /> -->
+        <inner-content-section :cart-item="cartItem" :tour-package-data="tourPackageData"
+            :check-package-ids="checkPackageIds" :first-package-id="firstPackageId" @edit-package="editPackage"
+            @remove-from-cart="removeFromCart" @tab-change="handleTabChange" @book-now="bookNow" />
+    </div>
 </template>
 
 <script>
