@@ -53,10 +53,16 @@
                             <span>Subtotal</span>
                             <span>{{ currencyFormat(calculateSubtotal) }}</span>
                         </div>
-                        <div class="summary-row" v-if="addonsTotal > 0">
-                            <span>Add-ons</span>
-                            <span>{{ currencyFormat(addonsTotal) }}</span>
+                        
+                        <!-- Itemized Add-ons (like checkout) -->
+                        <div v-if="customFieldsWithPricing.length > 0" class="addons-breakdown">
+                            <div class="addons-header">Add-ons:</div>
+                            <div v-for="(field, idx) in customFieldsWithPricing" :key="`addon-${idx}`" class="summary-row addon-item">
+                                <span>{{ field.name }}</span>
+                                <span>{{ currencyFormat(field.priceInfo.price) }}</span>
+                            </div>
                         </div>
+                        
                         <div class="summary-row">
                             <span>Taxes & Fees</span>
                             <span>{{ currencyFormat(calculateFees) }}</span>
@@ -107,8 +113,6 @@ export default {
             hasCustomFields: false,
             loadingCustomFields: true,
             customFieldValues: [],
-            addonsTotal: 0,
-            addonsFee: 0,
             serviceCommission: 0
         };
     },
@@ -119,12 +123,32 @@ export default {
             }, 0);
         },
         calculateFees() {
-            return Object.values(this.cartItem).reduce((sum, item) => {
+            const baseFees = Object.values(this.cartItem).reduce((sum, item) => {
                 return sum + (Number(item.fees) || 0) + (Number(item.addons_fee) || 0);
-            }, 0) + this.addonsFee;
+            }, 0);
+            // Add real-time custom fields fees
+            const customFieldsFee = this.roundout((this.addonsTotal * this.serviceCommission) / 100);
+            return baseFees + customFieldsFee;
         },
         calculateGrandTotal() {
             return this.calculateSubtotal + this.calculateFees + this.addonsTotal;
+        },
+        customFieldsWithPricing() {
+            // Get current custom fields from ref if available, otherwise from stored values
+            if (this.$refs.CustomFieldsRef && this.$refs.CustomFieldsRef.form && this.$refs.CustomFieldsRef.form.custom_fields) {
+                return this.$refs.CustomFieldsRef.form.custom_fields.filter(field => 
+                    field.priceInfo && field.priceInfo.enabled === true
+                );
+            }
+            return this.customFieldValues.filter(field => 
+                field.priceInfo && field.priceInfo.enabled === true
+            );
+        },
+        addonsTotal() {
+            // Calculate real-time total from custom fields with pricing
+            return this.customFieldsWithPricing.reduce((sum, field) => {
+                return sum + (Number(field.priceInfo?.price) || 0);
+            }, 0);
         }
     },
     async created() {
@@ -184,16 +208,16 @@ export default {
                         return;
                     }
                     
-                    // Update cart items with custom fields
-                    this.addonsTotal = this.$refs.CustomFieldsRef.sumTotal(customFormData.fields);
-                    this.addonsFee = this.roundout(this.$refs.CustomFieldsRef.feeTotal(customFormData.fields));
+                    // Calculate addons totals from custom fields
+                    const addonsTotal = this.$refs.CustomFieldsRef.sumTotal(customFormData.fields);
+                    const addonsFee = this.roundout(this.$refs.CustomFieldsRef.feeTotal(customFormData.fields));
                     
                     // Update each cart item with custom fields
                     const updatedCart = { ...this.cartItem };
                     for (const slotId in updatedCart) {
                         updatedCart[slotId].custom_fields = customFormData.fields;
-                        updatedCart[slotId].addons_total = this.addonsTotal;
-                        updatedCart[slotId].addons_fee = this.addonsFee;
+                        updatedCart[slotId].addons_total = addonsTotal;
+                        updatedCart[slotId].addons_fee = addonsFee;
                     }
                     
                     this.$store.dispatch('storeCartItem', updatedCart);
@@ -446,6 +470,32 @@ export default {
     margin-bottom: var(--space-3);
     font-size: var(--text-sm);
     color: var(--neutral-600);
+}
+
+.addons-breakdown {
+    margin: var(--space-3) 0;
+    padding: var(--space-3);
+    background: var(--neutral-50);
+    border-radius: var(--radius-md);
+}
+
+.addons-header {
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    color: var(--primary-teal);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-2);
+}
+
+.addon-item {
+    margin-bottom: var(--space-2);
+    padding-left: var(--space-3);
+    color: var(--neutral-700);
+}
+
+.addon-item:last-child {
+    margin-bottom: 0;
 }
 
 .summary-total {
