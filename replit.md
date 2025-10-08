@@ -134,10 +134,15 @@ Complete redesign of the user interface with modern, clean aesthetics:
 - Responsive: 2 columns on tablet, 1 on mobile
 
 **Schedule Page (Init.vue / TourForm.vue):**
-- Two-column layout: calendar/guest selection (left), time slots (right)
+- Three-column layout: Select Date (left), Available Times (middle), Booking Summary (right)
 - Calendar picker for date selection
-- Interactive time slot cards with availability info
-- Guest selection with increment/decrement counters
+- Time slots displayed as vertical list with availability badges (seats left, sold out, call to book)
+- Booking Summary includes:
+  - Tour card with image, title, duration, age range, and base pricing
+  - Selected date, time, and guest count display
+  - Guest selection with increment/decrement counters
+  - Pricing breakdown (Subtotal, Taxes & Fees, Total)
+  - Continue button
 - Clean section titles and #fafafa backgrounds
 - Visual feedback for selected, disabled, and sold-out slots
 
