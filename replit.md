@@ -6,11 +6,14 @@ This Vue.js 3 frontend application facilitates booking Native American tours. It
 ## Recent Changes (October 8, 2025)
 - **Dynamic Branding**: Header now fetches tour operator logo and company name from `tour-operator-logo` API endpoint with fallback to default branding
 - **Calendar Redesign**: Custom calendar component fully redesigned with Native Journey design tokens (teal gradient header, modern cells, enhanced legend)
-- **Booking Summary Enhancement**: Added color-coded badges (duration, age range, tag) below package name to improve visual hierarchy
+- **Calendar Cell Improvements**: Removed inner borders, fixed overflow, improved color distinction (teal for available, amber for low booking)
+- **Booking Summary Enhancement**: Added color-coded badges and description text below package name to fill empty space
+- **Real-time Add-ons Pricing**: Implemented reactive pricing updates - add-ons now update totals immediately without refresh
 - **Header Alignment Fix**: Consistent padding and alignment across all screen sizes (max-width: 1400px)
 - **Additional Options Styling**: Added white background, padding, and shadows to match other sections
-- **Checkout Layout Fix**: Resolved header overlap issue with proper margin adjustments
+- **Checkout Layout Fix**: Resolved header overlap issue with proper margin adjustments for inner-content-section
 - **Phone Dropdown UX**: Implemented click-outside handler to close country code dropdown when clicking outside the component
+- **Proceed Button Icon Fix**: Enhanced icon visibility with explicit styling to ensure terracotta background and white icon are always visible
 
 ## User Preferences
 None documented yet.
