@@ -21,6 +21,7 @@
                             :display_height="500"
                             :service_commission="serviceCommission"
                             @customformexists="handleCustomFormExists"
+                            @fieldschanged="handleFieldsChanged"
                             :endpoint="`/package/custom/form/${packageId}`" />
                     </div>
 
@@ -113,7 +114,8 @@ export default {
             hasCustomFields: false,
             loadingCustomFields: true,
             customFieldValues: [],
-            serviceCommission: 0
+            serviceCommission: 0,
+            currentCustomFields: []
         };
     },
     computed: {
@@ -134,13 +136,8 @@ export default {
             return this.calculateSubtotal + this.calculateFees + this.addonsTotal;
         },
         customFieldsWithPricing() {
-            // Get current custom fields from ref if available, otherwise from stored values
-            if (this.$refs.CustomFieldsRef && this.$refs.CustomFieldsRef.form && this.$refs.CustomFieldsRef.form.custom_fields) {
-                return this.$refs.CustomFieldsRef.form.custom_fields.filter(field => 
-                    field.priceInfo && field.priceInfo.enabled === true
-                );
-            }
-            return this.customFieldValues.filter(field => 
+            // Use the reactive currentCustomFields data property for real-time updates
+            return this.currentCustomFields.filter(field => 
                 field.priceInfo && field.priceInfo.enabled === true
             );
         },
@@ -181,6 +178,10 @@ export default {
         handleCustomFormExists(exists) {
             this.hasCustomFields = exists;
             this.loadingCustomFields = false;
+        },
+        handleFieldsChanged(fields) {
+            // Update the reactive data property for real-time price updates
+            this.currentCustomFields = fields;
         },
         navigateToTab(tab, destination) {
             if ([1, 2, 3, 4, 5, 6].includes(tab)) {

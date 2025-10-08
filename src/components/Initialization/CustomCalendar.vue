@@ -242,6 +242,7 @@ export default {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: var(--space-2);
+    padding: 0 var(--space-1);
 }
 
 .calendar-day {
@@ -256,23 +257,23 @@ export default {
 
 .calendar-cell {
     text-align: center;
-    padding: var(--space-3);
+    padding: var(--space-2);
     border-radius: var(--radius-md);
     cursor: pointer;
     background: var(--neutral-50);
     font-weight: var(--font-medium);
     transition: all var(--transition-base);
-    border: 2px solid transparent;
-    min-height: 40px;
+    border: none;
+    min-height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: var(--text-sm);
 }
 
 .calendar-cell:hover:not(.disabled) {
     background: var(--primary-teal-light);
-    border-color: var(--primary-teal);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
     box-shadow: var(--shadow-md);
 }
 
@@ -284,7 +285,8 @@ export default {
 }
 
 .calendar-cell.selected {
-    border: 3px solid var(--primary-teal);
+    outline: 3px solid var(--primary-teal);
+    outline-offset: -3px;
     font-weight: var(--font-bold);
     background-color: white !important;
     color: var(--primary-teal);
@@ -292,7 +294,8 @@ export default {
 }
 
 .calendar-cell.today {
-    border: 2px solid var(--amber);
+    outline: 2px solid var(--amber);
+    outline-offset: -2px;
     box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.1);
 }
 
@@ -346,22 +349,22 @@ export default {
 
 /* Booking status colors using Native Journey palette */
 .bg-light-green {
-    background-color: rgba(13, 148, 136, 0.2);
-    color: var(--primary-teal-dark);
+    background-color: rgba(245, 158, 11, 0.15);
+    color: var(--amber-dark);
 }
 
 .bg-orange {
-    background-color: rgba(224, 120, 86, 0.2);
+    background-color: rgba(224, 120, 86, 0.25);
     color: var(--terracotta-dark);
 }
 
 .bg-red {
-    background-color: rgba(224, 120, 86, 0.4);
+    background-color: rgba(224, 120, 86, 0.5);
     color: var(--terracotta-dark);
 }
 
 .bg-green {
-    background-color: rgba(13, 148, 136, 0.15);
+    background-color: rgba(13, 148, 136, 0.2);
     color: var(--primary-teal-dark);
 }
 

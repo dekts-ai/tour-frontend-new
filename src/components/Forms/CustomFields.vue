@@ -436,6 +436,16 @@ export default {
         }
     },
 
+    watch: {
+        fields: {
+            handler() {
+                // Emit field changes for real-time pricing updates
+                this.$emit('fieldschanged', this.fields);
+            },
+            deep: true
+        }
+    },
+
     methods: {
 
         /**

@@ -239,8 +239,12 @@ export default {
 }
 
 .action-icon-btn.checkout-btn {
-    background: linear-gradient(135deg, var(--primary-terracotta) 0%, #D97454 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--primary-terracotta) 0%, #D97454 100%) !important;
+    color: white !important;
+}
+
+.action-icon-btn.checkout-btn svg {
+    stroke: white;
 }
 
 .action-icon-btn.checkout-btn:hover {

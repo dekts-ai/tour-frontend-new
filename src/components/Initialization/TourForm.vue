@@ -98,6 +98,12 @@
                                     {{ tourPackageData[0].tag }}
                                 </span>
                             </div>
+                            <div v-if="tourPackageData[0]?.description" class="tour-summary-description">
+                                {{ tourPackageData[0].description }}
+                            </div>
+                            <div v-else class="tour-summary-description">
+                                Experience the beauty and culture of this amazing tour. Select your date and time to begin your adventure.
+                            </div>
                         </div>
                     </div>
 
