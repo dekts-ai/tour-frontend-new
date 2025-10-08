@@ -14,6 +14,7 @@
                                     :date-time-arr="dateTimeArr" :reveal="reveal" :tour-package-name="tourPackageName"
                                     :hotels="hotels" :errors="errors" :is_group_rate_enabled="is_group_rate_enabled"
                                     :tour-package-rate-groups="details.tourPackageRateGroups"
+                                    :tour-package-data="details.tourPackageData"
                                     :selectgrouppeoples="selectgrouppeoples" :has_contacts="has_contacts"
                                     :static-date-range="staticDateRange" :selected-date="selectedDate"
                                     :call-to-book-validation="callToBookValidation" :open-phone-popup="openPhonePopup"
