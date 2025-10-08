@@ -8,7 +8,7 @@ This Vue.js 3 frontend application facilitates booking Native American tours. It
 - **Calendar Redesign**: Custom calendar component fully redesigned with Native Journey design tokens (teal gradient header, modern cells, enhanced legend)
 - **Calendar Cell Improvements**: Removed inner borders, fixed overflow, improved color distinction (teal for available, amber for low booking)
 - **Booking Summary Enhancement**: Added color-coded badges and description text below package name to fill empty space
-- **Real-time Add-ons Pricing**: Implemented reactive pricing updates - add-ons now update totals immediately without refresh
+- **Real-time Add-ons Pricing**: Implemented reactive pricing updates - add-ons now update totals immediately without refresh, only showing prices for actually selected add-ons (checked checkboxes, filled numbers > 0, selected radio/dropdowns)
 - **Header Alignment Fix**: Consistent padding and alignment across all screen sizes (max-width: 1400px)
 - **Additional Options Styling**: Added white background, padding, and shadows to match other sections
 - **Checkout Layout Fix**: Resolved header overlap issue with proper margin adjustments for inner-content-section
