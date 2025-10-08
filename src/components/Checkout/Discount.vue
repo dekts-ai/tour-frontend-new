@@ -1,20 +1,32 @@
 <template>
-    <div class="other-details-wrap">
-        <div class="tour-packages-couponcode d-flex justify-content-end align-items-center gap-2">
-            <input :id="couponInputId" v-model.trim="couponCode" type="text" placeholder="Promo Code"
-                class="form-control" @keyup="resetCoupon">
-            <button :id="applyButtonId"
-                :class="['couponcode-apply-btn ms-1', hasCouponApplied ? 'btn-success' : 'btn-primary']"
-                :disabled="hasCouponApplied || processing" @click="applyCoupon">
-                {{ hasCouponApplied ? 'Applied' : 'Apply' }}
+    <div class="promo-code-section">
+        <div class="promo-code-input-group">
+            <input 
+                :id="couponInputId" 
+                v-model.trim="couponCode" 
+                type="text" 
+                placeholder="Enter promo code"
+                class="promo-code-input" 
+                @keyup="resetCoupon"
+                :disabled="hasCouponApplied">
+            <button 
+                :id="applyButtonId"
+                :class="['promo-code-button', hasCouponApplied ? 'applied' : '']"
+                :disabled="hasCouponApplied || processing" 
+                @click="applyCoupon">
+                <span v-if="processing">Applying...</span>
+                <span v-else-if="hasCouponApplied">✓ Applied</span>
+                <span v-else>Apply</span>
             </button>
         </div>
-        <p v-for="(message, index) in successMessages" :key="`success-${index}`" class="text-success text-end mb-0">
-            {{ message }}
-        </p>
-        <p v-for="(error, index) in errorMessages" :key="`error-${index}`" class="text-danger text-end mb-0">
-            {{ error }}
-        </p>
+        <div class="promo-code-messages">
+            <p v-for="(message, index) in successMessages" :key="`success-${index}`" class="message-success">
+                {{ message }}
+            </p>
+            <p v-for="(error, index) in errorMessages" :key="`error-${index}`" class="message-error">
+                {{ error }}
+            </p>
+        </div>
     </div>
 </template>
 
@@ -174,3 +186,95 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.promo-code-section {
+    margin-top: var(--space-4);
+    padding: var(--space-4);
+    background: var(--neutral-50);
+    border-radius: var(--radius-lg);
+}
+
+.promo-code-input-group {
+    display: flex;
+    gap: var(--space-2);
+}
+
+.promo-code-input {
+    flex: 1;
+    padding: var(--space-3);
+    border: 2px solid var(--neutral-300);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-base);
+    font-family: var(--font-body);
+    color: var(--neutral-900);
+    background: white;
+    transition: all var(--transition-base);
+}
+
+.promo-code-input:focus {
+    outline: none;
+    border-color: var(--primary-teal);
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+}
+
+.promo-code-input:disabled {
+    background: var(--neutral-100);
+    color: var(--neutral-500);
+    cursor: not-allowed;
+}
+
+.promo-code-input::placeholder {
+    color: var(--neutral-400);
+}
+
+.promo-code-button {
+    padding: var(--space-3) var(--space-6);
+    background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-teal-light) 100%);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    white-space: nowrap;
+}
+
+.promo-code-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.promo-code-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.promo-code-button.applied {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+}
+
+.promo-code-messages {
+    margin-top: var(--space-3);
+}
+
+.message-success,
+.message-error {
+    margin: var(--space-2) 0;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+}
+
+.message-success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+}
+
+.message-error {
+    background: linear-gradient(135deg, rgba(224, 120, 86, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
+    color: var(--primary-terracotta);
+}
+</style>
