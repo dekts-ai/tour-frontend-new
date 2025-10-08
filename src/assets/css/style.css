@@ -1,15 +1,18 @@
 /*---------------------------  
-        Common
+        Common - Native Journey Design System
 ---------------------------*/
 html {
         scroll-behavior: smooth;
 }
 
 body {
-        padding: 0px;
-        margin: 0px;
-        background: #e7e7e7;
-        font-family: 'Inter', sans-serif;
+        padding: 0;
+        margin: 0;
+        background: var(--neutral-50);
+        font-family: var(--font-body);
+        color: var(--neutral-900);
+        font-size: var(--text-base);
+        line-height: 1.5;
         overflow-x: hidden;
 }
 
@@ -61,11 +64,12 @@ ul {
 }
 
 /*---------------------------  
-        Header
+        Header - Native Journey Design
 ---------------------------*/
 .header-section {
-        padding: 8px 0;
-        background: #f5f3f3;
+        padding: var(--space-2) 0;
+        background: white;
+        border-bottom: 1px solid var(--neutral-200);
 }
 
 .header-right {
@@ -75,41 +79,43 @@ ul {
 }
 
 .header-right button.register {
-        font-size: 14px;
-        font-weight: 400;
-        background: #ebf3ff;
-        border: 1px solid #0071c2;
-        color: #0071c2;
-        border-radius: 3px;
-        padding: 8px 25px;
+        font-size: var(--text-sm);
+        font-weight: var(--font-medium);
+        background: white;
+        border: 2px solid var(--primary-teal);
+        color: var(--primary-teal);
+        border-radius: var(--radius-md);
+        padding: var(--space-2) var(--space-4);
         width: 108px;
         height: 38px;
-        margin-right: 7px;
+        margin-right: var(--space-2);
+        transition: all var(--transition-base);
 }
 
 .header-right button.signin {
-        font-size: 14px;
-        font-weight: 400;
-        background: #0373c3;
-        border: 1px solid #0373c3;
-        color: #fff;
-        border-radius: 3px;
-        padding: 8px 20px;
+        font-size: var(--text-sm);
+        font-weight: var(--font-medium);
+        background: var(--primary-teal);
+        border: 2px solid var(--primary-teal);
+        color: white;
+        border-radius: var(--radius-md);
+        padding: var(--space-2) var(--space-4);
         width: 95px;
         height: 38px;
-        margin-right: 20px;
+        margin-right: var(--space-4);
+        transition: all var(--transition-base);
 }
 
 .header-right button.register:hover {
-        background: #0373c3;
-        border: 1px solid #0373c3;
-        color: #fff;
+        background: var(--primary-teal);
+        border-color: var(--primary-teal);
+        color: white;
 }
 
 .header-right button.signin:hover {
-        background: #ebf3ff;
-        border: 1px solid #0071c2;
-        color: #0071c2;
+        background: white;
+        border-color: var(--primary-teal);
+        color: var(--primary-teal);
 }
 
 /*---------------------------  
@@ -156,19 +162,19 @@ ul {
 }
 
 .bradcumb-row .bradcumb-main ul li.home:hover a {
-        color: #fff;
+        color: white;
 }
 
 .bradcumb-row .bradcumb-main ul li.home:hover {
-        background: #0071c2;
-        border-color: #0071c2;
+        background: var(--primary-teal);
+        border-color: var(--primary-teal);
 }
 
 .bradcumb-row .bradcumb-main ul li.home {
-        border: 1px solid #d6d6d6;
+        border: 1px solid var(--neutral-300);
         line-height: 1;
-        border-radius: 3px;
-        margin-right: 20px;
+        border-radius: var(--radius-md);
+        margin-right: var(--space-5);
         position: relative;
         cursor: pointer;
 }
@@ -181,16 +187,17 @@ ul {
 }
 
 .bradcumb-row .bradcumb-main .cloasedbtn {
-        border: 1px solid #c4c4c4;
-        padding: 9px 9px;
-        border-radius: 3px;
+        border: 1px solid var(--neutral-300);
+        padding: var(--space-2);
+        border-radius: var(--radius-md);
         line-height: 0;
         cursor: pointer;
+        transition: all var(--transition-base);
 }
 
 .bradcumb-row .bradcumb-main .cloasedbtn:hover {
-        background: #0071c2;
-        border-color: #0071c2;
+        background: var(--primary-teal);
+        border-color: var(--primary-teal);
 }
 
 .bradcumb-row .bradcumb-main .cloasedbtn:hover img {
@@ -705,9 +712,9 @@ ul {
         font-size: 13px;
 }
 .date-booking-row {
-        padding: 0px 13px;
-        border-bottom: 1px solid #dfdfdf;
-        background: #ebf3ff;
+        padding: 0 var(--space-3);
+        border-bottom: 1px solid var(--neutral-200);
+        background: white;
 }
 
 .date-booking-row .calendardate {
@@ -719,46 +726,47 @@ ul {
         background: transparent;
         cursor: pointer;
         text-align: center;
-        border-radius: 3px;
-        padding: 10px;
+        border-radius: var(--radius-md);
+        padding: var(--space-3);
+        transition: all var(--transition-base);
 }
 
 .date-booking-row .calendardate .item:hover {
-        background: #0071c2;
-        color: #fff;
+        background: var(--primary-teal);
+        color: white;
 }
 
 .date-booking-row .calendardate .item h2 {
-        font-size: 24px;
-        font-weight: 600;
+        font-size: var(--text-2xl);
+        font-weight: var(--font-bold);
         line-height: 1;
-        color: #0071c2;
+        color: var(--primary-teal);
 }
 
 .date-booking-row .calendardate .item:hover h2,
 .date-booking-row .calendardate .item:hover p {
-        color: #fff;
+        color: white;
 }
 
 .date-booking-row .calendardate .item p {
-        font-size: 14px;
-        color: #666666;
+        font-size: var(--text-sm);
+        color: var(--neutral-600);
 }
 
 .date-booking-row .calendardate .owl-carousel .owl-nav {
-        margin-top: 0px;
+        margin-top: 0;
 }
 
 .date-booking-row .calendardate .owl-carousel .owl-nav button {
         margin: 0 !important;
-        border: 1px solid #bcbcbc !important;
+        border: 1px solid var(--neutral-300) !important;
         height: 45px;
         width: 36px;
 }
 
 .date-booking-row .calendardate .owl-carousel .owl-nav button:hover {
-        background: #0071c2 !important;
-        border-color: #0071c2 !important;
+        background: var(--primary-teal) !important;
+        border-color: var(--primary-teal) !important;
 }
 
 .date-booking-row .calendardate .owl-carousel .owl-nav button span {
@@ -1485,15 +1493,16 @@ ul {
 }
 
 .booking-dt-sec .booking-dt-wrp .booking-dt-detail-btn a {
-        font-size: 16px;
-        font-weight: 400;
+        font-size: var(--text-base);
+        font-weight: var(--font-medium);
         line-height: 1;
-        color: #2f2f2f;
+        color: var(--neutral-900);
         letter-spacing: 0.32px;
-        background-color: #ebf3ff;
-        border: 1px solid #5bbaff;
-        border-radius: 5px;
-        padding: 8px 16px;
+        background-color: var(--neutral-100);
+        border: 1px solid var(--primary-teal);
+        border-radius: var(--radius-md);
+        padding: var(--space-2) var(--space-4);
+        transition: all var(--transition-base);
 }
 
 .booking-dt-sec .booking-dt-wrp .booking-dt-detail-btn a .fa {
@@ -1526,8 +1535,8 @@ ul {
 }
 
 .payment-form-sec .masks-mandatory-wrp {
-        background-color: #ebf3ff;
-        border-radius: 5px;
+        background-color: var(--neutral-100);
+        border-radius: var(--radius-lg);
         padding: 25px 42px 18px;
         margin-bottom: 26px;
 }
@@ -1578,10 +1587,10 @@ ul {
         left: 0;
         height: 20px;
         width: 20px;
-        background-color: #f9f9f9;
-        border-radius: 5px;
+        background-color: var(--neutral-50);
+        border-radius: var(--radius-md);
         box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.19);
-        border: 1px solid #439dde;
+        border: 1px solid var(--primary-teal);
 }
 
 .payment-form-sec .checkmark:after {
@@ -1943,8 +1952,8 @@ ul {
 }
 
 .payment-form-sec .makeapayment-btn:hover {
-        background: #0373c3;
-        color: #fff;
+        background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-teal-light) 100%);
+        color: white;
 }
 
 .payment-form-sec .booking-you-text {
