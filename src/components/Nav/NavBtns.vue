@@ -32,14 +32,14 @@
                     @click="handleNavigation(step.id, step.route)">
                     
                     <div class="step-indicator">
-                        <div class="step-number" v-if="tabs < step.id">{{ index + 1 }}</div>
+                        <div class="step-number" v-if="tabs < step.id">{{ getStepNumber(step.id) }}</div>
                         <svg v-else class="step-check" width="16" height="16" viewBox="0 0 16 16" fill="none">
                             <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
                     
                     <div class="step-content">
-                        <div class="step-label">Step {{ index + 1 }}</div>
+                        <div class="step-label">Step {{ getStepNumber(step.id) }}</div>
                         <div class="step-title">{{ step.title }}</div>
                     </div>
                 </div>
@@ -61,13 +61,7 @@ export default {
     props: ['comboIds', 'tabs'],
     data() {
         return {
-            iframeStatus: true,
-            steps: [
-                { id: 1, title: 'Browse Tours', route: 'Index' },
-                { id: 2, title: 'Choose Date', route: 'Init' },
-                { id: 4, title: 'Add Extras', route: 'Addons' },
-                { id: 5, title: 'Checkout', route: 'Checkout' }
-            ]
+            iframeStatus: true
         };
     },
     created() {
@@ -81,9 +75,35 @@ export default {
             return this.tourOperatorLogo && this.tourOperatorLogo.name 
                 ? this.tourOperatorLogo.name 
                 : 'Native Journeys';
+        },
+        hasCustomFields() {
+            return this.$store.state.hasCustomFields;
+        },
+        steps() {
+            // Build steps array dynamically based on hasCustomFields
+            const baseSteps = [
+                { id: 1, title: 'Browse Tours', route: 'Index' },
+                { id: 2, title: 'Choose Date', route: 'Init' }
+            ];
+            
+            // Only add Add Extras step if company has custom fields
+            // Note: hasCustomFields will be null initially, true if exists, false if doesn't exist
+            if (this.hasCustomFields === true) {
+                baseSteps.push({ id: 3, title: 'Add Extras', route: 'Addons' });
+            }
+            
+            // Always add Checkout step at the end
+            baseSteps.push({ id: 4, title: 'Checkout', route: 'Checkout' });
+            
+            return baseSteps;
         }
     },
     methods: {
+        getStepNumber(stepId) {
+            // Return the visual step number (1, 2, 3, 4) based on position in steps array
+            const index = this.steps.findIndex(s => s.id === stepId);
+            return index + 1;
+        },
         canNavigateTo(stepId) {
             // Allow navigation to current or previous steps
             return stepId <= this.tabs || stepId === 1;
