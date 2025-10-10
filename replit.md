@@ -7,6 +7,7 @@ This Vue.js 3 frontend application facilitates booking Native American tours. It
 - **Pricing Breakdown Real-time Display**: Tour form now shows pricing breakdown (subtotal, taxes & fees, total) immediately when customers select rate groups or adjust guest counts, not just on continue button click
 - **Duplicate Fees Fix**: Resolved issue where add-on fees were being calculated and displayed twice in checkout - fees now correctly calculated only for actually selected add-ons (checkbox checked, number > 0, radio/select chosen)
 - **Consistent Add-ons Validation**: Applied hasValidFieldValue() logic across both Addons and Checkout components to ensure pricing consistency
+- **Thank You Page Redesign**: Complete redesign of booking confirmation page with Native Journey design system - features animated success header with teal gradient checkmark, modern customer info cards with icons, clean booking summary cards, responsive guests table, elegant pricing breakdown, and amber gradient help section. Fully responsive with mobile optimizations.
 
 ## Previous Changes (October 8, 2025)
 - **Dynamic Branding**: Header now fetches tour operator logo and company name from `tour-operator-logo` API endpoint with fallback to default branding
