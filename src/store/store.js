@@ -46,7 +46,8 @@ const localStoragePlugin = store => {
                 packageOrder: [],
                 currency: "USD",
                 countryCode: "US",
-                timezone: "America/Phoenix"
+                timezone: "America/Phoenix",
+                hasCustomFields: null
             });
         } else {
             // Restore state if date is not in the past
@@ -83,7 +84,8 @@ export default createStore({
         packageOrder: [],
         currency: "USD",
         countryCode: "US",
-        timezone: "America/Phoenix"
+        timezone: "America/Phoenix",
+        hasCustomFields: null
     },
     getters: {
         iframeStatus: state => {
@@ -151,6 +153,9 @@ export default createStore({
         },
         timezone: state => {
             return state.timezone;
+        },
+        hasCustomFields: state => {
+            return state.hasCustomFields;
         }
     },
     mutations: {
@@ -219,6 +224,9 @@ export default createStore({
         },
         TIMEZONE(state, timezone) {
             state.timezone = timezone;
+        },
+        HAS_CUSTOM_FIELDS(state, hasCustomFields) {
+            state.hasCustomFields = hasCustomFields;
         }
     },
     actions: {
@@ -287,6 +295,9 @@ export default createStore({
         },
         storeTimezone({ commit }, timezone) {
             commit('TIMEZONE', timezone);
+        },
+        storeHasCustomFields({ commit }, hasCustomFields) {
+            commit('HAS_CUSTOM_FIELDS', hasCustomFields);
         }
     },
     plugins: [localStoragePlugin]
