@@ -112,7 +112,6 @@ export default {
             affiliateId: 0,
             cartItem: {},
             cartItemLength: 0,
-            tabs: 4,
             checkPackageIds: [],
             hasCustomFields: false,
             loadingCustomFields: true,
@@ -122,6 +121,10 @@ export default {
         };
     },
     computed: {
+        tabs() {
+            // Addons page is always step 3 (when it exists)
+            return 3;
+        },
         calculateSubtotal() {
             return Object.values(this.cartItem).reduce((sum, item) => {
                 return sum + (Number(item.subtotal) || 0);

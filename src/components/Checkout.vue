@@ -47,7 +47,7 @@ export default {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: true,
             tenantId: null,
-            tabs: 5,
+            tabs: 4,
             comboIds: 0,
             bookingIds: {},
             details: [],
