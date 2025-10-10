@@ -4,48 +4,94 @@
     </section>
 
     <section class="inner-content-section">
-        <div :class="['no-container']">
-            <div class="background-color-sec">
-                <div class="row">
-                    <div class="col-12">
-                        <div :class="['row payment-row iframe-row']">
-                            <div class="col-12">
-                                <div class="tourlist-packages-wrap">
-                                    <GMapMap :center="center" ref="mapRef" :zoom="10" class="tour-map"
-                                        :options="mapOptions" data-testid="tour-map">
-                                        <GMapMarker v-for="(marker, index) in markers" :key="index"
-                                            :ref="`marker${index}`" :position="marker.position" :clickable="true"
-                                            :icon="marker.icon" :title="marker.title" @click="onMarkerClick(marker)"
-                                            :data-testid="`marker-${index}`" />
-                                    </GMapMap>
+        <div class="maps-container">
+            <!-- Page Header -->
+            <div class="maps-header">
+                <div class="header-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 21C16.4183 21 20 17.4183 20 13C20 8.58172 16.4183 5 12 5C7.58172 5 4 8.58172 4 13C4 17.4183 7.58172 21 12 21Z" fill="currentColor" opacity="0.2"/>
+                        <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" fill="currentColor"/>
+                        <path d="M12 21C16.4183 21 20 17.4183 20 13C20 8.58172 16.4183 5 12 5C7.58172 5 4 8.58172 4 13C4 17.4183 7.58172 21 12 21Z" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 3V5M21 13H19M5 13H3M18.364 18.364L16.95 16.95" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="header-content">
+                    <h1 class="header-title">Trip Map</h1>
+                    <p class="header-subtitle">Visualize your journey across locations</p>
+                </div>
+            </div>
 
-                                    <div class="tour-details-wrap">
-                                        <div class="tour-details-title">Your Day:</div>
-                                        <div v-for="item in cartItem" :key="item.tour_slot_id"
-                                            class="d-lg-flex justify-content-between border-bottom pb-4 mb-4 w-100"
-                                            :data-testid="`cart-item-${item.tour_slot_id}`">
-                                            <div class="details-box mb-3 mb-lg-0">
-                                                <div
-                                                    class="title-wrap d-flex justify-content-between align-items-center">
-                                                    <div class="tour-title">{{ item.package_name }}</div>
-                                                    <div class="tour-time">
-                                                        <span v-if="item.package_has_slots">{{ item.duration }}</span>
-                                                        {{ item.type }}
-                                                    </div>
-                                                </div>
-                                                <p class="date-time">
-                                                    {{ dateFormat(item.date) }}
-                                                    <span v-if="item.package_has_slots">@ {{ item.time_date }}</span>
-                                                </p>
-                                                <p class="details-text">{{ item.long_description }}</p>
-                                            </div>
-                                            <div class="tourselected-image">
-                                                <img :src="item.package_image" :alt="item.package_name" />
-                                            </div>
-                                        </div>
-                                    </div>
+            <!-- Map Container -->
+            <div class="map-wrapper">
+                <GMapMap 
+                    :center="center" 
+                    ref="mapRef" 
+                    :zoom="10" 
+                    class="tour-map"
+                    :options="mapOptions" 
+                    data-testid="tour-map">
+                    <GMapMarker 
+                        v-for="(marker, index) in markers" 
+                        :key="index"
+                        :ref="`marker${index}`" 
+                        :position="marker.position" 
+                        :clickable="true"
+                        :icon="marker.icon" 
+                        :title="marker.title" 
+                        @click="onMarkerClick(marker)"
+                        :data-testid="`marker-${index}`" />
+                </GMapMap>
+            </div>
+
+            <!-- Tour Details -->
+            <div class="tour-details-section">
+                <div class="section-header">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <rect x="3" y="6" width="18" height="15" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <path d="M3 10H21" stroke="currentColor" stroke-width="2"/>
+                        <path d="M8 3V7M16 3V7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <h2>Your Day</h2>
+                </div>
+
+                <div class="tour-cards">
+                    <div 
+                        v-for="item in cartItem" 
+                        :key="item.tour_slot_id"
+                        class="tour-card"
+                        :data-testid="`cart-item-${item.tour_slot_id}`">
+                        
+                        <div class="tour-card-image">
+                            <img :src="item.package_image" :alt="item.package_name" />
+                            <div class="tour-type-badge">{{ item.type }}</div>
+                        </div>
+
+                        <div class="tour-card-content">
+                            <div class="tour-card-header">
+                                <h3 class="tour-title">{{ item.package_name }}</h3>
+                                <div v-if="item.package_has_slots" class="tour-duration">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/>
+                                        <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                    <span>{{ item.duration }}</span>
                                 </div>
                             </div>
+
+                            <div class="tour-meta">
+                                <div class="meta-badge">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <rect x="3" y="6" width="18" height="15" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                                        <path d="M3 10H21" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                    <span>
+                                        {{ dateFormat(item.date) }}
+                                        <span v-if="item.package_has_slots">@ {{ item.time_date }}</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <p class="tour-description">{{ item.long_description }}</p>
                         </div>
                     </div>
                 </div>
@@ -73,7 +119,6 @@ export default {
             tourOperatorId: 0,
             comboIds: 0,
             cartItem: {},
-            tabs: 4,
             center: { lat: 0, lng: 0 },
             markers: [],
             mapOptions: {
@@ -83,9 +128,42 @@ export default {
                 streetViewControl: true,
                 rotateControl: true,
                 fullscreenControl: true,
-                disableDefaultUi: false
+                disableDefaultUi: false,
+                styles: [
+                    {
+                        featureType: 'water',
+                        elementType: 'geometry',
+                        stylers: [{ color: '#e9e9e9' }, { lightness: 17 }]
+                    },
+                    {
+                        featureType: 'landscape',
+                        elementType: 'geometry',
+                        stylers: [{ color: '#f5f5f5' }, { lightness: 20 }]
+                    },
+                    {
+                        featureType: 'road.highway',
+                        elementType: 'geometry.fill',
+                        stylers: [{ color: '#ffffff' }, { lightness: 17 }]
+                    },
+                    {
+                        featureType: 'road.highway',
+                        elementType: 'geometry.stroke',
+                        stylers: [{ color: '#ffffff' }, { lightness: 29 }, { weight: 0.2 }]
+                    },
+                    {
+                        featureType: 'road.arterial',
+                        elementType: 'geometry',
+                        stylers: [{ color: '#ffffff' }, { lightness: 18 }]
+                    }
+                ]
             }
         };
+    },
+    computed: {
+        tabs() {
+            // Maps is always step 2 (only used in combo packages)
+            return 2;
+        }
     },
     created() {
         this.initializeFromStore();
@@ -133,7 +211,7 @@ export default {
             return getMomentTimezone(this.$store.state.timezone, date).format('dddd, MMMM D, YYYY');
         },
         navigateToTab(tab, destination) {
-            if ([1, 2, 3, 4, 6].includes(tab)) {
+            if ([1, 2, 3, 4, 5, 6].includes(tab)) {
                 if (tab === 2) {
                     this.$store.dispatch('storeFormData', null);
                 }
@@ -165,8 +243,267 @@ export default {
 </script>
 
 <style scoped>
+.maps-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--space-8) var(--space-6);
+}
+
+/* Header */
+.maps-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+    padding-bottom: var(--space-6);
+    border-bottom: 2px solid var(--neutral-200);
+}
+
+.header-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-teal-light) 100%);
+    border-radius: var(--radius-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.header-content {
+    flex: 1;
+}
+
+.header-title {
+    font-size: var(--text-3xl);
+    font-weight: var(--font-bold);
+    color: var(--neutral-900);
+    margin-bottom: var(--space-2);
+}
+
+.header-subtitle {
+    font-size: var(--text-base);
+    color: var(--neutral-600);
+    margin: 0;
+}
+
+/* Map */
+.map-wrapper {
+    background: white;
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: var(--space-8);
+}
+
 .tour-map {
     width: 100%;
-    height: 400px;
+    height: 500px;
+}
+
+/* Tour Details Section */
+.tour-details-section {
+    background: white;
+    border-radius: var(--radius-2xl);
+    padding: var(--space-8);
+    box-shadow: var(--shadow-lg);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: 2px solid var(--neutral-200);
+}
+
+.section-header svg {
+    color: var(--primary-teal);
+}
+
+.section-header h2 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: var(--neutral-900);
+    margin: 0;
+}
+
+/* Tour Cards */
+.tour-cards {
+    display: grid;
+    gap: var(--space-6);
+}
+
+.tour-card {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: var(--space-6);
+    padding: var(--space-6);
+    background: var(--neutral-50);
+    border-radius: var(--radius-xl);
+    border: 2px solid var(--neutral-200);
+    transition: all var(--transition-base);
+}
+
+.tour-card:hover {
+    border-color: var(--primary-teal-lighter);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.tour-card-image {
+    position: relative;
+    width: 280px;
+    height: 200px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.tour-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tour-type-badge {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    background: linear-gradient(135deg, var(--accent-amber) 0%, var(--accent-amber-light) 100%);
+    color: white;
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-sm);
+}
+
+.tour-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.tour-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+}
+
+.tour-title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: var(--neutral-900);
+    margin: 0;
+}
+
+.tour-duration {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background: white;
+    border-radius: var(--radius-md);
+    color: var(--primary-teal);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    white-space: nowrap;
+}
+
+.tour-duration svg {
+    flex-shrink: 0;
+}
+
+.tour-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+}
+
+.meta-badge {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background: white;
+    border-radius: var(--radius-md);
+    color: var(--neutral-700);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+}
+
+.meta-badge svg {
+    color: var(--primary-teal);
+    flex-shrink: 0;
+}
+
+.tour-description {
+    color: var(--neutral-600);
+    font-size: var(--text-sm);
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .tour-card {
+        grid-template-columns: 240px 1fr;
+    }
+    
+    .tour-card-image {
+        width: 240px;
+        height: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    .maps-container {
+        padding: var(--space-6) var(--space-4);
+    }
+    
+    .maps-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-3);
+    }
+    
+    .header-icon {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .header-title {
+        font-size: var(--text-2xl);
+    }
+    
+    .tour-map {
+        height: 350px;
+    }
+    
+    .tour-details-section {
+        padding: var(--space-6) var(--space-4);
+    }
+    
+    .tour-card {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+    }
+    
+    .tour-card-image {
+        width: 100%;
+        height: 220px;
+    }
+    
+    .tour-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .section-header h2 {
+        font-size: var(--text-xl);
+    }
 }
 </style>

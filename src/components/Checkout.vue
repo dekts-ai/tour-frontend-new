@@ -47,7 +47,6 @@ export default {
             baseUrl: process.env.VUE_APP_BASE_URL,
             iframeStatus: true,
             tenantId: null,
-            tabs: 4,
             comboIds: 0,
             bookingIds: {},
             details: [],
@@ -79,6 +78,24 @@ export default {
             paymentIntentId: null,
             stripeCustomerId: null
         };
+    },
+    computed: {
+        tabs() {
+            const hasCustomFields = this.$store.state.hasCustomFields;
+            const isCombo = this.comboIds && this.comboIds !== 0;
+            
+            if (isCombo) {
+                // Combo WITH add-ons: MyTrip(1), Maps(2), Browse(3), Init(4), Addons(5), Checkout(6)
+                // Combo WITHOUT add-ons: MyTrip(1), Maps(2), Browse(3), Init(4), Checkout(5)
+                // If hasCustomFields is null (unknown), default to 6 (assume add-ons exist)
+                return hasCustomFields === false ? 5 : 6;
+            } else {
+                // Single WITH add-ons: Browse(1), Init(2), Addons(3), Checkout(4)
+                // Single WITHOUT add-ons: Browse(1), Init(2), Checkout(3)
+                // If hasCustomFields is null (unknown), default to 4 (assume add-ons exist)
+                return hasCustomFields === false ? 3 : 4;
+            }
+        }
     },
     async mounted() {
         this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY);

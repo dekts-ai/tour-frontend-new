@@ -138,9 +138,18 @@ export default {
             is_group_rate_enabled: 0,
             is_partner_package: 0,
             withRateGroups: 1,
-            has_contacts: 0,
-            tabs: 2
+            has_contacts: 0
         };
+    },
+    computed: {
+        tabs() {
+            // For combo packages: MyTrip(1), Maps(2), Browse(3), Init(4)
+            // For single package: Browse(1), Init(2)
+            return this.comboIds && this.comboIds !== 0 ? 4 : 2;
+        },
+        hasCustomFields() {
+            return this.$store.state.hasCustomFields;
+        }
     },
     created() {
         this.initializeFromStore();

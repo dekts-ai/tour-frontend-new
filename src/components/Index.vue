@@ -41,11 +41,20 @@ export default {
             date: null,
             cartItem: {},
             cartItemLength: 0,
-            tabs: 1,
             checkPackageIds: [],
             firstPackageId: 0,
             firstPackageName: '',
         };
+    },
+    computed: {
+        tabs() {
+            // For combo packages: MyTrip(1), Maps(2), Browse(3)
+            // For single package: Browse(1)
+            return this.comboIds && this.comboIds !== 0 ? 3 : 1;
+        },
+        hasCustomFields() {
+            return this.$store.state.hasCustomFields;
+        }
     },
     async created() {
         const loader = this.$loading.show();
@@ -75,6 +84,12 @@ export default {
             if (this.cartItemLength) {
                 // Get package IDs from cart
                 this.checkPackageIds = Object.values(this.cartItem).map(item => parseInt(item.package_id));
+            }
+
+            // For combination packages with cart items, route to MyTrip first
+            if (this.comboIds && this.cartItemLength > 0 && this.$store.state.mindChange === 0) {
+                this.$router.push({ name: 'MyTrip' });
+                return;
             }
 
             if (this.packageId > 0 && this.$store.state.mindChange === 0) {

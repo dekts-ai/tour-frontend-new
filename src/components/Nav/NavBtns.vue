@@ -79,23 +79,41 @@ export default {
         hasCustomFields() {
             return this.$store.state.hasCustomFields;
         },
+        isComboPackage() {
+            return this.$store.state.comboIds && this.$store.state.comboIds !== 0;
+        },
         steps() {
-            // Build steps array dynamically based on hasCustomFields
-            const baseSteps = [
-                { id: 1, title: 'Browse Tours', route: 'Index' },
-                { id: 2, title: 'Choose Date', route: 'Init' }
-            ];
+            const steps = [];
             
-            // Only add Add Extras step if company has custom fields
-            // Note: hasCustomFields will be null initially, true if exists, false if doesn't exist
-            if (this.hasCustomFields === true) {
-                baseSteps.push({ id: 3, title: 'Add Extras', route: 'Addons' });
+            // For combination packages, add MyTrip and Maps first
+            if (this.isComboPackage) {
+                steps.push({ id: 1, title: 'My Trip', route: 'MyTrip' });
+                steps.push({ id: 2, title: 'Trip Map', route: 'Maps' });
+                steps.push({ id: 3, title: 'Browse Tours', route: 'Index' });
+                steps.push({ id: 4, title: 'Choose Date', route: 'Init' });
+                
+                // Add Extras step (id: 5) if company has custom fields
+                if (this.hasCustomFields === true) {
+                    steps.push({ id: 5, title: 'Add Extras', route: 'Addons' });
+                }
+                
+                // Checkout is always last (id: 6)
+                steps.push({ id: 6, title: 'Checkout', route: 'Checkout' });
+            } else {
+                // Single package flow
+                steps.push({ id: 1, title: 'Browse Tours', route: 'Index' });
+                steps.push({ id: 2, title: 'Choose Date', route: 'Init' });
+                
+                // Add Extras step (id: 3) if company has custom fields
+                if (this.hasCustomFields === true) {
+                    steps.push({ id: 3, title: 'Add Extras', route: 'Addons' });
+                }
+                
+                // Checkout is always last (id: 4)
+                steps.push({ id: 4, title: 'Checkout', route: 'Checkout' });
             }
             
-            // Always add Checkout step at the end
-            baseSteps.push({ id: 4, title: 'Checkout', route: 'Checkout' });
-            
-            return baseSteps;
+            return steps;
         }
     },
     methods: {
