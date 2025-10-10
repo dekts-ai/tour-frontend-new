@@ -10,12 +10,24 @@ import 'vue-loading-overlay/dist/vue-loading.css';
 
 import VueGoogleMaps from '@fawmi/vue-google-maps';
 
-// Set base API URL based on tenant
-const params = new URLSearchParams(window.location.search);
-const storedParams = JSON.parse(localStorage.getItem('urlParams') || '{}');
-
-const tenant = params.get("tid") || storedParams.tenantId;
-axios.defaults.baseURL = `https://${tenant}.${process.env.VUE_APP_API_URL}`;
+// Axios interceptor to dynamically set baseURL from store/localStorage before each request
+axios.interceptors.request.use(config => {
+    let tenantId = store.state.tenantId;
+    
+    // Fallback to localStorage or URL params if store doesn't have tenantId yet
+    if (!tenantId) {
+        const params = new URLSearchParams(window.location.search);
+        const storedParams = JSON.parse(localStorage.getItem('urlParams') || '{}');
+        tenantId = params.get("tid") || storedParams.tenantId;
+    }
+    
+    if (tenantId) {
+        config.baseURL = `https://${tenantId}.${process.env.VUE_APP_API_URL}`;
+    }
+    return config;
+}, error => {
+    return Promise.reject(error);
+});
 
 // Create and configure app
 const app = createApp(App);
@@ -28,10 +40,5 @@ app.use(store)
          key: process.env.VUE_APP_MAP_KEY
       }
    });
-
-// Update axios baseURL after store is loaded with correct tenantId from localStorage
-if (store.state.tenantId) {
-    axios.defaults.baseURL = `https://${store.state.tenantId}.${process.env.VUE_APP_API_URL}`;
-}
 
 app.mount('#app');

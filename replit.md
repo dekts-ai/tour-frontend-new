@@ -4,7 +4,7 @@
 This Vue.js 3 frontend application facilitates booking Native American tours. It offers a user-friendly interface for browsing tour packages, selecting dates, adding extras, and processing payments via Stripe. The project aims to provide a modern, nature-inspired booking experience for cultural tours, leveraging a multi-tenant backend architecture.
 
 ## Recent Changes (October 10, 2025)
-- **Navigation Query Parameter Fix**: Fixed critical bug where Continue buttons and tab navigation were losing URL query parameters (tid, oid, pid, cids), causing blank pages and initialization failures. All router.push() calls now preserve query parameters across all navigation flows.
+- **Axios BaseURL Fix**: Fixed critical blank page issue by adding axios request interceptor that dynamically sets baseURL from Vuex store with fallback to localStorage/URL parameters. This ensures API calls work correctly during navigation even before App.vue completes initialization.
 - **Tab Computation Fix**: Corrected MyTrip and Maps components to properly compute tab/step numbers by checking both comboIds and hasCustomFields state, ensuring accurate navigation highlighting for all flow types.
 - **Combination Packages Support**: Implemented full support for multi-package bookings using `cids` URL parameter (comma-separated package IDs). Added MyTrip and Maps pages to combination package flow with complete Native Journey redesign - modern card-based timeline, interactive map visualization, teal gradients, amber accents, responsive design with icons and shadows.
 - **Corrected Dynamic Navigation**: Navigation now adapts to BOTH booking type (single vs combo) AND company configuration (with/without add-ons):
