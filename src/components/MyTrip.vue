@@ -152,8 +152,16 @@ export default {
     computed: {
         tabs() {
             const hasCustomFields = this.$store.state.hasCustomFields;
-            // MyTrip: step 4 (with add-ons) or step 3 (without add-ons) - combo packages only
-            return hasCustomFields === true ? 4 : 3;
+            const isCombo = this.comboIds && this.comboIds !== 0;
+            
+            if (isCombo) {
+                // Combo WITH add-ons: Browse(1), Init(2), Addons(3), MyTrip(4), Maps(5), Checkout(6)
+                // Combo WITHOUT add-ons: Browse(1), Init(2), MyTrip(3), Maps(4), Checkout(5)
+                return hasCustomFields === false ? 3 : 4;
+            }
+            
+            // MyTrip is only for combo packages, shouldn't be here for single packages
+            return 1;
         }
     },
     async created() {
