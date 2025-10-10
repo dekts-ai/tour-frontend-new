@@ -273,7 +273,9 @@ export default {
                 }
             }
             
-            this.$router.push({ name: 'Checkout' });
+            // Route to MyTrip for combo packages, Checkout for single packages
+            const destination = this.comboIds && this.comboIds !== 0 ? 'MyTrip' : 'Checkout';
+            this.$router.push({ name: destination });
         },
         formatDate(date) {
             return getMomentTimezone(this.$store.state.timezone, date).format('MMM D, YYYY');

@@ -623,15 +623,21 @@ export default {
                 this.$store.dispatch('storeCartItem', this.cartItem);
                 this.$store.dispatch('storeMindChange', 1);
 
-                // Dynamic routing based on whether company has add-ons
+                // Dynamic routing based on whether company has add-ons and package type
                 const hasCustomFields = this.$store.state.hasCustomFields;
+                const isComboPackage = this.comboIds && this.comboIds !== 0;
                 
                 if (hasCustomFields === false) {
-                    // No add-ons available, go directly to Checkout
-                    this.$router.push({ name: 'Checkout' });
+                    // No add-ons available
+                    if (isComboPackage) {
+                        // Combo packages go to MyTrip
+                        this.$router.push({ name: 'MyTrip' });
+                    } else {
+                        // Single packages go to Checkout
+                        this.$router.push({ name: 'Checkout' });
+                    }
                 } else {
                     // Add-ons available or unknown, go to Add Extras page
-                    // (The Add Extras page will determine and store the actual value)
                     this.$router.push({ name: 'Addons' });
                 }
             } catch (error) {

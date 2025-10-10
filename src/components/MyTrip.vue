@@ -112,6 +112,13 @@
                     </transition>
                 </div>
             </div>
+
+            <!-- Continue Button -->
+            <div class="continue-section">
+                <button class="continue-button" @click="continueToMaps">
+                    Continue to Maps →
+                </button>
+            </div>
         </div>
     </section>
 </template>
@@ -245,6 +252,9 @@ export default {
                 this.$store.dispatch('storeMindChange', 1);
                 this.$router.push({ name: destination });
             }
+        },
+        continueToMaps() {
+            this.$router.push({ name: 'Maps' });
         },
         processLoader(loader) {
             loader.hide();
@@ -529,6 +539,40 @@ export default {
 .expand-leave-to {
     max-height: 0;
     opacity: 0;
+}
+
+/* Continue Section */
+.continue-section {
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 2px solid var(--neutral-200);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.continue-button {
+    padding: var(--space-4) var(--space-8);
+    background: linear-gradient(135deg, var(--accent-amber) 0%, #ea580c 100%);
+    color: white;
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.continue-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.continue-button:active {
+    transform: translateY(0);
 }
 
 /* Responsive */
