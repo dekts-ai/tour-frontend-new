@@ -91,7 +91,7 @@
                             <div class="detail-icon">📅</div>
                             <div class="detail-content">
                                 <div class="detail-label">Date</div>
-                                <div class="detail-value">{{ formatDate(booking.date) }}</div>
+                                <div class="detail-value">{{ booking.date }}</div>
                             </div>
                         </div>
                         
@@ -120,13 +120,15 @@
                             <div class="guests-header">
                                 <div class="col-type">Type</div>
                                 <div class="col-rate">Rate</div>
-                                <div v-if="booking.package_has_slots" class="col-fees">Fees</div>
+                                <div v-if="booking.is_group_rate_enabled == 0" class="col-permit">Permit Fee</div>
+                                <div v-if="booking.package_has_slots" class="col-fees">Tax</div>
                                 <div class="col-total">Total</div>
                             </div>
                             <div v-for="rate in booking.tourPackageRates" :key="rate.id" class="guests-row">
                                 <div class="col-type">{{ rate.tourists }}</div>
                                 <div class="col-rate">{{ currencyFormat(rate.rate) }}</div>
-                                <div v-if="booking.package_has_slots" class="col-fees">{{ currencyFormat(rate.fees) }}</div>
+                                <div v-if="booking.is_group_rate_enabled == 0" class="col-permit">{{ currencyFormat(rate.permit_fee) }}</div>
+                                <div v-if="booking.package_has_slots" class="col-fees">{{ currencyFormat(rate.additional_charge) }}</div>
                                 <div class="col-total">{{ currencyFormat(rate.total) }}</div>
                             </div>
                         </div>
@@ -259,7 +261,7 @@ export default {
                     });
                 }
                 
-                this.$store.dispatch('storeBookingIds', {});
+                // this.$store.dispatch('storeBookingIds', {});
                 this.processLoader(loader);
             }).catch((error) => {
                 console.error('Error fetching booking confirmation:', error);
@@ -268,9 +270,6 @@ export default {
         },
         currencyFormat(amount) {
             return formatCurrencyIntl(amount, this.$store.state.currency);
-        },
-        formatDate(date) {
-            return getMomentTimezone(this.$store.state.timezone, date).format('dddd, MMMM D, YYYY');
         },
         processLoader(loader) {
             loader.hide();
@@ -527,7 +526,7 @@ export default {
 
 .guests-header {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
     gap: var(--space-3);
     padding: var(--space-3) var(--space-4);
     background: linear-gradient(135deg, var(--primary-teal), var(--primary-teal-light));
@@ -538,7 +537,7 @@ export default {
 
 .guests-row {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
     gap: var(--space-3);
     padding: var(--space-3) var(--space-4);
     border-top: 1px solid var(--neutral-200);
@@ -550,7 +549,7 @@ export default {
     background: var(--neutral-50);
 }
 
-.col-type, .col-rate, .col-fees, .col-total {
+.col-type, .col-rate, .col-permit, .col-fees, .col-total {
     display: flex;
     align-items: center;
 }
@@ -637,7 +636,7 @@ export default {
     display: flex;
     align-items: center;
     gap: var(--space-4);
-    background: linear-gradient(135deg, var(--primary-amber-light) 0%, var(--primary-amber) 100%);
+    background: linear-gradient(135deg, #FFC107 0%, #FF9800 100%);
     border-radius: var(--radius-xl);
     padding: var(--space-6);
     margin-top: var(--space-6);
@@ -709,11 +708,11 @@ export default {
 
     .guests-header,
     .guests-row {
-        grid-template-columns: 2fr 1fr 1fr;
+        grid-template-columns: 2fr 1fr;
         font-size: var(--text-xs);
     }
 
-    .col-fees {
+    .col-rate, .col-permit, .col-fees {
         display: none;
     }
 
