@@ -11,8 +11,13 @@ This Vue.js 3 frontend application facilitates booking Native American tours. It
   - All step IDs are truly dynamic and contiguous, computed from both `comboIds` and `hasCustomFields` state
   - All flows correctly start at Browse Tours, with MyTrip and Maps appearing AFTER Add Extras for combination packages
 - **Smart Navigation Logic**: All components use computed tabs based on booking type and add-on availability for accurate step highlighting; navigation guards prevent accessing MyTrip/Maps with less than 2 packages in cart
-- **MyTrip Page Redesign**: Modern collapsible date sections with package timeline cards, time indicators, guest details, package images with type badges, and edit functionality - fully responsive with Native Journey design system
-- **Maps Page Redesign**: Interactive Google Maps integration with custom styled markers, elegant tour details cards showing itinerary, date/time badges, and descriptions - clean layout with teal/amber color scheme
+- **Continue Button Flow**: Added Continue buttons to MyTrip and Maps pages with amber gradient styling:
+  - Add Extras routes to MyTrip (combo) or Checkout (single)
+  - MyTrip has Continue to Maps button
+  - Maps has Continue to Checkout button
+  - Schedule routes to MyTrip (combo without add-ons) or Checkout (single without add-ons) or Add Extras (when available)
+- **MyTrip Page Redesign**: Modern collapsible date sections with package timeline cards, time indicators, guest details, package images with type badges, edit functionality, and Continue to Maps button - fully responsive with Native Journey design system
+- **Maps Page Redesign**: Interactive Google Maps with custom styled markers, elegant tour details cards showing itinerary, date/time badges, descriptions, and Continue to Checkout button - clean layout with teal/amber color scheme
 - **Pricing Breakdown Real-time Display**: Tour form now shows pricing breakdown (subtotal, taxes & fees, total) immediately when customers select rate groups or adjust guest counts, not just on continue button click
 - **Duplicate Fees Fix**: Resolved issue where add-on fees were being calculated and displayed twice in checkout - fees now correctly calculated only for actually selected add-ons (checkbox checked, number > 0, radio/select chosen)
 - **Consistent Add-ons Validation**: Applied hasValidFieldValue() logic across both Addons and Checkout components to ensure pricing consistency
