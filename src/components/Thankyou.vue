@@ -261,7 +261,7 @@ export default {
                     });
                 }
                 
-                // this.$store.dispatch('storeBookingIds', {});
+                this.$store.dispatch('storeBookingIds', {});
                 this.processLoader(loader);
             }).catch((error) => {
                 console.error('Error fetching booking confirmation:', error);
