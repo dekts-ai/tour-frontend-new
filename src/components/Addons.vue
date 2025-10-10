@@ -186,6 +186,8 @@ export default {
         handleCustomFormExists(exists) {
             this.hasCustomFields = exists;
             this.loadingCustomFields = false;
+            // Store in Vuex for global access
+            this.$store.dispatch('storeHasCustomFields', exists);
         },
         handleFieldsChanged(fields) {
             // Update the reactive data property for real-time price updates
