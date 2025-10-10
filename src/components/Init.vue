@@ -613,8 +613,17 @@ export default {
                 this.$store.dispatch('storeCartItem', this.cartItem);
                 this.$store.dispatch('storeMindChange', 1);
 
-                // Always go to Add Extras first (tab 4), then to Checkout (tab 5)
-                this.$router.push({ name: 'Addons' });
+                // Dynamic routing based on whether company has add-ons
+                const hasCustomFields = this.$store.state.hasCustomFields;
+                
+                if (hasCustomFields === false) {
+                    // No add-ons available, go directly to Checkout
+                    this.$router.push({ name: 'Checkout' });
+                } else {
+                    // Add-ons available or unknown, go to Add Extras page
+                    // (The Add Extras page will determine and store the actual value)
+                    this.$router.push({ name: 'Addons' });
+                }
             } catch (error) {
                 console.error('Add to cart error:', error);
                 this.errors.push(error.response?.data?.message || 'Failed to add to cart.');
