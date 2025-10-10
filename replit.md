@@ -4,7 +4,14 @@
 This Vue.js 3 frontend application facilitates booking Native American tours. It offers a user-friendly interface for browsing tour packages, selecting dates, adding extras, and processing payments via Stripe. The project aims to provide a modern, nature-inspired booking experience for cultural tours, leveraging a multi-tenant backend architecture.
 
 ## Recent Changes (October 10, 2025)
-- **Dynamic Navigation System**: Implemented intelligent navigation that adapts based on company configuration - automatically hides "Add Extras" step and routes directly from Schedule to Checkout when a company has no custom fields/add-ons. Navigation displays 3 steps (Browse, Schedule, Checkout) or 4 steps (Browse, Schedule, Add Extras, Checkout) dynamically. Uses Vuex store to track hasCustomFields availability, set in Init.vue before routing decisions.
+- **Combination Packages Support**: Implemented full support for multi-package bookings using `cids` URL parameter (comma-separated package IDs). Added MyTrip and Maps pages to combination package flow with complete Native Journey redesign - modern card-based timeline, interactive map visualization, teal gradients, amber accents, responsive design with icons and shadows.
+- **Extended Dynamic Navigation**: Navigation now adapts to BOTH booking type (single vs combo) AND company configuration (with/without add-ons):
+  - Single package flow: Browse → Schedule → Add Extras → Checkout (or 3 steps without add-ons)
+  - Combination package flow: MyTrip → Maps → Browse → Schedule → Add Extras → Checkout (or 5 steps without add-ons)
+  - All step IDs are truly dynamic and contiguous, computed from both `comboIds` and `hasCustomFields` state
+- **Smart Routing Logic**: Index.vue routes to MyTrip first when combination packages with cart items detected; all components use computed tabs based on booking type and add-on availability for accurate step highlighting
+- **MyTrip Page Redesign**: Modern collapsible date sections with package timeline cards, time indicators, guest details, package images with type badges, and edit functionality - fully responsive with Native Journey design system
+- **Maps Page Redesign**: Interactive Google Maps integration with custom styled markers, elegant tour details cards showing itinerary, date/time badges, and descriptions - clean layout with teal/amber color scheme
 - **Pricing Breakdown Real-time Display**: Tour form now shows pricing breakdown (subtotal, taxes & fees, total) immediately when customers select rate groups or adjust guest counts, not just on continue button click
 - **Duplicate Fees Fix**: Resolved issue where add-on fees were being calculated and displayed twice in checkout - fees now correctly calculated only for actually selected add-ons (checkbox checked, number > 0, radio/select chosen)
 - **Consistent Add-ons Validation**: Applied hasValidFieldValue() logic across both Addons and Checkout components to ensure pricing consistency
