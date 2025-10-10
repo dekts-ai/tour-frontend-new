@@ -20,13 +20,18 @@ axios.defaults.baseURL = `https://${tenant}.${process.env.VUE_APP_API_URL}`;
 // Create and configure app
 const app = createApp(App);
 
-app.use(router)
-   .use(store)
+app.use(store)
+   .use(router)
    .use(VueLoading)
    .use(VueGoogleMaps, {
       load: {
          key: process.env.VUE_APP_MAP_KEY
       }
    });
+
+// Update axios baseURL after store is loaded with correct tenantId from localStorage
+if (store.state.tenantId) {
+    axios.defaults.baseURL = `https://${store.state.tenantId}.${process.env.VUE_APP_API_URL}`;
+}
 
 app.mount('#app');

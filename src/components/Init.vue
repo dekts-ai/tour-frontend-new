@@ -631,14 +631,14 @@ export default {
                     // No add-ons available
                     if (isComboPackage) {
                         // Combo packages go to MyTrip
-                        this.$router.push({ name: 'MyTrip', query: this.$route.query });
+                        this.$router.push({ name: 'MyTrip' });
                     } else {
                         // Single packages go to Checkout
-                        this.$router.push({ name: 'Checkout', query: this.$route.query });
+                        this.$router.push({ name: 'Checkout' });
                     }
                 } else {
                     // Add-ons available or unknown, go to Add Extras page
-                    this.$router.push({ name: 'Addons', query: this.$route.query });
+                    this.$router.push({ name: 'Addons' });
                 }
             } catch (error) {
                 console.error('Add to cart error:', error);
@@ -786,7 +786,7 @@ export default {
             if ([1, 3, 4, 5, 6].includes(tab)) {
                 if (tab === 1 || Object.keys(this.cartItem).length) {
                     this.$store.dispatch('storeMindChange', 1);
-                    this.$router.push({ name: destination, query: this.$route.query });
+                    this.$router.push({ name: destination });
                 } else {
                     Swal.fire({
                         toast: true,

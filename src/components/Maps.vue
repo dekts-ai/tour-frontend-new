@@ -232,7 +232,7 @@ export default {
                     this.$store.dispatch('storeFormData', null);
                 }
                 this.$store.dispatch('storeMindChange', 1);
-                this.$router.push({ name: destination, query: this.$route.query });
+                this.$router.push({ name: destination });
             }
         },
         onMarkerClick(marker) {
@@ -255,7 +255,7 @@ export default {
             });
         },
         continueToCheckout() {
-            this.$router.push({ name: 'Checkout', query: this.$route.query });
+            this.$router.push({ name: 'Checkout' });
         }
     }
 };
