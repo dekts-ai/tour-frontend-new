@@ -382,6 +382,8 @@ export default {
 
         hasCustomFormFields(exists) {
             this.customFieldExists = exists;
+            // Store in Vuex immediately so routing decisions can use it
+            this.$store.dispatch('storeHasCustomFields', exists);
         },
 
         updatePricingBreakdown() {
