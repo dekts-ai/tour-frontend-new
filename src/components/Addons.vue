@@ -245,9 +245,14 @@ export default {
                         return;
                     }
                     
-                    // Calculate addons totals from custom fields
-                    const addonsTotal = this.$refs.CustomFieldsRef.sumTotal(customFormData.fields);
-                    const addonsFee = this.roundout(this.$refs.CustomFieldsRef.feeTotal(customFormData.fields));
+                    // Filter to only include fields with valid values (same logic as display)
+                    const fieldsWithValidValues = customFormData.fields.filter(field => 
+                        field.priceInfo?.enabled && this.hasValidFieldValue(field)
+                    );
+                    
+                    // Calculate addons totals from custom fields with valid values
+                    const addonsTotal = this.$refs.CustomFieldsRef.sumTotal(fieldsWithValidValues);
+                    const addonsFee = this.roundout(this.$refs.CustomFieldsRef.feeTotal(fieldsWithValidValues));
                     
                     // Update each cart item with custom fields
                     const updatedCart = { ...this.cartItem };

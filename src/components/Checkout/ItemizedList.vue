@@ -28,7 +28,7 @@
                 <div v-if="item?.custom_fields?.length && isPriceInfoEnabled(item?.custom_fields)" class="addons-section">
                     <div class="addon-header">Add-ons:</div>
                     <div v-for="(option, idx) in item.custom_fields" :key="`custom-option-${idx}`">
-                        <div v-if="option.priceInfo.enabled" class="pricing-line">
+                        <div v-if="option.priceInfo.enabled && hasValidFieldValue(option)" class="pricing-line">
                             <span>{{ option.name }}</span>
                             <span>{{ currencyFormat(option.priceInfo.price) }}</span>
                         </div>
@@ -85,6 +85,34 @@ export default {
         },
         isPriceInfoEnabled(customFields) {
             return customFields.some(item => item.priceInfo.enabled === true);
+        },
+        hasValidFieldValue(field) {
+            // Check if a field has a valid selected value based on its type
+            const value = field.value;
+            
+            switch (field.type) {
+                case 'checkbox':
+                    // Checkbox must be checked (truthy value)
+                    return !!value;
+                
+                case 'number':
+                    // Number must be greater than 0
+                    return Number(value) > 0;
+                
+                case 'radio':
+                case 'select':
+                    // Radio and select must have a non-empty value selected
+                    return value !== null && value !== undefined && value !== '';
+                
+                case 'text':
+                case 'textarea':
+                    // Text fields must have a non-empty value
+                    return value !== null && value !== undefined && String(value).trim() !== '';
+                
+                default:
+                    // For any other type, check if value exists
+                    return value !== null && value !== undefined && value !== '';
+            }
         },
         handleItemsUpdate(updatedItems) {
             // Emit the updated items list to `Checkout.vue`
