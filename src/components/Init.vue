@@ -376,10 +376,48 @@ export default {
                     total_people_selected: this.form.selectedSize
                 });
             }
+            // Update pricing breakdown immediately when rate group changes
+            this.updatePricingBreakdown();
         },
 
         hasCustomFormFields(exists) {
             this.customFieldExists = exists;
+        },
+
+        updatePricingBreakdown() {
+            // Only calculate if we have rate groups and people selected
+            if (!this.details.tourPackageRateGroups?.length || this.form.total_people_selected === 0) {
+                this.form.subtotal = 0;
+                this.form.fees = 0;
+                this.form.total = 0;
+                return;
+            }
+
+            const rateGroups = Object.values(this.details.tourPackageRateGroups);
+            const { paxSubtotalArr, feesGroupArr } = this.calculateTotals(rateGroups);
+            
+            const subtotalSum = paxSubtotalArr.reduce((sum, val) => sum + Number(val), 0);
+            let feesSum = feesGroupArr.reduce((sum, val) => sum + Number(val), 0);
+
+            this.form.before_discount_subtotal = Number(subtotalSum);
+            this.form.before_discount_fees = Number(feesSum);
+            this.form.before_discount_total = this.roundout(subtotalSum + feesSum);
+
+            let discountedSubtotal = subtotalSum;
+            if (this.form.discount2_percentage > 0) {
+                const discount = (subtotalSum * this.form.discount2_percentage) / 100;
+                this.form.discount2_value = Number(discount).toFixed(2);
+                discountedSubtotal = Number(subtotalSum - discount).toFixed(2);
+                feesSum = this.roundout((discountedSubtotal * this.form.service_commission) / 100, 2);
+            } else if (this.form.discount2_value > 0) {
+                discountedSubtotal = Number(subtotalSum - this.form.discount2_value).toFixed(2);
+                feesSum = this.roundout((discountedSubtotal * this.form.service_commission) / 100, 2);
+            }
+
+            const total = Number(discountedSubtotal) + Number(feesSum);
+            this.form.subtotal = this.roundout(discountedSubtotal);
+            this.form.fees = feesSum;
+            this.form.total = this.roundout(total);
         },
 
         async submit() {
@@ -621,6 +659,9 @@ export default {
                     0
                 );
             }
+            
+            // Update pricing breakdown immediately when rate count changes
+            this.updatePricingBreakdown();
         },
 
         decrement(rateId) {
@@ -638,6 +679,9 @@ export default {
                     0
                 );
             }
+            
+            // Update pricing breakdown immediately when rate count changes
+            this.updatePricingBreakdown();
         },
 
         updatePaxDetail(rateId, index, field, value) {
