@@ -3,7 +3,12 @@
 ## Overview
 This Vue.js 3 frontend application facilitates booking Native American tours. It offers a user-friendly interface for browsing tour packages, selecting dates, adding extras, and processing payments via Stripe. The project aims to provide a modern, nature-inspired booking experience for cultural tours, leveraging a multi-tenant backend architecture.
 
-## Recent Changes (October 8, 2025)
+## Recent Changes (October 10, 2025)
+- **Pricing Breakdown Real-time Display**: Tour form now shows pricing breakdown (subtotal, taxes & fees, total) immediately when customers select rate groups or adjust guest counts, not just on continue button click
+- **Duplicate Fees Fix**: Resolved issue where add-on fees were being calculated and displayed twice in checkout - fees now correctly calculated only for actually selected add-ons (checkbox checked, number > 0, radio/select chosen)
+- **Consistent Add-ons Validation**: Applied hasValidFieldValue() logic across both Addons and Checkout components to ensure pricing consistency
+
+## Previous Changes (October 8, 2025)
 - **Dynamic Branding**: Header now fetches tour operator logo and company name from `tour-operator-logo` API endpoint with fallback to default branding
 - **Calendar Redesign**: Custom calendar component fully redesigned with Native Journey design tokens (teal gradient header, modern cells, enhanced legend)
 - **Calendar Cell Improvements**: Removed inner borders, fixed overflow, improved color distinction (teal for available, amber for low booking)
