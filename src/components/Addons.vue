@@ -230,7 +230,7 @@ export default {
                     this.$store.dispatch('storeFormData', null);
                 }
                 this.$store.dispatch('storeMindChange', 1);
-                this.$router.push({ name: destination });
+                this.$router.push({ name: destination, query: this.$route.query });
             }
         },
         async continueToCheckout() {
@@ -275,7 +275,7 @@ export default {
             
             // Route to MyTrip for combo packages, Checkout for single packages
             const destination = this.comboIds && this.comboIds !== 0 ? 'MyTrip' : 'Checkout';
-            this.$router.push({ name: destination });
+            this.$router.push({ name: destination, query: this.$route.query });
         },
         formatDate(date) {
             return getMomentTimezone(this.$store.state.timezone, date).format('MMM D, YYYY');

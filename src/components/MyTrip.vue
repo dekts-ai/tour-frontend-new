@@ -250,11 +250,11 @@ export default {
                     this.$store.dispatch('storeFormData', null);
                 }
                 this.$store.dispatch('storeMindChange', 1);
-                this.$router.push({ name: destination });
+                this.$router.push({ name: destination, query: this.$route.query });
             }
         },
         continueToMaps() {
-            this.$router.push({ name: 'Maps' });
+            this.$router.push({ name: 'Maps', query: this.$route.query });
         },
         processLoader(loader) {
             loader.hide();

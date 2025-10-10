@@ -242,7 +242,7 @@ export default {
                     this.$store.dispatch('storeFormData', null);
                 }
                 this.$store.dispatch('storeMindChange', 1);
-                this.$router.push({ name: destination });
+                this.$router.push({ name: destination, query: this.$route.query });
             }
         },
         processLoader(loader) {
