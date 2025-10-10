@@ -103,7 +103,7 @@ export default {
     padding: var(--space-6);
     background: white;
     border-radius: var(--radius-xl);
-    border: 2px solid var(--primary-teal-light);
+    border: 1px solid #dfdfdf;
 }
 
 .selected-tours-grid {

@@ -258,6 +258,7 @@ export default {
                 this.has_contacts = tourData.has_contacts || 0;
 
                 Object.assign(this.form, {
+                    package_image: tourData.FrontendPackageImage || '',
                     things_to_bring: response.data.thingsToBring || [],
                     short_description: tourData.short_description || '',
                     long_description: tourData.long_description || '',

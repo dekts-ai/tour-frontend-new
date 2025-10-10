@@ -28,9 +28,9 @@
             
             <div class="tour-footer">
                 <div class="tour-pricing">
-                    <span class="price-from">From</span>
+                    <!-- <span class="price-from">From</span>
                     <span class="price-value">${{ tourPackage.adult_price || tourPackage.price }}</span>
-                    <span class="price-per">per person</span>
+                    <span class="price-per">per person</span> -->
                 </div>
                 <button class="btn-select-tour"
                     @click="$emit('book-now', { 

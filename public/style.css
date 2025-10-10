@@ -144,8 +144,8 @@ ul {
 }
 
 .inner-content-section .background-color-sec {
-	background: #fff;
-	padding: 20px 40px;
+	/* background: #fff; */
+	padding: 20px 50px;
 	border-radius: 3px;
 	margin-bottom: 60px;
 	/*border: 1px solid #d5d5d5;*/
@@ -275,9 +275,10 @@ ul {
 
 /* Payment */
 .payment-row {
+	background-color: #fff;
 	border: 1px solid #dfdfdf;
-	border-radius: 3px;
-	margin: 33px 0 0;
+	border-radius: var(--radius-xl);
+	/* margin: 33px 0 0; */
 }
 
 .payment-row .booking-row {
@@ -2374,8 +2375,8 @@ input.help-block+.checkmark {
 	font-weight: 700;
 	line-height: 1;
 	color: #333;
-	background: #ffde84;
-	background: linear-gradient(90deg, #ffde84, #eed07e);
+	/* background: #ffde84;
+	background: linear-gradient(90deg, #ffde84, #eed07e); */
 	box-shadow: 4px 4px 5px 0 rgba(0, 0, 0, .05), inset -3px -4px 12px 0 rgba(0, 0, 0, .12);
 	text-align: center;
 	border: none;
@@ -2387,8 +2388,8 @@ input.help-block+.checkmark {
 
 .addmore-package-wrap .checkout-btn:hover,
 .addmore-package-wrap .checkout-btn:focus {
-	background: #0373c3;
-	color: #fff;
+	/* background: #0373c3;
+	color: #fff; */
 }
 
 .tour-packages-item .tour-packages-group-people {
@@ -3256,7 +3257,7 @@ input.help-block+.checkmark {
 
 .tabs-section {
 	margin-top: 20px;
-	margin-left: 40px;
+	/* margin-left: 40px; */
 }
 
 .tabs-section .tabs-wrap {

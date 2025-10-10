@@ -128,8 +128,8 @@ ul {
 }
 
 .inner-content-section .background-color-sec {
-        background: #fff;
-        padding: 20px 40px;
+        /* background: #fff; */
+        padding: 20px 50px;
         border-radius: 3px;
         margin-bottom: 60px;
         /*border: 1px solid #d5d5d5;*/
@@ -528,7 +528,7 @@ ul {
 .payment-row {
         border: 1px solid #dfdfdf;
         border-radius: 3px;
-        margin: 34px 0 0;
+        /* margin: 34px 0 0; */
 }
 
 .payment-row .booking-row {
@@ -4409,7 +4409,7 @@ button.btn-quantity {
     padding: var(--space-8) var(--space-6);
     max-width: 1400px;
     margin: 0 auto;
-    background: var(--neutral-50);
+    background: white;
 }
 
 .schedule-column {
@@ -4448,7 +4448,7 @@ button.btn-quantity {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    max-height: 500px;
+    max-height: 765px;
     overflow-y: auto;
     padding-right: var(--space-2);
 }
@@ -4548,12 +4548,12 @@ button.btn-quantity {
 .booking-summary-content {
     background: white;
     border-radius: var(--radius-xl);
-    padding: var(--space-6);
+    /* padding: var(--space-6); */
     display: flex;
     flex-direction: column;
     gap: var(--space-5);
-    border: 1px solid var(--neutral-200);
-    box-shadow: var(--shadow-sm);
+    /* border: 1px solid var(--neutral-200); */
+    /* box-shadow: var(--shadow-sm); */
 }
 
 .tour-summary-card {

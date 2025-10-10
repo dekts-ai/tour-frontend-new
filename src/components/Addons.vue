@@ -40,8 +40,11 @@
                             <div v-for="(item, slotId) in cartItem" :key="slotId" class="cart-summary-item">
                                 <div class="item-name">{{ item.package_name }}</div>
                                 <div class="item-details">
-                                    <span class="item-date">{{ formatDate(item.date) }}</span>
-                                    <span class="item-price">{{ currencyFormat(Number(item.total || 0) + Number(item.addons_fee || 0) + Number(item.addons_total || 0)) }}</span>
+                                    <span class="item-date">
+                                        {{ formatDate(item.date) }}
+                                        <span v-if="item.package_has_slots">@ {{ item.time_date }}</span>
+                                    </span>
+                                    <!-- <span class="item-price">{{ currencyFormat(Number(item.total || 0) + Number(item.addons_fee || 0) + Number(item.addons_total || 0)) }}</span> -->
                                 </div>
                             </div>
                         </div>

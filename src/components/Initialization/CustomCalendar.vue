@@ -229,15 +229,6 @@ export default {
 </script>
 
 <style scoped>
-.custom-calendar {
-    border: 1px solid var(--neutral-200);
-    border-radius: var(--radius-xl);
-    padding: var(--space-4);
-    margin-top: var(--space-2);
-    background: white;
-    box-shadow: var(--shadow-sm);
-}
-
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);

@@ -124,7 +124,7 @@ export default {
     background: white;
     border-radius: var(--radius-xl);
     overflow: hidden;
-    border: 2px solid var(--primary-teal-light);
+    /* border: 2px solid var(--primary-teal-light); */
     box-shadow: var(--shadow-md);
     transition: all var(--transition-base);
 }
@@ -180,6 +180,7 @@ export default {
     margin-bottom: var(--space-4);
     padding-bottom: var(--space-3);
     border-bottom: 2px solid var(--neutral-100);
+    align-items: baseline;
 }
 
 .tour-title-section {
@@ -239,7 +240,7 @@ export default {
 }
 
 .action-icon-btn.checkout-btn {
-    background: linear-gradient(135deg, var(--primary-terracotta) 0%, #D97454 100%) !important;
+    background: linear-gradient(135deg, #E36D4A 0%, #D97454 100%) !important;
     color: white !important;
 }
 

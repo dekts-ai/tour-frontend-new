@@ -79,8 +79,8 @@ export default {
 }
 
 .summary-row.grand-total {
-    background: linear-gradient(135deg, var(--primary-terracotta) 0%, rgba(224, 120, 86, 0.9) 100%);
-    color: white;
+    /* background: linear-gradient(135deg, var(--primary-terracotta) 0%, rgba(224, 120, 86, 0.9) 100%);
+    color: white; */
     font-weight: var(--font-bold);
     font-size: var(--text-base);
     margin-top: var(--space-3);
