@@ -48,9 +48,8 @@ export default {
     },
     computed: {
         tabs() {
-            // For combo packages: MyTrip(1), Maps(2), Browse(3)
-            // For single package: Browse(1)
-            return this.comboIds && this.comboIds !== 0 ? 3 : 1;
+            // Browse is always step 1 (for both single and combo packages)
+            return 1;
         },
         hasCustomFields() {
             return this.$store.state.hasCustomFields;
@@ -84,12 +83,6 @@ export default {
             if (this.cartItemLength) {
                 // Get package IDs from cart
                 this.checkPackageIds = Object.values(this.cartItem).map(item => parseInt(item.package_id));
-            }
-
-            // For combination packages with cart items, route to MyTrip first
-            if (this.comboIds && this.cartItemLength > 0 && this.$store.state.mindChange === 0) {
-                this.$router.push({ name: 'MyTrip' });
-                return;
             }
 
             if (this.packageId > 0 && this.$store.state.mindChange === 0) {
@@ -145,7 +138,8 @@ export default {
         },
         handleTab(tab, destination) {
             if (tab === 2 || Object.keys(this.cartItem).length) {
-                if (tab === 5 && this.comboIds && this.cartItemLength === 1) {
+                // Check if navigating to MyTrip or Maps with only 1 package (combo requires 2+)
+                if ((destination === 'MyTrip' || destination === 'Maps') && this.comboIds && this.cartItemLength === 1) {
                     Swal.fire({
                         toast: true,
                         html: `To proceed, please ensure you have selected at least two packages.`,

@@ -144,8 +144,9 @@ export default {
     },
     computed: {
         tabs() {
-            // MyTrip is always step 1 (only used in combo packages)
-            return 1;
+            const hasCustomFields = this.$store.state.hasCustomFields;
+            // MyTrip: step 4 (with add-ons) or step 3 (without add-ons) - combo packages only
+            return hasCustomFields === true ? 4 : 3;
         }
     },
     async created() {

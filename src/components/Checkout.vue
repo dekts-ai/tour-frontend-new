@@ -85,8 +85,8 @@ export default {
             const isCombo = this.comboIds && this.comboIds !== 0;
             
             if (isCombo) {
-                // Combo WITH add-ons: MyTrip(1), Maps(2), Browse(3), Init(4), Addons(5), Checkout(6)
-                // Combo WITHOUT add-ons: MyTrip(1), Maps(2), Browse(3), Init(4), Checkout(5)
+                // Combo WITH add-ons: Browse(1), Init(2), Addons(3), MyTrip(4), Maps(5), Checkout(6)
+                // Combo WITHOUT add-ons: Browse(1), Init(2), MyTrip(3), Maps(4), Checkout(5)
                 // If hasCustomFields is null (unknown), default to 6 (assume add-ons exist)
                 return hasCustomFields === false ? 5 : 6;
             } else {

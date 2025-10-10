@@ -122,9 +122,8 @@ export default {
     },
     computed: {
         tabs() {
-            // For combo packages: MyTrip(1), Maps(2), Browse(3), Init(4), Addons(5)
-            // For single package: Browse(1), Init(2), Addons(3)
-            return this.comboIds && this.comboIds !== 0 ? 5 : 3;
+            // Add Extras is always step 3 (for both single and combo packages, when available)
+            return 3;
         },
         calculateSubtotal() {
             return Object.values(this.cartItem).reduce((sum, item) => {

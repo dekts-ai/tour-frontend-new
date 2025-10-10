@@ -161,8 +161,9 @@ export default {
     },
     computed: {
         tabs() {
-            // Maps is always step 2 (only used in combo packages)
-            return 2;
+            const hasCustomFields = this.$store.state.hasCustomFields;
+            // Maps: step 5 (with add-ons) or step 4 (without add-ons) - combo packages only
+            return hasCustomFields === true ? 5 : 4;
         }
     },
     created() {

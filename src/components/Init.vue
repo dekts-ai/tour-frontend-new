@@ -143,9 +143,8 @@ export default {
     },
     computed: {
         tabs() {
-            // For combo packages: MyTrip(1), Maps(2), Browse(3), Init(4)
-            // For single package: Browse(1), Init(2)
-            return this.comboIds && this.comboIds !== 0 ? 4 : 2;
+            // Choose Date is always step 2 (for both single and combo packages)
+            return 2;
         },
         hasCustomFields() {
             return this.$store.state.hasCustomFields;

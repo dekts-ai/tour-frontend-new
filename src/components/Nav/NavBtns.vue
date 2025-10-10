@@ -85,32 +85,32 @@ export default {
         steps() {
             const steps = [];
             
-            // For combination packages, add MyTrip and Maps first
+            // All flows start with Browse and Schedule
+            steps.push({ id: 1, title: 'Browse Tours', route: 'Index' });
+            steps.push({ id: 2, title: 'Choose Date', route: 'Init' });
+            
             if (this.isComboPackage) {
-                steps.push({ id: 1, title: 'My Trip', route: 'MyTrip' });
-                steps.push({ id: 2, title: 'Trip Map', route: 'Maps' });
-                steps.push({ id: 3, title: 'Browse Tours', route: 'Index' });
-                steps.push({ id: 4, title: 'Choose Date', route: 'Init' });
-                
-                // Add Extras step (id: 5) if company has custom fields
-                if (this.hasCustomFields === true) {
-                    steps.push({ id: 5, title: 'Add Extras', route: 'Addons' });
-                }
-                
-                // Checkout is always last (id: 6)
-                steps.push({ id: 6, title: 'Checkout', route: 'Checkout' });
-            } else {
-                // Single package flow
-                steps.push({ id: 1, title: 'Browse Tours', route: 'Index' });
-                steps.push({ id: 2, title: 'Choose Date', route: 'Init' });
-                
-                // Add Extras step (id: 3) if company has custom fields
+                // Combination package flow
                 if (this.hasCustomFields === true) {
                     steps.push({ id: 3, title: 'Add Extras', route: 'Addons' });
+                    steps.push({ id: 4, title: 'My Trip', route: 'MyTrip' });
+                    steps.push({ id: 5, title: 'Trip Map', route: 'Maps' });
+                    steps.push({ id: 6, title: 'Checkout', route: 'Checkout' });
+                } else {
+                    // No add-ons for combo
+                    steps.push({ id: 3, title: 'My Trip', route: 'MyTrip' });
+                    steps.push({ id: 4, title: 'Trip Map', route: 'Maps' });
+                    steps.push({ id: 5, title: 'Checkout', route: 'Checkout' });
                 }
-                
-                // Checkout is always last (id: 4)
-                steps.push({ id: 4, title: 'Checkout', route: 'Checkout' });
+            } else {
+                // Single package flow
+                if (this.hasCustomFields === true) {
+                    steps.push({ id: 3, title: 'Add Extras', route: 'Addons' });
+                    steps.push({ id: 4, title: 'Checkout', route: 'Checkout' });
+                } else {
+                    // No add-ons for single
+                    steps.push({ id: 3, title: 'Checkout', route: 'Checkout' });
+                }
             }
             
             return steps;
