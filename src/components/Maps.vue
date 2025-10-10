@@ -1,9 +1,10 @@
 <template>
-    <section class="tabs-section">
-        <NavBtns @navigatetotab="navigateToTab" :combo-ids="comboIds" :tabs="tabs" />
-    </section>
+    <div>
+        <section class="tabs-section">
+            <NavBtns @navigatetotab="navigateToTab" :combo-ids="comboIds" :tabs="tabs" />
+        </section>
 
-    <section class="inner-content-section">
+        <section class="inner-content-section">
         <div class="maps-container">
             <!-- Page Header -->
             <div class="maps-header">
@@ -104,7 +105,8 @@
                 </button>
             </div>
         </div>
-    </section>
+        </section>
+    </div>
 </template>
 
 <script>
