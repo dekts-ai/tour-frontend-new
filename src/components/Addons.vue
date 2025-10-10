@@ -129,7 +129,7 @@ export default {
         },
         calculateFees() {
             const baseFees = Object.values(this.cartItem).reduce((sum, item) => {
-                return sum + (Number(item.fees) || 0) + (Number(item.addons_fee) || 0);
+                return sum + (Number(item.fees) || 0);
             }, 0);
             // Add real-time custom fields fees
             const customFieldsFee = this.roundout((this.addonsTotal * this.serviceCommission) / 100);
