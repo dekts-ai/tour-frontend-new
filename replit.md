@@ -4,17 +4,20 @@
 This Vue.js 3 frontend application facilitates booking Native American tours. It offers a user-friendly interface for browsing tour packages, selecting dates, adding extras, and processing payments via Stripe. The project aims to provide a modern, nature-inspired booking experience for cultural tours, leveraging a multi-tenant backend architecture.
 
 ## Recent Changes (October 13, 2025)
-- **Modular Add-ons System**: Completely refactored add-ons to support nested conditional fields with clean component architecture:
-  - Created `AddonField.vue` component for all input types (text, number, checkbox, radio, dropdown, textbox)
-  - Created `PricePerPaxField.vue` for "Price per pax" fields with rate group breakdown (separate inputs for Adults, Child, Infant based on schedule selections)
-  - Built `AddonsNew.vue` with API integration (`/package/get-addon-form/{packageId}`) supporting:
-    - Conditional field visibility based on parent rules (checked, equals operators)
-    - Nested children fields that show/hide dynamically
-    - Three pricing types: One time (fixed), Price per unit (quantity × price), Price per pax (passengers × price)
-    - Real-time pricing calculations with itemized breakdown in booking summary
-    - Integration with cart rate groups (people_group, rate_group arrays)
-  - Added Vuex store support: addonValues, addonOptions, serviceCommission
-  - Graceful error handling for API failures
+- **Modular Add-ons System Refactor**: Completely rebuilt add-ons with proper fee calculation and Native Journey design:
+  - Created 6 input components (NumberInput, TextInput, TextboxInput, CheckboxInput, RadioInput, DropdownInput) with Native Journey styling
+  - Rebuilt `AddonsNew.vue` with correct pricing logic:
+    - Value structure: Each field stores { value, price, subtotal, fee, isRepeated, values[] }
+    - Fee calculation: Per-unit/pax fees calculated first, then aggregated (fee = subtotal × commission_rate, mathematically equivalent to sum of per-unit fees)
+    - Fixed grand total calculation to prevent double-counting (cart subtotal + addon subtotal + all fees)
+  - **Repeated Child Fields**:
+    - Price per pax: Children repeat based on totalPeople (from cart people_group), each person gets separate input
+    - Price per unit: Children repeat based on parent number field value, each unit gets separate input
+  - Conditional field visibility with operators: checked, equals, !=, >, <, >=, <=
+  - Real-time pricing with itemized add-ons breakdown in booking summary
+  - API integration: `/package/get-addon-form/{packageId}` with graceful error handling
+  - Three pricing types: One time (fixed), Price per unit (quantity × price), Price per pax (passengers × price)
+  - Native Journey design: Field cards, nested children styling, teal accents, amber price tags, responsive layout
 
 ## Previous Changes (October 10, 2025)
 - **Axios BaseURL Fix**: Fixed critical blank page issue by adding axios request interceptor that dynamically sets baseURL from Vuex store with fallback to localStorage/URL parameters. This ensures API calls work correctly during navigation even before App.vue completes initialization.
