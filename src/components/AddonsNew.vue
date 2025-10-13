@@ -19,9 +19,9 @@
                         <!-- Addons Fields -->
                         <div v-else-if="hasAddons" class="addons-form">
                             <!-- Total Cost Summary -->
-                            <div class="total-cost-summary">
+                            <div v-if="calculateAddonsSubtotal > 0" class="total-cost-summary">
                                 <span class="total-cost-label">Total Add-on Cost:</span>
-                                <span class="total-cost-amount">{{ currencyFormat(totalCost) }}</span>
+                                <span class="total-cost-amount">{{ currencyFormat(calculateAddonsSubtotal + calculateAddonsFees) }}</span>
                             </div>
 
                             <div v-for="field in sortedFields" :key="field.id" class="field-card">
@@ -279,15 +279,20 @@ export default {
             });
             return addons;
         },
+        calculateAddonsSubtotal() {
+            return this.addonsWithPricing.reduce((sum, addon) => sum + addon.subtotal, 0);
+        },
+        calculateAddonsFees() {
+            return this.addonsWithPricing.reduce((sum, addon) => sum + addon.fee, 0);
+        },
         calculateFees() {
             const baseFees = Object.values(this.cartItem).reduce((sum, item) => {
                 return sum + (Number(item.fees) || 0);
             }, 0);
-            const addonsFee = this.addonsWithPricing.reduce((sum, addon) => sum + addon.fee, 0);
-            return baseFees + addonsFee;
+            return baseFees + this.calculateAddonsFees;
         },
         calculateGrandTotal() {
-            return this.calculateSubtotal + this.calculateFees + this.totalCost;
+            return this.calculateSubtotal + this.calculateAddonsSubtotal + this.calculateFees;
         }
     },
     watch: {
