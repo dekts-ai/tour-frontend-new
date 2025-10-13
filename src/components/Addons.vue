@@ -22,7 +22,7 @@
                             :service_commission="serviceCommission"
                             @customformexists="handleCustomFormExists"
                             @fieldschanged="handleFieldsChanged"
-                            :endpoint="`/package/custom/form/${packageId}`" />
+                            :endpoint="`/package/get-addon-form/${packageId}`" />
                     </div>
 
                     <!-- Fallback message if no custom fields -->
