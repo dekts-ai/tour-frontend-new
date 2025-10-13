@@ -323,11 +323,11 @@ export default {
             this.cartItem = this.$store.state.cartItem;
             this.cartItemLength = Object.keys(this.cartItem).length;
             this.currency = this.$store.state.currency || 'USD';
-            this.serviceCommission = this.$store.state.serviceCommission || 0;
             
             // Calculate total people from cart
             const firstItem = Object.values(this.cartItem)[0];
             if (firstItem && firstItem.people_group) {
+                this.serviceCommission = firstItem.service_commission || 0;
                 this.totalPeople = firstItem.people_group.reduce((sum, count) => sum + Number(count || 0), 0);
             }
         },
