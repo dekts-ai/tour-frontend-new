@@ -18,49 +18,103 @@
 
                         <!-- Addons Fields -->
                         <div v-else-if="hasAddons" class="addons-form">
-                            <div v-for="field in addonFields" :key="field.id">
-                                <template v-if="shouldShowField(field)">
-                                    <!-- Price Per Pax Field -->
-                                    <PricePerPaxField
-                                        v-if="field.unit_type === 'Price per pax' && field.additional_fee"
-                                        :field="field"
-                                        :value="fieldValues[field.id] || {}"
-                                        :rateGroups="rateGroups"
-                                        :rateGroupCounts="rateGroupCounts"
-                                        :currency="currency"
-                                        @update="handleFieldUpdate" />
+                            <!-- Total Cost Summary -->
+                            <div class="total-cost-summary">
+                                <span class="total-cost-label">Total Add-on Cost:</span>
+                                <span class="total-cost-amount">{{ currencyFormat(totalCost) }}</span>
+                            </div>
 
-                                    <!-- Regular Field -->
-                                    <AddonField
-                                        v-else
-                                        :field="field"
-                                        :value="fieldValues[field.id] || getDefaultValue(field)"
-                                        @update="handleFieldUpdate" />
+                            <div v-for="field in sortedFields" :key="field.id" class="field-card">
+                                <div v-if="shouldShowField(field)">
+                                    <div class="field-header">
+                                        <label :for="`field-${field.id}`" class="field-label">
+                                            {{ field.label }}
+                                            <span v-if="field.required" class="required-indicator">*</span>
+                                        </label>
+                                        <span v-if="field.additional_fee && field.price && !['radio', 'dropdown'].includes(field.type)" class="price-tag">
+                                            {{ currencyFormat(field.price) }} ({{ field.unit_type }})
+                                        </span>
+                                    </div>
 
-                                    <!-- Render Children if Condition Met -->
-                                    <div v-if="shouldShowChildren(field)" class="children-container">
-                                        <div v-for="child in field.children" :key="child.id">
-                                            <!-- Price Per Pax Child -->
-                                            <PricePerPaxField
-                                                v-if="child.unit_type === 'Price per pax' && child.additional_fee"
-                                                :field="child"
-                                                :value="fieldValues[child.id] || {}"
-                                                :rateGroups="rateGroups"
-                                                :rateGroupCounts="rateGroupCounts"
-                                                :currency="currency"
-                                                :isNested="true"
-                                                @update="handleFieldUpdate" />
+                                    <!-- Dynamic Input Component -->
+                                    <component 
+                                        :is="getInputComponent(field.type)" 
+                                        :field="field" 
+                                        :value="getFieldValue(field)"
+                                        :enabled="true" 
+                                        :display-errors="display_errors" 
+                                        :error="errors[field.id]"
+                                        @update:value="updateValue(field, $event)" 
+                                        @validate="validateField(field)" />
 
-                                            <!-- Regular Child -->
-                                            <AddonField
-                                                v-else
-                                                :field="child"
-                                                :value="fieldValues[child.id] || getDefaultValue(child)"
-                                                :isNested="true"
-                                                @update="handleFieldUpdate" />
+                                    <!-- Nested/Conditional Children -->
+                                    <div v-if="shouldShowChildren(field)" class="nested-fields">
+                                        <div v-for="child in sortedChildren(field.children)" :key="child.id" class="child-field-card">
+                                            <div class="field-header">
+                                                <label :for="`field-${child.id}`" class="field-label">
+                                                    {{ child.label }}
+                                                    <span v-if="child.required" class="required-indicator">*</span>
+                                                </label>
+                                                <span v-if="child.additional_fee && child.price && !['radio', 'dropdown'].includes(child.type)" class="price-tag">
+                                                    {{ currencyFormat(child.price) }} ({{ child.unit_type || 'N/A' }})
+                                                </span>
+                                            </div>
+
+                                            <!-- Repeated child fields for Price per pax -->
+                                            <template v-if="field.unit_type === 'Price per pax' && totalPeople > 0">
+                                                <div v-for="personIndex in totalPeople" :key="personIndex" class="person-input">
+                                                    <div class="person-header">Person {{ personIndex }}</div>
+                                                    <component 
+                                                        :is="getInputComponent(child.type)" 
+                                                        :field="child"
+                                                        :value="getChildValue(child, personIndex - 1)" 
+                                                        :enabled="true"
+                                                        :display-errors="display_errors" 
+                                                        :error="errors[`${child.id}-${personIndex}`]"
+                                                        :id-suffix="`-${personIndex}`"
+                                                        @update:value="updateChildValue(child, personIndex - 1, $event)"
+                                                        @validate="validateField(child, `${personIndex}`)" />
+                                                </div>
+                                            </template>
+
+                                            <!-- Repeated child fields for Price per unit -->
+                                            <template v-else-if="field.unit_type === 'Price per unit'">
+                                                <div v-for="unitIndex in getRepeatCount(field)" :key="unitIndex" class="unit-input">
+                                                    <div class="unit-header">Unit {{ unitIndex }}</div>
+                                                    <component 
+                                                        :is="getInputComponent(child.type)" 
+                                                        :field="child"
+                                                        :value="getChildValue(child, unitIndex - 1)" 
+                                                        :enabled="true"
+                                                        :display-errors="display_errors" 
+                                                        :error="errors[`${child.id}-${unitIndex}`]"
+                                                        :id-suffix="`-${unitIndex}`"
+                                                        @update:value="updateChildValue(child, unitIndex - 1, $event)"
+                                                        @validate="validateField(child, `${unitIndex}`)" />
+                                                </div>
+                                            </template>
+
+                                            <!-- Regular child (not repeated) -->
+                                            <template v-else>
+                                                <component 
+                                                    :is="getInputComponent(child.type)" 
+                                                    :field="child"
+                                                    :value="getFieldValue(child)" 
+                                                    :enabled="true"
+                                                    :display-errors="display_errors" 
+                                                    :error="errors[child.id]"
+                                                    @update:value="updateValue(child, $event)"
+                                                    @validate="validateField(child)" />
+                                            </template>
                                         </div>
                                     </div>
-                                </template>
+
+                                    <!-- Field Subtotal Display -->
+                                    <div v-if="!field.parent_field_id && safeValues[field.id]?.subtotal > 0" class="subtotal-tag">
+                                        Subtotal: {{ currencyFormat(safeValues[field.id].subtotal) }} 
+                                        (Fee: {{ currencyFormat(safeValues[field.id].fee) }})
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -101,7 +155,7 @@
                                 <div class="addons-header">Add-ons:</div>
                                 <div v-for="(addon, idx) in addonsWithPricing" :key="`addon-${idx}`" class="summary-row addon-item">
                                     <span>{{ addon.label }}</span>
-                                    <span>{{ currencyFormat(addon.price) }}</span>
+                                    <span>{{ currencyFormat(addon.subtotal) }}</span>
                                 </div>
                             </div>
                             
@@ -126,9 +180,14 @@
 </template>
 
 <script>
+import { reactive, computed } from 'vue';
 import NavBtns from './Nav/NavBtns.vue';
-import AddonField from './Forms/AddonField.vue';
-import PricePerPaxField from './Forms/PricePerPaxField.vue';
+import NumberInput from './Forms/AddonInput/NumberInput.vue';
+import RadioInput from './Forms/AddonInput/RadioInput.vue';
+import CheckboxInput from './Forms/AddonInput/CheckboxInput.vue';
+import DropdownInput from './Forms/AddonInput/DropdownInput.vue';
+import TextInput from './Forms/AddonInput/TextInput.vue';
+import TextboxInput from './Forms/AddonInput/TextboxInput.vue';
 import { formatCurrencyIntl } from '../utils/currency';
 import { getMomentTimezone } from '../utils/dateUtils';
 import axios from 'axios';
@@ -139,12 +198,33 @@ export default {
     title: 'Native American Tours',
     components: {
         NavBtns,
-        AddonField,
-        PricePerPaxField
+        NumberInput,
+        RadioInput,
+        CheckboxInput,
+        DropdownInput,
+        TextInput,
+        TextboxInput
+    },
+    setup() {
+        const internalValues = reactive({});
+        
+        const totalCost = computed(() => {
+            let total = 0;
+            if (internalValues && typeof internalValues === 'object') {
+                Object.values(internalValues).forEach(item => {
+                    total += (item.subtotal || 0) + (item.fee || 0);
+                });
+            }
+            return total;
+        });
+        
+        return { internalValues, totalCost };
     },
     data() {
         return {
             loading: true,
+            display_errors: false,
+            errors: {},
             tenantId: null,
             tourOperatorId: 0,
             comboIds: 0,
@@ -152,28 +232,32 @@ export default {
             affiliateId: 0,
             cartItem: {},
             cartItemLength: 0,
-            addonForm: null,
+            form: null,
             addonFields: [],
-            fieldValues: {},
-            selectedOptions: {},
-            rateGroups: [],
-            rateGroupCounts: [],
             currency: 'USD',
-            serviceCommission: 0
+            serviceCommission: 0,
+            totalPeople: 0
         };
     },
     computed: {
-        tabs() {
-            return 3;
-        },
-        hasAddons() {
-            return this.addonFields.length > 0;
-        },
+        tabs() { return 3; },
+        hasAddons() { return this.addonFields.length > 0; },
         nextStepName() {
             if (this.comboIds && this.comboIds.toString().split(',').length > 1) {
                 return 'My Trip';
             }
             return 'Checkout';
+        },
+        sortedFields() {
+            if (!this.form || !this.form.fields) return [];
+            return [...this.form.fields]
+                .filter(f => !f.parent_field_id)
+                .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+        },
+        safeValues() {
+            return this.internalValues && typeof this.internalValues === 'object' && this.internalValues !== null 
+                ? this.internalValues 
+                : {};
         },
         calculateSubtotal() {
             return Object.values(this.cartItem).reduce((sum, item) => {
@@ -182,50 +266,40 @@ export default {
         },
         addonsWithPricing() {
             const addons = [];
-            
-            this.addonFields.forEach(field => {
-                if (field.additional_fee && this.fieldHasValue(field)) {
-                    const price = this.calculateFieldPrice(field);
-                    if (price > 0) {
-                        addons.push({
-                            id: field.id,
-                            label: field.label,
-                            price: price
-                        });
-                    }
-                }
-                
-                // Check children
-                if (field.children && this.shouldShowChildren(field)) {
-                    field.children.forEach(child => {
-                        if (child.additional_fee && this.fieldHasValue(child)) {
-                            const childPrice = this.calculateFieldPrice(child);
-                            if (childPrice > 0) {
-                                addons.push({
-                                    id: child.id,
-                                    label: child.label,
-                                    price: childPrice
-                                });
-                            }
-                        }
+            this.getAllFields().forEach(field => {
+                const entry = this.safeValues[field.id];
+                if (entry && entry.subtotal > 0) {
+                    addons.push({
+                        id: field.id,
+                        label: field.label,
+                        subtotal: entry.subtotal,
+                        fee: entry.fee
                     });
                 }
             });
-            
             return addons;
-        },
-        addonsTotal() {
-            return this.addonsWithPricing.reduce((sum, addon) => sum + addon.price, 0);
         },
         calculateFees() {
             const baseFees = Object.values(this.cartItem).reduce((sum, item) => {
                 return sum + (Number(item.fees) || 0);
             }, 0);
-            const addonsFee = this.roundout((this.addonsTotal * this.serviceCommission) / 100);
+            const addonsFee = this.addonsWithPricing.reduce((sum, addon) => sum + addon.fee, 0);
             return baseFees + addonsFee;
         },
         calculateGrandTotal() {
-            return this.calculateSubtotal + this.calculateFees + this.addonsTotal;
+            return this.calculateSubtotal + this.calculateFees + this.totalCost;
+        }
+    },
+    watch: {
+        totalPeople() {
+            if (this.form && this.form.fields) {
+                this.updateAllFees();
+            }
+        },
+        serviceCommission() {
+            if (this.form && this.form.fields) {
+                this.updateAllFees();
+            }
         }
     },
     async created() {
@@ -246,11 +320,10 @@ export default {
             this.currency = this.$store.state.currency || 'USD';
             this.serviceCommission = this.$store.state.serviceCommission || 0;
             
-            // Extract rate groups from first cart item
+            // Calculate total people from cart
             const firstItem = Object.values(this.cartItem)[0];
-            if (firstItem) {
-                this.rateGroups = firstItem.rate_group || [];
-                this.rateGroupCounts = firstItem.people_group || [];
+            if (firstItem && firstItem.people_group) {
+                this.totalPeople = firstItem.people_group.reduce((sum, count) => sum + Number(count || 0), 0);
             }
         },
         async fetchAddonForm() {
@@ -259,15 +332,15 @@ export default {
                 const response = await axios.get(`/package/get-addon-form/${this.packageId}`);
                 
                 if (response.data.success && response.data.form) {
-                    this.addonForm = response.data.form;
-                    this.addonFields = response.data.form.fields.filter(f => f.parent_field_id === null);
+                    this.form = response.data.form;
+                    this.addonFields = response.data.form.fields || [];
+                    this.initializeValues(this.addonFields);
+                    this.updateAllFees();
                 }
             } catch (error) {
                 console.error('Failed to fetch addon form:', error);
-                // Gracefully handle API errors - show no addons message
                 this.addonFields = [];
                 
-                // Only show error alert if it's not a 404 (404 means no form configured)
                 if (error?.response?.status !== 404) {
                     Swal.fire({
                         icon: 'error',
@@ -280,113 +353,233 @@ export default {
                 this.loading = false;
             }
         },
-        getDefaultValue(field) {
-            if (field.type === 'checkbox') return false;
-            if (field.type === 'number') return 0;
-            return '';
+        getInputComponent(type) {
+            switch (type) {
+                case 'number': return 'NumberInput';
+                case 'radio': return 'RadioInput';
+                case 'checkbox': return 'CheckboxInput';
+                case 'dropdown': return 'DropdownInput';
+                case 'text': return 'TextInput';
+                case 'textbox': return 'TextboxInput';
+                default: return null;
+            }
+        },
+        initializeValues(fields) {
+            if (!fields) return;
+            fields.forEach(field => {
+                if (!(field.id in this.safeValues)) {
+                    this.safeValues[field.id] = {
+                        value: this.defaultForType(field.type),
+                        price: 0,
+                        subtotal: 0,
+                        fee: 0,
+                        isRepeated: ['Price per unit', 'Price per pax'].includes(field.unit_type),
+                        values: ['Price per unit', 'Price per pax'].includes(field.unit_type) ? [] : null
+                    };
+                }
+                if (field.children && field.children.length) {
+                    this.initializeValues(field.children);
+                }
+            });
+        },
+        defaultForType(type) {
+            switch (type) {
+                case 'checkbox': return false;
+                case 'number': return 0;
+                case 'radio':
+                case 'dropdown': return '';
+                case 'text':
+                case 'textbox': return '';
+                default: return '';
+            }
+        },
+        getFieldValue(field) {
+            return this.safeValues[field.id]?.value ?? this.defaultForType(field.type);
+        },
+        getChildValue(child, index) {
+            return this.safeValues[child.id]?.values?.[index] ?? this.defaultForType(child.type);
+        },
+        getRepeatCount(field) {
+            return this.safeValues[field.id]?.value || 0;
         },
         shouldShowField(field) {
-            // Always show if visibility is "Both" or "Frontend" (or not specified)
             if (!field.visibility || field.visibility === 'Both') return true;
             if (field.visibility === 'Backend') return false;
             return true;
         },
         shouldShowChildren(field) {
             if (!field.children || field.children.length === 0) return false;
-            if (!field.rules || field.rules.length === 0) return false;
+            if (!field.rules || field.rules.length === 0) return true;
             
-            // Check if any rule is satisfied
-            return field.rules.some(rule => this.checkRule(rule, field));
+            const rule = field.rules[0];
+            const value = this.safeValues[field.id]?.value ?? null;
+            
+            if (value === undefined || value === null) return false;
+            
+            switch (rule.operator) {
+                case 'checked': return !!value;
+                case 'equals':
+                case '==': return value == rule.value;
+                case '!=': return value != rule.value;
+                case '>': return Number(value) > Number(rule.value);
+                case '<': return Number(value) < Number(rule.value);
+                case '>=': return Number(value) >= Number(rule.value);
+                case '<=': return Number(value) <= Number(rule.value);
+                default: return false;
+            }
         },
-        checkRule(rule, field) {
-            const value = this.fieldValues[field.id];
-            
-            if (rule.operator === 'checked') {
-                return value === true;
-            }
-            
-            if (rule.operator === 'equals') {
-                if (rule.option_id) {
-                    const selectedOption = this.selectedOptions[field.id];
-                    return selectedOption && selectedOption.id === rule.option_id;
-                }
-                return value == rule.value;
-            }
-            
-            return false;
+        sortedChildren(children) {
+            if (!children) return [];
+            return [...children].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
         },
-        fieldHasValue(field) {
-            const value = this.fieldValues[field.id];
-            
-            if (field.type === 'checkbox') {
-                return value === true;
+        updateValue(field, newValue) {
+            if (!this.safeValues[field.id]) {
+                this.safeValues[field.id] = {
+                    value: newValue,
+                    price: 0,
+                    subtotal: 0,
+                    fee: 0,
+                    isRepeated: ['Price per unit', 'Price per pax'].includes(field.unit_type),
+                    values: ['Price per unit', 'Price per pax'].includes(field.unit_type) ? [] : null
+                };
+            } else {
+                this.safeValues[field.id].value = newValue;
             }
-            
-            if (field.type === 'number') {
-                return Number(value) > 0;
-            }
-            
-            if (field.type === 'radio' || field.type === 'dropdown') {
-                return value !== '' && value !== null && value !== undefined;
-            }
-            
-            if (field.unit_type === 'Price per pax') {
-                return Object.values(value || {}).some(v => Number(v) > 0);
-            }
-            
-            return !!value;
+            this.initializeValues(this.form.fields);
+            this.updateAllFees();
         },
-        calculateFieldPrice(field) {
-            const value = this.fieldValues[field.id];
-            
-            // One time pricing
-            if (field.unit_type === 'One time') {
-                if (field.type === 'checkbox' && value === true) {
-                    return Number(field.price || 0);
-                }
-                
-                if ((field.type === 'radio' || field.type === 'dropdown') && value) {
-                    const selectedOption = this.selectedOptions[field.id];
-                    if (selectedOption && selectedOption.additional_fee) {
-                        return Number(selectedOption.price || 0);
+        updateChildValue(child, index, newValue) {
+            if (!this.safeValues[child.id]) {
+                this.safeValues[child.id] = {
+                    value: this.defaultForType(child.type),
+                    price: 0,
+                    subtotal: 0,
+                    fee: 0,
+                    isRepeated: false,
+                    values: []
+                };
+            }
+            if (!this.safeValues[child.id].values) {
+                this.safeValues[child.id].values = [];
+            }
+            this.safeValues[child.id].values[index] = newValue;
+            this.updateAllFees();
+        },
+        resizeChildValues(child, parent, commissionRate) {
+            const item = this.safeValues[child.id];
+            if (!item) return;
+
+            let count = 0;
+            if (parent.unit_type === 'Price per unit') {
+                count = this.safeValues[parent.id]?.value || 0;
+            } else if (parent.unit_type === 'Price per pax') {
+                count = Number(this.totalPeople) || 0;
+            }
+
+            let values = item.values || [];
+            while (values.length < count) {
+                values.push(this.defaultForType(child.type));
+            }
+            if (values.length > count) {
+                values.length = count;
+            }
+            item.values = values;
+
+            // Calculate subtotal for child
+            let subtotal = 0;
+            values.forEach(val => {
+                let instanceCost = 0;
+                if (child.type === 'radio' || child.type === 'dropdown') {
+                    const selectedOption = child.options?.find(opt => opt.value === val) || {};
+                    if (selectedOption.additional_fee && selectedOption.price) {
+                        instanceCost = Number(selectedOption.price) || 0;
                     }
+                } else if (child.type === 'number') {
+                    if (child.additional_fee && child.price) {
+                        instanceCost = Number(child.price) * Number(val || 0);
+                    }
+                } else if (child.type === 'checkbox') {
+                    if (child.additional_fee && child.price && val === true) {
+                        instanceCost = Number(child.price) || 0;
+                    }
+                } else if (child.additional_fee && child.price) {
+                    instanceCost = Number(child.price) || 0;
                 }
-                
-                return Number(field.price || 0);
-            }
-            
-            // Price per unit
-            if (field.unit_type === 'Price per unit') {
-                if (field.type === 'number') {
-                    return Number(value || 0) * Number(field.price || 0);
-                }
-                
-                if (field.type === 'checkbox' && value === true) {
-                    return Number(field.price || 0);
-                }
-                
-                if ((field.type === 'radio' || field.type === 'dropdown') && value) {
-                    return Number(field.price || 0);
-                }
-            }
-            
-            // Price per pax
-            if (field.unit_type === 'Price per pax') {
-                const totalPax = Object.values(value || {}).reduce((sum, count) => sum + Number(count || 0), 0);
-                return totalPax * Number(field.price || 0);
-            }
-            
-            return 0;
+                subtotal += instanceCost;
+            });
+
+            const fee = subtotal * commissionRate;
+            item.subtotal = subtotal;
+            item.fee = fee;
         },
-        handleFieldUpdate(data) {
-            this.fieldValues[data.fieldId] = data.value;
+        updateAllFees() {
+            const commissionRate = Number(this.serviceCommission) / 100 || 0;
+            const allFields = this.getAllFields();
             
-            if (data.option) {
-                this.selectedOptions[data.fieldId] = data.option;
-            }
-            
-            // Force reactivity update
-            this.fieldValues = { ...this.fieldValues };
+            allFields.forEach(field => {
+                const entry = this.safeValues[field.id];
+                if (!entry) return;
+
+                let price = 0;
+                let subtotal = 0;
+                const value = entry.value;
+
+                if (field.type === 'radio' || field.type === 'dropdown') {
+                    if (value && field.options) {
+                        const selectedOption = field.options.find(option => option.value === value);
+                        if (selectedOption && selectedOption.additional_fee && selectedOption.price) {
+                            price = Number(selectedOption.price) || 0;
+                            subtotal = price;
+                        }
+                    }
+                } else if (field.type === 'number') {
+                    if (field.additional_fee && field.price) {
+                        price = Number(field.price) || 0;
+                        subtotal = price * (Number(value) || 0);
+                    }
+                } else if (field.type === 'checkbox') {
+                    if (field.additional_fee && field.price && value === true) {
+                        price = Number(field.price) || 0;
+                        if (field.unit_type === 'Price per pax' && Number(this.totalPeople) > 0) {
+                            subtotal = price * Number(this.totalPeople);
+                        } else {
+                            subtotal = price;
+                        }
+                    }
+                } else if (field.additional_fee && field.price) {
+                    price = Number(field.price) || 0;
+                    subtotal = price;
+                }
+
+                const fee = subtotal * commissionRate;
+                entry.price = price;
+                entry.subtotal = subtotal;
+                entry.fee = fee;
+            });
+
+            // Update children
+            this.getAllFields().forEach(field => {
+                if (field.children) {
+                    field.children.forEach(child => {
+                        if (['Price per unit', 'Price per pax'].includes(field.unit_type)) {
+                            this.resizeChildValues(child, field, commissionRate);
+                        }
+                    });
+                }
+            });
+        },
+        getAllFields(fields = this.form?.fields, allFields = []) {
+            if (!fields) return allFields;
+            fields.forEach(field => {
+                allFields.push(field);
+                if (field.children) {
+                    this.getAllFields(field.children, allFields);
+                }
+            });
+            return allFields;
+        },
+        validateField(field) {
+            // Validation logic here
         },
         roundout(num) {
             return Math.round(num * 100) / 100;
@@ -403,21 +596,8 @@ export default {
             this.$router.push({ name: routes[tab - 1] });
         },
         async continueToCheckout() {
-            // Validate required fields
-            const invalidFields = this.validateFields();
-            if (invalidFields.length > 0) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Required Fields Missing',
-                    text: `Please fill in: ${invalidFields.join(', ')}`,
-                    confirmButtonColor: '#0D9488'
-                });
-                return;
-            }
-            
             // Store addon values
-            this.$store.dispatch('storeAddonValues', this.fieldValues);
-            this.$store.dispatch('storeAddonOptions', this.selectedOptions);
+            this.$store.dispatch('storeAddonValues', this.safeValues);
             
             // Navigate to next step
             if (this.comboIds && this.comboIds.toString().split(',').length > 1) {
@@ -425,29 +605,6 @@ export default {
             } else {
                 this.$router.push({ name: 'checkout' });
             }
-        },
-        validateFields() {
-            const invalid = [];
-            
-            const validateField = (field) => {
-                if (field.required && this.shouldShowField(field)) {
-                    if (!this.fieldHasValue(field)) {
-                        invalid.push(field.label);
-                    }
-                }
-                
-                // Validate children
-                if (this.shouldShowChildren(field)) {
-                    field.children.forEach(child => {
-                        if (child.required && !this.fieldHasValue(child)) {
-                            invalid.push(child.label);
-                        }
-                    });
-                }
-            };
-            
-            this.addonFields.forEach(validateField);
-            return invalid;
         }
     }
 };
@@ -521,11 +678,101 @@ export default {
 .addons-form {
     display: flex;
     flex-direction: column;
+    gap: 1rem;
 }
 
-.children-container {
+.total-cost-summary {
+    background: linear-gradient(135deg, rgba(13, 148, 136, 0.1) 0%, rgba(13, 148, 136, 0.05) 100%);
+    padding: 1rem;
+    border-radius: var(--border-radius-md);
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total-cost-label {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+.total-cost-amount {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.field-card {
+    background: var(--color-background);
+    border-radius: var(--border-radius-md);
+    padding: 1.25rem;
+    border: 1px solid var(--color-border);
+}
+
+.field-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+    gap: 1rem;
+}
+
+.field-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.required-indicator {
+    color: var(--color-terracotta);
+    font-size: 1rem;
+}
+
+.price-tag {
+    font-size: 0.875rem;
+    color: var(--color-amber);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.subtotal-tag {
     margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--color-border);
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+}
+
+.nested-fields {
+    margin-top: 1rem;
+    margin-left: 1rem;
+    border-left: 3px solid var(--color-primary);
     padding-left: 1rem;
+}
+
+.child-field-card {
+    background: white;
+    border-radius: var(--border-radius-sm);
+    padding: 1rem;
+    margin-top: 0.75rem;
+}
+
+.person-input,
+.unit-input {
+    margin-top: 1rem;
+}
+
+.person-header,
+.unit-header {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
 }
 
 .no-addons-message {
