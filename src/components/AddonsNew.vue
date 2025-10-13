@@ -264,6 +264,18 @@ export default {
                 }
             } catch (error) {
                 console.error('Failed to fetch addon form:', error);
+                // Gracefully handle API errors - show no addons message
+                this.addonFields = [];
+                
+                // Only show error alert if it's not a 404 (404 means no form configured)
+                if (error?.response?.status !== 404) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed to Load Add-ons',
+                        text: 'Could not load additional options. Please try again.',
+                        confirmButtonColor: '#0D9488'
+                    });
+                }
             } finally {
                 this.loading = false;
             }

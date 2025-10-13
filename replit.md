@@ -3,7 +3,20 @@
 ## Overview
 This Vue.js 3 frontend application facilitates booking Native American tours. It offers a user-friendly interface for browsing tour packages, selecting dates, adding extras, and processing payments via Stripe. The project aims to provide a modern, nature-inspired booking experience for cultural tours, leveraging a multi-tenant backend architecture.
 
-## Recent Changes (October 10, 2025)
+## Recent Changes (October 13, 2025)
+- **Modular Add-ons System**: Completely refactored add-ons to support nested conditional fields with clean component architecture:
+  - Created `AddonField.vue` component for all input types (text, number, checkbox, radio, dropdown, textbox)
+  - Created `PricePerPaxField.vue` for "Price per pax" fields with rate group breakdown (separate inputs for Adults, Child, Infant based on schedule selections)
+  - Built `AddonsNew.vue` with API integration (`/package/get-addon-form/{packageId}`) supporting:
+    - Conditional field visibility based on parent rules (checked, equals operators)
+    - Nested children fields that show/hide dynamically
+    - Three pricing types: One time (fixed), Price per unit (quantity × price), Price per pax (passengers × price)
+    - Real-time pricing calculations with itemized breakdown in booking summary
+    - Integration with cart rate groups (people_group, rate_group arrays)
+  - Added Vuex store support: addonValues, addonOptions, serviceCommission
+  - Graceful error handling for API failures
+
+## Previous Changes (October 10, 2025)
 - **Axios BaseURL Fix**: Fixed critical blank page issue by adding axios request interceptor that dynamically sets baseURL from Vuex store with fallback to localStorage/URL parameters. This ensures API calls work correctly during navigation even before App.vue completes initialization.
 - **Tab Computation Fix**: Corrected MyTrip and Maps components to properly compute tab/step numbers by checking both comboIds and hasCustomFields state, ensuring accurate navigation highlighting for all flow types.
 - **Combination Packages Support**: Implemented full support for multi-package bookings using `cids` URL parameter (comma-separated package IDs). Added MyTrip and Maps pages to combination package flow with complete Native Journey redesign - modern card-based timeline, interactive map visualization, teal gradients, amber accents, responsive design with icons and shadows.
