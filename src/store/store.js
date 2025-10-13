@@ -85,7 +85,10 @@ export default createStore({
         currency: "USD",
         countryCode: "US",
         timezone: "America/Phoenix",
-        hasCustomFields: null
+        hasCustomFields: null,
+        addonValues: {},
+        addonOptions: {},
+        serviceCommission: 0
     },
     getters: {
         iframeStatus: state => {
@@ -156,6 +159,15 @@ export default createStore({
         },
         hasCustomFields: state => {
             return state.hasCustomFields;
+        },
+        addonValues: state => {
+            return state.addonValues;
+        },
+        addonOptions: state => {
+            return state.addonOptions;
+        },
+        serviceCommission: state => {
+            return state.serviceCommission;
         }
     },
     mutations: {
@@ -227,6 +239,15 @@ export default createStore({
         },
         HAS_CUSTOM_FIELDS(state, hasCustomFields) {
             state.hasCustomFields = hasCustomFields;
+        },
+        ADDON_VALUES(state, addonValues) {
+            state.addonValues = addonValues;
+        },
+        ADDON_OPTIONS(state, addonOptions) {
+            state.addonOptions = addonOptions;
+        },
+        SERVICE_COMMISSION(state, serviceCommission) {
+            state.serviceCommission = serviceCommission;
         }
     },
     actions: {
@@ -298,6 +319,15 @@ export default createStore({
         },
         storeHasCustomFields({ commit }, hasCustomFields) {
             commit('HAS_CUSTOM_FIELDS', hasCustomFields);
+        },
+        storeAddonValues({ commit }, addonValues) {
+            commit('ADDON_VALUES', addonValues);
+        },
+        storeAddonOptions({ commit }, addonOptions) {
+            commit('ADDON_OPTIONS', addonOptions);
+        },
+        storeServiceCommission({ commit }, serviceCommission) {
+            commit('SERVICE_COMMISSION', serviceCommission);
         }
     },
     plugins: [localStoragePlugin]
