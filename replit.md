@@ -4,6 +4,22 @@
 This Vue.js 3 frontend application facilitates booking Native American tours. It offers a user-friendly interface for browsing tour packages, selecting dates, adding extras, and processing payments via Stripe. The project aims to provide a modern, nature-inspired booking experience for cultural tours, leveraging a multi-tenant backend architecture.
 
 ## Recent Changes (October 13, 2025)
+- **Complete Native Journey Design Compliance for Add-ons System**: Finalized 100% Native Journey design implementation across all add-on components:
+  - **All 6 Input Components Redesigned**: NumberInput, TextInput, TextboxInput, CheckboxInput, RadioInput, DropdownInput now feature:
+    - Consistent 2px borders with var(--neutral-200), teal focus states with 3px glow (rgba(13, 148, 136, 0.1))
+    - Hover effects with background: var(--neutral-50) and border: var(--neutral-300)
+    - Custom checkbox/radio designs with teal gradient fills and smooth check animations
+    - Proper icon integration with SVG icons positioned inline
+    - Error states with red borders and error messages with warning icons
+    - All transitions using var(--transition-base) for smooth interactions
+  - **AddonsNew.vue Parent Component Styling**:
+    - Field cards with gradient left border accents (teal gradient, opacity 0 → 1 on hover)
+    - Hover states with border color change, shadow elevation (var(--shadow-md)), and translateY(-1px) transform
+    - Price tags with amber gradient backgrounds (var(--accent-amber) to var(--accent-amber-dark))
+    - Total cost summary with teal gradient background and white text
+    - Continue button with amber gradient, hover transform, and shadow enhancement
+  - **Responsive Breakpoints**: Media queries at 1024px (tablet: 2-col → 1-col grid) and 768px (mobile: reduced spacing)
+  - **Design System Compliance**: All components use CSS custom properties from design-system.css (--primary-teal, --accent-amber, --neutral-*, --space-*, --radius-*, --shadow-*)
 - **Modular Add-ons System Refactor**: Completely rebuilt add-ons with proper fee calculation and Native Journey design:
   - Created 6 input components (NumberInput, TextInput, TextboxInput, CheckboxInput, RadioInput, DropdownInput) with Native Journey styling
   - Rebuilt `AddonsNew.vue` with correct pricing logic:
