@@ -593,12 +593,16 @@ export default {
             return formatCurrencyIntl(amount, this.currency);
         },
         formatDate(date) {
-            const moment = getMomentTimezone();
-            return moment(date).format('ddd, MMM D, YYYY');
+            return getMomentTimezone(this.$store.state.timezone, date).format('ddd, MMM D, YYYY');
         },
         navigateToTab(tab) {
-            const routes = ['index', 'tour-form', 'addons', 'my-trip', 'maps', 'checkout'];
-            this.$router.push({ name: routes[tab - 1] });
+            if ([1, 2, 3, 4, 5, 6].includes(tab)) {
+                if (tab === 2) {
+                    this.$store.dispatch('storeFormData', null);
+                }
+                this.$store.dispatch('storeMindChange', 1);
+                this.$router.push({ name: destination });
+            }
         },
         async continueToCheckout() {
             // Store addon values
@@ -606,9 +610,9 @@ export default {
             
             // Navigate to next step
             if (this.comboIds && this.comboIds.toString().split(',').length > 1) {
-                this.$router.push({ name: 'my-trip' });
+                this.$router.push({ name: 'MyTrip' });
             } else {
-                this.$router.push({ name: 'checkout' });
+                this.$router.push({ name: 'Checkout' });
             }
         }
     }
