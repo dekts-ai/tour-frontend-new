@@ -1,0 +1,26 @@
+CheckboxInput 3 mounted - display_errors: false error: 
+index.js??ruleSet[0].use[0]!./src/components/Forms/AddonInput/CheckboxInput.vue?vue&type=script&lang=js:13 CheckboxInput 8 mounted - display_errors: false error: 
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:641 === Continue to Checkout clicked ===
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:511 All fields for validation: (11) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:518 Field 3 (Taxi Pickup): visibility=Frontend, shouldShow=true
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:518 Field 5 (Food Options): visibility=Both, shouldShow=true
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:518 Field 6 (Your City): visibility=Backend, shouldShow=false
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:521 Skipping field 6 due to visibility
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:518 Field 8 (Unit Test): visibility=Both, shouldShow=true
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:518 Field 9 (Contact Name): visibility=null, shouldShow=true
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:645 Validation result: false
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:646 Errors: Proxy(Object) {3: 'Taxi Pickup is required', 5: 'Food Options is required', 8: 'Unit Test is required'}
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:649 Validation failed, showing errors
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:651 display_errors set to: true
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:654 display_errors value: true
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:655 errors object: {"3":"Taxi Pickup is required","5":"Food Options is required","8":"Unit Test is required"}
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:656 errors[3]: Taxi Pickup is required
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:657 errors[5]: Food Options is required
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:658 errors[8]: Unit Test is required
+index.js??ruleSet[0].use[0]!./src/components/Forms/AddonInput/CheckboxInput.vue?vue&type=script&lang=js:16 CheckboxInput 3 updated - display_errors: true error: Taxi Pickup is required
+index.js??ruleSet[0].use[0]!./src/components/Forms/AddonInput/CheckboxInput.vue?vue&type=script&lang=js:16 CheckboxInput 8 updated - display_errors: true error: Unit Test is required
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:662 After nextTick - display_errors: true
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:663 After nextTick - errors: {"3":"Taxi Pickup is required","5":"Food Options is required","8":"Unit Test is required"}
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:666 All input elements: 11
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:669 Error input elements: 3 NodeList(3) [input#field-3.checkbox-native.input-error, select#field-5.select-input.input-error, input#field-8.checkbox-native.input-error]
+index.js??ruleSet[0].use[0]!./src/components/AddonsNew.vue?vue&type=script&lang=js:672 First error element: <input data-v-93c48e1c type=​"checkbox" id=​"field-3" required class=​"checkbox-native input-error" aria-invalid=​"true" aria-describedby=​"error-field-3">​

@@ -10,14 +10,6 @@
                     <div class="addons-left">
                         <h2 class="section-title">Additional Options</h2>
                         
-                        <!-- DEBUG: Check template access to reactive values -->
-                        <div style="background: yellow; padding: 10px; margin: 10px 0;">
-                            DEBUG: display_errors = {{ display_errors }}, 
-                            errors[3] = {{ errors[3] }}, 
-                            errors[5] = {{ errors[5] }}, 
-                            errors[8] = {{ errors[8] }}
-                        </div>
-                        
                         <!-- Loading State -->
                         <div v-if="loading" class="loading-state">
                             <div class="spinner"></div>
@@ -77,8 +69,8 @@
                                                         :field="child"
                                                         :value="getChildValue(child, personIndex - 1)" 
                                                         :enabled="true"
-                                                        :display-errors="display_errors" 
-                                                        :error="errors[`${child.id}-${personIndex}`]"
+                                                        v-bind:display_errors="display_errors" 
+                                                        v-bind:error="errors[`${child.id}-${personIndex}`]"
                                                         :id-suffix="`-${personIndex}`"
                                                         @update:value="updateChildValue(child, personIndex - 1, $event)"
                                                         @validate="validateField(child, `${personIndex}`)" />
@@ -94,8 +86,8 @@
                                                         :field="child"
                                                         :value="getChildValue(child, unitIndex - 1)" 
                                                         :enabled="true"
-                                                        :display-errors="display_errors" 
-                                                        :error="errors[`${child.id}-${unitIndex}`]"
+                                                        v-bind:display_errors="display_errors" 
+                                                        v-bind:error="errors[`${child.id}-${unitIndex}`]"
                                                         :id-suffix="`-${unitIndex}`"
                                                         @update:value="updateChildValue(child, unitIndex - 1, $event)"
                                                         @validate="validateField(child, `${unitIndex}`)" />
@@ -109,8 +101,8 @@
                                                     :field="child"
                                                     :value="getFieldValue(child)" 
                                                     :enabled="true"
-                                                    :display-errors="display_errors" 
-                                                    :error="errors[child.id]"
+                                                    v-bind:display_errors="display_errors" 
+                                                    v-bind:error="errors[child.id]"
                                                     @update:value="updateValue(child, $event)"
                                                     @validate="validateField(child)" />
                                             </template>
@@ -682,19 +674,12 @@ export default {
             let isValid = true;
             
             const allFields = this.getAllFields();
-            console.log('All fields for validation:', allFields.map(f => ({ id: f.id, label: f.label, visibility: f.visibility, required: f.required })));
             
             allFields.forEach(field => {
                 if (!field.required) return;
                 
                 // Skip validation for backend visibility fields
-                const shouldShow = this.shouldShowField(field);
-                console.log(`Field ${field.id} (${field.label}): visibility=${field.visibility}, shouldShow=${shouldShow}`);
-                
-                if (!shouldShow) {
-                    console.log(`Skipping field ${field.id} due to visibility`);
-                    return;
-                }
+                if (!this.shouldShowField(field)) return;
                 
                 // Check if field should be shown based on parent rules
                 const parent = allFields.find(f => f.children?.some(c => c.id === field.id));
@@ -812,53 +797,23 @@ export default {
             this.updateAllFees();
         },
         async continueToCheckout() {
-            console.log('=== Continue to Checkout clicked ===');
-            
             // Validate all fields
             const isValid = this.validateAllFields();
-            console.log('Validation result:', isValid);
-            console.log('Errors:', this.errors);
             
             if (!isValid) {
-                console.log('Validation failed, showing errors');
                 this.display_errors = true;
-                console.log('display_errors set to:', this.display_errors);
-                
-                // Log what's being passed to components
-                console.log('display_errors value:', this.display_errors);
-                console.log('errors object:', JSON.stringify(this.errors));
-                console.log('errors[3]:', this.errors[3]);
-                console.log('errors[5]:', this.errors[5]);
-                console.log('errors[8]:', this.errors[8]);
                 
                 // Scroll to first error (no popup, just show inline errors)
                 this.$nextTick(() => {
-                    console.log('After nextTick - display_errors:', this.display_errors);
-                    console.log('After nextTick - errors:', JSON.stringify(this.errors));
-                    
-                    const allInputs = document.querySelectorAll('input, select, textarea');
-                    console.log('All input elements:', allInputs.length);
-                    
-                    const errorInputs = document.querySelectorAll('.input-error');
-                    console.log('Error input elements:', errorInputs.length, errorInputs);
-                    
                     const firstError = document.querySelector('.input-error');
-                    console.log('First error element:', firstError);
-                    
                     if (firstError) {
                         firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         firstError.focus();
-                    } else {
-                        console.log('No error element found. Checking error messages...');
-                        const errorMessages = document.querySelectorAll('.error-message');
-                        console.log('Error message elements:', errorMessages.length, errorMessages);
                     }
                 });
                 
                 return;
             }
-            
-            console.log('Validation passed, saving custom fields');
             
             // Build and save custom_fields to the first cart item's form
             const customFields = this.buildCustomFields();
@@ -880,10 +835,7 @@ export default {
             this.$store.dispatch('storeAddonValues', this.safeValues);
             
             // Navigate to next step
-            const destination = (this.comboIds && this.comboIds.toString().split(',').length > 1) ? 'MyTrip' : 'Checkout';
-            console.log('Navigating to:', destination);
-            
-            if (destination === 'MyTrip') {
+            if (this.comboIds && this.comboIds.toString().split(',').length > 1) {
                 this.$router.push({ name: 'MyTrip' });
             } else {
                 this.$router.push({ name: 'Checkout' });

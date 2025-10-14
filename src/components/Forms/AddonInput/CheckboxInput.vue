@@ -39,12 +39,6 @@ export default {
         error: { type: String, default: '' },
         idSuffix: { type: String, default: '' }
     },
-    mounted() {
-        console.log(`CheckboxInput ${this.field.id} mounted - display_errors:`, this.display_errors, 'error:', this.error);
-    },
-    updated() {
-        console.log(`CheckboxInput ${this.field.id} updated - display_errors:`, this.display_errors, 'error:', this.error);
-    },
     computed: {
         id() { return `field-${this.field.id}${this.idSuffix}`; },
         errorId() { return `error-field-${this.field.id}${this.idSuffix}`; },
