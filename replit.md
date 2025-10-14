@@ -4,6 +4,17 @@
 This Vue.js 3 frontend application provides a user-friendly interface for browsing, selecting, and booking Native American tours. It supports various tour packages, date selection, add-on management, and integrated payment processing via Stripe. The project aims to deliver a modern, nature-inspired booking experience for cultural tours, leveraging a multi-tenant backend architecture. It features dynamic navigation, combination package support, and real-time pricing updates. The application adheres to a custom "Native Journey" design system to ensure a consistent and responsive user experience.
 
 ## Recent Changes (October 14, 2025)
+- **Price per Pax Parent Field Repetition - COMPLETE**: Implemented per-person repetition for parent addons with "Price per pax" unit type:
+  - **Repeated Parent Display**: Parent addons with "Price per pax" now show N instances (N = number of people), each labeled with "Person 1", "Person 2", etc.
+  - **Data Structure**: Parent values stored in `safeValues[field.id].values[]` array (one per person); children use `safeValues[child.id].parentValues[]` for nested per-person data
+  - **Nested Children Support**: Each parent instance can have its own conditional children, properly isolated per person
+  - **Visual Design**: Teal gradient person headers with person badges (👤), subtle teal background for parent groups, clear visual hierarchy
+  - **Pricing Calculation**: `updateAllFees()` sums pricing across all person instances, handles option-based pricing for dropdown/radio per person
+  - **Serialization**: `buildCustomFields()` detects Price per pax parents via `isPerPaxParent` flag, serializes `values[]` array with `isRepeated=true`, children stored with `parentValues[]`
+  - **Restoration**: `restoreCustomFields()` properly restores `values[]` for parents and `parentValues[]` for children when editing cart items
+  - **Validation Enhancement**: Both `validateField()` and `validateAllFields()` enforce per-person requirements, checking each person's selection in values array, blocking submission if any person's required field is empty
+  - **Conditional Visibility**: `shouldShowChildrenForPerPaxParent()` checks parent rule per person instance for proper child display
+  - **Error Handling**: Person-specific error keys (`${fieldId}-1`, `${fieldId}-2`, etc.) show validation messages beside each person instance
 - **Dropdown/Radio Option-Based Pricing Fix - COMPLETE**: Fixed missing addons when pricing is stored in dropdown/radio options:
   - **Root Cause**: Field-level `additional_fee` was 0 for dropdown/radio, but pricing exists in selected options
   - **buildCustomFields Fix**: Now checks `field.additional_fee || entry.price > 0 || entry.subtotal > 0` to enable priceInfo
