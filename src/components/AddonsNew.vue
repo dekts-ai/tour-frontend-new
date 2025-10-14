@@ -813,14 +813,26 @@ export default {
             if (!isValid) {
                 console.log('Validation failed, showing errors');
                 this.display_errors = true;
+                console.log('display_errors set to:', this.display_errors);
                 
                 // Scroll to first error (no popup, just show inline errors)
                 this.$nextTick(() => {
+                    const allInputs = document.querySelectorAll('input, select, textarea');
+                    console.log('All input elements:', allInputs.length);
+                    
+                    const errorInputs = document.querySelectorAll('.input-error');
+                    console.log('Error input elements:', errorInputs.length, errorInputs);
+                    
                     const firstError = document.querySelector('.input-error');
                     console.log('First error element:', firstError);
+                    
                     if (firstError) {
                         firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         firstError.focus();
+                    } else {
+                        console.log('No error element found. Checking error messages...');
+                        const errorMessages = document.querySelectorAll('.error-message');
+                        console.log('Error message elements:', errorMessages.length, errorMessages);
                     }
                 });
                 
