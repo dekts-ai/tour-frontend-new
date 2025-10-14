@@ -28,20 +28,18 @@
                 <div v-if="hasVisibleAddons(item?.custom_fields)" class="addons-section">
                     <div class="addon-header">Add-ons:</div>
                     <div v-for="(option, idx) in item.custom_fields" :key="`custom-option-${idx}`">
-                        <!-- Parent add-on - show if it has a value (priced or not) -->
-                        <div v-if="hasValidFieldValue(option)" class="pricing-line">
+                        <!-- Parent add-on -->
+                        <div v-if="option.priceInfo.enabled && hasValidFieldValue(option)" class="pricing-line">
                             <span>{{ option.name }}</span>
-                            <span v-if="option.priceInfo?.enabled">{{ currencyFormat(option.priceInfo.subtotal || option.priceInfo.price) }}</span>
-                            <span v-else>{{ formatNonPricedValue(option) }}</span>
+                            <span>{{ currencyFormat(option.priceInfo.subtotal || option.priceInfo.price) }}</span>
                         </div>
                         
                         <!-- Child add-ons -->
                         <div v-if="option.children && option.children.length > 0">
                             <div v-for="(child, childIdx) in option.children" :key="`child-${idx}-${childIdx}`">
-                                <div v-if="hasValidFieldValue(child)" class="pricing-line child-addon">
+                                <div v-if="child.priceInfo.enabled && hasValidFieldValue(child)" class="pricing-line child-addon">
                                     <span>  ↳ {{ child.name }}</span>
-                                    <span v-if="child.priceInfo?.enabled">{{ currencyFormat(child.priceInfo.subtotal || child.priceInfo.price) }}</span>
-                                    <span v-else>{{ formatNonPricedValue(child) }}</span>
+                                    <span>{{ currencyFormat(child.priceInfo.subtotal || child.priceInfo.price) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -99,60 +97,20 @@ export default {
         hasVisibleAddons(customFields) {
             if (!customFields || !Array.isArray(customFields)) return false;
             
-            // Check if at least one add-on (parent or child) has valid value (priced or not)
+            // Check if at least one add-on (parent or child) has valid value and is enabled
             return customFields.some(field => {
                 // Check parent
-                if (this.hasValidFieldValue(field)) {
+                if (field.priceInfo?.enabled && this.hasValidFieldValue(field)) {
                     return true;
                 }
                 // Check children
                 if (field.children && Array.isArray(field.children)) {
-                    return field.children.some(child => this.hasValidFieldValue(child));
+                    return field.children.some(child => 
+                        child.priceInfo?.enabled && this.hasValidFieldValue(child)
+                    );
                 }
                 return false;
             });
-        },
-        formatNonPricedValue(field) {
-            // Format non-priced addon values for display
-            
-            // Handle repeated values (per-pax/per-unit)
-            if (field.isRepeated && field.values && Array.isArray(field.values)) {
-                const validValues = field.values.filter(val => {
-                    if (field.type === 'checkbox') return val === true;
-                    if (field.type === 'number') return Number(val) > 0;
-                    if (field.type === 'text' || field.type === 'textbox') return val && String(val).trim() !== '';
-                    return val !== '' && val !== null && val !== undefined;
-                });
-                
-                if (validValues.length === 0) return '';
-                
-                // Show count or concatenated values
-                if (field.type === 'checkbox') {
-                    return `${validValues.length} selected`;
-                } else if (field.type === 'text' || field.type === 'textbox') {
-                    return validValues.join(', ');
-                } else {
-                    return validValues.join(', ');
-                }
-            }
-            
-            // Handle single value
-            const value = field.value;
-            
-            switch (field.type) {
-                case 'checkbox':
-                    return value === true ? 'Yes' : 'No';
-                case 'text':
-                case 'textbox':
-                    return String(value || '');
-                case 'number':
-                    return String(value || '0');
-                case 'radio':
-                case 'dropdown':
-                    return String(value || '');
-                default:
-                    return String(value || '');
-            }
         },
         hasValidFieldValue(field) {
             // For custom_fields saved from AddonsNew, check if there's a valid subtotal
@@ -161,30 +119,7 @@ export default {
                 return true;
             }
             
-            // Check if field has repeated values (for per-pax/per-unit pricing)
-            if (field.isRepeated && field.values && Array.isArray(field.values)) {
-                // For repeated fields, check if any value is valid
-                return field.values.some(val => {
-                    switch (field.type) {
-                        case 'checkbox':
-                            return val === true;
-                        case 'number':
-                            return Number(val) > 0;
-                        case 'radio':
-                        case 'dropdown':
-                        case 'select':
-                            return val !== '' && val !== null && val !== undefined;
-                        case 'text':
-                        case 'textbox':
-                        case 'textarea':
-                            return val && String(val).trim() !== '';
-                        default:
-                            return val !== null && val !== undefined && val !== '';
-                    }
-                });
-            }
-            
-            // Fallback: check the single value field
+            // Fallback: check the value field
             const value = field.value;
             
             switch (field.type) {
