@@ -4,6 +4,13 @@
 This Vue.js 3 frontend application provides a user-friendly interface for browsing, selecting, and booking Native American tours. It supports various tour packages, date selection, add-on management, and integrated payment processing via Stripe. The project aims to deliver a modern, nature-inspired booking experience for cultural tours, leveraging a multi-tenant backend architecture. It features dynamic navigation, combination package support, and real-time pricing updates. The application adheres to a custom "Native Journey" design system to ensure a consistent and responsive user experience.
 
 ## Recent Changes (October 14, 2025)
+- **Add-ons Display Logic Simplification - COMPLETE**: Simplified addon display logic to ensure ALL priced addons appear in cart and checkout:
+  - **Direct Subtotal Check**: Changed condition from complex `hasValidFieldValue()` to direct `priceInfo?.enabled && priceInfo?.subtotal > 0`
+  - **Fixed Multiple Addon Display**: Previously only one addon displayed; now ALL priced addons with subtotal > 0 show correctly
+  - **Consistent Logic**: Applied simplified logic to both CartItem (Index page) and ItemizedList (Checkout page)
+  - **Updated hasVisibleAddons()**: Helper now uses same direct subtotal check for determining if ADD-ONS section should appear
+  - **No Complex Validation**: Removed type-based value validation that could reject valid priced addons
+  - **Display Rule**: Show addon if price enabled AND subtotal > 0, regardless of input type or value structure
 - **Child Add-ons Value Persistence & API Payload Fix - COMPLETE**: Fixed critical bugs preventing child addon values from being retained and included in API:
   - **buildCustomFields() Fix**: Now includes children with values regardless of parent condition (shouldShowChildren), ensures all filled child values reach the API
   - **restoreCustomFields() Enhancement**: Properly restores pricing info (price/subtotal/fee) and isRepeated flag for both parent and children
