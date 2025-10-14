@@ -50,8 +50,8 @@
                                         :field="field" 
                                         :value="getFieldValue(field)"
                                         :enabled="true" 
-                                        :display-errors="display_errors" 
-                                        :error="errors[field.id]"
+                                        v-bind:display_errors="display_errors" 
+                                        v-bind:error="errors[field.id]"
                                         @update:value="updateValue(field, $event)" 
                                         @validate="validateField(field)" />
 
