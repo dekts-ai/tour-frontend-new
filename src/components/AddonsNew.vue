@@ -25,7 +25,71 @@
                             </div>
 
                             <div v-for="field in sortedFields" :key="field.id">
-                                <div v-if="shouldShowField(field)" class="field-card">
+                                <!-- Parent field with Price per pax - show once per person -->
+                                <template v-if="shouldShowField(field) && field.unit_type === 'Price per pax' && totalPeople > 0">
+                                    <div v-for="personIndex in totalPeople" :key="`${field.id}-person-${personIndex}`" class="field-card parent-per-pax">
+                                        <div class="person-group-header">
+                                            <span class="person-badge">Person {{ personIndex }}</span>
+                                        </div>
+                                        
+                                        <div class="field-header">
+                                            <label :for="`field-${field.id}-${personIndex}`" class="field-label">
+                                                {{ field.label }}
+                                                <span v-if="field.required" class="required-indicator">*</span>
+                                            </label>
+                                            <span v-if="field.additional_fee && field.price && !['radio', 'dropdown'].includes(field.type)" class="price-tag">
+                                                {{ currencyFormat(field.price) }} ({{ field.unit_type }})
+                                            </span>
+                                        </div>
+
+                                        <!-- Parent Input -->
+                                        <component 
+                                            :is="getInputComponent(field.type)" 
+                                            :field="field" 
+                                            :value="getParentPerPaxValue(field, personIndex - 1)"
+                                            :enabled="true" 
+                                            v-bind:display_errors="display_errors" 
+                                            v-bind:error="errors[`${field.id}-${personIndex}`]"
+                                            :id-suffix="`-${personIndex}`"
+                                            @update:value="updateParentPerPaxValue(field, personIndex - 1, $event)" 
+                                            @validate="validateField(field, `${personIndex}`)" />
+
+                                        <!-- Nested/Conditional Children for this parent instance -->
+                                        <div v-if="shouldShowChildrenForPerPaxParent(field, personIndex - 1)" class="nested-fields">
+                                            <div v-for="child in sortedChildren(field.children)" :key="`${child.id}-p${personIndex}`" class="child-field-card">
+                                                <div class="field-header">
+                                                    <label :for="`field-${child.id}-p${personIndex}`" class="field-label">
+                                                        {{ child.label }}
+                                                        <span v-if="child.required" class="required-indicator">*</span>
+                                                    </label>
+                                                    <span v-if="child.additional_fee && child.price && !['radio', 'dropdown'].includes(child.type)" class="price-tag">
+                                                        {{ currencyFormat(child.price) }} ({{ child.unit_type || 'N/A' }})
+                                                    </span>
+                                                </div>
+
+                                                <!-- Child input for this parent instance -->
+                                                <component 
+                                                    :is="getInputComponent(child.type)" 
+                                                    :field="child"
+                                                    :value="getChildValueForPerPaxParent(child, personIndex - 1)" 
+                                                    :enabled="true"
+                                                    v-bind:display_errors="display_errors" 
+                                                    v-bind:error="errors[`${child.id}-p${personIndex}`]"
+                                                    :id-suffix="`-p${personIndex}`"
+                                                    @update:value="updateChildValueForPerPaxParent(child, personIndex - 1, $event)"
+                                                    @validate="validateField(child, `p${personIndex}`)" />
+                                            </div>
+                                        </div>
+
+                                        <!-- Field Subtotal Display -->
+                                        <div v-if="getParentPerPaxSubtotal(field, personIndex - 1) > 0" class="subtotal-tag">
+                                            Subtotal: {{ currencyFormat(getParentPerPaxSubtotal(field, personIndex - 1)) }}
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <!-- Regular parent field (not Price per pax) -->
+                                <div v-else-if="shouldShowField(field)" class="field-card">
                                     <div class="field-header">
                                         <label :for="`field-${field.id}`" class="field-label">
                                             {{ field.label }}
@@ -520,6 +584,112 @@ export default {
             this.safeValues[child.id].values[index] = newValue;
             this.updateAllFees();
         },
+        // Price per pax parent field methods
+        getParentPerPaxValue(field, index) {
+            return this.safeValues[field.id]?.values?.[index] ?? this.defaultForType(field.type);
+        },
+        updateParentPerPaxValue(field, index, newValue) {
+            if (!this.safeValues[field.id]) {
+                this.safeValues[field.id] = {
+                    value: this.defaultForType(field.type),
+                    price: 0,
+                    subtotal: 0,
+                    fee: 0,
+                    isRepeated: true,
+                    values: []
+                };
+            }
+            if (!this.safeValues[field.id].values) {
+                this.safeValues[field.id].values = [];
+            }
+            this.safeValues[field.id].values[index] = newValue;
+            this.updateAllFees();
+        },
+        shouldShowChildrenForPerPaxParent(field, index) {
+            if (!field.children || field.children.length === 0) return false;
+            if (!field.rules || field.rules.length === 0) return true;
+            
+            const rule = field.rules[0];
+            const value = this.safeValues[field.id]?.values?.[index] ?? null;
+            
+            if (value === undefined || value === null) return false;
+            
+            switch (rule.operator) {
+                case 'checked': return !!value;
+                case 'equals':
+                case '==': return value == rule.value;
+                case '!=': return value != rule.value;
+                case '>': return Number(value) > Number(rule.value);
+                case '<': return Number(value) < Number(rule.value);
+                case '>=': return Number(value) >= Number(rule.value);
+                case '<=': return Number(value) <= Number(rule.value);
+                default: return false;
+            }
+        },
+        getChildValueForPerPaxParent(child, parentIndex) {
+            // For Price per pax parent, child values are stored in a nested array structure
+            // safeValues[child.id].parentValues[parentIndex] for single child value per parent
+            if (!this.safeValues[child.id]) return this.defaultForType(child.type);
+            if (!this.safeValues[child.id].parentValues) return this.defaultForType(child.type);
+            return this.safeValues[child.id].parentValues[parentIndex] ?? this.defaultForType(child.type);
+        },
+        updateChildValueForPerPaxParent(child, parentIndex, newValue) {
+            if (!this.safeValues[child.id]) {
+                this.safeValues[child.id] = {
+                    value: this.defaultForType(child.type),
+                    price: 0,
+                    subtotal: 0,
+                    fee: 0,
+                    isRepeated: false,
+                    parentValues: []
+                };
+            }
+            if (!this.safeValues[child.id].parentValues) {
+                this.safeValues[child.id].parentValues = [];
+            }
+            this.safeValues[child.id].parentValues[parentIndex] = newValue;
+            this.updateAllFees();
+        },
+        getParentPerPaxSubtotal(field, index) {
+            // Calculate subtotal for this specific person's selection
+            const value = this.safeValues[field.id]?.values?.[index];
+            if (!value) return 0;
+            
+            let subtotal = 0;
+            if (field.type === 'radio' || field.type === 'dropdown') {
+                const selectedOption = field.options?.find(opt => opt.value === value);
+                if (selectedOption && selectedOption.additional_fee && selectedOption.price) {
+                    subtotal = Number(selectedOption.price) || 0;
+                }
+            } else if (field.additional_fee && field.price) {
+                subtotal = Number(field.price) || 0;
+            }
+            
+            // Add child subtotals for this parent instance
+            if (field.children) {
+                field.children.forEach(child => {
+                    const childValue = this.getChildValueForPerPaxParent(child, index);
+                    if (childValue) {
+                        if (child.type === 'radio' || child.type === 'dropdown') {
+                            const selectedOption = child.options?.find(opt => opt.value === childValue);
+                            if (selectedOption && selectedOption.additional_fee && selectedOption.price) {
+                                subtotal += Number(selectedOption.price) || 0;
+                            }
+                        } else if (child.additional_fee && child.price) {
+                            if (child.type === 'checkbox' && childValue === true) {
+                                subtotal += Number(child.price) || 0;
+                            } else if (child.type === 'number') {
+                                subtotal += Number(child.price) * Number(childValue || 0);
+                            } else {
+                                subtotal += Number(child.price) || 0;
+                            }
+                        }
+                    }
+                });
+            }
+            
+            return this.roundout(subtotal);
+        },
         resizeChildValues(child, parent, commissionRate) {
             const item = this.safeValues[child.id];
             if (!item) return;
@@ -583,51 +753,75 @@ export default {
                 let price = 0;
                 let subtotal = 0;
                 let fee = 0;
-                const value = entry.value;
+                
+                // Handle parent fields with Price per pax unit type (repeated parent)
+                if (!field.parent_field_id && field.unit_type === 'Price per pax' && entry.values && entry.values.length > 0) {
+                    entry.values.forEach(val => {
+                        if (field.type === 'radio' || field.type === 'dropdown') {
+                            if (val && field.options) {
+                                const selectedOption = field.options.find(option => option.value === val);
+                                if (selectedOption && selectedOption.additional_fee && selectedOption.price) {
+                                    const instancePrice = Number(selectedOption.price) || 0;
+                                    subtotal += instancePrice;
+                                    fee += this.roundout(instancePrice * commissionRate);
+                                }
+                            }
+                        } else if (field.additional_fee && field.price) {
+                            const instancePrice = Number(field.price) || 0;
+                            subtotal += instancePrice;
+                            fee += this.roundout(instancePrice * commissionRate);
+                        }
+                    });
+                    price = subtotal > 0 ? this.roundout(subtotal / entry.values.length) : 0;
+                } 
+                // Regular field handling (not Price per pax parent)
+                else {
+                    const value = entry.value;
 
-                if (field.type === 'radio' || field.type === 'dropdown') {
-                    if (value && field.options) {
-                        const selectedOption = field.options.find(option => option.value === value);
-                        if (selectedOption && selectedOption.additional_fee && selectedOption.price) {
-                            price = Number(selectedOption.price) || 0;
-                            subtotal = price;
-                            // Fee calculation for 1 unit
-                            fee = this.roundout(price * commissionRate);
+                    if (field.type === 'radio' || field.type === 'dropdown') {
+                        if (value && field.options) {
+                            const selectedOption = field.options.find(option => option.value === value);
+                            if (selectedOption && selectedOption.additional_fee && selectedOption.price) {
+                                price = Number(selectedOption.price) || 0;
+                                subtotal = price;
+                                // Fee calculation for 1 unit
+                                fee = this.roundout(price * commissionRate);
+                            }
                         }
-                    }
-                } else if (field.type === 'number') {
-                    if (field.additional_fee && field.price) {
+                    } else if (field.type === 'number') {
+                        if (field.additional_fee && field.price) {
+                            price = Number(field.price) || 0;
+                            const quantity = Number(value) || 0;
+                            
+                            if (field.unit_type === 'Price per unit' && quantity > 0) {
+                                // Calculate fee for 1 unit, then multiply by quantity
+                                const feePerUnit = this.roundout(price * commissionRate);
+                                subtotal = this.roundout(price * quantity);
+                                fee = this.roundout(feePerUnit * quantity);
+                            } else {
+                                subtotal = this.roundout(price * quantity);
+                                fee = this.roundout(subtotal * commissionRate);
+                            }
+                        }
+                    } else if (field.type === 'checkbox') {
+                        if (field.additional_fee && field.price && value === true) {
+                            price = Number(field.price) || 0;
+                            
+                            if (field.unit_type === 'Price per pax' && Number(this.totalPeople) > 0) {
+                                // Calculate fee for 1 pax, then multiply by total people
+                                const feePerPax = this.roundout(price * commissionRate);
+                                subtotal = this.roundout(price * Number(this.totalPeople));
+                                fee = this.roundout(feePerPax * Number(this.totalPeople));
+                            } else {
+                                subtotal = price;
+                                fee = this.roundout(price * commissionRate);
+                            }
+                        }
+                    } else if (field.additional_fee && field.price) {
                         price = Number(field.price) || 0;
-                        const quantity = Number(value) || 0;
-                        
-                        if (field.unit_type === 'Price per unit' && quantity > 0) {
-                            // Calculate fee for 1 unit, then multiply by quantity
-                            const feePerUnit = this.roundout(price * commissionRate);
-                            subtotal = this.roundout(price * quantity);
-                            fee = this.roundout(feePerUnit * quantity);
-                        } else {
-                            subtotal = this.roundout(price * quantity);
-                            fee = this.roundout(subtotal * commissionRate);
-                        }
+                        subtotal = price;
+                        fee = this.roundout(price * commissionRate);
                     }
-                } else if (field.type === 'checkbox') {
-                    if (field.additional_fee && field.price && value === true) {
-                        price = Number(field.price) || 0;
-                        
-                        if (field.unit_type === 'Price per pax' && Number(this.totalPeople) > 0) {
-                            // Calculate fee for 1 pax, then multiply by total people
-                            const feePerPax = this.roundout(price * commissionRate);
-                            subtotal = this.roundout(price * Number(this.totalPeople));
-                            fee = this.roundout(feePerPax * Number(this.totalPeople));
-                        } else {
-                            subtotal = price;
-                            fee = this.roundout(price * commissionRate);
-                        }
-                    }
-                } else if (field.additional_fee && field.price) {
-                    price = Number(field.price) || 0;
-                    subtotal = price;
-                    fee = this.roundout(price * commissionRate);
                 }
 
                 entry.price = this.roundout(price);
@@ -700,15 +894,46 @@ export default {
                 return true;
             }
             
-            // For repeated children, validate the specific index
-            if (suffix) {
+            // For Price per pax parent (repeated parent), validate the specific person
+            if (suffix && !field.parent_field_id && field.unit_type === 'Price per pax') {
                 const index = parseInt(suffix) - 1;
-                if (!this.hasValidChildValue(field, index)) {
-                    this.errors[fieldKey] = `${field.label} is required for Person/Unit ${suffix}`;
+                const value = this.safeValues[field.id]?.values?.[index];
+                let isValid = false;
+                
+                switch (field.type) {
+                    case 'checkbox':
+                        isValid = value === true;
+                        break;
+                    case 'number':
+                        isValid = Number(value) > 0;
+                        break;
+                    case 'radio':
+                    case 'dropdown':
+                        isValid = value !== '' && value !== null && value !== undefined;
+                        break;
+                    case 'text':
+                    case 'textbox':
+                        isValid = value && value.trim() !== '';
+                        break;
+                    default:
+                        isValid = value !== null && value !== undefined && value !== '';
+                }
+                
+                if (!isValid) {
+                    this.errors[fieldKey] = `${field.label} is required for Person ${suffix}`;
                     return false;
                 }
-            } else {
-                // Validate parent field
+            }
+            // For repeated children, validate the specific index
+            else if (suffix) {
+                const index = suffix.startsWith('p') ? parseInt(suffix.substring(1)) - 1 : parseInt(suffix) - 1;
+                if (!this.hasValidChildValue(field, index)) {
+                    this.errors[fieldKey] = `${field.label} is required for Person/Unit ${suffix.replace('p', '')}`;
+                    return false;
+                }
+            } 
+            // Validate regular parent field
+            else {
                 if (!this.hasValidFieldValue(field)) {
                     this.errors[fieldKey] = `${field.label} is required`;
                     return false;
@@ -739,7 +964,76 @@ export default {
                 
                 // Validate parent fields
                 if (!field.parent_field_id) {
-                    if (!this.hasValidFieldValue(field)) {
+                    // For Price per pax parent, validate each person's selection
+                    if (field.unit_type === 'Price per pax' && this.totalPeople > 0) {
+                        for (let i = 0; i < this.totalPeople; i++) {
+                            const value = this.safeValues[field.id]?.values?.[i];
+                            let personValid = false;
+                            
+                            switch (field.type) {
+                                case 'checkbox':
+                                    personValid = value === true;
+                                    break;
+                                case 'number':
+                                    personValid = Number(value) > 0;
+                                    break;
+                                case 'radio':
+                                case 'dropdown':
+                                    personValid = value !== '' && value !== null && value !== undefined;
+                                    break;
+                                case 'text':
+                                case 'textbox':
+                                    personValid = value && value.trim() !== '';
+                                    break;
+                                default:
+                                    personValid = value !== null && value !== undefined && value !== '';
+                            }
+                            
+                            if (!personValid) {
+                                this.errors[`${field.id}-${i + 1}`] = `${field.label} is required for Person ${i + 1}`;
+                                isValid = false;
+                            }
+                            
+                            // Validate children for this person's parent instance
+                            if (personValid && field.children && field.children.length > 0) {
+                                field.children.forEach(child => {
+                                    if (!child.required) return;
+                                    
+                                    // Check if children should show for this person's selection
+                                    if (this.shouldShowChildrenForPerPaxParent(field, i)) {
+                                        const childValue = this.safeValues[child.id]?.parentValues?.[i];
+                                        let childValid = false;
+                                        
+                                        switch (child.type) {
+                                            case 'checkbox':
+                                                childValid = childValue === true;
+                                                break;
+                                            case 'number':
+                                                childValid = Number(childValue) > 0;
+                                                break;
+                                            case 'radio':
+                                            case 'dropdown':
+                                                childValid = childValue !== '' && childValue !== null && childValue !== undefined;
+                                                break;
+                                            case 'text':
+                                            case 'textbox':
+                                                childValid = childValue && childValue.trim() !== '';
+                                                break;
+                                            default:
+                                                childValid = childValue !== null && childValue !== undefined && childValue !== '';
+                                        }
+                                        
+                                        if (!childValid) {
+                                            this.errors[`${child.id}-p${i + 1}`] = `${child.label} is required for Person ${i + 1}`;
+                                            isValid = false;
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                    // Regular parent field validation
+                    else if (!this.hasValidFieldValue(field)) {
                         this.errors[field.id] = `${field.label} is required`;
                         isValid = false;
                     } else if (field.children && field.children.length > 0 && this.shouldShowChildren(field)) {
@@ -803,8 +1097,11 @@ export default {
                 const entry = this.safeValues[field.id];
                 if (!entry) return;
                 
+                // Check if parent field has Price per pax (repeated parent)
+                const isPerPaxParent = field.unit_type === 'Price per pax' && entry.values && entry.values.length > 0;
+                
                 // Check if field has a valid value
-                if (this.hasValidFieldValue(field)) {
+                if (this.hasValidFieldValue(field) || isPerPaxParent) {
                     // For dropdown/radio, pricing might be in selected option (not field.additional_fee)
                     // So check if entry has calculated price/subtotal to determine if pricing is enabled
                     const hasPricing = field.additional_fee || entry.price > 0 || entry.subtotal > 0;
@@ -822,9 +1119,10 @@ export default {
                         }
                     };
                     
-                    // Add child values if repeated
+                    // Add values if repeated (Price per pax parent or Price per unit/pax child)
                     if (entry.isRepeated && entry.values && entry.values.length > 0) {
                         customField.values = entry.values;
+                        customField.isRepeated = true;
                     }
                     
                     // Add child fields if present and have values
@@ -835,9 +1133,10 @@ export default {
                             const childEntry = this.safeValues[child.id];
                             if (!childEntry) return;
                             
-                            // Check if child has a valid value (for non-priced fields) or enabled pricing
+                            // Check if child has a valid value
                             const hasValue = this.hasValidFieldValue(child) || 
-                                           (childEntry.isRepeated && childEntry.values && childEntry.values.length > 0);
+                                           (childEntry.isRepeated && childEntry.values && childEntry.values.length > 0) ||
+                                           (childEntry.parentValues && childEntry.parentValues.length > 0);
                             
                             if (hasValue) {
                                 // For dropdown/radio children, pricing might be in selected option
@@ -856,12 +1155,17 @@ export default {
                                     }
                                 };
                                 
-                                // For repeated children (Price per pax or Price per unit)
-                                if (childEntry.isRepeated && childEntry.values && childEntry.values.length > 0) {
+                                // For children of Price per pax parent (stored in parentValues)
+                                if (isPerPaxParent && childEntry.parentValues && childEntry.parentValues.length > 0) {
+                                    childField.parentValues = childEntry.parentValues;
+                                }
+                                // For repeated children (Price per unit/pax)
+                                else if (childEntry.isRepeated && childEntry.values && childEntry.values.length > 0) {
                                     childField.values = childEntry.values;
                                     childField.isRepeated = true;
-                                } else {
-                                    // Regular child field with single value
+                                } 
+                                // Regular child field with single value
+                                else {
                                     childField.value = childEntry.value;
                                 }
                                 
@@ -909,12 +1213,17 @@ export default {
                 if (savedField.children && Array.isArray(savedField.children)) {
                     savedField.children.forEach(savedChild => {
                         if (this.safeValues[savedChild.id]) {
+                            // Restore children of Price per pax parent (stored in parentValues)
+                            if (savedChild.parentValues && Array.isArray(savedChild.parentValues)) {
+                                this.safeValues[savedChild.id].parentValues = [...savedChild.parentValues];
+                            }
                             // Restore repeated child values
-                            if (savedChild.values && Array.isArray(savedChild.values)) {
+                            else if (savedChild.values && Array.isArray(savedChild.values)) {
                                 this.safeValues[savedChild.id].values = [...savedChild.values];
                                 this.safeValues[savedChild.id].isRepeated = savedChild.isRepeated === true || savedChild.isRepeated === 'true';
-                            } else {
-                                // Restore single child value
+                            } 
+                            // Restore single child value
+                            else {
                                 this.safeValues[savedChild.id].value = savedChild.value;
                                 this.safeValues[savedChild.id].isRepeated = false;
                             }
@@ -1227,6 +1536,36 @@ export default {
     background: white;
     border-radius: var(--radius-md);
     border: 1px solid var(--neutral-200);
+}
+
+/* Price per pax parent styling */
+.parent-per-pax {
+    background: linear-gradient(135deg, rgba(13, 148, 136, 0.03) 0%, rgba(13, 148, 136, 0.01) 100%);
+    border-left: 4px solid var(--primary-teal);
+}
+
+.person-group-header {
+    margin: calc(var(--space-6) * -1) calc(var(--space-6) * -1) var(--space-4);
+    padding: var(--space-3) var(--space-6);
+    background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-teal-dark) 100%);
+    border-top-left-radius: var(--radius-lg);
+    border-top-right-radius: var(--radius-lg);
+}
+
+.person-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.person-badge::before {
+    content: '👤';
+    font-size: var(--text-base);
 }
 
 .person-header,
