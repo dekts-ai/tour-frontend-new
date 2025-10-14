@@ -4,6 +4,13 @@
 This Vue.js 3 frontend application provides a user-friendly interface for browsing, selecting, and booking Native American tours. It supports various tour packages, date selection, add-on management, and integrated payment processing via Stripe. The project aims to deliver a modern, nature-inspired booking experience for cultural tours, leveraging a multi-tenant backend architecture. It features dynamic navigation, combination package support, and real-time pricing updates. The application adheres to a custom "Native Journey" design system to ensure a consistent and responsive user experience.
 
 ## Recent Changes (October 14, 2025)
+- **Dropdown/Radio Option-Based Pricing Fix - COMPLETE**: Fixed missing addons when pricing is stored in dropdown/radio options:
+  - **Root Cause**: Field-level `additional_fee` was 0 for dropdown/radio, but pricing exists in selected options
+  - **buildCustomFields Fix**: Now checks `field.additional_fee || entry.price > 0 || entry.subtotal > 0` to enable priceInfo
+  - **Child Fields**: Applied same logic to child dropdown/radio fields for nested option-based pricing
+  - **Pricing Detection**: Properly identifies option-based pricing by checking calculated entry values
+  - **Display Result**: Dropdown/radio addons with priced options now appear correctly in cart and checkout
+  - **No Regressions**: Other field types (checkbox, number, text) continue to work as expected
 - **Add-ons Display Logic Simplification - COMPLETE**: Simplified addon display logic to ensure ALL priced addons appear in cart and checkout:
   - **Direct Subtotal Check**: Changed condition from complex `hasValidFieldValue()` to direct `priceInfo?.enabled && priceInfo?.subtotal > 0`
   - **Fixed Multiple Addon Display**: Previously only one addon displayed; now ALL priced addons with subtotal > 0 show correctly
