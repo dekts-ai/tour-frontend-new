@@ -389,7 +389,10 @@ export default {
             this.currency = this.$store.state.currency || 'USD';
             
             // Calculate total people from cart
-            const firstItem = Object.values(this.cartItem)[0];
+            // const firstItem = Object.values(this.cartItem)[0];
+            const firstItem = Object.values(this.cartItem).find(
+                item => item.package_id === this.packageId
+            );
             if (firstItem && firstItem.people_group) {
                 this.serviceCommission = firstItem.service_commission || 0;
                 this.totalPeople = firstItem.people_group.reduce((sum, count) => sum + Number(count || 0), 0);
@@ -411,7 +414,10 @@ export default {
                     this.initializeValues(this.addonFields);
                     
                     // Restore custom_fields if user is returning to this page
-                    const firstSlotId = Object.keys(this.cartItem)[0];
+                    // const firstSlotId = Object.keys(this.cartItem)[0];
+                    const firstSlotId = Object.keys(this.cartItem).find(
+                        slotId => this.cartItem[slotId].package_id === this.packageId
+                    );                    
                     if (firstSlotId && this.cartItem[firstSlotId]?.custom_fields) {
                         this.restoreCustomFields(this.cartItem[firstSlotId].custom_fields);
                     }
@@ -1274,8 +1280,11 @@ export default {
             
             // Build and save custom_fields to the first cart item's form
             const customFields = this.buildCustomFields();
-            const firstSlotId = Object.keys(this.cartItem)[0];
-            
+            // const firstSlotId = Object.keys(this.cartItem)[0];
+            const firstSlotId = Object.keys(this.cartItem).find(
+                slotId => this.cartItem[slotId].package_id === this.packageId
+            );
+
             if (firstSlotId && this.cartItem[firstSlotId]) {
                 // Calculate addon totals
                 const addonsTotal = this.calculateAddonsSubtotal;
