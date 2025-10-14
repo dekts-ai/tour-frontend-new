@@ -805,13 +805,17 @@ export default {
                 
                 // Check if field has a valid value
                 if (this.hasValidFieldValue(field)) {
+                    // For dropdown/radio, pricing might be in selected option (not field.additional_fee)
+                    // So check if entry has calculated price/subtotal to determine if pricing is enabled
+                    const hasPricing = field.additional_fee || entry.price > 0 || entry.subtotal > 0;
+                    
                     const customField = {
                         id: field.id,
                         name: field.label,
                         type: field.type,
                         value: entry.value,
                         priceInfo: {
-                            enabled: field.additional_fee || false,
+                            enabled: hasPricing,
                             price: entry.price || 0,
                             subtotal: entry.subtotal || 0,
                             fee: entry.fee || 0
@@ -836,12 +840,16 @@ export default {
                                            (childEntry.isRepeated && childEntry.values && childEntry.values.length > 0);
                             
                             if (hasValue) {
+                                // For dropdown/radio children, pricing might be in selected option
+                                // So check if entry has calculated price/subtotal to determine if pricing is enabled
+                                const childHasPricing = child.additional_fee || childEntry.price > 0 || childEntry.subtotal > 0;
+                                
                                 const childField = {
                                     id: child.id,
                                     name: child.label,
                                     type: child.type,
                                     priceInfo: {
-                                        enabled: child.additional_fee || false,
+                                        enabled: childHasPricing,
                                         price: childEntry.price || 0,
                                         subtotal: childEntry.subtotal || 0,
                                         fee: childEntry.fee || 0
