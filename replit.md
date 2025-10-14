@@ -4,12 +4,14 @@
 This Vue.js 3 frontend application facilitates booking Native American tours. It offers a user-friendly interface for browsing tour packages, selecting dates, adding extras, and processing payments via Stripe. The project aims to provide a modern, nature-inspired booking experience for cultural tours, leveraging a multi-tenant backend architecture.
 
 ## Recent Changes (October 14, 2025)
-- **Add-ons Validation & Persistence**: Implemented comprehensive validation and state management for add-ons system:
+- **Add-ons Validation & Persistence - COMPLETE**: Implemented comprehensive validation and state management for add-ons system:
   - **Required Field Validation**: Full validation for required add-ons with parent/child relationship checking
     - If parent is required and selected, children must be filled when conditional rules are met
     - Detailed error messages for repeated fields: "Field is required for Person 1" / "Unit 2"
     - Inline error display with Native Journey design (no popup modals)
     - Smooth scroll to first error field when validation fails
+    - **Fixed Critical Reactivity Issue**: Moved `errors` and `display_errors` from data() to setup() as reactive/ref for proper Vue 3 reactivity
+    - **Fixed Prop Binding**: Changed `:display-errors` (kebab-case) to `v-bind:display_errors` to match underscore prop names in child components
   - **Custom Fields Persistence**: Selected add-ons saved to `custom_fields` structure for cart items
     - Auto-save on navigation: buildCustomFields() creates structured object with id, name, type, value, priceInfo
     - Auto-restore on return: restoreCustomFields() retrieves saved selections when editing from cart
@@ -20,6 +22,8 @@ This Vue.js 3 frontend application facilitates booking Native American tours. It
     - Correctly appears in both combo and single package flows when add-ons are available
     - All edge cases handled: success with fields, success without form, and error states
   - **Visibility Filtering**: Only shows add-ons with visibility type "Both" or "Frontend", hides "Backend" type fields
+    - Fixed empty field-card containers by moving visibility check to wrap entire card div
+    - Validation skips backend fields to prevent false validation failures
   - All validation errors use consistent key format (`fieldId-index`) matching template bindings for proper error display
 
 ## Recent Changes (October 13, 2025)
