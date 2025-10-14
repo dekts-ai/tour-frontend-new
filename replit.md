@@ -3,6 +3,21 @@
 ## Overview
 This Vue.js 3 frontend application provides a user-friendly interface for browsing, selecting, and booking Native American tours. It supports various tour packages, date selection, add-on management, and integrated payment processing via Stripe. The project aims to deliver a modern, nature-inspired booking experience for cultural tours, leveraging a multi-tenant backend architecture. It features dynamic navigation, combination package support, and real-time pricing updates. The application adheres to a custom "Native Journey" design system to ensure a consistent and responsive user experience.
 
+## Recent Changes (October 14, 2025)
+- **CartItem Add-ons Display - COMPLETE**: Enhanced CartItem component to display add-ons with proper visibility:
+  - **ADD-ONS Section**: Added dedicated section with dashed divider and uppercase header
+  - **Subtotal Display**: Shows add-on subtotals (not prices) matching AddonsNew display
+  - **Child Add-ons Hierarchy**: Displays child add-ons with indentation (↳) and lighter background
+  - **Fees Consolidation**: All fees (tour + add-ons) combined in single "Taxes & Fees" row
+  - **Visibility in Index & Checkout**: CartItem now properly displays add-ons in both Start/Index and Checkout pages
+  - **Validation Logic**: Only shows add-ons with valid values using hasValidFieldValue() method
+- **Add-ons Fee Calculation Fix - COMPLETE**: Corrected per-unit and per-pax fee calculation logic:
+  - **Proper Per-Unit/Pax Fee Logic**: Now calculates fee for 1 unit/pax first, then multiplies by quantity
+  - **Roundout for Decimal Precision**: All price, subtotal, and fee values rounded to 2 decimals
+  - **Checkout Display Enhancement**: Add-ons in checkout now match AddonsNew display with child add-ons
+- **Add-ons Persistence & Checkout Integration - COMPLETE**: Fixed critical bugs in add-ons data persistence and checkout display
+- **Add-ons Validation & Persistence - COMPLETE**: Implemented comprehensive validation and state management for add-ons system
+
 ## User Preferences
 None documented yet.
 

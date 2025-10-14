@@ -74,15 +74,33 @@
                             <span>Discount <span v-if="item?.discount2_percentage">({{ item?.discount2_percentage }}%)</span></span>
                             <span class="discount-value">-{{ currencyFormat(item?.discount2_value || 0) }}</span>
                         </div>
-                        <div v-if="item?.custom_fields?.length && isPriceInfoEnabled(item?.custom_fields)">
-                            <div v-for="(option, k) in item.custom_fields.filter(f => f.priceInfo?.enabled)"
-                                :key="`custom-field-${k}`" class="pricing-row">
-                                <span>{{ option.name }}</span>
-                                <span>{{ currencyFormat(option.priceInfo?.price || 0) }}</span>
+                        
+                        <!-- Add-ons Section -->
+                        <div v-if="hasVisibleAddons(item?.custom_fields)" class="addons-section">
+                            <div class="addons-divider"></div>
+                            <div class="addons-header">ADD-ONS:</div>
+                            
+                            <div v-for="(option, k) in item.custom_fields" :key="`addon-${k}`">
+                                <!-- Parent add-on -->
+                                <div v-if="option.priceInfo?.enabled && hasValidFieldValue(option)" class="pricing-row addon-row">
+                                    <span>{{ option.name }}</span>
+                                    <span>{{ currencyFormat(option.priceInfo?.subtotal || option.priceInfo?.price || 0) }}</span>
+                                </div>
+                                
+                                <!-- Child add-ons -->
+                                <div v-if="option.children && option.children.length > 0">
+                                    <div v-for="(child, childIdx) in option.children" :key="`child-${k}-${childIdx}`">
+                                        <div v-if="child.priceInfo?.enabled && hasValidFieldValue(child)" class="pricing-row addon-row child-addon">
+                                            <span>  ↳ {{ child.name }}</span>
+                                            <span>{{ currencyFormat(child.priceInfo?.subtotal || child.priceInfo?.price || 0) }}</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        
                         <div class="pricing-row">
-                            <span>Booking Fees</span>
+                            <span>Taxes & Fees</span>
                             <span>{{ currencyFormat(Number(item.fees || 0) + Number(item.addons_fee || 0)) }}</span>
                         </div>
                         <div class="pricing-row total">
@@ -113,6 +131,49 @@ export default {
         },
         isPriceInfoEnabled(customFields) {
             return customFields?.some(item => item.priceInfo?.enabled === true) || false;
+        },
+        hasVisibleAddons(customFields) {
+            if (!customFields || !Array.isArray(customFields)) return false;
+            
+            // Check if at least one add-on (parent or child) has valid value and is enabled
+            return customFields.some(field => {
+                // Check parent
+                if (field.priceInfo?.enabled && this.hasValidFieldValue(field)) {
+                    return true;
+                }
+                // Check children
+                if (field.children && Array.isArray(field.children)) {
+                    return field.children.some(child => 
+                        child.priceInfo?.enabled && this.hasValidFieldValue(child)
+                    );
+                }
+                return false;
+            });
+        },
+        hasValidFieldValue(field) {
+            // For custom_fields saved from AddonsNew, check if there's a valid subtotal
+            // This handles all pricing types including price-per-pax and price-per-unit
+            if (field.priceInfo && field.priceInfo.subtotal > 0) {
+                return true;
+            }
+            
+            // Fallback: check the value field
+            const value = field.value;
+            
+            switch (field.type) {
+                case 'checkbox':
+                    return value === true;
+                case 'number':
+                    return Number(value) > 0;
+                case 'radio':
+                case 'dropdown':
+                    return value !== '' && value !== null && value !== undefined;
+                case 'text':
+                case 'textbox':
+                    return value && String(value).trim() !== '';
+                default:
+                    return value !== null && value !== undefined && value !== '';
+            }
         },
     },
 };
@@ -361,6 +422,43 @@ export default {
     font-size: var(--text-base);
     margin-top: var(--space-3);
     padding: var(--space-3) var(--space-4);
+}
+
+/* Add-ons Section */
+.addons-section {
+    margin: var(--space-3) 0;
+}
+
+.addons-divider {
+    height: 1px;
+    background: repeating-linear-gradient(
+        to right,
+        var(--neutral-300) 0px,
+        var(--neutral-300) 5px,
+        transparent 5px,
+        transparent 10px
+    );
+    margin-bottom: var(--space-3);
+}
+
+.addons-header {
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    color: var(--neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-2);
+}
+
+.pricing-row.addon-row {
+    background: white;
+    margin-bottom: var(--space-1);
+}
+
+.pricing-row.addon-row.child-addon {
+    margin-left: var(--space-4);
+    background: var(--neutral-100);
+    font-size: var(--text-xs);
 }
 
 /* Responsive */
