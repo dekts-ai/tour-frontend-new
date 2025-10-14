@@ -4,6 +4,18 @@
 This Vue.js 3 frontend application facilitates booking Native American tours. It offers a user-friendly interface for browsing tour packages, selecting dates, adding extras, and processing payments via Stripe. The project aims to provide a modern, nature-inspired booking experience for cultural tours, leveraging a multi-tenant backend architecture.
 
 ## Recent Changes (October 14, 2025)
+- **Add-ons Persistence & Checkout Integration - COMPLETE**: Fixed critical bugs in add-ons data persistence and checkout display:
+  - **Custom Fields with Child Values**: Enhanced buildCustomFields() to properly save child field values alongside parent fields
+    - Parent fields save with their values and pricing info
+    - Child fields now stored in nested `children` array with values/repeated values
+    - restoreCustomFields() now properly restores both parent and child field values when editing packages
+  - **Checkout Add-ons Display**: Fixed missing add-on pricing in checkout summary
+    - Now saves `addons_total` (subtotal of all add-ons) to cart item
+    - Now saves `addons_fee` (fees for all add-ons) to cart item
+    - Checkout ItemizedList displays add-on breakdown and includes fees in totals
+  - **Total Calculation Fix**: Corrected total calculation to prevent double-counting
+    - Base `item.total` remains tour subtotal + tour fees
+    - Checkout adds `addons_total` and `addons_fee` separately for correct grand total
 - **Add-ons Validation & Persistence - COMPLETE**: Implemented comprehensive validation and state management for add-ons system:
   - **Required Field Validation**: Full validation for required add-ons with parent/child relationship checking
     - If parent is required and selected, children must be filled when conditional rules are met

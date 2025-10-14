@@ -747,9 +747,9 @@ export default {
         },
         buildCustomFields() {
             const customFields = [];
-            const allFields = this.getAllFields();
+            const parentFields = this.sortedFields; // Only parent fields (no parent_field_id)
             
-            allFields.forEach(field => {
+            parentFields.forEach(field => {
                 const entry = this.safeValues[field.id];
                 if (!entry) return;
                 
@@ -773,6 +773,38 @@ export default {
                         customField.values = entry.values;
                     }
                     
+                    // Add child fields if present
+                    if (field.children && field.children.length > 0 && this.shouldShowChildren(field)) {
+                        customField.children = [];
+                        
+                        field.children.forEach(child => {
+                            const childEntry = this.safeValues[child.id];
+                            if (!childEntry) return;
+                            
+                            const childField = {
+                                id: child.id,
+                                name: child.label,
+                                type: child.type,
+                                priceInfo: {
+                                    enabled: child.additional_fee || false,
+                                    price: childEntry.price || 0,
+                                    subtotal: childEntry.subtotal || 0,
+                                    fee: childEntry.fee || 0
+                                }
+                            };
+                            
+                            // For repeated children (Price per pax or Price per unit)
+                            if (childEntry.isRepeated && childEntry.values && childEntry.values.length > 0) {
+                                childField.values = childEntry.values;
+                            } else {
+                                // Regular child field with single value
+                                childField.value = childEntry.value;
+                            }
+                            
+                            customField.children.push(childField);
+                        });
+                    }
+                    
                     customFields.push(customField);
                 }
             });
@@ -783,6 +815,7 @@ export default {
             if (!customFields || !Array.isArray(customFields)) return;
             
             customFields.forEach(savedField => {
+                // Restore parent field value
                 if (this.safeValues[savedField.id]) {
                     this.safeValues[savedField.id].value = savedField.value;
                     
@@ -790,6 +823,21 @@ export default {
                     if (savedField.values && Array.isArray(savedField.values)) {
                         this.safeValues[savedField.id].values = [...savedField.values];
                     }
+                }
+                
+                // Restore child field values
+                if (savedField.children && Array.isArray(savedField.children)) {
+                    savedField.children.forEach(savedChild => {
+                        if (this.safeValues[savedChild.id]) {
+                            // Restore repeated child values
+                            if (savedChild.values && Array.isArray(savedChild.values)) {
+                                this.safeValues[savedChild.id].values = [...savedChild.values];
+                            } else {
+                                // Restore single child value
+                                this.safeValues[savedChild.id].value = savedChild.value;
+                            }
+                        }
+                    });
                 }
             });
             
@@ -820,11 +868,19 @@ export default {
             const firstSlotId = Object.keys(this.cartItem)[0];
             
             if (firstSlotId && this.cartItem[firstSlotId]) {
-                // Update the cart item with custom_fields
+                // Calculate addon totals
+                const addonsTotal = this.calculateAddonsSubtotal;
+                const addonsFee = this.calculateAddonsFees;
+                
+                // Update the cart item with custom_fields and addon pricing
+                // Note: item.total should remain the base tour total (subtotal + fees)
+                // The checkout will add addons_total and addons_fee separately
                 const updatedCartItem = { ...this.cartItem };
                 updatedCartItem[firstSlotId] = {
                     ...updatedCartItem[firstSlotId],
-                    custom_fields: customFields
+                    custom_fields: customFields,
+                    addons_total: addonsTotal,
+                    addons_fee: addonsFee
                 };
                 
                 // Store updated cart
