@@ -437,8 +437,35 @@ export default {
         },
         shouldShowChildren(field) {
             if (!field.children || field.children.length === 0) return false;
+            
+            // If no rules, always show children
             if (!field.rules || field.rules.length === 0) return true;
             
+            // Check if any child has a value (for editing scenarios)
+            const hasChildrenWithValues = field.children.some(child => {
+                const childEntry = this.safeValues[child.id];
+                if (!childEntry) return false;
+                
+                // Check for repeated children with values
+                if (childEntry.isRepeated && childEntry.values && childEntry.values.length > 0) {
+                    return childEntry.values.some(val => {
+                        if (child.type === 'checkbox') return val === true;
+                        if (child.type === 'number') return Number(val) > 0;
+                        return val !== '' && val !== null && val !== undefined;
+                    });
+                }
+                
+                // Check for single value children
+                const value = childEntry.value;
+                if (child.type === 'checkbox') return value === true;
+                if (child.type === 'number') return Number(value) > 0;
+                return value !== '' && value !== null && value !== undefined;
+            });
+            
+            // Show children if they have values (editing scenario) OR if parent rule is met
+            if (hasChildrenWithValues) return true;
+            
+            // Otherwise check parent field rule
             const rule = field.rules[0];
             const value = this.safeValues[field.id]?.value ?? null;
             
@@ -796,36 +823,48 @@ export default {
                         customField.values = entry.values;
                     }
                     
-                    // Add child fields if present
-                    if (field.children && field.children.length > 0 && this.shouldShowChildren(field)) {
-                        customField.children = [];
+                    // Add child fields if present and have values
+                    if (field.children && field.children.length > 0) {
+                        const childrenWithValues = [];
                         
                         field.children.forEach(child => {
                             const childEntry = this.safeValues[child.id];
                             if (!childEntry) return;
                             
-                            const childField = {
-                                id: child.id,
-                                name: child.label,
-                                type: child.type,
-                                priceInfo: {
-                                    enabled: child.additional_fee || false,
-                                    price: childEntry.price || 0,
-                                    subtotal: childEntry.subtotal || 0,
-                                    fee: childEntry.fee || 0
+                            // Check if child has a valid value (for non-priced fields) or enabled pricing
+                            const hasValue = this.hasValidFieldValue(child) || 
+                                           (childEntry.isRepeated && childEntry.values && childEntry.values.length > 0);
+                            
+                            if (hasValue) {
+                                const childField = {
+                                    id: child.id,
+                                    name: child.label,
+                                    type: child.type,
+                                    priceInfo: {
+                                        enabled: child.additional_fee || false,
+                                        price: childEntry.price || 0,
+                                        subtotal: childEntry.subtotal || 0,
+                                        fee: childEntry.fee || 0
+                                    }
+                                };
+                                
+                                // For repeated children (Price per pax or Price per unit)
+                                if (childEntry.isRepeated && childEntry.values && childEntry.values.length > 0) {
+                                    childField.values = childEntry.values;
+                                    childField.isRepeated = true;
+                                } else {
+                                    // Regular child field with single value
+                                    childField.value = childEntry.value;
                                 }
-                            };
-                            
-                            // For repeated children (Price per pax or Price per unit)
-                            if (childEntry.isRepeated && childEntry.values && childEntry.values.length > 0) {
-                                childField.values = childEntry.values;
-                            } else {
-                                // Regular child field with single value
-                                childField.value = childEntry.value;
+                                
+                                childrenWithValues.push(childField);
                             }
-                            
-                            customField.children.push(childField);
                         });
+                        
+                        // Only add children array if there are children with values
+                        if (childrenWithValues.length > 0) {
+                            customField.children = childrenWithValues;
+                        }
                     }
                     
                     customFields.push(customField);
@@ -849,6 +888,13 @@ export default {
                     if (savedField.values && Array.isArray(savedField.values)) {
                         this.safeValues[savedField.id].values = [...savedField.values];
                     }
+                    
+                    // Restore pricing info for parent
+                    if (savedField.priceInfo) {
+                        this.safeValues[savedField.id].price = savedField.priceInfo.price || 0;
+                        this.safeValues[savedField.id].subtotal = savedField.priceInfo.subtotal || 0;
+                        this.safeValues[savedField.id].fee = savedField.priceInfo.fee || 0;
+                    }
                 }
                 
                 // Restore child field values
@@ -858,9 +904,18 @@ export default {
                             // Restore repeated child values
                             if (savedChild.values && Array.isArray(savedChild.values)) {
                                 this.safeValues[savedChild.id].values = [...savedChild.values];
+                                this.safeValues[savedChild.id].isRepeated = savedChild.isRepeated === true || savedChild.isRepeated === 'true';
                             } else {
                                 // Restore single child value
                                 this.safeValues[savedChild.id].value = savedChild.value;
+                                this.safeValues[savedChild.id].isRepeated = false;
+                            }
+                            
+                            // Restore pricing info
+                            if (savedChild.priceInfo) {
+                                this.safeValues[savedChild.id].price = savedChild.priceInfo.price || 0;
+                                this.safeValues[savedChild.id].subtotal = savedChild.priceInfo.subtotal || 0;
+                                this.safeValues[savedChild.id].fee = savedChild.priceInfo.fee || 0;
                             }
                         }
                     });
