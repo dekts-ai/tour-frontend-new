@@ -838,6 +838,9 @@ export default {
             if (!customFields || !Array.isArray(customFields)) return;
             
             customFields.forEach(savedField => {
+                // Find the original field definition from addonFields
+                const originalField = this.getAllFields(this.addonFields).find(f => f.id === savedField.id);
+                
                 // Restore parent field value
                 if (this.safeValues[savedField.id]) {
                     this.safeValues[savedField.id].value = savedField.value;
@@ -861,6 +864,17 @@ export default {
                             }
                         }
                     });
+                    
+                    // After restoring child values, recalculate pricing for repeated children
+                    if (originalField && originalField.children && originalField.children.length > 0) {
+                        const isRepeated = ['Price per unit', 'Price per pax'].includes(originalField.unit_type);
+                        if (isRepeated) {
+                            const commissionRate = this.serviceCommission / 100 || 0;
+                            originalField.children.forEach(child => {
+                                this.resizeChildValues(child, originalField, commissionRate);
+                            });
+                        }
+                    }
                 }
             });
             
