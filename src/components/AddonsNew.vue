@@ -673,12 +673,19 @@ export default {
             let isValid = true;
             
             const allFields = this.getAllFields();
+            console.log('All fields for validation:', allFields.map(f => ({ id: f.id, label: f.label, visibility: f.visibility, required: f.required })));
             
             allFields.forEach(field => {
                 if (!field.required) return;
                 
                 // Skip validation for backend visibility fields
-                if (!this.shouldShowField(field)) return;
+                const shouldShow = this.shouldShowField(field);
+                console.log(`Field ${field.id} (${field.label}): visibility=${field.visibility}, shouldShow=${shouldShow}`);
+                
+                if (!shouldShow) {
+                    console.log(`Skipping field ${field.id} due to visibility`);
+                    return;
+                }
                 
                 // Check if field should be shown based on parent rules
                 const parent = allFields.find(f => f.children?.some(c => c.id === field.id));
