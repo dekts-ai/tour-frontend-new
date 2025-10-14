@@ -25,7 +25,7 @@
                     <span class="discount">-{{ item?.discount2_value ? currencyFormat(item?.discount2_value) : currencyFormat(0) }}</span>
                 </div>
 
-                <div v-if="item?.custom_fields?.length && isPriceInfoEnabled(item?.custom_fields)" class="addons-section">
+                <div v-if="hasVisibleAddons(item?.custom_fields)" class="addons-section">
                     <div class="addon-header">Add-ons:</div>
                     <div v-for="(option, idx) in item.custom_fields" :key="`custom-option-${idx}`">
                         <!-- Parent add-on -->
@@ -94,34 +94,46 @@ export default {
         currencyFormat(amount) {
             return formatCurrencyIntl(amount, this.$store.state.currency);
         },
-        isPriceInfoEnabled(customFields) {
-            return customFields.some(item => item.priceInfo.enabled === true);
+        hasVisibleAddons(customFields) {
+            if (!customFields || !Array.isArray(customFields)) return false;
+            
+            // Check if at least one add-on (parent or child) has valid value and is enabled
+            return customFields.some(field => {
+                // Check parent
+                if (field.priceInfo?.enabled && this.hasValidFieldValue(field)) {
+                    return true;
+                }
+                // Check children
+                if (field.children && Array.isArray(field.children)) {
+                    return field.children.some(child => 
+                        child.priceInfo?.enabled && this.hasValidFieldValue(child)
+                    );
+                }
+                return false;
+            });
         },
         hasValidFieldValue(field) {
-            // Check if a field has a valid selected value based on its type
+            // For custom_fields saved from AddonsNew, check if there's a valid subtotal
+            // This handles all pricing types including price-per-pax and price-per-unit
+            if (field.priceInfo && field.priceInfo.subtotal > 0) {
+                return true;
+            }
+            
+            // Fallback: check the value field
             const value = field.value;
             
             switch (field.type) {
                 case 'checkbox':
-                    // Checkbox must be checked (truthy value)
-                    return !!value;
-                
+                    return value === true;
                 case 'number':
-                    // Number must be greater than 0
                     return Number(value) > 0;
-                
                 case 'radio':
                 case 'select':
-                    // Radio and select must have a non-empty value selected
                     return value !== null && value !== undefined && value !== '';
-                
                 case 'text':
                 case 'textarea':
-                    // Text fields must have a non-empty value
                     return value !== null && value !== undefined && String(value).trim() !== '';
-                
                 default:
-                    // For any other type, check if value exists
                     return value !== null && value !== undefined && value !== '';
             }
         },
