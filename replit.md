@@ -4,6 +4,13 @@
 This Vue.js 3 frontend application provides a user-friendly interface for browsing, selecting, and booking Native American tours. It supports various tour packages, date selection, add-on management, and integrated payment processing via Stripe. The project aims to deliver a modern, nature-inspired booking experience for cultural tours, leveraging a multi-tenant backend architecture. It features dynamic navigation, combination package support, and real-time pricing updates. The application adheres to a custom "Native Journey" design system to ensure a consistent and responsive user experience.
 
 ## Recent Changes (October 14, 2025)
+- **Repeated Values Display & Non-Priced Add-ons Fix - COMPLETE**: Fixed critical bugs preventing repeated children and non-priced add-ons from displaying:
+  - **hasValidFieldValue() Enhancement**: All three components (AddonsNew, CartItem, ItemizedList) now check both `field.value` AND `field.values` array for repeated children
+  - **formatNonPricedValue() Enhancement**: Added support for repeated values - shows counts for checkboxes, joined strings for text/number inputs
+  - **Display Logic Update**: Removed requirement for `priceInfo.enabled` - now shows ALL add-ons with values (priced or non-priced)
+  - **Type-Aware Validation**: Repeated values validated with type-specific checks (checkbox, number, text, etc.)
+  - **Consistent Schema**: AddonsNew creates `{ value, values, isRepeated }`, CartItem/ItemizedList read both based on `isRepeated` flag
+  - **Result**: Repeated non-priced children (e.g., text per person), repeated priced children, and single non-priced fields all display correctly
 - **Child Add-ons Value Persistence & API Payload Fix - COMPLETE**: Fixed critical bugs preventing child addon values from being retained and included in API:
   - **buildCustomFields() Fix**: Now includes children with values regardless of parent condition (shouldShowChildren), ensures all filled child values reach the API
   - **restoreCustomFields() Enhancement**: Properly restores pricing info (price/subtotal/fee) and isRepeated flag for both parent and children
