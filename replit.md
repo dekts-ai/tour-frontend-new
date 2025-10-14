@@ -4,6 +4,13 @@
 This Vue.js 3 frontend application provides a user-friendly interface for browsing, selecting, and booking Native American tours. It supports various tour packages, date selection, add-on management, and integrated payment processing via Stripe. The project aims to deliver a modern, nature-inspired booking experience for cultural tours, leveraging a multi-tenant backend architecture. It features dynamic navigation, combination package support, and real-time pricing updates. The application adheres to a custom "Native Journey" design system to ensure a consistent and responsive user experience.
 
 ## Recent Changes (October 14, 2025)
+- **Child Add-ons Value Persistence & API Payload Fix - COMPLETE**: Fixed critical bugs preventing child addon values from being retained and included in API:
+  - **buildCustomFields() Fix**: Now includes children with values regardless of parent condition (shouldShowChildren), ensures all filled child values reach the API
+  - **restoreCustomFields() Enhancement**: Properly restores pricing info (price/subtotal/fee) and isRepeated flag for both parent and children
+  - **shouldShowChildren() Smart Logic**: Shows children if they have values (editing scenario) OR if parent rule is met, preventing loss of filled data
+  - **Correct isRepeated Handling**: Non-repeated children stay non-repeated (isRepeated=false), repeated children stay repeated (isRepeated=true)
+  - **Text Input Values**: All child input types (text, checkbox, number, etc.) now properly captured and submitted in API payload
+  - **Complete State Restoration**: When editing cart items, all child values, pricing, and metadata are fully restored
 - **Child Add-ons Restoration Fix - COMPLETE**: Fixed child add-ons not retaining values when editing cart items:
   - **Enhanced restoreCustomFields()**: Now finds original field definitions and calls resizeChildValues for repeated children
   - **Pricing Recalculation**: After restoring child values, pricing (subtotal/fee) is recalculated correctly
