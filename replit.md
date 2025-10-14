@@ -4,6 +4,18 @@
 This Vue.js 3 frontend application facilitates booking Native American tours. It offers a user-friendly interface for browsing tour packages, selecting dates, adding extras, and processing payments via Stripe. The project aims to provide a modern, nature-inspired booking experience for cultural tours, leveraging a multi-tenant backend architecture.
 
 ## Recent Changes (October 14, 2025)
+- **Add-ons Fee Calculation Fix - COMPLETE**: Corrected per-unit and per-pax fee calculation logic:
+  - **Proper Per-Unit/Pax Fee Logic**: Now calculates fee for 1 unit/pax first, then multiplies by quantity
+    - Example: $10/unit with 3 units and 10% commission = $1 fee × 3 = $3 total fee (not $30 × 10% = $3)
+    - Ensures mathematically consistent fee calculation across all pricing types
+    - Applied to both parent fields and child fields
+  - **Roundout for Decimal Precision**: All price, subtotal, and fee values rounded to 2 decimals
+    - Applied roundout() to prevent floating-point precision issues
+    - All monetary values display with exactly 2 decimal places
+  - **Checkout Display Enhancement**: Add-ons in checkout now match AddonsNew display
+    - Shows subtotal (not just price) for per-unit/per-pax fields
+    - Displays child add-ons with indentation and visual hierarchy
+    - Child add-ons styled with lighter background and smaller font
 - **Add-ons Persistence & Checkout Integration - COMPLETE**: Fixed critical bugs in add-ons data persistence and checkout display:
   - **Custom Fields with Child Values**: Enhanced buildCustomFields() to properly save child field values alongside parent fields
     - Parent fields save with their values and pricing info

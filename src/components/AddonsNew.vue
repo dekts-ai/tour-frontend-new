@@ -513,8 +513,10 @@ export default {
             }
             item.values = values;
 
-            // Calculate subtotal for child
+            // Calculate subtotal and fee for child (per-unit/per-pax logic)
             let subtotal = 0;
+            let totalFee = 0;
+            
             values.forEach(val => {
                 let instanceCost = 0;
                 if (child.type === 'radio' || child.type === 'dropdown') {
@@ -533,12 +535,15 @@ export default {
                 } else if (child.additional_fee && child.price) {
                     instanceCost = Number(child.price) || 0;
                 }
+                
+                // Calculate fee for this ONE instance, then add to total
+                const instanceFee = this.roundout(instanceCost * commissionRate);
                 subtotal += instanceCost;
+                totalFee += instanceFee;
             });
 
-            const fee = subtotal * commissionRate;
-            item.subtotal = subtotal;
-            item.fee = fee;
+            item.subtotal = this.roundout(subtotal);
+            item.fee = this.roundout(totalFee);
         },
         updateAllFees() {
             const commissionRate = Number(this.serviceCommission) / 100 || 0;
@@ -550,6 +555,7 @@ export default {
 
                 let price = 0;
                 let subtotal = 0;
+                let fee = 0;
                 const value = entry.value;
 
                 if (field.type === 'radio' || field.type === 'dropdown') {
@@ -558,31 +564,48 @@ export default {
                         if (selectedOption && selectedOption.additional_fee && selectedOption.price) {
                             price = Number(selectedOption.price) || 0;
                             subtotal = price;
+                            // Fee calculation for 1 unit
+                            fee = this.roundout(price * commissionRate);
                         }
                     }
                 } else if (field.type === 'number') {
                     if (field.additional_fee && field.price) {
                         price = Number(field.price) || 0;
-                        subtotal = price * (Number(value) || 0);
+                        const quantity = Number(value) || 0;
+                        
+                        if (field.unit_type === 'Price per unit' && quantity > 0) {
+                            // Calculate fee for 1 unit, then multiply by quantity
+                            const feePerUnit = this.roundout(price * commissionRate);
+                            subtotal = this.roundout(price * quantity);
+                            fee = this.roundout(feePerUnit * quantity);
+                        } else {
+                            subtotal = this.roundout(price * quantity);
+                            fee = this.roundout(subtotal * commissionRate);
+                        }
                     }
                 } else if (field.type === 'checkbox') {
                     if (field.additional_fee && field.price && value === true) {
                         price = Number(field.price) || 0;
+                        
                         if (field.unit_type === 'Price per pax' && Number(this.totalPeople) > 0) {
-                            subtotal = price * Number(this.totalPeople);
+                            // Calculate fee for 1 pax, then multiply by total people
+                            const feePerPax = this.roundout(price * commissionRate);
+                            subtotal = this.roundout(price * Number(this.totalPeople));
+                            fee = this.roundout(feePerPax * Number(this.totalPeople));
                         } else {
                             subtotal = price;
+                            fee = this.roundout(price * commissionRate);
                         }
                     }
                 } else if (field.additional_fee && field.price) {
                     price = Number(field.price) || 0;
                     subtotal = price;
+                    fee = this.roundout(price * commissionRate);
                 }
 
-                const fee = subtotal * commissionRate;
-                entry.price = price;
-                entry.subtotal = subtotal;
-                entry.fee = fee;
+                entry.price = this.roundout(price);
+                entry.subtotal = this.roundout(subtotal);
+                entry.fee = this.roundout(fee);
             });
 
             // Update children

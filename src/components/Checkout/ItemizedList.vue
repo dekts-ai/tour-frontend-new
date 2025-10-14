@@ -28,9 +28,20 @@
                 <div v-if="item?.custom_fields?.length && isPriceInfoEnabled(item?.custom_fields)" class="addons-section">
                     <div class="addon-header">Add-ons:</div>
                     <div v-for="(option, idx) in item.custom_fields" :key="`custom-option-${idx}`">
+                        <!-- Parent add-on -->
                         <div v-if="option.priceInfo.enabled && hasValidFieldValue(option)" class="pricing-line">
                             <span>{{ option.name }}</span>
-                            <span>{{ currencyFormat(option.priceInfo.price) }}</span>
+                            <span>{{ currencyFormat(option.priceInfo.subtotal || option.priceInfo.price) }}</span>
+                        </div>
+                        
+                        <!-- Child add-ons -->
+                        <div v-if="option.children && option.children.length > 0">
+                            <div v-for="(child, childIdx) in option.children" :key="`child-${idx}-${childIdx}`">
+                                <div v-if="child.priceInfo.enabled && hasValidFieldValue(child)" class="pricing-line child-addon">
+                                    <span>  ↳ {{ child.name }}</span>
+                                    <span>{{ currencyFormat(child.priceInfo.subtotal || child.priceInfo.price) }}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -222,6 +233,12 @@ export default {
     color: var(--neutral-500);
     text-transform: uppercase;
     margin-bottom: var(--space-2);
+}
+
+.pricing-line.child-addon {
+    margin-left: var(--space-4);
+    background: var(--neutral-100);
+    font-size: var(--text-xs);
 }
 
 .errors-section {
