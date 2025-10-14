@@ -81,18 +81,18 @@
                             <div class="addons-header">ADD-ONS:</div>
                             
                             <div v-for="(option, k) in item.custom_fields" :key="`addon-${k}`">
-                                <!-- Parent add-on -->
-                                <div v-if="option.priceInfo?.enabled && hasValidFieldValue(option)" class="pricing-row addon-row">
+                                <!-- Parent add-on (show if priced and has subtotal > 0) -->
+                                <div v-if="option.priceInfo?.enabled && option.priceInfo?.subtotal > 0" class="pricing-row addon-row">
                                     <span>{{ option.name }}</span>
-                                    <span>{{ currencyFormat(option.priceInfo?.subtotal || option.priceInfo?.price || 0) }}</span>
+                                    <span>{{ currencyFormat(option.priceInfo.subtotal) }}</span>
                                 </div>
                                 
                                 <!-- Child add-ons -->
                                 <div v-if="option.children && option.children.length > 0">
                                     <div v-for="(child, childIdx) in option.children" :key="`child-${k}-${childIdx}`">
-                                        <div v-if="child.priceInfo?.enabled && hasValidFieldValue(child)" class="pricing-row addon-row child-addon">
+                                        <div v-if="child.priceInfo?.enabled && child.priceInfo?.subtotal > 0" class="pricing-row addon-row child-addon">
                                             <span>  ↳ {{ child.name }}</span>
-                                            <span>{{ currencyFormat(child.priceInfo?.subtotal || child.priceInfo?.price || 0) }}</span>
+                                            <span>{{ currencyFormat(child.priceInfo.subtotal) }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -135,16 +135,16 @@ export default {
         hasVisibleAddons(customFields) {
             if (!customFields || !Array.isArray(customFields)) return false;
             
-            // Check if at least one add-on (parent or child) has valid value and is enabled
+            // Check if at least one add-on (parent or child) has price enabled and subtotal > 0
             return customFields.some(field => {
                 // Check parent
-                if (field.priceInfo?.enabled && this.hasValidFieldValue(field)) {
+                if (field.priceInfo?.enabled && field.priceInfo?.subtotal > 0) {
                     return true;
                 }
                 // Check children
                 if (field.children && Array.isArray(field.children)) {
                     return field.children.some(child => 
-                        child.priceInfo?.enabled && this.hasValidFieldValue(child)
+                        child.priceInfo?.enabled && child.priceInfo?.subtotal > 0
                     );
                 }
                 return false;
