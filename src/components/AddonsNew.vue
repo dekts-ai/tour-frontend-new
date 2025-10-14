@@ -657,7 +657,32 @@ export default {
             return allFields;
         },
         hasValidFieldValue(field) {
-            const value = this.safeValues[field.id]?.value;
+            const entry = this.safeValues[field.id];
+            if (!entry) return false;
+            
+            // Check if field has repeated values (for per-pax/per-unit pricing)
+            if (entry.isRepeated && entry.values && Array.isArray(entry.values)) {
+                // For repeated fields, check if any value is valid
+                return entry.values.some(val => {
+                    switch (field.type) {
+                        case 'checkbox':
+                            return val === true;
+                        case 'number':
+                            return Number(val) > 0;
+                        case 'radio':
+                        case 'dropdown':
+                            return val !== '' && val !== null && val !== undefined;
+                        case 'text':
+                        case 'textbox':
+                            return val && String(val).trim() !== '';
+                        default:
+                            return val !== null && val !== undefined && val !== '';
+                    }
+                });
+            }
+            
+            // Check single value
+            const value = entry.value;
             
             switch (field.type) {
                 case 'checkbox':
@@ -669,7 +694,7 @@ export default {
                     return value !== '' && value !== null && value !== undefined;
                 case 'text':
                 case 'textbox':
-                    return value && value.trim() !== '';
+                    return value && String(value).trim() !== '';
                 default:
                     return false;
             }
