@@ -8,14 +8,18 @@ This Vue.js 3 frontend application facilitates booking Native American tours. It
   - **Required Field Validation**: Full validation for required add-ons with parent/child relationship checking
     - If parent is required and selected, children must be filled when conditional rules are met
     - Detailed error messages for repeated fields: "Field is required for Person 1" / "Unit 2"
-    - Real-time validation on field change with error display in Native Journey design
-    - SweetAlert warning modal when validation fails with smooth scroll to first error
+    - Inline error display with Native Journey design (no popup modals)
+    - Smooth scroll to first error field when validation fails
   - **Custom Fields Persistence**: Selected add-ons saved to `custom_fields` structure for cart items
     - Auto-save on navigation: buildCustomFields() creates structured object with id, name, type, value, priceInfo
     - Auto-restore on return: restoreCustomFields() retrieves saved selections when editing from cart
     - Includes repeated child values for Price per pax/unit fields
     - Maintains pricing information (price, subtotal, fee) for checkout display
-  - **Navigation Integration**: "Add Extras" step correctly appears in both combo and single package flows when hasCustomFields is true
+  - **Navigation Integration**: "Add Extras" step dynamically appears/hides based on addon availability
+    - AddonsNew sets hasCustomFields in Vuex when addon form loads (true if fields exist, false otherwise)
+    - Correctly appears in both combo and single package flows when add-ons are available
+    - All edge cases handled: success with fields, success without form, and error states
+  - **Visibility Filtering**: Only shows add-ons with visibility type "Both" or "Frontend", hides "Backend" type fields
   - All validation errors use consistent key format (`fieldId-index`) matching template bindings for proper error display
 
 ## Recent Changes (October 13, 2025)
