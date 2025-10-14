@@ -10,6 +10,14 @@
                     <div class="addons-left">
                         <h2 class="section-title">Additional Options</h2>
                         
+                        <!-- DEBUG: Check template access to reactive values -->
+                        <div style="background: yellow; padding: 10px; margin: 10px 0;">
+                            DEBUG: display_errors = {{ display_errors }}, 
+                            errors[3] = {{ errors[3] }}, 
+                            errors[5] = {{ errors[5] }}, 
+                            errors[8] = {{ errors[8] }}
+                        </div>
+                        
                         <!-- Loading State -->
                         <div v-if="loading" class="loading-state">
                             <div class="spinner"></div>
