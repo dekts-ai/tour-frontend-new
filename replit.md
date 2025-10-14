@@ -4,13 +4,14 @@
 This Vue.js 3 frontend application provides a user-friendly interface for browsing, selecting, and booking Native American tours. It supports various tour packages, date selection, add-on management, and integrated payment processing via Stripe. The project aims to deliver a modern, nature-inspired booking experience for cultural tours, leveraging a multi-tenant backend architecture. It features dynamic navigation, combination package support, and real-time pricing updates. The application adheres to a custom "Native Journey" design system to ensure a consistent and responsive user experience.
 
 ## Recent Changes (October 14, 2025)
-- **CartItem Add-ons Display - COMPLETE**: Enhanced CartItem component to display add-ons with proper visibility:
+- **CartItem Add-ons Display & Validation Fix - COMPLETE**: Enhanced CartItem component with proper add-ons visibility and fixed validation logic:
   - **ADD-ONS Section**: Added dedicated section with dashed divider and uppercase header
   - **Subtotal Display**: Shows add-on subtotals (not prices) matching AddonsNew display
   - **Child Add-ons Hierarchy**: Displays child add-ons with indentation (↳) and lighter background
   - **Fees Consolidation**: All fees (tour + add-ons) combined in single "Taxes & Fees" row
   - **Visibility in Index & Checkout**: CartItem now properly displays add-ons in both Start/Index and Checkout pages
-  - **Validation Logic**: Only shows add-ons with valid values using hasValidFieldValue() method
+  - **Validation Logic Fix**: hasValidFieldValue() now checks priceInfo.subtotal first, preventing NaN errors for price-per-pax/per-unit add-ons stored as arrays/objects
+  - **Smart Section Display**: hasVisibleAddons() ensures ADD-ONS section only appears when valid add-ons exist
 - **Add-ons Fee Calculation Fix - COMPLETE**: Corrected per-unit and per-pax fee calculation logic:
   - **Proper Per-Unit/Pax Fee Logic**: Now calculates fee for 1 unit/pax first, then multiplies by quantity
   - **Roundout for Decimal Precision**: All price, subtotal, and fee values rounded to 2 decimals
