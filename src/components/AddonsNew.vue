@@ -340,6 +340,13 @@ export default {
                     this.form = response.data.form;
                     this.addonFields = response.data.form.fields || [];
                     this.initializeValues(this.addonFields);
+                    
+                    // Restore custom_fields if user is returning to this page
+                    const firstSlotId = Object.keys(this.cartItem)[0];
+                    if (firstSlotId && this.cartItem[firstSlotId]?.custom_fields) {
+                        this.restoreCustomFields(this.cartItem[firstSlotId].custom_fields);
+                    }
+                    
                     this.updateAllFees();
                 }
             } catch (error) {
@@ -583,8 +590,122 @@ export default {
             });
             return allFields;
         },
-        validateField(field) {
-            // Validation logic here
+        hasValidFieldValue(field) {
+            const value = this.safeValues[field.id]?.value;
+            
+            switch (field.type) {
+                case 'checkbox':
+                    return value === true;
+                case 'number':
+                    return Number(value) > 0;
+                case 'radio':
+                case 'dropdown':
+                    return value !== '' && value !== null && value !== undefined;
+                case 'text':
+                case 'textbox':
+                    return value && value.trim() !== '';
+                default:
+                    return false;
+            }
+        },
+        hasValidChildValue(child, index) {
+            const value = this.safeValues[child.id]?.values?.[index];
+            
+            switch (child.type) {
+                case 'checkbox':
+                    return value === true;
+                case 'number':
+                    return Number(value) > 0;
+                case 'radio':
+                case 'dropdown':
+                    return value !== '' && value !== null && value !== undefined;
+                case 'text':
+                case 'textbox':
+                    return value && value.trim() !== '';
+                default:
+                    return false;
+            }
+        },
+        validateField(field, suffix = '') {
+            const fieldKey = suffix ? `${field.id}-${suffix}` : field.id;
+            
+            if (!field.required) {
+                delete this.errors[fieldKey];
+                return true;
+            }
+            
+            // For repeated children, validate the specific index
+            if (suffix) {
+                const index = parseInt(suffix) - 1;
+                if (!this.hasValidChildValue(field, index)) {
+                    this.errors[fieldKey] = `${field.label} is required for Person/Unit ${suffix}`;
+                    return false;
+                }
+            } else {
+                // Validate parent field
+                if (!this.hasValidFieldValue(field)) {
+                    this.errors[fieldKey] = `${field.label} is required`;
+                    return false;
+                }
+            }
+            
+            delete this.errors[fieldKey];
+            return true;
+        },
+        validateAllFields() {
+            this.errors = {};
+            let isValid = true;
+            
+            const allFields = this.getAllFields();
+            
+            allFields.forEach(field => {
+                if (!field.required) return;
+                
+                // Check if field should be shown based on parent rules
+                const parent = allFields.find(f => f.children?.some(c => c.id === field.id));
+                if (parent && !this.shouldShowChildren(parent)) {
+                    return; // Skip validation if parent condition not met
+                }
+                
+                // Validate parent fields
+                if (!field.parent_field_id) {
+                    if (!this.hasValidFieldValue(field)) {
+                        this.errors[field.id] = `${field.label} is required`;
+                        isValid = false;
+                    } else if (field.children && field.children.length > 0 && this.shouldShowChildren(field)) {
+                        // If parent is filled and has children, validate children
+                        field.children.forEach(child => {
+                            if (!child.required) return;
+                            
+                            // For repeated children
+                            if (field.unit_type === 'Price per pax') {
+                                for (let i = 0; i < this.totalPeople; i++) {
+                                    if (!this.hasValidChildValue(child, i)) {
+                                        this.errors[`${child.id}-${i + 1}`] = `${child.label} is required for Person ${i + 1}`;
+                                        isValid = false;
+                                    }
+                                }
+                            } else if (field.unit_type === 'Price per unit') {
+                                const count = this.safeValues[field.id]?.value || 0;
+                                for (let i = 0; i < count; i++) {
+                                    if (!this.hasValidChildValue(child, i)) {
+                                        this.errors[`${child.id}-${i + 1}`] = `${child.label} is required for Unit ${i + 1}`;
+                                        isValid = false;
+                                    }
+                                }
+                            } else {
+                                // Regular child (not repeated)
+                                if (!this.hasValidFieldValue(child)) {
+                                    this.errors[child.id] = `${child.label} is required`;
+                                    isValid = false;
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+            
+            return isValid;
         },
         roundout(num) {
             return Math.round(num * 100) / 100;
@@ -604,7 +725,99 @@ export default {
                 this.$router.push({ name: destination });
             }
         },
+        buildCustomFields() {
+            const customFields = [];
+            const allFields = this.getAllFields();
+            
+            allFields.forEach(field => {
+                const entry = this.safeValues[field.id];
+                if (!entry) return;
+                
+                // Check if field has a valid value
+                if (this.hasValidFieldValue(field)) {
+                    const customField = {
+                        id: field.id,
+                        name: field.label,
+                        type: field.type,
+                        value: entry.value,
+                        priceInfo: {
+                            enabled: field.additional_fee || false,
+                            price: entry.price || 0,
+                            subtotal: entry.subtotal || 0,
+                            fee: entry.fee || 0
+                        }
+                    };
+                    
+                    // Add child values if repeated
+                    if (entry.isRepeated && entry.values && entry.values.length > 0) {
+                        customField.values = entry.values;
+                    }
+                    
+                    customFields.push(customField);
+                }
+            });
+            
+            return customFields;
+        },
+        restoreCustomFields(customFields) {
+            if (!customFields || !Array.isArray(customFields)) return;
+            
+            customFields.forEach(savedField => {
+                if (this.safeValues[savedField.id]) {
+                    this.safeValues[savedField.id].value = savedField.value;
+                    
+                    // Restore repeated values if present
+                    if (savedField.values && Array.isArray(savedField.values)) {
+                        this.safeValues[savedField.id].values = [...savedField.values];
+                    }
+                }
+            });
+            
+            // Recalculate fees after restoration
+            this.updateAllFees();
+        },
         async continueToCheckout() {
+            // Validate all fields
+            const isValid = this.validateAllFields();
+            
+            if (!isValid) {
+                this.display_errors = true;
+                
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Required Fields Missing',
+                    text: 'Please fill in all required add-on fields before continuing.',
+                    confirmButtonColor: '#0D9488'
+                });
+                
+                // Scroll to first error
+                this.$nextTick(() => {
+                    const firstError = document.querySelector('.input-error');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstError.focus();
+                    }
+                });
+                
+                return;
+            }
+            
+            // Build and save custom_fields to the first cart item's form
+            const customFields = this.buildCustomFields();
+            const firstSlotId = Object.keys(this.cartItem)[0];
+            
+            if (firstSlotId && this.cartItem[firstSlotId]) {
+                // Update the cart item with custom_fields
+                const updatedCartItem = { ...this.cartItem };
+                updatedCartItem[firstSlotId] = {
+                    ...updatedCartItem[firstSlotId],
+                    custom_fields: customFields
+                };
+                
+                // Store updated cart
+                this.$store.dispatch('storeCartItem', updatedCartItem);
+            }
+            
             // Store addon values
             this.$store.dispatch('storeAddonValues', this.safeValues);
             
