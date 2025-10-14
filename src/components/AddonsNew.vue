@@ -796,15 +796,21 @@ export default {
             this.updateAllFees();
         },
         async continueToCheckout() {
+            console.log('=== Continue to Checkout clicked ===');
+            
             // Validate all fields
             const isValid = this.validateAllFields();
+            console.log('Validation result:', isValid);
+            console.log('Errors:', this.errors);
             
             if (!isValid) {
+                console.log('Validation failed, showing errors');
                 this.display_errors = true;
                 
                 // Scroll to first error (no popup, just show inline errors)
                 this.$nextTick(() => {
                     const firstError = document.querySelector('.input-error');
+                    console.log('First error element:', firstError);
                     if (firstError) {
                         firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         firstError.focus();
@@ -813,6 +819,8 @@ export default {
                 
                 return;
             }
+            
+            console.log('Validation passed, saving custom fields');
             
             // Build and save custom_fields to the first cart item's form
             const customFields = this.buildCustomFields();
@@ -834,7 +842,10 @@ export default {
             this.$store.dispatch('storeAddonValues', this.safeValues);
             
             // Navigate to next step
-            if (this.comboIds && this.comboIds.toString().split(',').length > 1) {
+            const destination = (this.comboIds && this.comboIds.toString().split(',').length > 1) ? 'MyTrip' : 'Checkout';
+            console.log('Navigating to:', destination);
+            
+            if (destination === 'MyTrip') {
                 this.$router.push({ name: 'MyTrip' });
             } else {
                 this.$router.push({ name: 'Checkout' });
