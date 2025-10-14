@@ -816,8 +816,18 @@ export default {
                 this.display_errors = true;
                 console.log('display_errors set to:', this.display_errors);
                 
+                // Log what's being passed to components
+                console.log('display_errors value:', this.display_errors);
+                console.log('errors object:', JSON.stringify(this.errors));
+                console.log('errors[3]:', this.errors[3]);
+                console.log('errors[5]:', this.errors[5]);
+                console.log('errors[8]:', this.errors[8]);
+                
                 // Scroll to first error (no popup, just show inline errors)
                 this.$nextTick(() => {
+                    console.log('After nextTick - display_errors:', this.display_errors);
+                    console.log('After nextTick - errors:', JSON.stringify(this.errors));
+                    
                     const allInputs = document.querySelectorAll('input, select, textarea');
                     console.log('All input elements:', allInputs.length);
                     
