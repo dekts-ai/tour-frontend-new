@@ -24,8 +24,8 @@
                                 <span class="total-cost-amount">{{ currencyFormat(calculateAddonsSubtotal + calculateAddonsFees) }}</span>
                             </div>
 
-                            <div v-for="field in sortedFields" :key="field.id" class="field-card">
-                                <div v-if="shouldShowField(field)">
+                            <div v-for="field in sortedFields" :key="field.id">
+                                <div v-if="shouldShowField(field)" class="field-card">
                                     <div class="field-header">
                                         <label :for="`field-${field.id}`" class="field-label">
                                             {{ field.label }}
@@ -676,6 +676,9 @@ export default {
             
             allFields.forEach(field => {
                 if (!field.required) return;
+                
+                // Skip validation for backend visibility fields
+                if (!this.shouldShowField(field)) return;
                 
                 // Check if field should be shown based on parent rules
                 const parent = allFields.find(f => f.children?.some(c => c.id === field.id));
