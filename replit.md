@@ -4,6 +4,11 @@
 This Vue.js 3 frontend application provides a user-friendly interface for browsing, selecting, and booking Native American tours. It supports various tour packages, date selection, add-on management, and integrated payment processing via Stripe. The project aims to deliver a modern, nature-inspired booking experience for cultural tours, leveraging a multi-tenant backend architecture. It features dynamic navigation, combination package support, and real-time pricing updates. The application adheres to a custom "Native Journey" design system to ensure a consistent and responsive user experience.
 
 ## Recent Changes (October 14, 2025)
+- **Child Add-ons Restoration Fix - COMPLETE**: Fixed child add-ons not retaining values when editing cart items:
+  - **Enhanced restoreCustomFields()**: Now finds original field definitions and calls resizeChildValues for repeated children
+  - **Pricing Recalculation**: After restoring child values, pricing (subtotal/fee) is recalculated correctly
+  - **Restoration Flow**: Parent value → child values → resizeChildValues → updateAllFees
+  - **Works for All Types**: Price per unit, Price per pax, and non-repeated children all restore correctly
 - **CartItem & ItemizedList Add-ons Display Fix - COMPLETE**: Fixed validation logic preventing add-ons from displaying in cart and checkout:
   - **ADD-ONS Section in CartItem**: Added dedicated section with dashed divider and uppercase header
   - **Subtotal Display**: Shows add-on subtotals (not prices) matching AddonsNew display
