@@ -339,6 +339,11 @@ export default {
                 if (response.data.success && response.data.form) {
                     this.form = response.data.form;
                     this.addonFields = response.data.form.fields || [];
+                    
+                    // Set hasCustomFields in Vuex so navigation shows "Add Extras"
+                    const hasFields = this.addonFields.length > 0;
+                    this.$store.dispatch('storeHasCustomFields', hasFields);
+                    
                     this.initializeValues(this.addonFields);
                     
                     // Restore custom_fields if user is returning to this page
@@ -348,10 +353,15 @@ export default {
                     }
                     
                     this.updateAllFees();
+                } else {
+                    // No form data returned, hide Add Extras navigation
+                    this.addonFields = [];
+                    this.$store.dispatch('storeHasCustomFields', false);
                 }
             } catch (error) {
                 console.error('Failed to fetch addon form:', error);
                 this.addonFields = [];
+                this.$store.dispatch('storeHasCustomFields', false);
                 
                 if (error?.response?.status !== 404) {
                     Swal.fire({
@@ -415,8 +425,14 @@ export default {
             return this.safeValues[field.id]?.value || 0;
         },
         shouldShowField(field) {
-            if (!field.visibility || field.visibility === 'Both') return true;
-            if (field.visibility === 'Backend') return false;
+            // Only show fields with visibility 'Both' or 'Frontend'
+            // Hide 'Backend' visibility type
+            if (!field.visibility || field.visibility === 'Both' || field.visibility === 'Frontend') {
+                return true;
+            }
+            if (field.visibility === 'Backend') {
+                return false;
+            }
             return true;
         },
         shouldShowChildren(field) {
@@ -783,14 +799,7 @@ export default {
             if (!isValid) {
                 this.display_errors = true;
                 
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Required Fields Missing',
-                    text: 'Please fill in all required add-on fields before continuing.',
-                    confirmButtonColor: '#0D9488'
-                });
-                
-                // Scroll to first error
+                // Scroll to first error (no popup, just show inline errors)
                 this.$nextTick(() => {
                     const firstError = document.querySelector('.input-error');
                     if (firstError) {
