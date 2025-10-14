@@ -1440,7 +1440,7 @@ export default {
 }
 
 .field-card:hover {
-    border-color: var(--primary-teal-light);
+    /* border-color: var(--primary-teal-light); */
     box-shadow: var(--shadow-md);
     transform: translateY(-1px);
 }
@@ -1541,14 +1541,16 @@ export default {
 /* Price per pax parent styling */
 .parent-per-pax {
     background: linear-gradient(135deg, rgba(13, 148, 136, 0.03) 0%, rgba(13, 148, 136, 0.01) 100%);
-    border-left: 4px solid var(--primary-teal);
+    /* border-left: 4px solid var(--primary-teal); */
+    margin-bottom: 1%;
+    border-top-left-radius: unset;
 }
 
 .person-group-header {
     margin: calc(var(--space-6) * -1) calc(var(--space-6) * -1) var(--space-4);
     padding: var(--space-3) var(--space-6);
     background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-teal-dark) 100%);
-    border-top-left-radius: var(--radius-lg);
+    /* border-top-left-radius: var(--radius-lg); */
     border-top-right-radius: var(--radius-lg);
 }
 
