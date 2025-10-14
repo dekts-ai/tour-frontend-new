@@ -180,7 +180,7 @@
 </template>
 
 <script>
-import { reactive, computed } from 'vue';
+import { reactive, computed, ref } from 'vue';
 import NavBtns from './Nav/NavBtns.vue';
 import NumberInput from './Forms/AddonInput/NumberInput.vue';
 import RadioInput from './Forms/AddonInput/RadioInput.vue';
@@ -207,6 +207,8 @@ export default {
     },
     setup() {
         const internalValues = reactive({});
+        const errors = reactive({});
+        const display_errors = ref(false);
         
         const totalCost = computed(() => {
             let total = 0;
@@ -218,13 +220,11 @@ export default {
             return total;
         });
         
-        return { internalValues, totalCost };
+        return { internalValues, totalCost, errors, display_errors };
     },
     data() {
         return {
             loading: true,
-            display_errors: false,
-            errors: {},
             tenantId: null,
             tourOperatorId: 0,
             comboIds: 0,
@@ -669,7 +669,8 @@ export default {
             return true;
         },
         validateAllFields() {
-            this.errors = {};
+            // Clear all errors (since errors is reactive, we need to delete keys instead of reassigning)
+            Object.keys(this.errors).forEach(key => delete this.errors[key]);
             let isValid = true;
             
             const allFields = this.getAllFields();
