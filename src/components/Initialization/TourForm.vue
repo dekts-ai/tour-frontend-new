@@ -134,7 +134,7 @@
                         <div v-else class="guest-types-list">
                             <div v-for="tour in tourPackageRateGroups" :key="tour.id" class="guest-type-row">
                                 <div class="guest-type-info">
-                                    <div class="guest-type-name">{{ tour.rate_for }}</div>
+                                    <div class="guest-type-name">{{ tour.rate_for }} <span v-if="tour.description">({{ tour.description }})</span></div>
                                     <div class="guest-type-price">{{ currencyFormat(tour.rate) }}</div>
                                 </div>
                                 <div class="guest-type-counter">

@@ -21,7 +21,7 @@
                     <span>{{ currencyFormat(item.subtotal) }}</span>
                 </div>
                 <div class="pricing-line" v-if="item?.discount2_value > 0">
-                    <span>Discount <span v-if="item?.discount2_percentage">({{ item?.discount2_percentage }}%)</span></span>
+                    <span>Discount <!-- <span v-if="item?.discount2_percentage">({{ item?.discount2_percentage }}%)</span> --></span>
                     <span class="discount">-{{ item?.discount2_value ? currencyFormat(item?.discount2_value) : currencyFormat(0) }}</span>
                 </div>
 
